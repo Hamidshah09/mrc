@@ -7,7 +7,7 @@
     <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
         <form method="POST" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data">
             @csrf
-
+            @method('PUT')
             <!-- Grid: Single column on mobile, two on md+ -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
 
@@ -31,7 +31,7 @@
                 <div>
                     <x-input-label for="father_name" :value="__('Father Name')" />
                     <x-text-input id="father_name" name="father_name" type="text" class="block mt-1 w-full"
-                                :value="old('father_name', $user->father)" required />
+                                :value="old('father_name', $user->father_name)" required />
                     <x-input-error :messages="$errors->get('father_name')" class="mt-2" />
                 </div>
 
@@ -79,7 +79,7 @@
                 <div>
                     <x-input-label for="password" :value="__('Password')" />
                     <x-text-input id="password" name="password" type="password" class="block mt-1 w-full"
-                                required autocomplete="new-password" />
+                                autocomplete="new-password" />
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
@@ -87,7 +87,7 @@
                 <div>
                     <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
                     <x-text-input id="password_confirmation" name="password_confirmation" type="password"
-                                class="block mt-1 w-full" required autocomplete="new-password" />
+                                class="block mt-1 w-full" autocomplete="new-password" />
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                 </div>
                 <!-- Role -->
@@ -117,11 +117,11 @@
                     <select name="status" id="status" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full mt-1">
                         @if ($user->status === 'Active')
                             <option value="Active" selected>Active</option>
-                            <option value="Not Active">Not Active</option>
+                            <option value="Not active">Not Active</option>
 
-                        @elseif ($user->status === 'Not Active')
+                        @elseif ($user->status === 'Not active')
                             <option value="Active">Active</option>
-                            <option value="Not Active" selected>Not Active</option>
+                            <option value="Not active" selected>Not Active</option>
                         @endif
                     </select>
                     <x-input-error :messages="$errors->get('status')" class="mt-2" />

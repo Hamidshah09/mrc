@@ -101,6 +101,9 @@ class RegisteredUserController extends Controller
             'mobile'         => 'required|string|size:11|unique:users,mobile,' . $user->id,
             'license_number' => 'required|string|unique:users,license_number,' . $user->id,
             'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'status'       => 'string|in:Active,Not active',
+            'role'         => 'string|in:registrar,admin,operator', // Add this
+            'password'       => 'nullable|string|min:8|confirmed', // Add this line
         ]);
 
         // Handle profile image upload (if any)
@@ -108,6 +111,12 @@ class RegisteredUserController extends Controller
             $validated['profile_image'] = $request->file('profile_image')->store('profiles', 'public');
         }
 
+        // Handle password (only if provided)
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
         // Update user
         $user->update($validated);
 

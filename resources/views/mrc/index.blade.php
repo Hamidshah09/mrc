@@ -6,7 +6,7 @@
     </x-slot>
     <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
         <h2 class="text-3xl font-bold text-gray-800 mb-6">Marriage Records</h2>
-
+        <x-icons.add class="float-right text-green-500 hover:text-green-700" />
         @if ($errors->any())
             <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-300">
                 <ul class="list-disc pl-5 space-y-1">

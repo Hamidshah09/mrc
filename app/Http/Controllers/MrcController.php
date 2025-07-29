@@ -8,19 +8,46 @@ use Illuminate\Http\Request;
 
 class MrcController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
         $query = MRC::with(['registrar', 'verifier']);
 
-        if ($user->role === 'registrar') {
-            $query->where('registrar_id', $user->id);
+        // Limit to registrar's own records if applicable
+    if ($user->role === 'registrar') {
+        $query->where('registrar_id', $user->id);
+    }
+
+    // Apply search filters
+    if ($request->filled('search') && $request->filled('search_type')) {
+        $searchType = $request->input('search_type');
+        $searchValue = $request->input('search');
+
+        // Sanitize and apply search type filter
+        if (in_array($searchType, ['groom_cnic', 'groom_name', 'bride_cnic', 'bride_name'])) {
+            $query->where($searchType, 'LIKE', '%' . $searchValue . '%');
         }
+    }
 
-        $mrcRecords = $query->paginate(10);
+    // Date range filter
+    if ($request->filled('From')) {
+        $query->whereDate('created_at', '>=', $request->input('From'));
+    }
 
-        return view('mrc.index', compact('mrcRecords', 'user'));
+    if ($request->filled('To')) {
+        $query->whereDate('created_at', '<=', $request->input('To'));
+    }
+
+    // Status filter
+    if ($request->filled('status') && in_array($request->input('status'), ['verified', 'not verified'])) {
+        $query->where('status', $request->input('status'));
+    }
+
+    // Get filtered results
+    $mrcRecords = $query->paginate(10)->withQueryString(); // keep filters in pagination links
+
+    return view('mrc.index', compact('mrcRecords', 'user'));
     }
     public function create()
     {

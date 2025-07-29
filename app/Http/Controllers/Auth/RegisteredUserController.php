@@ -17,10 +17,44 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function index(){
-        $users = User::all();
-        return view('users.index', compact('users'));
+    public function index(Request $request)
+{
+    $query = User::query();
+
+    // Apply search by type
+    if ($request->filled('search') && $request->filled('search_type')) {
+        $searchType = $request->input('search_type');
+        $searchValue = $request->input('search');
+
+        if (in_array($searchType, ['cnic', 'name', 'license_number', 'email'])) {
+            $query->where($searchType, 'LIKE', '%' . $searchValue . '%');
+        }
     }
+
+    // Apply date range filters
+    if ($request->filled('From')) {
+        $query->whereDate('created_at', '>=', $request->input('From'));
+    }
+
+    if ($request->filled('To')) {
+        $query->whereDate('created_at', '<=', $request->input('To'));
+    }
+
+    // Apply status filter
+    if ($request->filled('status')) {
+        if ($request->input('status') === 'active') {
+            $query->where('status', 'Active');
+        } elseif ($request->input('status') === 'not active') {
+            $query->where('status', 'Not active');
+        }
+    }
+
+    // Fetch results with pagination and keep query params
+    $users = $query->paginate(10)->withQueryString();
+
+    return view('users.index', compact('users'));
+}
+
      public function create(): View
     {
         return view('auth.register');

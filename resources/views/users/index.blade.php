@@ -4,7 +4,38 @@
             {{ __('Users') }}
         </h2>
     </x-slot>
-    <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+        <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+            <div class="w-full flex justify-end">
+
+                <a href="{{route('users.create')}}" class="mb-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">New</a>
+
+        </div>
+        <div class="w-full">
+            <form action="" class="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0 mb-4 w-full">
+                <input type="text" name="search" placeholder="Search" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3 lg:w-1/2" value="{{ request('search') }}">
+                <select name="search_type" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                    <option selected>Select Search Type</option>>
+                    <option value="cnic">CNIC</option>
+                    <option value="name">Name</option>
+                    <option value="license_number">License Number</option>
+                    <option value="email">Email</option>
+                </select>
+
+                <label for="from">From</label>
+                <input type="date" name="From" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('from') }}">
+                <label for="from">to</label>
+                <input type="date" name="To" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('to') }}">
+                <label for="status">Status</label>
+                <select name="status" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                    <option selected>Select Status</option>>
+                    <option value="active">Active</option>
+                    <option value="not active">Not Active</option>
+                </select>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">Search</button>
+            </form>
+
+
+        </div>
         @if ($errors->any())
             <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-300">
                 <ul class="list-disc pl-5 space-y-1">

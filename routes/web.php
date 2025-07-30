@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\domicileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MrcController;
 use App\Http\Controllers\ProfileController;
@@ -12,7 +13,13 @@ Route::get('/', function () {
 Route::get('/inactive', function () {
     return view('auth.inactive');
 })->name('inactive');
+Route::controller(domicileController::class)->group(function () {
+    Route::get('/domicile/noc/success/{id}', 'success')->name('noc.success');    
+    Route::get('/domicile/noc', 'show_noc')->name('noc.show');
+    Route::get('/domicile/noc/create', 'create_noc')->name('noc.create');
+    Route::post('/domicile/noc/store', 'store_noc')->name('noc.store');
 
+    });
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');

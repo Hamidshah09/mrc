@@ -119,9 +119,9 @@ class domicileController extends Controller
         $cnic = $request->applicantCnic[$i];
 
         // Check if CNIC already exists
-        if (NocApplicants::where('cnic', $cnic)->exists()) {
+        if (NocApplicants::where('cnic', $request->applicantCnic[$i])->exists()) {
             return back()->withErrors([
-                "applicantCnic.$i" => "CNIC $cnic already exists in the records."
+                "applicantCnic.$i" => "CNIC" . $request->applicantCnic[$i] . " already exists in the records."
             ]);
         }
 

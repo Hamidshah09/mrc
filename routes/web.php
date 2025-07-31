@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\domicileController;
 use App\Http\Controllers\UserController;
@@ -25,6 +26,11 @@ Route::controller(domicileController::class)->group(function () {
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/admin/generate-passcodes/create', [AdminController::class, 'create'])->name('Passcode.create');
+    Route::post('/admin/generate-passcodes/store', [AdminController::class, 'store'])->name('Passcode.store');
+    Route::get('/admin/passcodes/gen-report', [AdminController::class, 'gen_report'])->name('Passcodes.gen_report');
+    Route::post('/admin/passcodes/report', [AdminController::class, 'report'])->name('Passcodes.report');
+    
     Route::get('/dashboard', [MrcController::class, 'index'])->name('dashboard');
     Route::post('/mrc/store', [MrcController::class, 'store'])->name('mrc.store');
     Route::get('/mrc/create', [MrcController::class, 'create'])->name('mrc.create');

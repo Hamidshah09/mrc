@@ -56,10 +56,10 @@
           
         </table>
         <div class="mt-2 flex flex-row justify-between items-center">
-            <button type="button" onclick="addApplicant()" class="bg-gradient-to-r from-indigo-500 to-purple-500 px-6 py-2 rounded-full font-medium shadow-md hover:shadow-lg transform hover:-translate-y-1 transition">
+            <button type="button" onclick="addApplicant()" class="bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-2 rounded-full font-medium shadow-md hover:shadow-lg transform hover:-translate-y-1 transition">
             Add Applicant
           </button>
-          <button type="button" onclick="deleteLastApplicant()" class="bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-full font-medium shadow-md hover:shadow-lg transform hover:-translate-y-1 transition">
+          <button type="button" onclick="deleteLastApplicant()" class="bg-gradient-to-r from-red-500 to-red-600 px-4 py-2 rounded-full font-medium shadow-md hover:shadow-lg transform hover:-translate-y-1 transition">
               Del Applicant
           </button>
         </div>
@@ -68,7 +68,11 @@
 
       {{-- Save Button --}}
       <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-green-600">
-        <button type="submit" class="bg-gradient-to-r from-indigo-500 to-purple-500 px-6 py-2 rounded-full font-medium shadow-md hover:shadow-lg transform hover:-translate-y-1 transition">
+        <div>
+            <label class="block font-medium text-gray-700 mb-2">Pass Code</label>
+            <input type="text" name="code" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+        </div>
+        <button type="submit" class="mt-3 bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-2 rounded-full font-medium shadow-md hover:shadow-lg transform hover:-translate-y-1 transition">
           Save Letter
         </button>
       </div>

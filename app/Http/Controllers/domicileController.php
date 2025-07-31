@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\NocApplicants;
 use App\Models\NocLetters;
+use App\Models\Passcode;
 use Illuminate\Http\Request;
 
 class domicileController extends Controller
@@ -72,6 +73,17 @@ class domicileController extends Controller
 }
 
     public function store_noc(Request $request){
+        
+        $passcode = Passcode::where([
+            ['code', '=', $request->code],
+            ['valid_on', '=', today()],
+            ['used', '=', false]
+        ])->first();
+
+        if (!$passcode) {
+            return back()->withErrors(['code' => 'Invalid or already used passcode.']);
+        }
+
         $request->validate([
         'letterType'             => 'required|string',
         'applicantName'          => 'required|array',
@@ -102,25 +114,29 @@ class domicileController extends Controller
     foreach ($request->applicantName as $i => $name) {
         $cnic = $request->applicantCnic[$i];
 
-    // Check if CNIC already exists
-    if (NocApplicants::where('cnic', $cnic)->exists()) {
-        return back()->withErrors([
-            "applicantCnic.$i" => "CNIC $cnic already exists in the records."
-        ]);
-    }
+        // Check if CNIC already exists
+        if (NocApplicants::where('cnic', $cnic)->exists()) {
+            return back()->withErrors([
+                "applicantCnic.$i" => "CNIC $cnic already exists in the records."
+            ]);
+        }
 
-        NocApplicants::create([
+        $Nocapplicant = NocApplicants::create([
             'letter_id'         => $nocLetter->id,
             'applicant_name'        => $name,
             'cnic'        => $request->applicantCnic[$i],
             'relation'    => $request->applicantRelation[$i],
             'applicant_father_name' => $request->applicantFather[$i],
         ]);
+
     }
 
-    
-    
-    
+    // Mark as used and tie to applicant
+    $passcode->update([
+        'used' => true,
+        'submitted_by' => $Nocapplicant->id
+    ]);
+
     return redirect()->route('noc.success', $nocLetter->id);
     
     }

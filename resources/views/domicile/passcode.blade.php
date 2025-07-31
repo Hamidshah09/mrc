@@ -11,12 +11,26 @@
                 {{session('status')}}
             </div>    
         @endif
+        @if ($errors->any())
+            <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-300">
+                <ul class="list-disc pl-5 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         
-        <form method="POST" action="{{ route('Passcodes.report') }}" class="mt-2">
+        <form method="POST" action="{{ route('Passcode.store') }}" class="mt-2">
             @csrf
             <div class="mb-4">
                 <label for="date" class="block font-semibold">Date</label>
                 <input type="date" name="date" id="date" class="mt-1 w-full border rounded px-3 py-2" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="count" class="block font-semibold">Number of Codes</label>
+                <input type="text" name="count" id="count" class="mt-1 w-full border rounded px-3 py-2" required>
             </div>
 
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded">

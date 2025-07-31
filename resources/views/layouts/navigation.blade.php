@@ -23,7 +23,7 @@
                         </x-nav-link>
                     </div>
                 @endif
-                @if (auth()->user()->role== 'domicile')
+                @if (auth()->user()->role== 'admin')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('Passcode.create')" :active="request()->routeIs('Passcode.create')">
                             {{ __('Generate Passcode') }}

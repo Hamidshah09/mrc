@@ -32,14 +32,14 @@ class AdminController extends Controller
     return back()->with('status', 'Passcodes Generated');
     }
     public function gen_report(){
-        return view('domicile.passcode');
+        return view('domicile.createreport');
     }
     public function report(Request $request)
     {
         $date = Carbon::parse($request->query('date'));
         $passcodes = Passcode::whereDate('valid_on', $date)->where('used', false)->get();
 
-        return view('domicile/passcodereport', compact('passcodes', 'date'));
+        return view('domicile.passcodereport', compact('passcodes', 'date'));
     }
 
 

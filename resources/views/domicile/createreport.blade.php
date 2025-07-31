@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Generate Passcodes') }}
+            {{ __('Generate Report') }}
         </h2>
     </x-slot>
     <div class="max-w-3xl mt-5 mx-auto p-6 bg-white shadow rounded">
@@ -11,8 +11,16 @@
                 {{session('status')}}
             </div>    
         @endif
-        
-        <form method="POST" action="{{ route('Passcode.report') }}" class="mt-2">
+        @if ($errors->any())
+            <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-300">
+                <ul class="list-disc pl-5 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        <form method="POST" action="{{ route('Passcodes.report') }}" class="mt-2">
             @csrf
             <div class="mb-4">
                 <label for="date" class="block font-semibold">Date</label>

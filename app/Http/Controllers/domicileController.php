@@ -10,7 +10,11 @@ use Illuminate\Http\Request;
 class domicileController extends Controller
 {
     public function create_noc(){
-        return view('domicile/noc');
+        $passcode = Passcode::whereDate('valid_on', today())->where('used', false)->first();
+        if (!$passcode){
+            return view('domicile.nocode');
+        }
+        return view('domicile/noc', compact('passcode'));
     }
     public function show_noc(Request $request)
 {

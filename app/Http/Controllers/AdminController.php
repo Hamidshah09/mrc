@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     public function create(){
+        
         return view('domicile.passcode');
     }
     

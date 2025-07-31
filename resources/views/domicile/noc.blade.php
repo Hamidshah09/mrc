@@ -70,7 +70,7 @@
       <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-green-600">
         <div>
             <label class="block font-medium text-gray-700 mb-2">Pass Code</label>
-            <input type="text" name="code" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+            <input type="text" value="{{$passcode->code}}" name="code" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
         </div>
         <button type="submit" class="mt-3 bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-2 rounded-full font-medium shadow-md hover:shadow-lg transform hover:-translate-y-1 transition">
           Save Letter
@@ -101,15 +101,15 @@
                       </div>
                       <div class="flex flex-col">
                         <label class="font-semibold text-gray-700">CNIC</label>
-                        <input type="text" id="cnic" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantCnic[${applicantCounter - 1}]" />
+                        <input type="text" id="cnic" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantCnic[${applicantCounter - 1}]" />
                       </div>
                       <div class="flex flex-col">
                         <label class="font-semibold text-gray-700">Name</label>
-                        <input type="text" id="name" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantName[${applicantCounter - 1}]"  />
+                        <input type="text" id="name" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantName[${applicantCounter - 1}]"  />
                       </div>
                       <div class="flex flex-col">
                         <label class="font-semibold text-gray-700">Relation</label>
-                        <select name="applicantRelation[${applicantCounter - 1}]" id="relation" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                        <select required name="applicantRelation[${applicantCounter - 1}]" id="relation" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400">
                           <option value="s/o">S/o</option>
                           <option value="d/o">D/o</option>
                           <option value="w/o">W/o</option>
@@ -117,7 +117,7 @@
                       </div>
                       <div class="flex flex-col">
                         <label class="font-semibold text-gray-700">Father Name</label>
-                        <input type="text" id="father" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantFather[${applicantCounter - 1}]"  />
+                        <input type="text" id="father" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantFather[${applicantCounter - 1}]"  />
                       </div>
                     </div>
                   </td>

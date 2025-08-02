@@ -19,6 +19,9 @@ Route::controller(domicileController::class)->group(function () {
     Route::get('/domicile/noc', 'show_noc')->name('noc.show');
     Route::get('/domicile/noc/create', 'create_noc')->name('noc.create');
     Route::post('/domicile/noc/store', 'store_noc')->name('noc.store');
+    Route::get('/domicile/create', 'create_new')->name('domicile.create');
+    Route::post('/domicile/store', 'store_new')->name('domicile.store');
+    Route::get('/domicile/show', 'show_domicile')->name('domicile.show');
 
     });
 // Route::get('/dashboard', function () {

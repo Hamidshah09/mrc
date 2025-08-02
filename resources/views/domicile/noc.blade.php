@@ -10,9 +10,7 @@
   @endif  
   <form action="{{route('noc.store')}}" method="POST" class="container mx-auto font-sans">
     @csrf
-    
     <div class="md:p-10 relative">
-
       <h3 class="text-2xl font-semibold text-center text-gray-800 mb-8 relative">
         NOC to Other Districts
         <span class="block w-16 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto mt-2 rounded"></span>

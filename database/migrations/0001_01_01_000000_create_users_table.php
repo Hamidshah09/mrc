@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('dob');
             $table->string('email')->unique();
             $table->enum ('status', ['Active', 'Not active'])->default('Not active');
-            $table->enum('role', ['admin', 'registrar', 'operator'])->default('operator');
+            $table->enum('role', ['admin', 'registrar', 'operator', 'domicile'])->default('operator');
             $table->string('password');
             $table->string('mobile', length:11)->unique();
             $table->string('profile_image')->nullable();

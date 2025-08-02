@@ -25,7 +25,7 @@ class domicileController extends Controller
     public function store_new(Request $request)
     {
         $passcode = Passcode::where([
-                ['code', '=', $request->code],
+                ['code', '=', $request->passcode],
                 ['valid_on', '=', today()],
                 ['used', '=', false]
             ])->first();

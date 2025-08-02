@@ -1,14 +1,15 @@
 <x-guest-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Apply for New Domicile') }}
         </h2>
     </x-slot>
 
     <div class="py-6">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-4 text-gray-900 dark:text-gray-100">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-4 text-gray-900 d">
+                    <h2 class="text-2xl font-bold text-gray-800 text-center w-full">New Domicile</h2>
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -54,7 +55,7 @@
 
                             <div class="form-control">
                                 <x-input-label for="gender" :value="__('Gender')" />
-                                <select name="gender_id" id="gender_id" class="w-full border-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('gender_id')" required autofocus autocomplete="gender">
+                                <select name="gender_id" id="gender_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('gender_id')" required autofocus autocomplete="gender">
                                         <option value="">Select Gender</option>
                                         <option selected value="1">Male </option>
                                         <option value="2">Female</option>
@@ -71,7 +72,7 @@
 
                             <div class="form-control">
                                 <x-input-label for="marital_status" :value="__('Marital Status')" />
-                                <select name="marital_status_id" id="marital_status_id" class="w-full border-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('marital_status_id')" required autofocus autocomplete="marital_status">
+                                <select name="marital_status_id" id="marital_status_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('marital_status_id')" required autofocus autocomplete="marital_status">
                                     
                                     <option value="">Select Marital Status</option>
                                     <option selected value="1">Single</option>
@@ -90,7 +91,7 @@
                             </div>
                             <div class="form-control">
                                 <x-input-label for="qualification_id" :value="__('Qualification')" />
-                                <select name="qualification_id" id="qualification_id" class="w-full border-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('qualification_id')" autofocus autocomplete="qualification_id">
+                                <select name="qualification_id" id="qualification_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('qualification_id')" autofocus autocomplete="qualification_id">
                                     <option value="">Select Qualification</option>
                                     <option value="1">Primary</option>
                                     <option value="2">Middle</option>
@@ -107,7 +108,7 @@
                             </div>
                             <div class="form-control">
                                 <x-input-label for="occupation_id" :value="__('Ocupation')" />
-                                <select name="occupation_id" id="occupation_id" class="w-full border-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('occupation_id')" autofocus autocomplete="occupation_id">
+                                <select name="occupation_id" id="occupation_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('occupation_id')" autofocus autocomplete="occupation_id">
                                         <option value="">Select Occupation</option>
                                         <option value="1">Government Employee</option>
                                         <option value="2">Non Government Employee</option>
@@ -131,7 +132,7 @@
                             </div>
                             <div class="form-control">
                                 <x-input-label for="temp_province_id" :value="__('Present Province')" />
-                                <select name="temporaryAddress_province_id" id="temp_province_id" class="w-full border-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('temporaryAddress[province_id]')" required autofocus autocomplete="temp_province_id">
+                                <select name="temporaryAddress_province_id" id="temp_province_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('temporaryAddress[province_id]')" required autofocus autocomplete="temp_province_id">
                                     <option value="" selected="" disabled="">Select Province</option>
                                     <option value="694"> Azad Jammu and Kashmir</option>
                                     <option value="491"> Balochistan</option>
@@ -145,7 +146,7 @@
                             </div>
                             <div class="form-control">
                                 <x-input-label for="temp_district_id" :value="__('Present District')" />
-                                <select name="temporaryAddress_district_id" id="temp_district_id" class="w-full border-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('temporaryAddress_district_id')" required autofocus autocomplete="temp_district_id">
+                                <select name="temporaryAddress_district_id" id="temp_district_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('temporaryAddress_district_id')" required autofocus autocomplete="temp_district_id">
                                     <option value="" selected="" disabled="">Select District</option>
                                     @foreach ($districts as $district)
                                         <option value="{{$district->ID}}" >{{$district->Dis_Name}}</option>
@@ -155,7 +156,7 @@
                             </div>
                             <div class="form-control">
                                 <x-input-label for="temp_tehsil_id" :value="__('Present Tehsil')" />
-                                <select name="temporaryAddress_tehsil_id" id="temp_tehsil_id" class="w-full border-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('temporaryAddress_tehsil_id')" required autofocus autocomplete="temp_tehsil_id">
+                                <select name="temporaryAddress_tehsil_id" id="temp_tehsil_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('temporaryAddress_tehsil_id')" required autofocus autocomplete="temp_tehsil_id">
                                     <option value="" selected="" disabled="">Select Tehsil</option>
                                     @foreach ($tehsils as $tehsil)
                                         <option value="{{$tehsil->ID}}" >{{$tehsil->Teh_name}}</option>
@@ -177,7 +178,7 @@
                         
                             <div class="form-control">
                                 <x-input-label for="permanent_province_id" :value="__('Permanent Province')" />
-                                <select name="permanentAddress_province_id" id="permanent_province_id" class="w-full border-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('permanentAddress_province_id')" required autofocus autocomplete="permanent_province_id">
+                                <select name="permanentAddress_province_id" id="permanent_province_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('permanentAddress_province_id')" required autofocus autocomplete="permanent_province_id">
                                     <option value="" selected="" disabled="">Select Province</option>
                                     <option value="694"> Azad Jammu and Kashmir</option>
                                     <option value="491"> Balochistan</option>
@@ -191,7 +192,7 @@
                             </div>
                             <div class="form-control">
                                 <x-input-label for="permanent_district_id" :value="__('Permanent District')" />
-                                <select name="permanentAddress_district_id" id="permanent_district_id" class="w-full border-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('permanentAddress_district_id')" required autofocus autocomplete="permanent_district_id">
+                                <select name="permanentAddress_district_id" id="permanent_district_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('permanentAddress_district_id')" required autofocus autocomplete="permanent_district_id">
                                     <option value="" selected="" disabled="">Select District</option>
                                     @foreach ($districts as $district)
                                         <option value="{{$district->ID}}" >{{$district->Dis_Name}}</option>
@@ -201,7 +202,7 @@
                             </div>
                             <div class="form-control">
                                 <x-input-label for="permanent_tehsil_id" :value="__('Permanent Tehsil')" />
-                                <select name="permanentAddress_tehsil_id" id="permanent_tehsil_id" class="w-full border-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" :value="old('permanentAddress_tehsil_id')" required autofocus autocomplete="permanent_tehsil_id">
+                                <select name="permanentAddress_tehsil_id" id="permanent_tehsil_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('permanentAddress_tehsil_id')" required autofocus autocomplete="permanent_tehsil_id">
                                     <option value="" selected="" disabled="">Select Tehsil</option>
                                     @foreach ($tehsils as $tehsil)
                                         <option value="{{$tehsil->ID}}" >{{$tehsil->Teh_name}}</option>
@@ -222,7 +223,7 @@
                             </div>
                             <div class="form-control">
                                 <x-input-label for="passcode" :value="__('Passcode')" />
-                                <x-text-input id="passcode" class="block mt-1 w-full p-2" type="text" max="11" name="passcode" :value="old('passcode')" min="11" max=11 autofocus autocomplete="passcode" />
+                                <x-text-input id="passcode" class="block mt-1 w-full p-2" type="text" name="passcode" :value="old('passcode', $passcode->code)" min="6" max=6 autofocus autocomplete="passcode" />
                                 <x-input-error :messages="$errors->get('passcode')" class="mt-2" />
                             </div>
                         </div>

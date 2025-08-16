@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code', 6)->unique();  // 6-digit passcode
             $table->date('valid_on');            // Date it's valid for
-            $table->boolean('used')->default(false);
+            $table->enum('used', ['Yes', 'No', 'In Proccess'])->default('No');
             $table->foreignId('submitted_by')->nullable()->constrained('nocapplicants');
             $table->timestamps();
         });

@@ -38,7 +38,7 @@ class AdminController extends Controller
     public function report(Request $request)
     {
         $date = Carbon::parse($request->query('date'));
-        $passcodes = Passcode::whereDate('valid_on', $date)->where('used', false)->get();
+        $passcodes = Passcode::whereDate('valid_on', $date)->where('used', 'No')->get();
 
         return view('domicile.passcodereport', compact('passcodes', 'date'));
     }

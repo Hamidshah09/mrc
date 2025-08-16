@@ -8,6 +8,7 @@ class DomicileApplicants extends Model
 {
     protected $guarded=[];
     public $table = 'domicileapplicants';
+    protected $casts = ['date_of_arrival' => 'date', 'date_of_birth'=>'date'];
     public function children(){
         return $this->hasMany(children::class, 'applicant_id', 'id');
     }

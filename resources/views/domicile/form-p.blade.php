@@ -35,7 +35,7 @@
       }
 
       .paragraph {
-        margin-bottom: 15px;
+        margin-bottom: 10px;
       }
 
       /* Bold and underline for key particulars */
@@ -76,12 +76,12 @@
       <div class="paragraph justified">
         <p>
           I, <span>{{$applicant->name}}</span> S/D/W/O <span>{{$applicant->fathername}}</span>,
-          Date of Birth: <span>{{$applicant->date_of_birth}}</span>, Present Address:
+          Date of Birth: <span>{{$applicant->date_of_birth->format('d-m-Y')}}</span>, Present Address:
           <span>{{$applicant->temporaryAddress}}</span>, Permanent Address:
           <span>{{$applicant->permanenAddress}}</span>, have arrived in Capital Islamabad,
           Tehsil Islamabad, District Islamabad, Rev/Admin Federal Area in
-          Pakistan on <span>{{$applicant->date_of_arrival}}</span>. I have been continuously residing
-          in Pakistan since <span>{{$applicant->date_of_arrival}}</span>, immediately preceding this declaration
+          Pakistan on <span>{{$applicant->date_of_arrival->format('d-m-Y')}}</span>. I have been continuously residing
+          in Pakistan since <span>{{$applicant->date_of_arrival->format('d-m-Y')}}</span>, immediately preceding this declaration
           and I hereby express my intention to abandon my domicile of origin and
           take up my placed habitation in Pakistan during the remainder of my
           life.
@@ -102,9 +102,13 @@
         <p>Marital Status: <span>{{$applicant->marital_statuses->marital_status}}</span></p>
         <p>Name of Wife/Husband: <span>{{$applicant->spousename}}</span></p>
         <p>Name of Children & their ages including date of birth:</p>
-        @foreach ($applicant->childern as $child)
-          <span style="display: inline-block">{{$child->$child_name}}</span><span style="width: 10px;display:inline-block"></span><span style="display: inline-block">{{$child->$child_name}}</span>
-        @endforeach
+        
+            @foreach ($applicant->children as $child)
+              <div>  
+                <span style="">{{$child->child_name}}</span><span style="width: 30px;margin-right:10px;margin-left:10px"></span><span>{{$child->date_of_birth->format('d-m-Y')}}</span>
+              </div>
+            @endforeach    
+        
         <p>Trade & Occupation: <span>{{$applicant->occupations->occupation}}</span></p>
       </div>
 

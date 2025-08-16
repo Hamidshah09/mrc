@@ -27,7 +27,7 @@
         </div>
         <div>
             <label class="block font-medium text-gray-700 mb-2">Permenant District</label>
-            <input type="text" name="district" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+            <input type="text" name="district" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" max="25"/>
         </div>
 
         <div class="grid md:grid-cols-2 gap-4" id="officialFields">
@@ -99,11 +99,11 @@
                       </div>
                       <div class="flex flex-col">
                         <label class="font-semibold text-gray-700">CNIC</label>
-                        <input type="text" id="cnic" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantCnic[${applicantCounter - 1}]" />
+                        <input type="text" id="cnic" min="13" max="13" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantCnic[${applicantCounter - 1}]" />
                       </div>
                       <div class="flex flex-col">
                         <label class="font-semibold text-gray-700">Name</label>
-                        <input type="text" id="name" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantName[${applicantCounter - 1}]"  />
+                        <input type="text" id="name" max="50" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantName[${applicantCounter - 1}]"  />
                       </div>
                       <div class="flex flex-col">
                         <label class="font-semibold text-gray-700">Relation</label>
@@ -115,7 +115,7 @@
                       </div>
                       <div class="flex flex-col">
                         <label class="font-semibold text-gray-700">Father Name</label>
-                        <input type="text" id="father" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantFather[${applicantCounter - 1}]"  />
+                        <input type="text" id="father" max="50" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantFather[${applicantCounter - 1}]"  />
                       </div>
                     </div>
                   </td>

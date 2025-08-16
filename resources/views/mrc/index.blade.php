@@ -116,11 +116,11 @@
                     <tbody>
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700 w-1/3">Groom CNIC:</td>
-                            <td class="p-3 text-gray-900">{{ $mrc->grrom_cnic }}</td>
+                            <td class="p-3 text-gray-900">{{ $mrc->groom_cnic }}</td>
                         </tr>
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700 w-1/3">Groom:</td>
-                            <td class="p-3 text-gray-900">{{ $mrc->grrom_name }}</td>
+                            <td class="p-3 text-gray-900">{{ $mrc->groom_name }}</td>
                         </tr>
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700">Bride CNIC:</td>

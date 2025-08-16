@@ -1,9 +1,16 @@
+     
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
-
+    
+   
     RewriteEngine On
+
+    #Allow ACME Challaneg through without rewriting to index.php
+    RewriteCond %{REQUEST_URI} ^/\.well-known/acme-challenge/ [NC]
+    RewriteRule ^ - [L]
+
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

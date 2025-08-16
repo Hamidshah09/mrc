@@ -16,10 +16,13 @@ class domicileController extends Controller
     public function create_new(){
         $tehsils = tehsils::orderBy('Teh_name')->get();
         $districts = districts::orderBy('Dis_Name')->get();
-        $passcode = Passcode::whereDate('valid_on', today())->where('used', false)->first();
+        $passcode = Passcode::whereDate('valid_on', today())->where('used', 'No')->first();
         if (!$passcode){
             return view('domicile.nocode');
         }
+        $passcode->update([
+        'used' => 'In Process',
+    ]);
         return view('domicile.createnew',  compact('tehsils', 'districts', 'passcode'));
     }
     public function store_new(Request $request)
@@ -27,7 +30,7 @@ class domicileController extends Controller
         $passcode = Passcode::where([
                 ['code', '=', $request->passcode],
                 ['valid_on', '=', today()],
-                ['used', '=', false]
+                ['used', '=', 'In Process']
             ])->first();
 
         if (!$passcode) {
@@ -73,15 +76,15 @@ class domicileController extends Controller
     $domicile = new DomicileApplicants();
 
     // Personal Info
-    $domicile->cnic = $validated['cnic'];
-    $domicile->name = $validated['name'];
-    $domicile->fathername = $validated['fathername'];
-    $domicile->spousename = $request->input('spousename'); // nullable
+    $domicile->cnic = strtoupper($validated['cnic']);
+    $domicile->name = strtoupper($validated['name']);
+    $domicile->fathername = strtoupper($validated['fathername']);
+    $domicile->spousename = strtoupper($validated['spousename']); // nullable
     $domicile->date_of_birth = $validated['date_of_birth'];
     $domicile->gender_id = $validated['gender_id'];
     $domicile->place_of_birth = $validated['place_of_birth'];
     $domicile->marital_status_id = $validated['marital_status_id'];
-    $domicile->religion = $validated['religion'];
+    $domicile->religion = strtoupper($validated['religion']);
     $domicile->qualification_id = $request->input('qualification_id'); // nullable
     $domicile->occupation_id = $request->input('occupation_id'); // nullable
     $domicile->contact = $request->input('contact');
@@ -91,13 +94,13 @@ class domicileController extends Controller
     $domicile->temporaryAddress_province_id = $validated['temporaryAddress_province_id'];
     $domicile->temporaryAddress_district_id = $validated['temporaryAddress_district_id'];
     $domicile->temporaryAddress_tehsil_id = $validated['temporaryAddress_tehsil_id'];
-    $domicile->temporaryAddress = $validated['temporaryAddress'];
+    $domicile->temporaryAddress = strtoupper($validated['temporaryAddress']);
 
     // Permanent Address
     $domicile->permanentAddress_province_id = $validated['permanentAddress_province_id'];
     $domicile->permanentAddress_district_id = $validated['permanentAddress_district_id'];
     $domicile->permanentAddress_tehsil_id = $validated['permanentAddress_tehsil_id'];
-    $domicile->permanentAddress = $validated['permanentAddress'];
+    $domicile->permanentAddress = strtoupper($validated['permanentAddress']);
 
     // Children Checkbox
     // $domicile->has_children = $request->has('children_checkbox') ? true : false;
@@ -119,7 +122,7 @@ class domicileController extends Controller
     }
     
     $passcode->update([
-        'used' => true,
+        'used' => 'Yes',
         'submitted_by' => $domicile->id
     ]);
 
@@ -127,10 +130,13 @@ class domicileController extends Controller
 }
 
     public function create_noc(){
-        $passcode = Passcode::whereDate('valid_on', today())->where('used', false)->first();
+        $passcode = Passcode::whereDate('valid_on', today())->where('used', 'No')->first();
         if (!$passcode){
             return view('domicile.nocode');
         }
+        $passcode->update([
+        'used' => 'In Process',
+        ]);
         return view('domicile/noc', compact('passcode'));
     }
     public function show_noc(Request $request)
@@ -198,7 +204,7 @@ class domicileController extends Controller
         $passcode = Passcode::where([
             ['code', '=', $request->code],
             ['valid_on', '=', today()],
-            ['used', '=', false]
+            ['used', '=', 'In Process']
         ])->first();
 
         if (!$passcode) {
@@ -247,7 +253,7 @@ class domicileController extends Controller
 
     // Mark as used and tie to applicant
     $passcode->update([
-        'used' => true,
+        'used' => 'Yes',
         'submitted_by' => $Nocapplicant->id
     ]);
 

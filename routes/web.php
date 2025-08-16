@@ -22,6 +22,7 @@ Route::controller(domicileController::class)->group(function () {
     Route::get('/domicile/create', 'create_new')->name('domicile.create');
     Route::post('/domicile/store', 'store_new')->name('domicile.store');
     Route::get('/domicile/show', 'show_domicile')->name('domicile.show');
+    Route::get('/domicile/form-p/{id}', 'form_p')->name('domicile.form_p');
 
     });
 // Route::get('/dashboard', function () {

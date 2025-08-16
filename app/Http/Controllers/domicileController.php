@@ -313,4 +313,9 @@ class domicileController extends Controller
                 'data' => $applicants
             ]);
     }
+    public function form_p($id){
+        $applicant = DomicileApplicants::with('children', 'occupations', 'marital_statuses')->findOrFail($id);
+        // return $applicant;
+        return view('domicile.form-p', compact('applicant'));
+    }
 }

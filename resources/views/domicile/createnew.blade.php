@@ -25,7 +25,7 @@
                             
                             <div class="form-control">
                                 <x-input-label for="cnic" :value="__('CNIC')" />
-                                <x-text-input id="cnic" class="block mt-1 w-full p-2" type="text" name="cnic" :value="old('cnic')" required autofocus autocomplete="cnic" />
+                                <x-text-input id="cnic" class="block mt-1 w-full p-2" type="text" name="cnic" maxlength="13" :value="old('cnic')" required autofocus autocomplete="cnic" />
                                 <x-input-error :messages="$errors->get('cnic')" class="mt-2" />
                             </div>
         
@@ -324,6 +324,19 @@
             } 
         });
             
+        document.getElementById('cnic').addEventListener('blur', validate13DigitNumber);
+        function validate13DigitNumber() {
+        const input = document.getElementById('cnic').value;
 
+        // Regular expression: exactly 13 digits
+        const regex = /^\d{13}$/;
+
+        if (!regex.test(input)) {
+            alert("Please enter exactly 13 digits (numbers only).");
+            return false; // Prevent form submission
+        } else {
+            return ture;
+        }
+        }
     </script>
 </x-guest-layout>

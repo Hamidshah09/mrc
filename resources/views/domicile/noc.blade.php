@@ -99,7 +99,7 @@
                       </div>
                       <div class="flex flex-col">
                         <label class="font-semibold text-gray-700">CNIC</label>
-                        <input type="text" id="cnic" min="13" max="13" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantCnic[${applicantCounter - 1}]" />
+                        <input type="text" id="cnic" maxlength="13" minlength="13" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="applicantCnic[${applicantCounter - 1}]" />
                       </div>
                       <div class="flex flex-col">
                         <label class="font-semibold text-gray-700">Name</label>
@@ -130,6 +130,20 @@
       if (tbody.lastElementChild) {
         tbody.removeChild(tbody.lastElementChild);
         applicantCounter--;
+      }
+    }
+    document.getElementById('cnic').addEventListener('blur', validate13DigitNumber);
+    function validate13DigitNumber() {
+      const input = document.getElementById('cnic').value;
+
+      // Regular expression: exactly 13 digits
+      const regex = /^\d{13}$/;
+
+      if (!regex.test(input)) {
+        alert("Please enter exactly 13 digits (numbers only).");
+        return false; // Prevent form submission
+      } else {
+        return ture;
       }
     }
   </script>

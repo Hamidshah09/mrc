@@ -12,7 +12,8 @@
       <div class="text-3xl font-bold text-indigo-600">
         {{ $id }}
       </div>
-      <p class="mt-4 text-gray-600">Please intimate this id to dealing person on counter.</p>
+      <a class="p-2 text-center text-white w-full bg-blue-400 rounded-lg block mt-2" href="{{route('domicile.edit',  ['id'   => $id,'cnic' => $cnic,])}}">Update Current Record</a>
+      <a class="p-2 text-center text-white w-full bg-blue-400 rounded-lg block mt-2" href="{{route('domicile.create')}}"> Apply another one</a>
 
     </div>
   </div>

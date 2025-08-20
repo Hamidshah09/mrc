@@ -15,12 +15,17 @@ Route::get('/inactive', function () {
     return view('auth.inactive');
 })->name('inactive');
 Route::controller(domicileController::class)->group(function () {
-    Route::get('/domicile/noc/success/{id}', 'success')->name('noc.success');    
+    Route::get('/domicile/noc/success/{id}', 'noc_success')->name('noc.success');
+    Route::get('/domicile/success/{id}/{cnic}', 'domicile_success')->name('domicile.success');        
     Route::get('/domicile/noc', 'show_noc')->name('noc.show');
     Route::get('/domicile/noc/create', 'create_noc')->name('noc.create');
     Route::post('/domicile/noc/store', 'store_noc')->name('noc.store');
+    Route::get('/domicile', 'dom_index')->name('domicile.index');
+    Route::get('/domicile/admin', 'admin_index')->name('domicile.admin');
     Route::get('/domicile/create', 'create_new')->name('domicile.create');
     Route::post('/domicile/store', 'store_new')->name('domicile.store');
+    Route::get('/domicile/edit/{id}/{cnic}', 'dom_edit')->name('domicile.edit');
+    Route::post('/domicile/update/{id}', 'dom_update')->name('domicile.update');
     Route::get('/domicile/show', 'show_domicile')->name('domicile.show');
     Route::get('/domicile/form-p/{id}', 'form_p')->name('domicile.form_p');
 

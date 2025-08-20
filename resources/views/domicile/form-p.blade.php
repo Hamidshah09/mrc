@@ -35,9 +35,11 @@
       }
 
       .paragraph {
-        margin-bottom: 10px;
+        margin-bottom: 5px;
       }
-
+      p{
+        margin: 10px;
+      }
       /* Bold and underline for key particulars */
       span {
         font-weight: bold;
@@ -46,7 +48,6 @@
 
       /* Signature section aligned right */
       .signature {
-        margin-top: 40px;
         text-align: right;
       }
 
@@ -56,6 +57,24 @@
       .justified {
         text-align: justify;
       }
+      
+    .signature-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+    }
+    .signature-row > div {
+      width: 48%; /* side by side with spacing */
+    }
+    .child-attrib{
+      margin-left: 10px;
+      padding-right:10px;
+      padding-left:10px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+</style>
+
     </style>
   </head>
   <body>
@@ -76,12 +95,12 @@
       <div class="paragraph justified">
         <p>
           I, <span>{{$applicant->name}}</span> S/D/W/O <span>{{$applicant->fathername}}</span>,
-          Date of Birth: <span>{{$applicant->date_of_birth->format('d-m-Y')}}</span>, Present Address:
+          Date of Birth: <span>{{ \Carbon\Carbon::parse($applicant->date_of_birth)->format('d-m-Y') }}</span>, Present Address:
           <span>{{$applicant->temporaryAddress}}</span>, Permanent Address:
           <span>{{$applicant->permanenAddress}}</span>, have arrived in Capital Islamabad,
           Tehsil Islamabad, District Islamabad, Rev/Admin Federal Area in
-          Pakistan on <span>{{$applicant->date_of_arrival->format('d-m-Y')}}</span>. I have been continuously residing
-          in Pakistan since <span>{{$applicant->date_of_arrival->format('d-m-Y')}}</span>, immediately preceding this declaration
+          Pakistan on <span>{{ \Carbon\Carbon::parse($applicant->date_of_arrival)->format('d-m-Y') }}</span>. I have been continuously residing
+          in Pakistan since <span>{{ \Carbon\Carbon::parse($applicant->date_of_arrival)->format('d-m-Y') }}</span>, immediately preceding this declaration
           and I hereby express my intention to abandon my domicile of origin and
           take up my placed habitation in Pakistan during the remainder of my
           life.
@@ -102,14 +121,18 @@
         <p>Marital Status: <span>{{$applicant->marital_statuses->marital_status}}</span></p>
         <p>Name of Wife/Husband: <span>{{$applicant->spousename}}</span></p>
         <p>Name of Children & their ages including date of birth:</p>
-        
-            @foreach ($applicant->children as $child)
-              <div>  
-                <span style="">{{$child->child_name}}</span><span style="width: 30px;margin-right:10px;margin-left:10px"></span><span>{{$child->date_of_birth->format('d-m-Y')}}</span>
-              </div>
-            @endforeach    
+            <table>
+              <tbody>
+                @foreach ($applicant->children as $child)
+                  <tr>  
+                    <td class="child-attrib">{{$child->child_name}}</td><td class="child-attrib">{{ \Carbon\Carbon::parse($child->date_of_birth)->format('d-m-Y') }}</td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>    
         
         <p>Trade & Occupation: <span>{{$applicant->occupations->occupation}}</span></p>
+        <p>Purpose: <span>{{$applicant->purpose}}</span></p>
       </div>
 
       <div class="paragraph">
@@ -118,11 +141,18 @@
           my knowledge and belief.
         </p>
       </div>
+      
+      <div class="signature-row">
+        <div class="">
+          <div>Date of Attestation by</div>
+          <div>notry public</div>
 
-      <div class="signature">
-        <p>Signature: ________________</p>
-        <p>CNIC: <span>{{$applicant->cnic}}</span></p>
-        <p>Contact: <span>{{$applicant->contact}}</span></p>
+        </div>
+        <div class="signature">
+          <p>Signature: ________________</p>
+          <p>CNIC: <span>{{$applicant->cnic}}</span></p>
+          <p>Contact: <span>{{$applicant->contact}}</span></p>
+        </div>
       </div>
     </div>
   </body>

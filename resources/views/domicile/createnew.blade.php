@@ -65,7 +65,7 @@
                             </div>
 
                             <div class="form-control">
-                                <x-input-label for="place_of_birth" :value="__('Place of Birth')" />
+                                <x-input-label for="place_of_birth" :value="__('City of Birth')" />
                                 <x-text-input id="place_of_birth" class="block mt-1 w-full p-2" type="text" name="place_of_birth" :value="old('place_of_birth')" max="45" required autofocus autocomplete="place_of_birth" />
                                 <x-input-error :messages="$errors->get('place_of_birth')" class="mt-2" />
                             </div>
@@ -126,7 +126,7 @@
                                 <x-input-error :messages="$errors->get('contact')" class="mt-2" />
                             </div>
                             <div class="form-control">
-                                <x-input-label for="date_of_arrival" :value="__('Date of arrival')" />
+                                <x-input-label for="date_of_arrival" :value="__('Date of arrival in Islamabad')" />
                                 <x-text-input id="date_of_arrival" class="block mt-1 w-full p-2" type="date" name="date_of_arrival" :value="old('date_of_arrival')" autofocus autocomplete="date_of_arrival" />
                                 <x-input-error :messages="$errors->get('date_of_arrival')" class="mt-2" />
                             </div>
@@ -222,7 +222,17 @@
                                 </label>
                             </div>
                             <div class="form-control">
-                                <x-input-label for="passcode" :value="__('Passcode')" />
+                                <x-input-label for="purpose" :value="__('Purpose')" />
+                                    <select name="purpose" id="purpose" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('purpose')" required autofocus autocomplete="purpose">
+                                        <option value="" selected disabled="">Select Purpose</option>
+                                        <option value="study"> Study</option>
+                                        <option value="job" >Job</option>
+                                        
+                                    </select>
+                                <x-input-error :messages="$errors->get('purpose')" class="mt-2" />
+                            </div>
+                            <div class="form-control">
+                                <x-input-label for="passcode" :value="__('Please write down this Passcode')" class="text-red-500" />
                                 <x-text-input id="passcode" class="block mt-1 w-full p-2" type="text" name="passcode" :value="old('passcode', $passcode->code)" min="6" max=6 autofocus autocomplete="passcode" />
                                 <x-input-error :messages="$errors->get('passcode')" class="mt-2" />
                             </div>

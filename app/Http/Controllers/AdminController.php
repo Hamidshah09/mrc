@@ -17,7 +17,7 @@ class AdminController extends Controller
 {
     $request->validate([
         'date' => 'required|date',
-        'count' => 'required|integer|min:1|max:100'
+        'count' => 'required|integer|min:1|max:300'
     ]);
 
     $codes = [];

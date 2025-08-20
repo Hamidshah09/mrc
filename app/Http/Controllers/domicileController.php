@@ -37,7 +37,7 @@ class domicileController extends Controller
             return back()->withErrors(['code' => 'Invalid or already used passcode.']);
         }
     $validated = $request->validate([
-        'cnic' => 'required|string|max:15',
+        'cnic' => 'required|string|max:13|min:13',
         'name' => 'required|string|max:255',
         'fathername' => 'required|string|max:255',
         'spousename' => 'nullable|string|max:255',

@@ -133,10 +133,10 @@
                             <div class="form-control">
                                 <x-input-label for="temp_province_id" :value="__('Present Province')" />
                                 <select name="temporaryAddress_province_id" id="temp_province_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('temporaryAddress[province_id]')" required autofocus autocomplete="temp_province_id">
-                                    <option value="" selected="" disabled="">Select Province</option>
+                                    <option value="" disabled="">Select Province</option>
                                     <option value="694"> Azad Jammu and Kashmir</option>
                                     <option value="491"> Balochistan</option>
-                                    <option value="663"> Federal Capital</option>
+                                    <option selected value="663"> Federal Capital</option>
                                     <option value="666"> Gilgit-Baltistan</option>
                                     <option value="1"> Khyber Pakhtunkhwa</option>
                                     <option value="167"> Punjab</option>
@@ -149,7 +149,12 @@
                                 <select name="temporaryAddress_district_id" id="temp_district_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('temporaryAddress_district_id')" required autofocus autocomplete="temp_district_id">
                                     <option value="" selected="" disabled="">Select District</option>
                                     @foreach ($districts as $district)
-                                        <option value="{{$district->ID}}" >{{$district->Dis_Name}}</option>
+                                        
+                                        @if ($district->ID==664)
+                                            <option selected value="{{$district->ID}}" >{{$district->Dis_Name}}</option>
+                                        @else    
+                                            <option value="{{$district->ID}}" >{{$district->Dis_Name}}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 <x-input-error :messages="$errors->get('temporaryAddress_district_id')" class="mt-2" />
@@ -159,7 +164,11 @@
                                 <select name="temporaryAddress_tehsil_id" id="temp_tehsil_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('temporaryAddress_tehsil_id')" required autofocus autocomplete="temp_tehsil_id">
                                     <option value="" selected="" disabled="">Select Tehsil</option>
                                     @foreach ($tehsils as $tehsil)
-                                        <option value="{{$tehsil->ID}}" >{{$tehsil->Teh_name}}</option>
+                                        @if ($tehsil->ID==665)
+                                            <option selected value="{{$tehsil->ID}}" >{{$tehsil->Teh_name}}</option>
+                                        @else
+                                            <option value="{{$tehsil->ID}}" >{{$tehsil->Teh_name}}</option>    
+                                        @endif
                                     @endforeach
                                 </select>
                                 <x-input-error :messages="$errors->get('temporaryAddress_tehsil_id')" class="mt-2" />

@@ -14,11 +14,11 @@ use Illuminate\Http\Request;
 class domicileController extends Controller
 {
     public function admin_index(){
-        $records = DomicileApplicants::select('id', 'name')->paginate(25);
+        $records = DomicileApplicants::select('id', 'name', 'passcode')->orderBy('id', 'desc')->paginate(25);
         return view('domicile.adminindex', compact('records'));
     }
     public function dom_index(){
-        $records = DomicileApplicants::select('id', 'name')->paginate(25);
+        $records = DomicileApplicants::select('id', 'name')->orderBy('id', 'desc')->paginate(25);
         return view('domicile.domicileindex', compact('records'));
     }
     public function create_new(){
@@ -34,7 +34,8 @@ class domicileController extends Controller
         return view('domicile.createnew',  compact('tehsils', 'districts', 'passcode'));
     }
     public function store_new(Request $request)
-    {
+    {   
+        
         $passcode = Passcode::where([
                 ['code', '=', $request->passcode],
                 ['valid_on', '=', today()],
@@ -45,7 +46,7 @@ class domicileController extends Controller
             return back()->withErrors(['code' => 'Invalid or already used passcode.']);
         }
     $validated = $request->validate([
-        'cnic' => 'required|string|max:13|min:13',
+        'cnic' => 'required|regex:/^[0-9]{13}$/',
         'name' => 'required|string|max:255',
         'fathername' => 'required|string|max:255',
         'spousename' => 'nullable|string|max:255',
@@ -58,7 +59,7 @@ class domicileController extends Controller
         'occupation_id' => 'nullable|integer',
         'contact' => 'nullable|string|max:15',
         'date_of_arrival' => 'nullable|date',
-        'passcode'=>'integer',
+        'passcode'=>'string|min:6|max:6',
 
         // Temporary Address
         'temporaryAddress_province_id' => 'required|integer',
@@ -307,8 +308,10 @@ class domicileController extends Controller
         }
     }
 
-    return redirect()->route('domicile.index')
-                     ->with('success', 'Record updated successfully.');
+    return redirect()->route('domicile.success', [
+                    'id'   => $domicile->id,
+                    'cnic' => $domicile->cnic,
+                ]);
     }
 
     public function create_noc(){
@@ -384,7 +387,7 @@ class domicileController extends Controller
     public function store_noc(Request $request){
         
         $passcode = Passcode::where([
-            ['code', '=', $request->code],
+            ['code', '=', (string)$request->code],
             ['valid_on', '=', today()],
             ['used', '=', 'In Process']
         ])->first();
@@ -509,7 +512,6 @@ class domicileController extends Controller
     public function form_p($id){
 
         $applicant = DomicileApplicants::with('children', 'occupations', 'marital_statuses')
-                                        ->where('id', $id)
                                         ->findOrFail($id);
         // return $applicant;
         if ($applicant){

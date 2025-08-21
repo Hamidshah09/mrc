@@ -21,7 +21,7 @@ Route::controller(domicileController::class)->group(function () {
     Route::get('/domicile/noc/create', 'create_noc')->name('noc.create');
     Route::post('/domicile/noc/store', 'store_noc')->name('noc.store');
     Route::get('/domicile', 'dom_index')->name('domicile.index');
-    Route::get('/domicile/admin', 'admin_index')->name('domicile.admin');
+    
     Route::get('/domicile/create', 'create_new')->name('domicile.create');
     Route::post('/domicile/store', 'store_new')->name('domicile.store');
     Route::get('/domicile/edit/{id}/{cnic}', 'dom_edit')->name('domicile.edit');
@@ -35,6 +35,8 @@ Route::controller(domicileController::class)->group(function () {
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/domicile/admin', [domicileController::class, 'admin_index'])->name('domicile.admin');
+    Route::get('/domicile/form-p/{id}', [domicileController::class,'form_p'])->name('domicile.form_p');
     Route::get('/admin/generate-passcodes/create', [AdminController::class, 'create'])->name('Passcode.create');
     Route::post('/admin/generate-passcodes/store', [AdminController::class, 'store'])->name('Passcode.store');
     Route::get('/admin/passcodes/gen-report', [AdminController::class, 'gen_report'])->name('Passcodes.gen_report');

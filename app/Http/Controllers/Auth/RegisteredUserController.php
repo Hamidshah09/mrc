@@ -133,7 +133,7 @@ class RegisteredUserController extends Controller
             'dob'            => 'required|date',
             'email'          => 'required|email|unique:users,email,' . $user->id,
             'mobile'         => 'required|string|size:11|unique:users,mobile,' . $user->id,
-            'license_number' => 'required|string,' . $user->id,
+            'license_number' => 'required|string',
             'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status'       => 'string|in:Active,Not active',
             'role'         => 'string|in:registrar,admin,operator', // Add this

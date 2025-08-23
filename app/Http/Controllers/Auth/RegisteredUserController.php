@@ -104,7 +104,7 @@ class RegisteredUserController extends Controller
     ]);
 
     // Step 4: Fire Registered event and log in the user
-    event(new Registered($user));
+    // event(new Registered($user));
 
     if (Auth::check()) {
         return redirect()->route('dashboard')->with('success', 'Registration successful. Welcome!');
@@ -133,7 +133,7 @@ class RegisteredUserController extends Controller
             'dob'            => 'required|date',
             'email'          => 'required|email|unique:users,email,' . $user->id,
             'mobile'         => 'required|string|size:11|unique:users,mobile,' . $user->id,
-            'license_number' => 'required|string,' . $user->id,
+            'license_number' => 'required|string',
             'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status'       => 'string|in:Active,Not active',
             'role'         => 'string|in:registrar,admin,operator', // Add this

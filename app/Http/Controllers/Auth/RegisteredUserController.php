@@ -104,7 +104,7 @@ class RegisteredUserController extends Controller
     ]);
 
     // Step 4: Fire Registered event and log in the user
-    event(new Registered($user));
+    // event(new Registered($user));
 
     if (Auth::check()) {
         return redirect()->route('dashboard')->with('success', 'Registration successful. Welcome!');

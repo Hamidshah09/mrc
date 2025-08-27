@@ -21,6 +21,8 @@ Route::controller(domicileController::class)->group(function () {
     Route::get('/domicile/noc/create', 'create_noc')->name('noc.create');
     Route::post('/domicile/noc/store', 'store_noc')->name('noc.store');
     Route::get('/domicile', 'dom_index')->name('domicile.index');
+    Route::get('/domicile/tehsils', 'dom_tehsils')->name('domicile.tehsils');
+    Route::get('/domicile/districts', 'dom_districts')->name('domicile.districts');
     
     Route::get('/domicile/create', 'create_new')->name('domicile.create');
     Route::post('/domicile/store', 'store_new')->name('domicile.store');

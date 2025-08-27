@@ -521,4 +521,12 @@ class domicileController extends Controller
         }
         
     }
+    public function dom_tehsils(){
+        $tehsils = tehsils::all();
+        return $tehsils;
+    }
+    public function dom_districts(){
+        $districts = districts::all();
+        return $districts;
+    }
 }

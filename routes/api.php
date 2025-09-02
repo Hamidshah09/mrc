@@ -12,5 +12,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/nitbuser/{id}', [IdpController::class, 'get_nitbuser']); 
     Route::post('/nitbuser/store', [IdpController::class, 'store_nitbuser']);   // Example GET route
     Route::post('/users/update-password', [IdpController::class, 'update_password']);
-    Route::post('/idp/store', [IdpController::class, 'store']); 
+    Route::post('/idp/store', [IdpController::class, 'store']);
+    Route::post('/idp-history/store', [IdpController::class, 'idp_his_store']); 
 });

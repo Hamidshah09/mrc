@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\domicileController;
+use App\Http\Controllers\idpController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MrcController;
 use App\Http\Controllers\ProfileController;
@@ -14,6 +15,12 @@ Route::get('/', function () {
 Route::get('/inactive', function () {
     return view('auth.inactive');
 })->name('inactive');
+Route::controller(idpController::class)->group(function () {
+    Route::get('/idp/create', 'create')->name('idp.create');
+    Route::post('/idp/store', 'store')->name('idp.store');
+    Route::get('/idp/edit/{id}/{cnic}', 'edit')->name('idp.edit');
+    Route::post('/idp/update/{id}', 'update')->name('idp.update');
+});
 Route::controller(domicileController::class)->group(function () {
     Route::get('/domicile/noc/success/{id}', 'noc_success')->name('noc.success');
     Route::get('/domicile/success/{id}/{cnic}', 'domicile_success')->name('domicile.success');        
@@ -30,6 +37,7 @@ Route::controller(domicileController::class)->group(function () {
     Route::post('/domicile/update/{id}', 'dom_update')->name('domicile.update');
     Route::get('/domicile/show', 'show_domicile')->name('domicile.show');
     Route::get('/domicile/form-p/{id}', 'form_p')->name('domicile.form_p');
+
 
     });
 // Route::get('/dashboard', function () {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 
 use App\Models\Idp;
+use App\Models\IdpHistory;
 use App\Models\IdpUser;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -40,6 +41,7 @@ class IdpController extends Controller
     }
     public function store(Request $request)
     {
+        
         $validated = $request->validate([
             'nitb_id' => 'required|integer',
             'first_name' => 'required|string|max:255',
@@ -125,6 +127,22 @@ class IdpController extends Controller
 
         return response()->json([
             'message' => 'Password updated successfully.'
+        ]);
+    }
+    public function idp_his_store(Request $request){
+        $validated = $request->validate([
+            'nitb_id' => 'required|integer',
+            'cnic'=>'required|string|min:13|max:13',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'father_name' => 'nullable|string|max:255',
+            'user_id'=>'required|integer'
+        ]);
+        $idphis = IdpHistory::create($validated);
+        return response()->json([
+            'success' => true,
+            'message' => 'Record created successfully',
+            'data' => $idphis,
         ]);
     }
 }

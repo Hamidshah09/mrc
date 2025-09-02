@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('idps', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('nitb_id');
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('father_name')->nullable();

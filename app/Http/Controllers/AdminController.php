@@ -43,6 +43,10 @@ class AdminController extends Controller
         return view('domicile.passcodereport', compact('passcodes', 'date'));
     }
 
+    public function downloads(){
+        return view('downloads.download');
+    }
+
 
 }
 

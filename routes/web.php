@@ -10,8 +10,29 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+    // return redirect()->route('dashboard');
+    return view('welcome');
 });
+
+Route::get('/mrc/info', function(){
+            return view('mrc.info');
+        })->name('mrc.info');
+Route::get('/mrc/divorce-info', function(){
+            return view('mrc.divorce-info');
+        })->name('drc.info');        
+
+Route::get('/idp/info', function(){
+            return view('idp.info');
+        })->name('idp.info');
+Route::get('/arms/info', function(){
+            return view('arms.info');
+        })->name('arms.info');
+Route::get('/birth/info', function(){
+            return view('birth.info');
+        })->name('birth.info');
+
+Route::post('/mrc/check', [MrcController::class, 'check'])->name('mrc.check');
+Route::post('/domicile/check', [domicileController::class, 'apiCheck'])->name('domicile.check');
 Route::get('/inactive', function () {
     return view('auth.inactive');
 })->name('inactive');
@@ -20,6 +41,7 @@ Route::controller(idpController::class)->group(function () {
     Route::post('/idp/store', 'store')->name('idp.store');
     Route::get('/idp/edit/{id}/{cnic}', 'edit')->name('idp.edit');
     Route::post('/idp/update/{id}', 'update')->name('idp.update');
+    Route::get('/idp/success/{id}/{cnic}', 'success')->name('idp.success');
 });
 Route::controller(domicileController::class)->group(function () {
     Route::get('/domicile/noc/success/{id}', 'noc_success')->name('noc.success');
@@ -31,6 +53,9 @@ Route::controller(domicileController::class)->group(function () {
     Route::get('/domicile/tehsils', 'dom_tehsils')->name('domicile.tehsils');
     Route::get('/domicile/districts', 'dom_districts')->name('domicile.districts');
     
+    Route::get('/domicile/info', function(){
+        return view('domicile.info');
+    })->name('domicile.info');
     Route::get('/domicile/create', 'create_new')->name('domicile.create');
     Route::post('/domicile/store', 'store_new')->name('domicile.store');
     Route::get('/domicile/edit/{id}/{cnic}', 'dom_edit')->name('domicile.edit');
@@ -51,6 +76,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/generate-passcodes/store', [AdminController::class, 'store'])->name('Passcode.store');
     Route::get('/admin/passcodes/gen-report', [AdminController::class, 'gen_report'])->name('Passcodes.gen_report');
     Route::post('/admin/passcodes/report', [AdminController::class, 'report'])->name('Passcodes.report');
+    Route::get('/admin/downloads', [AdminController::class, 'downloads'])->name('downloads');
     
     Route::get('/dashboard', [MrcController::class, 'index'])->name('dashboard');
     Route::post('/mrc/store', [MrcController::class, 'store'])->name('mrc.store');
@@ -59,6 +85,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/mrc/{id}', [MrcController::class, 'update'])->name('mrc.update');
     Route::get('/mrc/{id}', [MrcController::class, 'show'])->name('mrc.show');
     Route::put('/mrc/verify/{id}', [MrcController::class, 'verify'])->name('mrc.verify')->middleware('admin');
+    Route::get('/mrc/file/upload', [MrcController::class, 'upload_'])->name('mrc.upload');
+    Route::post('/mrc/import', [MrcController::class, 'import'])->name('mrc.import');
+    
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

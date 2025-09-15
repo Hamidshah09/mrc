@@ -9,7 +9,7 @@
       <p class="text-lg font-medium text-gray-700 mb-2">
         No Passcode
       </p>
-      <p class="mt-4 text-gray-600">Please contact concerned counter and inform him to generate passcode</p>
+      <p class="mt-4 text-gray-600">This service is available only during office hours. During office hours if no passcode is available then please contact concerned counter and inform him to generate passcode for you.</p>
 
     </div>
   </div>

@@ -11,11 +11,13 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
+                @if (auth()->user()->role== 'registrar' or auth()->user()->role== 'operator' or auth()->user()->role== 'verifier' or auth()->user()->role== 'admin')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    </div>
+                @endif
                 @if (auth()->user()->role== 'admin')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
@@ -23,7 +25,7 @@
                         </x-nav-link>
                     </div>
                 @endif
-                @if (auth()->user()->role== 'admin')
+                @if (auth()->user()->role== 'admin' or auth()->user()->role== 'domicile')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('Passcode.create')" :active="request()->routeIs('Passcode.create')">
                             {{ __('Generate Passcode') }}
@@ -39,6 +41,17 @@
                             {{ __('Form P') }}
                         </x-nav-link>
                     </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('downloads')" :active="request()->routeIs('downloads')">
+                            {{ __('Downloads') }}
+                        </x-nav-link>
+                    </div>
+                @elseif (auth()->user()->role== 'idp')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('downloads')" :active="request()->routeIs('downloads')">
+                            {{ __('Downloads') }}
+                        </x-nav-link>
+                    </div>
                 @endif
 
             </div>
@@ -52,8 +65,6 @@
                             <img src="{{ asset('storage/' . Auth::user()->profile_image) ?? asset('images/default-avatar.png') }}"
                                 alt=""
                                 class="h-8 w-8 rounded-full object-cover" />
-
-
 
                             <svg class="ms-2 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"

@@ -94,19 +94,13 @@
                 <div>
                     <x-input-label for="role" :value="__('Role')" />
                     <select name="role" id="role" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full mt-1">
-                        @if ($user->role === 'admin')
-                            <option value="admin" selected>Admin</option>
-                            <option value="registrar">Registrar</option>
-                            <option value="operator">Operator</option>
-                        @elseif ($user->role === 'registrar')
-                            <option value="admin">Admin</option>
-                            <option value="registrar" selected>Registrar</option>
-                            <option value="operator">Operator</option>
-                        @elseif ($user->role === 'operator')
-                            <<option value="admin">Admin</option>
-                            <option value="registrar">Registrar</option>
-                            <option value="operator" selected>Operator</option>
-                        @endif
+                        @for (i = 0; i < count($roles); i++)
+                            @if ($user->role === $roles[i])
+                                <option value="{{$roles[i]}}" selected>{{ufirst($roles[i])}}</option>    
+                            @else
+                                <option value="{{$roles[i]}}">{{ufirst($roles[i])}}</option>
+                            @endif
+                        @endfor
                     </select>
                     <x-input-error :messages="$errors->get('role')" class="mt-2" />
                 </div>

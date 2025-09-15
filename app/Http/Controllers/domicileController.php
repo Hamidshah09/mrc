@@ -10,6 +10,7 @@ use App\Models\NocLetters;
 use App\Models\Passcode;
 use App\Models\tehsils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class domicileController extends Controller
 {
@@ -29,8 +30,8 @@ class domicileController extends Controller
             return view('domicile.nocode');
         }
         $passcode->update([
-        'used' => 'In Process',
-    ]);
+            'used' => 'In Process',
+        ]);
         return view('domicile.createnew',  compact('tehsils', 'districts', 'passcode'));
     }
     public function store_new(Request $request)
@@ -528,5 +529,34 @@ class domicileController extends Controller
     public function dom_districts(){
         $districts = districts::all();
         return $districts;
+    }
+    public function apiCheck(Request $request)
+    {
+        session()->forget('status');
+        session()->forget('error');
+        $request->validate([
+            'cnic' => ['required', 'regex:/^[0-9]{5}-[0-9]{7}-[0-9]{1}$/']
+        ], [
+            'cnic.regex' => 'CNIC format must be like 61101-4561237-8'
+        ]);
+
+        try {
+            // Example API call (replace with your API URL)
+            $response = Http::get('http://127.0.0.1:5000/check', [
+                'cnic' => $request->cnic,
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['error'])) {
+                    return redirect()->back()->with('error', $data['error']);
+                }
+                return redirect()->back()->with('status', $data);
+            }else{
+                return redirect()->back()->with('error', $response->json()['error']);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: '.$e->getMessage());
+        }
     }
 }

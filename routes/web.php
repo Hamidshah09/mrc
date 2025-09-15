@@ -13,9 +13,24 @@ Route::get('/', function () {
     // return redirect()->route('dashboard');
     return view('welcome');
 });
+
 Route::get('/mrc/info', function(){
-        return view('mrc.info');
-    })->name('mrc.info');
+            return view('mrc.info');
+        })->name('mrc.info');
+Route::get('/mrc/divorce-info', function(){
+            return view('mrc.divorce-info');
+        })->name('drc.info');        
+
+Route::get('/idp/info', function(){
+            return view('idp.info');
+        })->name('idp.info');
+Route::get('/arms/info', function(){
+            return view('arms.info');
+        })->name('arms.info');
+Route::get('/birth/info', function(){
+            return view('birth.info');
+        })->name('birth.info');
+
 Route::post('/mrc/check', [MrcController::class, 'check'])->name('mrc.check');
 Route::post('/domicile/check', [domicileController::class, 'apiCheck'])->name('domicile.check');
 Route::get('/inactive', function () {

@@ -26,12 +26,12 @@
                         <div x-show="dropdown" @click.outside="dropdown = false"
                             x-transition
                             class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
-                            <a href="#services" class="block px-4 py-2 hover:bg-gray-100">Arms License</a>
+                            <a href="{{route('arms.info')}}" class="block px-4 py-2 hover:bg-gray-100">Arms License</a>
                             <a href="{{route('domicile.info')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile</a>
-                            <a href="#services" class="block px-4 py-2 hover:bg-gray-100">International Driving Permit</a>
-                            <a href="#services" class="block px-4 py-2 hover:bg-gray-100">Birth Certificate</a>
+                            <a href="{{route('idp.info')}}" class="block px-4 py-2 hover:bg-gray-100">International Driving Permit</a>
+                            <a href="{{route('birth.info')}}" class="block px-4 py-2 hover:bg-gray-100">Birth Certificate</a>
                             <a href="{{route('mrc.info')}}" class="block px-4 py-2 hover:bg-gray-100">Marriage Certificate</a>
-                            <a href="#services" class="block px-4 py-2 hover:bg-gray-100">Police Services</a>
+                            <a href="{{route('drc.info')}}" class="block px-4 py-2 hover:bg-gray-100">Divorce Certificate</a>
                         </div>
                     </div>
 
@@ -79,12 +79,12 @@
                         </svg>
                     </button>
                     <div x-show="dropdown" x-transition class="pl-6 space-y-1">
-                        <a href="#services" class="block px-4 py-2 hover:bg-gray-100">Arms License</a>
+                        <a href="{{route('arms.info')}}" class="block px-4 py-2 hover:bg-gray-100">Arms License</a>
                         <a href="{{route('domicile.info')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile</a>
-                        <a href="#services" class="block px-4 py-2 hover:bg-gray-100">International Driving Permit</a>
-                        <a href="#services" class="block px-4 py-2 hover:bg-gray-100">Birth Certificate</a>
+                        <a href="{{route('idp.info')}}" class="block px-4 py-2 hover:bg-gray-100">International Driving Permit</a>
+                        <a href="{{route('birth.info')}}" class="block px-4 py-2 hover:bg-gray-100">Birth Certificate</a>
                         <a href="{{route('mrc.info')}}" class="block px-4 py-2 hover:bg-gray-100">Marriage Certificate</a>
-                        <a href="#services" class="block px-4 py-2 hover:bg-gray-100">Police Services</a>
+                        <a href="{{route('drc.info')}}" class="block px-4 py-2 hover:bg-gray-100"> Divorce Certificate</a>
                     </div>
                 </div>
 

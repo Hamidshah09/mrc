@@ -56,8 +56,8 @@ class RegisteredUserController extends Controller
 }
 
      public function create(): View
-    {
-        return view('auth.register');
+    {   $roles = ['admin', 'registrar', 'mrc', 'idp', 'verifier', 'domicile', 'customer'];
+        return view('auth.register', compact('roles'));
     }
 
     /**
@@ -118,7 +118,8 @@ class RegisteredUserController extends Controller
     public function edit(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        return view('users.edit', compact('user'));
+        $roles = ['admin', 'registrar', 'mrc', 'idp', 'verifier', 'domicile', 'customer'];
+        return view('users.edit', compact('user', 'roles'));
     }
     public function update(Request $request, $id): RedirectResponse
     {

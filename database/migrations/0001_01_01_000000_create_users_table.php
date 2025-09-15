@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('mobile', length:11)->unique();
             $table->string('profile_image')->nullable();
-            $table->string('license_number', length:10)->unique();
+            $table->string('license_number', length:10)->nullable();
             $table->timestamps();
         });
 

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Mrc;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Imports\MrcImport;
+use App\Models\MrcStatus;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MrcController extends Controller
 {
@@ -128,4 +131,38 @@ class MrcController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'MRC record verified successfully.');
     }
+    public function upload_(Request $request){
+        return view('mrc.import');        
+    }
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls'
+        ]);
+
+        Excel::import(new MrcImport, $request->file('file'));
+
+        return redirect()->back()->with('success', 'File imported successfully!');
+    }
+    public function check(Request $request)
+    {
+        $request->validate([
+            'cnic' => 'required|string'
+        ]);
+
+        // Search for applicant in DB
+        $status = MrcStatus::where('applicant_cnic', $request->cnic)->first();
+
+        if ($status) {
+            return redirect()->back()->with('status', [
+                'tracking_id'      => $status->tracking_id,
+                'certificate_type' => $status->certificate_type,
+                'applicant_name'   => $status->applicant_name,
+                'status'   => $status->status,
+            ]);
+        }
+
+        return redirect()->back()->with('error', 'No record found for this CNIC.');
+    }
+
 }

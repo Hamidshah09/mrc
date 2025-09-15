@@ -26,12 +26,6 @@ return new class extends Migration
             $table->unsignedBigInteger('temporary_address_tehsil_id')->nullable();
             $table->string('temporary_address')->nullable();
 
-            // Permanent Address
-            $table->unsignedBigInteger('permanent_address_province_id')->nullable();
-            $table->unsignedBigInteger('permanent_address_district_id')->nullable();
-            $table->unsignedBigInteger('permanent_address_tehsil_id')->nullable();
-            $table->string('permanent_address')->nullable();
-
             $table->string('contact')->nullable();
 
             // Driving License
@@ -46,19 +40,7 @@ return new class extends Migration
             $table->date('passport_issue_date')->nullable();
             $table->date('passport_expiry_date')->nullable();
             $table->unsignedBigInteger('passport_type_id')->nullable();
-
-            // Application info
-            $table->unsignedBigInteger('applicant_type_id')->nullable();
-            $table->unsignedBigInteger('request_type_id')->nullable();
-            $table->unsignedBigInteger('service_type_id')->nullable();
-            $table->unsignedBigInteger('payment_type_id')->nullable();
-            $table->unsignedTinyInteger('application_type')->nullable();
-            $table->date('app_issue_date')->nullable();
-            $table->integer('driving_years')->default(1);
-            $table->date('app_expiry_date')->nullable();
-            $table->integer('amount')->nullable();
-            $table->string('remarks')->nullable();
-
+            $table->string('passcode', length:10);
             $table->timestamps();
         });
     }

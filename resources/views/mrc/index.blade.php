@@ -90,7 +90,7 @@
                                             <x-icons.pencil-square />
                                         </a>
                                     @endif
-                                    @if ($user->role === 'admin' && $mrc->status === 'pending')
+                                    @if ($user->role === 'admin' && $mrc->status === 'pending' or $user->role === 'verifier' && $mrc->status === 'pending')
                                         <a href="#" onclick="openVerifyModal({{ $mrc->id }})">
                                             <x-icons.check-circle class="text-green-500 hover:text-green-700" />
                                         </a>

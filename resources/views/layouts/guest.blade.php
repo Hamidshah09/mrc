@@ -19,8 +19,8 @@
             <div>
 
             </div>
-
-            <div class="w-[90] mt-6 px-4 md:px-8 lg:px-16 xl:px-24 py-6 bg-white shadow-md overflow-hidden rounded-lg">
+            {{-- px-4 md:px-8 lg:px-16 xl:px-24 py-6 bg-white shadow-md overflow-hidden rounded-lg --}}
+            <div class="w-full mt-6 rounded-lg">
                 {{ $slot }}
             </div>
         </div>

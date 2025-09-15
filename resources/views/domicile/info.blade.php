@@ -113,6 +113,9 @@
                         <p><strong>Receipt No:</strong> {{ session('status')['receipt_no'] }}</p>
                         <p><strong>Applicant Name:</strong> {{ session('status')['First_Name'] }}</p>
                         <p><strong>Status:</strong> {{ $current_status }}</p>
+                        @if ($current_status='Objection')
+                            <p><strong>Remarks:</strong> {{ session('status')['remarks'] }}</p>
+                        @endif
                     </div>
                 @endif
             </div>
@@ -125,8 +128,8 @@
 
             <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow mt-5">
                 <h3 class="font-semibold text-lg text-gray-900">Help Line</h3>
-                <p class="text-gray-700">051-8899221</p>
-                <p class="text-gray-700">051-8899331</p>
+                <p class="text-gray-700">051-8899622</p>
+                <p class="text-gray-700">051-8899611</p>
             </div>
         </div>
     </div>

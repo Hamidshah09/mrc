@@ -542,7 +542,7 @@ class domicileController extends Controller
 
         try {
             // Example API call (replace with your API URL)
-            $response = Http::get('http://127.0.0.1:5000/check', [
+            $response = Http::get('http://192.168.18.69:5000/check', [
                 'cnic' => $request->cnic,
             ]);
 

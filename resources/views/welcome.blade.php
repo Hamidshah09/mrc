@@ -36,7 +36,7 @@
                     <div class="w-16 h-16 mx-auto mb-4 text-white 
                                 flex items-center justify-center rounded-full 
                                 text-2xl font-bold shadow-inner">
-                        <img src="{{ asset('icons/pistol.svg') }}" alt="">
+                        <img src="{{ asset('app-icons/pistol.svg') }}" alt="">
                     </div>
                     <h3 class="text-xl font-semibold">Arms License</h3>
                 </div>
@@ -49,7 +49,7 @@
                         <div class="w-16 h-16 mx-auto mb-4 text-white 
                                     flex items-center justify-center rounded-full 
                                     text-2xl font-bold shadow-inner">
-                            <img src="{{ asset('icons/certificate.svg') }}" alt="">
+                            <img src="{{ asset('app-icons/certificate.svg') }}" alt="">
                         </div>
                         <h3 class="text-xl font-semibold">Domicile Certificate</h3>
                     </div>
@@ -63,7 +63,7 @@
                         <div class="w-16 h-16 mx-auto mb-4 text-white 
                                     flex items-center justify-center rounded-full 
                                     text-2xl font-bold shadow-inner">
-                            <img src="{{ asset('icons/certificate.svg') }}" alt="">
+                            <img src="{{ asset('app-icons/certificate.svg') }}" alt="">
                         </div>
                         <h3 class="text-xl font-semibold">International Driving Permit</h3>
                     </div>
@@ -77,7 +77,7 @@
                         <div class="w-16 h-16 mx-auto mb-4 text-white 
                                     flex items-center justify-center rounded-full 
                                     text-2xl font-bold shadow-inner">
-                            <img src="{{ asset('icons/marriage-certificate.svg') }}" alt="">
+                            <img src="{{ asset('app-icons/marriage-certificate.svg') }}" alt="">
                         </div>
                         <h3 class="text-xl font-semibold">Marriage Certificate</h3>
                     </div>
@@ -90,7 +90,7 @@
                     <div class="w-16 h-16 mx-auto mb-4 text-white 
                                 flex items-center justify-center rounded-full 
                                 text-2xl font-bold shadow-inner">
-                        <img src="{{ asset('icons/certificate.svg') }}" alt="">
+                        <img src="{{ asset('app-icons/certificate.svg') }}" alt="">
                     </div>
                     <h3 class="text-xl font-semibold">Birth Certificate</h3>
                 </div>
@@ -102,7 +102,7 @@
                     <div class="w-16 h-16 mx-auto mb-4 text-white 
                                 flex items-center justify-center rounded-full 
                                 text-2xl font-bold shadow-inner">
-                        <img src="{{ asset('icons/character-certificate.svg') }}" alt="">
+                        <img src="{{ asset('app-icons/character-certificate.svg') }}" alt="">
                     </div>
                     <h3 class="text-xl font-semibold">Police Character Certificate</h3>
                 </div>

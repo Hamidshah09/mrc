@@ -95,9 +95,13 @@
                                             <x-icons.check-circle class="text-green-500 hover:text-green-700" />
                                         </a>
                                     @endif
-                                    <a href="#">
-                                        <x-icons.document-text class="text-yellow-500 hover:text-yellow-700" />
-                                    </a>
+                                    @if ($user->role === 'admin' or $user->role === 'mrc')
+                                        @if($mrc->image)
+                                            <a href="{{ asset('storage/' . $mrc->image) }}">
+                                                <x-icons.document-text class="text-yellow-500 hover:text-yellow-700" />
+                                            </a>
+                                        @endif
+                                    @endif
                                 </div>
                             </td>
                         </tr>

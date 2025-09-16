@@ -15,7 +15,7 @@ class MrcController extends Controller
     {
         $user = Auth::user();
 
-        $query = MRC::with(['registrar', 'verifier']);
+        $query = MRC::with(['registrar', 'verifier'])->orderBy('id', 'desc');
 
         // Limit to registrar's own records if applicable
     if ($user->role === 'registrar') {
@@ -58,6 +58,7 @@ class MrcController extends Controller
     }
     public function store(Request $request)
     {
+        
         $validated = $request->validate([
             'groom_name'         => 'required|string|max:50',
             'bride_name'         => 'required|string|max:50',
@@ -73,10 +74,16 @@ class MrcController extends Controller
             'verification_date'  => 'nullable|date',
             'remarks'            => 'nullable|string|max:100',
             'register_no'        => 'nullable|string|max:20',
+            'image'              => 'required|image|mimes:jpg,jpeg,png|max:4048',
 
         ]);
         $validated['registrar_id'] = Auth::id(); // Assuming the registrar is the currently authenticated user
         $validated['status'] = 'pending';
+        
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('mrc_images', 'public');
+        }
+
         Mrc::create($validated);
 
         return redirect()->route('dashboard')->with('success', 'MRC record created successfully.');
@@ -93,6 +100,7 @@ class MrcController extends Controller
     public function update(Request $request, $id)
     {
         $mrc = Mrc::findOrFail($id);
+
         $validated = $request->validate([
             'groom_name'         => 'required|string|max:50',
             'bride_name'         => 'required|string|max:50',
@@ -106,7 +114,21 @@ class MrcController extends Controller
             'registration_date'  => 'required|date',
             'remarks'            => 'nullable|string|max:100',
             'register_no'        => 'nullable|string|max:20',
+            'image'              => 'nullable|image|mimes:jpg,jpeg,png|max:4048',
+            
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($mrc->image && Storage::disk('public')->exists($mrc->image)) {
+                Storage::disk('public')->delete($mrc->image);
+            }
+
+            // Store new image inside storage/app/public/mrc_images
+            $validated['image'] = $request->file('image')->store('mrc_images', 'public');
+        }
+
+
         $mrc->update($validated);
 
         return redirect()->route('dashboard')->with('success', 'MRC record updated successfully.');

@@ -103,12 +103,13 @@
                 <h3 class="font-semibold text-lg text-gray-900">Office timinings for Birth Certificate service.</h3>
                 <p class="text-gray-700">Mondy to Friday : 09:00 am to 05:00 pm.</p>
                 <p class="text-gray-700">Satuarday : 09:00 am to 04:00 pm.</p>
+                <p class="text-gray-700">Jumma Prayer Braek : 12:30 am to 02:30 pm.</p>
             </div>
 
             <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow mt-5">
                 <h3 class="font-semibold text-lg text-gray-900">Help Line</h3>
-                <p class="text-gray-700">051-8899221</p>
-                <p class="text-gray-700">051-8899331</p>
+                <p class="text-gray-700">051-8899611</p>
+                <p class="text-gray-700">051-8899622</p>
             </div>
         </div>
     </div>

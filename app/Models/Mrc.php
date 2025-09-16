@@ -22,7 +22,8 @@ class Mrc extends Model
         'verification_date',
         'remarks',
         'register_no',
-        'status'
+        'status',
+        'image',
     ];
     protected $table = 'mrc';
     public function registrar()

@@ -4,7 +4,7 @@
             <div class="flex justify-between h-16">
                 <!-- Logo + Title -->
                 <div class="flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center space-x-3">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-3">
                         <x-application-logo class="h-9 w-9 fill-current text-gray-800" />
                         <span class="hidden sm:block text-xl font-extrabold text-gray-900">
                             Citizen Facilitation Center

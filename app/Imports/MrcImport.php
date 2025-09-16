@@ -29,13 +29,28 @@ class MrcImport implements ToModel
     {
         try {
             if (is_numeric($value)) {
-                return Date::excelToDateTimeObject($value);
+                return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
             }
-            $clean = preg_replace('/\s?(AM|PM)$/i', '', $value);
 
-            return \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $clean);
+            $clean = trim(preg_replace('/\s?(AM|PM)$/i', '', $value));
+
+            // Try multiple formats (dashes or slashes)
+            $formats = ['d-m-Y', 'd/m/Y', 'Y-m-d', 'd-m-Y H:i:s', 'd/m/Y H:i:s'];
+
+            foreach ($formats as $format) {
+                try {
+                    return \Carbon\Carbon::createFromFormat($format, $clean);
+                } catch (\Exception $e) {
+                    continue;
+                }
+            }
+
+            // Last fallback: let Carbon guess
+            return \Carbon\Carbon::parse($clean);
+
         } catch (\Exception $e) {
             return null;
         }
     }
+
 }

@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <form action="{{ route('mrc.store') }}" method="POST" class="space-y-4">
+    <form action="{{ route('mrc.store') }}" method="POST" class="space-y-4" enctype="multipart/form-data">
         @csrf
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -79,6 +79,12 @@
             <div class="md:col-span-2">
                 <label class="block text-sm font-medium">Remarks</label>
                 <textarea name="remarks" rows="3" class="w-full border-gray-300 rounded shadow-sm">{{ old('remarks') }}</textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium">Upload Nikkahnama (page 1)</label>
+                <input type="file" required name="image" class="w-full border-gray-300 rounded shadow-sm" value="{{ old('image') }}">
+                
             </div>
         </div>
 

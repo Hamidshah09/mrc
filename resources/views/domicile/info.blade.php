@@ -27,6 +27,7 @@
                         <li class="text-justify">Date of issue of CNIC should be one year old (first cnic on age of 18 is exempted from this clause)</li>
                         <li class="text-justify">valid residence proof i.e allotment letter, fard/registry, rent agreement. (either on applicants name or his/her father, mother, uncle, grandfather, grandmother's name.)</li>
                         <li class="text-justify">if applicant has two diffent addresses mentioned on his/her cnic then an NOC/Verification from concerned district will be required. (This can be obtained by issuance of letter from CFC to concern district or applicant may apply to concerned district. )</li>
+                        <li class="text-justify"><a class="underline text-blue-800 font-semibold" href="{{asset('documents/sop_urdu.pdf')}}">Checkout SOP in Urdu</a></li>
                     </ul>
                     <h3 class="font-semibold text-lg text-gray-900 mt-2">Step Two:-</h3>
                     <p class="ml-5">Required documents:-</p>
@@ -35,7 +36,7 @@
                         <li class="text-justify">Residence Proof</li>
                         <li class="text-justify">Copy of Utility Bill</li>
                         <li class="text-justify">One Passport Size Picture</li>
-                        <li class="text-justify">Affidavit for domicile. <a class="underline text-blue-800 font-semibold" href="">check speciment here</a></li>
+                        <li class="text-justify">Affidavit for domicile. Check speciment for <a class="underline text-blue-800 font-semibold" href="{{asset('documents/MINOR AFFIDAVIT.pdf')}}" target="_blank">Minor</a> and <a class="underline text-blue-800 font-semibold" href="{{asset('documents/MAJOR AFFIDAVIT.pdf')}}" target="_blank">Major</a></li>
                     </ul>
                     <h3 class="font-semibold text-lg text-gray-900 mt-2">Step Three:-</h3>
                     <p class="ml-5">Visit CFC (first visit)</p>
@@ -124,6 +125,7 @@
                 <h3 class="font-semibold text-lg text-gray-900">Office timinings for domicile service.</h3>
                 <p class="text-gray-700">Mondy to Friday : 09:00 am to 08:00 pm.</p>
                 <p class="text-gray-700">Satuarday : 09:00 am to 04:00 pm.</p>
+                <p class="text-gray-700">Jumma Prayer Braek : 12:30 am to 02:30 pm.</p>
             </div>
 
             <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow mt-5">

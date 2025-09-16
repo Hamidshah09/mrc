@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('home') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
@@ -22,6 +22,13 @@
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                             {{ __('Users') }}
+                        </x-nav-link>
+                    </div>
+                @endif
+                @if (auth()->user()->role== 'admin' or auth()->user()->role== 'mrc')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('mrc.upload')" :active="request()->routeIs('mrc.upload')">
+                            {{ __('Upload') }}
                         </x-nav-link>
                     </div>
                 @endif
@@ -118,6 +125,13 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
+        @if (auth()->user()->role== 'admin' or auth()->user()->role== 'mrc')
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('mrc.upload')" :active="request()->routeIs('mrc.upload')">
+                    {{ __('Upload') }}
+                </x-responsive-nav-link>
+            </div>        
+        @endif
         @if (auth()->user()->role== 'admin')
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">

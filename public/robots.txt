@@ -1,2 +1,13 @@
 User-agent: *
-Disallow:
+# Disallow sensitive Laravel routes
+Disallow: /login
+Disallow: /register
+Disallow: /password
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /mrcs
+Disallow: /storage
+
+# Allow everything else
+Allow: /
+

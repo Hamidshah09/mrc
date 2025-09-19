@@ -40,64 +40,32 @@
                         <li class="text-justify">Get a token from que machine and wait for your turn</li>
                         <li class="text-justify">Upon your turn submit documents on counter and get a proof reading document.</li>
                         <li class="text-justify">After verificatin of particulars Birth Certificate will be issued.</li>
-                    </ul>    
+                    </ul>
+                </div>    
             </div>
         </div>
 
         <!-- Right: Apply Section -->
         <div id="search" class="col-span-1 mt-3">
-            {{-- <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow ">
-                <h2 class="text-xl font-bold text-gray-900 mb-4">Check Your Application Status</h2>
-                <form action="{{route('domicile.check')}}" method="POST">
-                    @csrf
+            <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow mt-3">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">Ask a question</h2>
+                <form id="askForm">
                     <div class="mb-4">
-                        <label class="block text-gray-700 mb-1">CNIC Number</label>
-                        <input placeholder="xxxxx-xxxxxxx-x" type="text" name="cnic" class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                        <label class="block text-gray-700 mb-1">Question</label>
+                        <input type="text" id="questionInput" name="question"
+                            class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">
+                    <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">
                         Submit
                     </button>
                 </form>
-                @if ($errors->any())
-                    <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-300 mt-3">
-                        <ul class="list-disc pl-5 space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                @if(session('error'))
-                    <div class="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                        {{ session('error') }}
-                    </div>
-                
-                @elseif(session('status'))
-                    @php
-                        $class_type = 'blue';
-                        if (session('status')['Status']=="Approval Received"){
-                            $class_type = 'green';
-                            $current_status = 'Documents Approved';
-                        }elseif (session('status')['Status']=="Sent for Approval"){
-                            $class_type = 'yellow';
-                            $current_status = 'Documents sent for approval';
-                        }elseif (session('status')['Status']=="Objection"){
-                            $class_type = 'red';
-                            $current_status = 'Objection';
-                        }elseif (session('status')['Status']=="Exported"){
-                            $class_type = 'blue';
-                            $current_status = 'Domicile Issued';
-                        }
-                        
-                    @endphp
-                    <div class="mt-4 bg-{{$class_type}}-100 border border-{{$class_type}}-400 text-{{$class_type}}-700 px-4 py-3 rounded">
-                        <h3 class="font-semibold text-lg text-center">Domicile Status</h3>
-                        <p><strong>Receipt No:</strong> {{ session('status')['receipt_no'] }}</p>
-                        <p><strong>Applicant Name:</strong> {{ session('status')['First_Name'] }}</p>
-                        <p><strong>Status:</strong> {{ $current_status }}</p>
-                    </div>
-                @endif
-            </div> --}}
+
+                <div id="response-box" class="hidden mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    <h3 class="font-semibold text-lg text-center">Answer</h3>
+                    <p id="response"></p>
+                </div>
+            </div>
             
             <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow mt-5">
                 <h3 class="font-semibold text-lg text-gray-900">Office timinings for Birth Certificate service.</h3>
@@ -113,5 +81,35 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById("askForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            document.getElementById("response-box").classList
+            let question = document.getElementById("questionInput").value;
+            let responseEl = document.getElementById("response");
+            document.getElementById("response-box").classList.remove("hidden");
+
+            responseEl.innerText = "Loading...";
+
+            try {
+                let res = await fetch("https://cfc-ict.com/chatbot/ask?question=" + encodeURIComponent(question), {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                });
+
+                if (!res.ok) {
+                    throw new Error("HTTP " + res.status);
+                }
+
+                let data = await res.json();
+                responseEl.innerText = data.answer || "No response";
+            } catch (error) {
+                console.error("❌ Fetch error:", error);
+                responseEl.innerText = "Error: " + error.message;
+            }
+        });
+    </script>
     
 </x-guest-layout>

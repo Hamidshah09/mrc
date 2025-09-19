@@ -10,11 +10,17 @@
                     </a>
                 </div>
 
+                
                 <!-- Navigation Links -->
-                @if (auth()->user()->role== 'registrar' or auth()->user()->role== 'operator' or auth()->user()->role== 'verifier' or auth()->user()->role== 'admin')
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
+                        </x-nav-link>
+                    </div>
+                @if (auth()->user()->role== 'registrar' or auth()->user()->role== 'mrc' or auth()->user()->role== 'verifier' or auth()->user()->role== 'admin')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('mrc.index')" :active="request()->routeIs('mrc.index')">
+                            {{ __('Marriage Records') }}
                         </x-nav-link>
                     </div>
                 @endif
@@ -26,6 +32,11 @@
                     </div>
                 @endif
                 @if (auth()->user()->role== 'admin' or auth()->user()->role== 'mrc')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('mrc_status.index')" :active="request()->routeIs('mrc_status.index')">
+                            {{ __('MRC Status') }}
+                        </x-nav-link>
+                    </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('mrc.upload')" :active="request()->routeIs('mrc.upload')">
                             {{ __('Upload') }}

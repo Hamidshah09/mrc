@@ -99,7 +99,25 @@
                 @endif
 
             </div>
-            
+            <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow mt-3">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">Ask a question</h2>
+                <form id="askForm">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-1">Question</label>
+                        <input type="text" id="questionInput" name="question"
+                            class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">
+                        Submit
+                    </button>
+                </form>
+
+                <div id="response-box" class="hidden mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    <h3 class="font-semibold text-lg text-center">Answer</h3>
+                    <p id="response"></p>
+                </div>
+            </div>
             <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow mt-5">
                 <h3 class="font-semibold text-lg text-gray-900">Office timinings for submission of documents for MRC service.</h3>
                 <p class="text-gray-700">Mondy to Friday : 09:00 am to 05:00 pm.</p>
@@ -116,4 +134,34 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById("askForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            document.getElementById("response-box").classList
+            let question = document.getElementById("questionInput").value;
+            let responseEl = document.getElementById("response");
+            document.getElementById("response-box").classList.remove("hidden");
+
+            responseEl.innerText = "Loading...";
+
+            try {
+                let res = await fetch("https://cfc-ict.com/chatbot/ask?question=" + encodeURIComponent(question), {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                });
+
+                if (!res.ok) {
+                    throw new Error("HTTP " + res.status);
+                }
+
+                let data = await res.json();
+                responseEl.innerText = data.answer || "No response";
+            } catch (error) {
+                console.error("❌ Fetch error:", error);
+                responseEl.innerText = "Error: " + error.message;
+            }
+        });
+    </script>
 </x-guest-layout>

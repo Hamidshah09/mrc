@@ -23,9 +23,9 @@
                     <h3 class="font-semibold text-lg text-gray-900">Step One:-</h3>
                     <p class="ml-5">Check your eligiblty to apply for IDP:-</p>
                     <ul class="ml-5 list-disc pl-5 text-gray-700">
-                        <li class="text-justify">Applicant should have a valid pakistani license</li>
-                        <li class="text-justify">If a local license validity is less than year then IDP will be issued till the expiry of local license</li>
-                        <li class="text-justify">An IDP will be issued for a maximum period of one years</li>
+                        <li class="text-justify">Applicant should have a valid pakistani license.</li>
+                        <li class="text-justify">If a local license validity is less than year then IDP will be issued till the expiry of local license.</li>
+                        <li class="text-justify">An IDP will be issued for a maximum period of one years.</li>
                         <li class="text-justify">Applicant must be present at CFC for biomatric and live picture.</li>
                     </ul>
                     <h3 class="font-semibold text-lg text-gray-900 mt-2">Step Two:-</h3>
@@ -52,11 +52,11 @@
         <div id="search" class="col-span-1 mt-3">
             <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow ">
                 <h2 class="text-xl font-bold text-gray-900 mb-4">Verify Your IDP</h2>
-                <form action="" method="">
-                    
+                <form action="{{route('idp.check')}}" method="post">
+                    @csrf
                     <div class="mb-4">
-                        <label class="block text-gray-700 mb-1">CNIC Number</label>
-                        <input placeholder="xxxxx-xxxxxxx-x" type="text" name="cnic" class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                        <label class="block text-gray-700 mb-1">IDP Number</label>
+                        <input type="text" name="idp" class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <button onclick="message()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">
                         Submit
@@ -76,35 +76,36 @@
                         {{ session('error') }}
                     </div>
                 @elseif(session('status'))
-                    @php
-                        $class_type = 'blue';
-                        if (session('status')['Status']=="Approval Received"){
-                            $class_type = 'green';
-                            $current_status = 'Documents Approved';
-                        }elseif (session('status')['Status']=="Sent for Approval"){
-                            $class_type = 'yellow';
-                            $current_status = 'Documents sent for approval';
-                        }elseif (session('status')['Status']=="Objection"){
-                            $class_type = 'red';
-                            $current_status = 'Objection';
-                        }elseif (session('status')['Status']=="Exported"){
-                            $class_type = 'blue';
-                            $current_status = 'Domicile Issued';
-                        }
-                        
-                    @endphp
-                    <div class="mt-4 bg-{{$class_type}}-100 border border-{{$class_type}}-400 text-{{$class_type}}-700 px-4 py-3 rounded">
-                        <h3 class="font-semibold text-lg text-center">Domicile Status</h3>
-                        <p><strong>IDP:</strong> {{ session('status')['receipt_no'] }}</p>
-                        <p><strong>Applicant Name:</strong> {{ session('status')['First_Name'] }}</p>
-                        <p><strong>Status:</strong> {{ $current_status }}</p>
-                        <p><strong>Remarks:</strong> {{ session('status')['remarks'] }}</p>
+                    
+                    <div class="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                        <h3 class="font-semibold text-lg text-center">IDP Status</h3>
+                        <p><strong>CNIC:</strong> {{ session('status')['CNIC'] }}</p>
+                        <p><strong>Applicant Name:</strong> {{ session('status')['Name'] }}</p>
+                        <p><strong>Status:</strong> {{ session('status')['Status'] }}</p>
                     </div>
                 @endif
 
                 
             </div>
-            
+            <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow mt-3">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">Ask a question</h2>
+                <form id="askForm">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-1">Question</label>
+                        <input type="text" id="questionInput" name="question"
+                            class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">
+                        Submit
+                    </button>
+                </form>
+
+                <div id="response-box" class="hidden mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    <h3 class="font-semibold text-lg text-center">Answer</h3>
+                    <p id="response"></p>
+                </div>
+            </div>
             <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow mt-5">
                 <h3 class="font-semibold text-lg text-gray-900">Office timinings for IDP service.</h3>
                 <p class="text-gray-700">Mondy to Friday : 09:00 am to 08:00 pm.</p>
@@ -120,9 +121,33 @@
         </div>
     </div>
     <script>
-        function message(){
-            prevent_defualt();
-            alert('Under Construction..');
-        }
+        document.getElementById("askForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            document.getElementById("response-box").classList
+            let question = document.getElementById("questionInput").value;
+            let responseEl = document.getElementById("response");
+            document.getElementById("response-box").classList.remove("hidden");
+
+            responseEl.innerText = "Loading...";
+
+            try {
+                let res = await fetch("https://cfc-ict.com/chatbot/ask?question=" + encodeURIComponent(question), {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                });
+
+                if (!res.ok) {
+                    throw new Error("HTTP " + res.status);
+                }
+
+                let data = await res.json();
+                responseEl.innerText = data.answer || "No response";
+            } catch (error) {
+                console.error("❌ Fetch error:", error);
+                responseEl.innerText = "Error: " + error.message;
+            }
+        });
     </script>
 </x-guest-layout>

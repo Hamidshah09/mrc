@@ -2,18 +2,21 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\domicileController;
 use App\Http\Controllers\idpController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\MrcController;
+use App\Http\Controllers\MrcStatusController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    // return redirect()->route('dashboard');
     return view('welcome');
 })->name('home');
-
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+Route::get('/chatbot/ask', [ChatController::class, 'ask'])->name('chatbot.ask');
 Route::get('/mrc/info', function(){
             return view('mrc.info');
         })->name('mrc.info');
@@ -31,8 +34,10 @@ Route::get('/birth/info', function(){
             return view('birth.info');
         })->name('birth.info');
 
+Route::post('/idp/check', [idpController::class, 'check'])->name('idp.check');
 Route::post('/mrc/check', [MrcController::class, 'check'])->name('mrc.check');
 Route::post('/domicile/check', [domicileController::class, 'apiCheck'])->name('domicile.check');
+Route::get('/statistics/check', [domicileController::class, 'get_statistics'])->name('statistics.check');
 Route::get('/inactive', function () {
     return view('auth.inactive');
 })->name('inactive');
@@ -53,6 +58,7 @@ Route::controller(domicileController::class)->group(function () {
     Route::get('/domicile/tehsils', 'dom_tehsils')->name('domicile.tehsils');
     Route::get('/domicile/districts', 'dom_districts')->name('domicile.districts');
     
+    
     Route::get('/domicile/info', function(){
         return view('domicile.info');
     })->name('domicile.info');
@@ -65,9 +71,9 @@ Route::controller(domicileController::class)->group(function () {
 
 
     });
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/domicile/admin', [domicileController::class, 'admin_index'])->name('domicile.admin');
@@ -78,7 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/passcodes/report', [AdminController::class, 'report'])->name('Passcodes.report');
     Route::get('/admin/downloads', [AdminController::class, 'downloads'])->name('downloads');
     
-    Route::get('/dashboard', [MrcController::class, 'index'])->name('dashboard');
+    Route::get('/mrc', [MrcController::class, 'index'])->name('mrc.index');
     Route::post('/mrc/store', [MrcController::class, 'store'])->name('mrc.store');
     Route::get('/mrc/create', [MrcController::class, 'create'])->name('mrc.create');
     Route::get('/mrc/edit/{id}', [MrcController::class, 'edit'])->name('mrc.edit')->middleware('owner');
@@ -88,6 +94,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/mrc/file/upload', [MrcController::class, 'upload_'])->name('mrc.upload');
     Route::post('/mrc/import', [MrcController::class, 'import'])->name('mrc.import');
     
+    Route::resource('mrc_status', MrcStatusController::class);
+
+    // Extra route for modal verification
+    Route::put('mrc_status/update_status/{mrcStatus}', [MrcStatusController::class, 'update_status'])
+        ->name('mrc_status.update_status');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -100,5 +111,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/users/{id}', 'update')->name('users.update')->middleware('admin');
 
     });
+    Route::post('/chatbot/pending-answers/{id}', [ChatController::class, 'pending_answers'])->name('chatbot.answers');
+    Route::get('/chatbot/pending-questions', [ChatController::class, 'pending_questions'])->name('chatbot.questions');
 });
 require __DIR__.'/auth.php';

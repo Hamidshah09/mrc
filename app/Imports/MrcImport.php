@@ -13,15 +13,19 @@ class MrcImport implements ToModel
         if (empty($row[0])) {
             return null; // skip if no tracking_id
         }
-        $status = ['Certificate Signed', 'Sent for Verification', 'Objection'];
-        
+        $statuses = ['Certificate Signed', 'Sent for Verification', 'Objection'];
+        if (empty($row[7])){
+            $status  = 'Sent for Verification';
+        } else {
+            $status = $statuses[$row[7]-1];
+        }
         return new MrcStatus([
             'tracking_id' => (string) $row[0],
             'certificate_type' => $row[3],
             'applicant_name'   => $row[4],
             'applicant_cnic'   => $row[5],
             'processing_date'  => $this->transformDate($row[6]),
-            'status'  => $status[$row[7]-1],
+            'status'  => $status,
         ]);
     }
 

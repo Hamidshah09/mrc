@@ -17,7 +17,7 @@
       </h3>
 
       {{-- Form Section --}}
-      <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-indigo-600 mb-6">
+      <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-2 border-indigo-600 mb-6 mx-3">
         <div class="mb-4">
           <label for="letterType" class="block font-medium text-gray-700 mb-2">Letter Type</label>
           <select id="letterType" name="letterType" onchange="toggleFields()" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400">
@@ -42,7 +42,7 @@
         </div>
       </div>
       {{-- Applicant Table --}}
-      <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-indigo-500 mb-6">
+      <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-2 border-indigo-500 mb-6 mx-3">
         <table class="min-w-full table-auto text-left text-sm bg-blue-50">
           <thead class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
             <h1 class="p-4 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white">Applicant Details</h1>
@@ -65,7 +65,7 @@
       </div>
 
       {{-- Save Button --}}
-      <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-green-600">
+      <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-2 border-green-600 mx-3">
         <div>
             <label class="block font-medium text-gray-700 mb-2">Pass Code</label>
             <input type="text" value="{{$passcode->code}}" name="code" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" />

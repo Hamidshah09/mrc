@@ -163,7 +163,11 @@
                         </tr>
                     </tbody>
                 </table>
+                
             @endforeach
+            <div>
+                {{ $mrcRecords->links() }}
+            </div>
         </div>
 
     </div>

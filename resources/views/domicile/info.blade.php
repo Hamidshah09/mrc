@@ -26,7 +26,7 @@
                         <li class="text-justify">At least one address of Islamabad should be written on CNIC</li>
                         <li class="text-justify">Date of issue of CNIC should be one year old (first cnic on age of 18 is exempted from this clause)</li>
                         <li class="text-justify">valid residence proof i.e allotment letter, fard/registry, rent agreement. (either on applicants name or his/her father, mother, uncle, grandfather, grandmother's name.)</li>
-                        <li class="text-justify">if applicant has two diffent addresses mentioned on his/her cnic then an NOC/Verification from concerned district will be required. (This can be obtained by issuance of letter from CFC to concern district or applicant may apply to concerned district. )</li>
+                        <li class="text-justify">if applicant has two diffent addresses mentioned on his/her cnic then an NOC/Verification from concerned district will be required. (This can be obtained by issuance of letter from CFC (<a class="underline text-blue-800 font-semibold" href="{{route('noc.create')}}">Apply</a>) to concern district or applicant may apply to concerned district. )</li>
                         <li class="text-justify"><a class="underline text-blue-800 font-semibold" href="{{asset('documents/sop_urdu.pdf')}}">Checkout SOP in Urdu</a></li>
                     </ul>
                     <h3 class="font-semibold text-lg text-gray-900 mt-2">Step Two:-</h3>
@@ -106,15 +106,17 @@
                         }elseif (session('status')['Status']=="Exported"){
                             $class_type = 'blue';
                             $current_status = 'Domicile Issued';
+                        }elseif (session('status')['Status']=="Pending"){
+                            $class_type = 'gray';
+                            $current_status = 'Pending';
                         }
-                        
                     @endphp
                     <div class="mt-4 bg-{{$class_type}}-100 border border-{{$class_type}}-400 text-{{$class_type}}-700 px-4 py-3 rounded">
                         <h3 class="font-semibold text-lg text-center">Domicile Status</h3>
                         <p><strong>Receipt No:</strong> {{ session('status')['receipt_no'] }}</p>
                         <p><strong>Applicant Name:</strong> {{ session('status')['First_Name'] }}</p>
                         <p><strong>Status:</strong> {{ $current_status }}</p>
-                        @if ($current_status='Objection')
+                        @if ($current_status=='Objection')
                             <p><strong>Remarks:</strong> {{ session('status')['remarks'] }}</p>
                         @endif
                     </div>

@@ -36,7 +36,7 @@
                     </div>
 
                     <!-- About -->
-                    <a href="#about" class="text-gray-700 hover:text-blue-600">About</a>
+                    <a href="{{route('about')}}" class="text-gray-700 hover:text-blue-600">About</a>
 
                     @auth
                         <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-blue-600">Dashboard</a>
@@ -89,7 +89,7 @@
                 </div>
 
                 <!-- About -->
-                <a href="#about" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">About</a>
+                <a href="{{route('about')}}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">About</a>
 
                 <!-- Login -->
                 @auth

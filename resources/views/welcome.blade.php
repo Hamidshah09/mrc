@@ -116,62 +116,63 @@
     <section class="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
         <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12 text-center">
             <div>
-                <p class="text-5xl font-extrabold counter" data-count="1200">0</p>
-                <p class="mt-2 text-lg">Arms Licenses Issued</p>
-            </div>
-            <div>
-                <p class="text-5xl font-extrabold counter" data-count="950">0</p>
+                <p class="text-5xl font-extrabold counter" id="domiciles">0</p>
                 <p class="mt-2 text-lg">Domiciles Approved</p>
             </div>
             <div>
-                <p class="text-5xl font-extrabold counter" data-count="750">0</p>
+                <p class="text-5xl font-extrabold counter" id="driving-permits">0</p>
                 <p class="mt-2 text-lg">Driving Permits Issued</p>
+            </div>
+            <div>
+                <p class="text-5xl font-extrabold counter" id="marriage-certificates">0</p>
+                <p class="mt-2 text-lg">Marriage/Divorce Certificates Issued</p>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 py-6">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <p>&copy; {{ date('Y') }} Citizen Facilitation Center. All rights reserved.</p>
-            <p>Contact: info@cfc.gov</p>
-        </div>
-    </footer>
 
     <!-- Counter Animation Script -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const btn = document.getElementById("servicesBtn");
             const menu = document.getElementById("servicesMenu");
-
-            btn.addEventListener("click", () => {
-                menu.classList.toggle("opacity-0");
-                menu.classList.toggle("invisible");
-            });
-
-            // Optional: close dropdown if clicked outside
-            document.addEventListener("click", (e) => {
-                if (!btn.contains(e.target) && !menu.contains(e.target)) {
-                    menu.classList.add("opacity-0", "invisible");
-                }
-            });
+            if (btn){
+                    btn.addEventListener("click", () => {
+                    menu.classList.toggle("opacity-0");
+                    menu.classList.toggle("invisible");
+                });
+                // Optional: close dropdown if clicked outside
+                document.addEventListener("click", (e) => {
+                    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                        menu.classList.add("opacity-0", "invisible");
+                    }
+                });
+            }
+                
+            
         });
         document.addEventListener("DOMContentLoaded", () => {
-            const counters = document.querySelectorAll(".counter");
-            counters.forEach(counter => {
-                let target = +counter.getAttribute("data-count");
+            fetch("/statistics/check")
+                .then(response => response.json())
+                .then(data => {
+                    animateCounter(document.getElementById("marriage-certificates"), data.marriage_certificates);
+                    animateCounter(document.getElementById("domiciles"), data.domiciles);
+                    animateCounter(document.getElementById("driving-permits"), data.driving_permits);
+                })
+                .catch(error => console.error("Error fetching counters:", error));
+
+            function animateCounter(element, target) {
                 let count = 0;
                 let step = target / 100;
                 let interval = setInterval(() => {
                     count += step;
                     if (count >= target) {
-                        counter.textContent = target;
+                        element.textContent = target;
                         clearInterval(interval);
                     } else {
-                        counter.textContent = Math.floor(count);
+                        element.textContent = Math.floor(count);
                     }
                 }, 30);
-            });
+            }
         });
     </script>
 </x-guest-layout>

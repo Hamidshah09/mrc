@@ -8,6 +8,7 @@ use App\Models\occupation;
 use App\Models\Passcode;
 use App\Models\tehsils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class idpController extends Controller
 {
@@ -100,5 +101,36 @@ class idpController extends Controller
     public function success($id, $cnic){
 
         return view('idp.success', compact('id', 'cnic'));
+    }
+
+    public function check(Request $request)
+    {
+        session()->forget('status');
+        session()->forget('error');
+        $request->validate([
+            'idp' => ['required', 'regex:/^\d+$/'],
+        ], [
+            'idp.regex' => 'IDP must contain only digits (no spaces or dashes).'
+        ]);
+
+        try {
+            // Example API call (replace with your API URL)
+            $response = Http::get($this->apiUrl.'/idp/check', [
+                'idp' => $request->idp,
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['error'])) {
+                    return redirect()->back()->with('error', $data['error']);
+                }
+                return redirect()->back()->with('status', $data);
+            }else{
+                return redirect()->back()->with('error', $response->json()['error']);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong: '.$e->getMessage());
+        }
+
     }
 }

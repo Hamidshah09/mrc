@@ -10,10 +10,11 @@ use App\Models\NocLetters;
 use App\Models\Passcode;
 use App\Models\tehsils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class domicileController extends Controller
-{
+{   
     public function admin_index(){
         $records = DomicileApplicants::select('id', 'name', 'passcode')->orderBy('id', 'desc')->paginate(25);
         return view('domicile.adminindex', compact('records'));
@@ -539,10 +540,10 @@ class domicileController extends Controller
         ], [
             'cnic.regex' => 'CNIC format must be like 61101-4561237-8'
         ]);
-
+        
         try {
             // Example API call (replace with your API URL)
-            $response = Http::get('http://192.168.18.21:5000/check', [
+            $response = Http::get($this->apiUrl.'/domicile/check', [
                 'cnic' => $request->cnic,
             ]);
 
@@ -557,6 +558,46 @@ class domicileController extends Controller
             }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong: '.$e->getMessage());
+        }
+    }
+    public function get_statistics()
+    {
+        // Check if cached value exists
+        $stats = Cache::get('counters');
+
+        if (!$stats) {
+            // If not cached, fetch fresh data
+            $stats = $this->fetchAndUpdateCounters();
+        }
+
+        return response()->json($stats, 200);
+    }
+
+    private function fetchAndUpdateCounters()
+    {
+        try {
+            $response = Http::get($this->apiUrl.'/statistics/check');
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                $marriageCertificates = 4523; // Or DB::table(...)->count();
+
+                $finalData = [
+                    'marriage_certificates' => $marriageCertificates,
+                    'domiciles' => $data['domicile'] ?? 0,
+                    'driving_permits' => $data['idp'] ?? 0,
+                ];
+
+                // Save in cache for 1 hour
+                Cache::put('counters', $finalData, now()->addHour());
+
+                return $finalData;
+            } else {
+                return ['error' => 'Python API error'];
+            }
+        } catch (\Exception $e) {
+            return ['error' => 'Something went wrong: ' . $e->getMessage()];
         }
     }
 }

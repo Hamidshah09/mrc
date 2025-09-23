@@ -58,8 +58,6 @@
                         <li class="text-justify">Your Domicile Certificate will be handed over to you.</li>
                     </ul>
                 </div>
-
-                
             </div>
         </div>
 

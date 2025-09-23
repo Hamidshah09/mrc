@@ -29,18 +29,19 @@
             <div class="grid md:grid-cols-3 gap-8">
                 
                 {{-- Arms  --}}
-
-                <div class="bg-white/20 backdrop-blur-md border border-white/30 
+                <a href="{{route('arms.info')}}">
+                    <div class="bg-white/20 backdrop-blur-md border border-white/30 
                             shadow-lg rounded-2xl p-8 text-center text-white
                             transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-                    <div class="w-16 h-16 mx-auto mb-4 text-white 
-                                flex items-center justify-center rounded-full 
-                                text-2xl font-bold shadow-inner">
-                        <img src="{{ asset('app-icons/pistol.svg') }}" alt="">
+                        <div class="w-16 h-16 mx-auto mb-4 text-white 
+                                    flex items-center justify-center rounded-full 
+                                    text-2xl font-bold shadow-inner">
+                            <img src="{{ asset('app-icons/pistol.svg') }}" alt="">
+                        </div>
+                        <h3 class="text-xl font-semibold">Arms License</h3>
                     </div>
-                    <h3 class="text-xl font-semibold">Arms License</h3>
-                </div>
-                
+                </a>
+
                 {{-- Domicile --}}
                 <a href="{{route('domicile.info')}}">
                     <div class="bg-white/20 backdrop-blur-md border border-white/30 
@@ -56,7 +57,7 @@
                 </a>
 
                 {{-- IDP --}}
-                <a href="">
+                <a href="{{route('idp.info')}}">
                     <div class="bg-white/20 backdrop-blur-md border border-white/30 
                                 shadow-lg rounded-2xl p-8 text-center text-white
                                 transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
@@ -84,16 +85,34 @@
                 </a>
                 
                 {{-- Birth Certificate --}}
-                <div class="bg-white/20 backdrop-blur-md border border-white/30 
+                <a href="{{route('birth.info')}}">
+                    <div class="bg-white/20 backdrop-blur-md border border-white/30 
                             shadow-lg rounded-2xl p-8 text-center text-white
                             transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-                    <div class="w-16 h-16 mx-auto mb-4 text-white 
-                                flex items-center justify-center rounded-full 
-                                text-2xl font-bold shadow-inner">
-                        <img src="{{ asset('app-icons/certificate.svg') }}" alt="">
+                        <div class="w-16 h-16 mx-auto mb-4 text-white 
+                                    flex items-center justify-center rounded-full 
+                                    text-2xl font-bold shadow-inner">
+                            <img src="{{ asset('app-icons/certificate.svg') }}" alt="">
+                        </div>
+                        <h3 class="text-xl font-semibold">Birth Certificate</h3>
                     </div>
-                    <h3 class="text-xl font-semibold">Birth Certificate</h3>
-                </div>
+                </a>
+                
+
+                {{-- Divorce Certificate --}}
+                <a href="{{route('drc.info')}}">
+                    <div class="bg-white/20 backdrop-blur-md border border-white/30 
+                            shadow-lg rounded-2xl p-8 text-center text-white
+                            transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
+                        <div class="w-16 h-16 mx-auto mb-4 text-white 
+                                    flex items-center justify-center rounded-full 
+                                    text-2xl font-bold shadow-inner">
+                            <img src="{{ asset('app-icons/character-certificate.svg') }}" alt="">
+                        </div>
+                        <h3 class="text-xl font-semibold">Divorce Certificate</h3>
+                    </div>
+                </a>
+                
 
                 {{-- Character Certificate --}}
                 <div class="bg-white/20 backdrop-blur-md border border-white/30 

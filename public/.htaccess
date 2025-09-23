@@ -4,7 +4,9 @@
         Options -MultiViews -Indexes
     </IfModule>
     
-   
+   <IfModule mod_headers.c>
+   </IfModule>
+
     RewriteEngine On
 
     #Allow ACME Challaneg through without rewriting to index.php

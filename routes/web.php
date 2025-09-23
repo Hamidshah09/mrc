@@ -30,7 +30,7 @@ Route::get('/idp/info', function(){
 Route::get('/arms/info', function(){
             return view('arms.info');
         })->name('arms.info');
-Route::get('/birth/info', function(){
+Route::get('/birth-info', function(){
             return view('birth.info');
         })->name('birth.info');
 

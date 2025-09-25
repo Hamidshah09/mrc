@@ -2,72 +2,82 @@
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+            
+            <div class="flex items-center">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
-
-                <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
-                    </div>
-                @if (auth()->user()->role== 'registrar' or auth()->user()->role== 'mrc' or auth()->user()->role== 'verifier' or auth()->user()->role== 'admin')
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('mrc.index')" :active="request()->routeIs('mrc.index')">
-                            {{ __('Marriage Records') }}
-                        </x-nav-link>
-                    </div>
-                @endif
+                    <a href="{{route('dashboard')}}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
+                </div>
                 @if (auth()->user()->role== 'admin')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
-                            {{ __('Users') }}
-                        </x-nav-link>
+                        <a href="{{route('users.index')}}" class="block px-4 py-2 hover:bg-gray-100">Users</a>
                     </div>
                 @endif
-                @if (auth()->user()->role== 'admin' or auth()->user()->role== 'mrc')
+                @if (auth()->user()->role== 'registrar' or auth()->user()->role== 'mrc' or auth()->user()->role== 'verifier' or auth()->user()->role== 'admin')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('mrc_status.index')" :active="request()->routeIs('mrc_status.index')">
-                            {{ __('MRC Status') }}
-                        </x-nav-link>
-                    </div>
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('mrc.upload')" :active="request()->routeIs('mrc.upload')">
-                            {{ __('Upload') }}
-                        </x-nav-link>
+                        <div class="relative" x-data="{ dropdown: false }">
+                            <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
+                                Mrc
+                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="dropdown" @click.outside="dropdown = false"
+                                x-transition
+                                class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
+                                <a href="{{route('mrc.index')}}" class="block px-4 py-2 hover:bg-gray-100">Marriage Records</a>
+                                @if (auth()->user()->role== 'admin' or auth()->user()->role== 'mrc')
+                                    <a href="{{route('mrc_status.index')}}" class="block px-4 py-2 hover:bg-gray-100">Marriage Status</a>
+                                    <a href="{{route('mrc.upload')}}" class="block px-4 py-2 hover:bg-gray-100">Upload</a>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 @endif
                 @if (auth()->user()->role== 'admin' or auth()->user()->role== 'domicile')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('Passcode.create')" :active="request()->routeIs('Passcode.create')">
-                            {{ __('Generate Passcode') }}
-                        </x-nav-link>
+                        <div class="relative" x-data="{ dropdown: false }">
+                            <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
+                                Domicile
+                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="dropdown" @click.outside="dropdown = false"
+                                x-transition
+                                class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
+                                <a href="{{route('Passcode.create')}}" class="block px-4 py-2 hover:bg-gray-100">Generate Passcode</a>
+                                <a href="{{route('Passcodes.gen_report')}}" class="block px-4 py-2 hover:bg-gray-100">Passcode Report</a>
+                                <a href="{{route('domicile.admin')}}" class="block px-4 py-2 hover:bg-gray-100">Form P</a>
+                                <a href="{{route('downloads')}}" class="block px-4 py-2 hover:bg-gray-100">Downloads</a>
+                                <a href="{{route('chatbot.questions')}}" class="block px-4 py-2 hover:bg-gray-100">Bot Questions</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('Passcodes.gen_report')" :active="request()->routeIs('Passcodes.gen_report')">
-                            {{ __('Print Report') }}
-                        </x-nav-link>
-                    </div>
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('domicile.admin')" :active="request()->routeIs('domicile.admin')">
-                            {{ __('Form P') }}
-                        </x-nav-link>
-                    </div>
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('downloads')" :active="request()->routeIs('downloads')">
-                            {{ __('Downloads') }}
-                        </x-nav-link>
-                    </div>
+                    
                 @elseif (auth()->user()->role== 'idp')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('downloads')" :active="request()->routeIs('downloads')">
-                            {{ __('Downloads') }}
-                        </x-nav-link>
+                        <div class="relative" x-data="{ dropdown: false }">
+                            <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
+                                Idp
+                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="dropdown" @click.outside="dropdown = false"
+                                x-transition
+                                class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
+                                <a href="{{route('downloads')}}" class="block px-4 py-2 hover:bg-gray-100">Downloads</a>    
+                            </div>
+                        </div>
                     </div>
                 @endif
 
@@ -135,23 +145,34 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
-        @if (auth()->user()->role== 'admin' or auth()->user()->role== 'mrc')
+        @if (auth()->user()->role== 'registrar' or auth()->user()->role== 'mrc' or auth()->user()->role== 'verifier' or auth()->user()->role== 'admin')
             <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('mrc_status.index')" :active="request()->routeIs('mrc_status.index')">
-                    {{ __('MRC Status') }}
+                <x-responsive-nav-link :href="route('mrc.index')" :active="request()->routeIs('mrc_status.index')">
+                    {{ __('Marriage Records') }}
                 </x-responsive-nav-link>
             </div>
-            <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('mrc.upload')" :active="request()->routeIs('mrc.upload')">
-                    {{ __('Upload') }}
-                </x-responsive-nav-link>
-            </div>        
+            @if (auth()->user()->role== 'admin' or auth()->user()->role== 'mrc')
+                <div class="pt-2 pb-3 space-y-1">
+                    <x-responsive-nav-link :href="route('mrc_status.index')" :active="request()->routeIs('mrc_status.index')">
+                        {{ __('MRC Status') }}
+                    </x-responsive-nav-link>
+                </div>
+                <div class="pt-2 pb-3 space-y-1">
+                    <x-responsive-nav-link :href="route('mrc.upload')" :active="request()->routeIs('mrc.upload')">
+                        {{ __('Upload') }}
+                    </x-responsive-nav-link>
+                </div>
+            @endif        
         @endif
         @if (auth()->user()->role== 'admin')
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                     {{ __('Users') }}
                 </x-responsive-nav-link>
+            </div>
+        @endif
+        @if (auth()->user()->role== 'admin' or auth()->user()->role== 'domicile')
+            <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('chatbot.questions')" :active="request()->routeIs('chatbot.questions')">
                     {{ __('Pending Questions') }}
                 </x-responsive-nav-link>
@@ -164,6 +185,11 @@
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('Passcodes.gen_report')" :active="request()->routeIs('Passcodes.gen_report')">
                     {{ __('Passcode report') }}
+                </x-responsive-nav-link>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('downloads')" :active="request()->routeIs('downloads')">
+                    {{ __('Downloads') }}
                 </x-responsive-nav-link>
             </div>
         @endif

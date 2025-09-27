@@ -19,7 +19,7 @@
 
     <!-- Services Section -->
     <section id="services" class="relative py-20 bg-cover bg-center"
-         style="background-image: url('{{ asset('images/middle.jpg') }}');">
+         style="background-image: url('{{ asset('images/middle.jpeg') }}');">
         <!-- Overlay -->
         <div class="absolute inset-0 bg-black/40"></div>
 

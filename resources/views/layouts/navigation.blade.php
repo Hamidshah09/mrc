@@ -80,6 +80,26 @@
                         </div>
                     </div>
                 @endif
+                @if (auth()->user()->role== 'ea' or auth()->user()->role== 'admin')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <div class="relative" x-data="{ dropdown: false }">
+                            <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
+                                EA
+                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="dropdown" @click.outside="dropdown = false"
+                                x-transition
+                                class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
+                                <a href="{{route('Employee.index')}}" class="block px-4 py-2 hover:bg-gray-100">Employees</a>
+                                <a href="{{route('departments.index')}}" class="block px-4 py-2 hover:bg-gray-100">Departments</a>
+                                <a href="{{route('designations.index')}}" class="block px-4 py-2 hover:bg-gray-100">Designations</a>    
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
             </div>
 
@@ -190,6 +210,13 @@
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('downloads')" :active="request()->routeIs('downloads')">
                     {{ __('Downloads') }}
+                </x-responsive-nav-link>
+            </div>
+        @endif
+        @if (auth()->user()->role== 'admin' or auth()->user()->role== 'ea')
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('Employee.index')" :active="request()->routeIs('Employee.index')">
+                    {{ __('Employees') }}
                 </x-responsive-nav-link>
             </div>
         @endif

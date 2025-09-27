@@ -3,7 +3,10 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\domicileController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\idpController;
 use App\Http\Controllers\MrcController;
 use App\Http\Controllers\MrcStatusController;
@@ -113,5 +116,19 @@ Route::middleware('auth')->group(function () {
     });
     Route::post('/chatbot/pending-answers/{id}', [ChatController::class, 'pending_answers'])->name('chatbot.answers');
     Route::get('/chatbot/pending-questions', [ChatController::class, 'pending_questions'])->name('chatbot.questions');
+
+    // Office Card Routes
+    Route::resource('departments', DepartmentController::class)->only(['index','create', 'store', 'edit', 'update']);
+    Route::resource('designations', DesignationController::class)->only(['index','create', 'store', 'edit', 'update']);
+    Route::controller(EmployeeController::class)->group(function () {
+        Route::get('/ea/employees', 'index')->name('Employee.index');
+        Route::get('/ea/employee/create', 'create')->name('Employee.create');
+        Route::post('/ea/employee/store', 'store')->name('Employee.store');
+        Route::get('/ea/employee/edit/{id}', 'edit')->name('Employee.edit');
+        Route::get('/ea/employee/show/{id}', 'show')->name('Employee.show');
+        Route::put('/ea/employee/update/{id}', 'update')->name('Employee.update');
+        Route::get('/ea/issuecard/{id}', 'issueCard')->name('issueCard');
+        
+    });
 });
 require __DIR__.'/auth.php';

@@ -118,7 +118,7 @@ class RegisteredUserController extends Controller
     public function edit(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        $roles = ['admin', 'registrar', 'mrc', 'idp', 'verifier', 'domicile', 'customer'];
+        $roles = ['admin', 'registrar', 'mrc', 'idp', 'verifier', 'domicile', 'customer', 'ea'];
         return view('users.edit', compact('user', 'roles'));
     }
     public function update(Request $request, $id): RedirectResponse

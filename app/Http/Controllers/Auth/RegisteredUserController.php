@@ -56,7 +56,7 @@ class RegisteredUserController extends Controller
 }
 
      public function create(): View
-    {   $roles = ['admin', 'registrar', 'mrc', 'idp', 'verifier', 'domicile', 'customer'];
+    {   $roles = ['admin', 'registrar', 'mrc', 'idp', 'verifier', 'domicile', 'customer', 'ea'];
         return view('auth.register', compact('roles'));
     }
 
@@ -100,7 +100,7 @@ class RegisteredUserController extends Controller
         'profile_image'  => $validated['profile_image'] ?? null,
         'password'       => Hash::make($validated['password']),
         'status'         => 'Not Active', // or 'Active' if auto-approved
-        'role'           => 'registrar',   // default role
+        'role'           => 'customer',   // default role
     ]);
 
     // Step 4: Fire Registered event and log in the user
@@ -137,7 +137,7 @@ class RegisteredUserController extends Controller
             'license_number' => 'required|string',
             'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status'       => 'string|in:Active,Not active',
-            'role'         => 'string|in:admin, registrar, mrc, idp, verifier, domicile, customer, ea', // Add this
+            'role'         => 'string|in:admin,registrar,mrc,idp,verifier,domicile,customer,ea', // Add this
             'password'       => 'nullable|string|min:8|confirmed', // Add this line
         ]);
 

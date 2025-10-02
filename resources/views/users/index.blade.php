@@ -91,6 +91,9 @@
                     @endforeach
                 </tbody>
             </table>
+            <div>
+                {{$users->links()}}
+            </div>
         </div>
 
         <!-- Card View (visible only on small screens) -->
@@ -146,6 +149,9 @@
                     </tbody>
                 </table>
             @endforeach
+        </div>
+        <div>
+            
         </div>
 
     </div>

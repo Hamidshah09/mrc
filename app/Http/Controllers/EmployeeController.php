@@ -99,7 +99,7 @@ class EmployeeController extends Controller
         $validated_data = $request->validate([
             'cnic' => 'required|string|max:255', // Ensure CNIC is unique
             'name' => 'required|string|max:255',
-            'father_name' => 'nullable|string|max:255',
+            'father_name' => 'required|string|max:255',
             'department_id' => 'required|integer|exists:departments,id', // Ensure it matches an existing department
             'designation_id' => 'required|integer|exists:designations,id', // Ensure it matches an existing designation
             'date_of_birth' => 'nullable|date', // Ensure valid date format
@@ -132,7 +132,7 @@ class EmployeeController extends Controller
         }
          
         
-        return redirect()->route('Employee.index');
+        return redirect()->route('Employee.index')->with('success', 'Reocrd Updated Successfully');
     }
     public function issueCard($id)
     {

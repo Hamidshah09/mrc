@@ -18,7 +18,6 @@ class ChatController extends Controller
             ])->post($this->apiUrl.'/ask', [
                 'question' => $question,
             ]);
-
             if ($response->successful()) {
                 return response()->json($response->json()); // ✅ return JSON to frontend
             } else {
@@ -54,7 +53,8 @@ class ChatController extends Controller
     public function pending_questions()
     {
         $response = Http::get($this->apiUrl.'/admin/pending');
-        $questions = json_decode($response->body()); 
+        $questions = json_decode($response->body());
+        // return $questions; 
         return view('chatbot.chat',compact('questions'));
     }
 }

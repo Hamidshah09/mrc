@@ -13,7 +13,7 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <a href="{{route('dashboard')}}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
                 </div>
-                @if (auth()->user()->role!= 'customer')
+                @if (auth()->user()->role!= 'customer' or auth()->user()->role!= 'registrar' or auth()->user()->role!= 'verifier')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <a href="{{route('statistics.index')}}" class="block px-4 py-2 hover:bg-gray-100">Statistics</a>
                     </div>
@@ -170,6 +170,13 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
+        @if (auth()->user()->role!= 'customer' or  auth()->user()->role!= 'registrar' or auth()->user()->role!= 'verifier')
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('statistics.index')" :active="request()->routeIs('statistics.index')">
+                    {{ __('CFC Statistics') }}
+                </x-responsive-nav-link>
+            </div>
+        @endif
         @if (auth()->user()->role== 'registrar' or auth()->user()->role== 'mrc' or auth()->user()->role== 'verifier' or auth()->user()->role== 'admin')
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('mrc.index')" :active="request()->routeIs('mrc_status.index')">

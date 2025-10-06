@@ -27,10 +27,18 @@
                             <x-primary-button class="mt-1 ms-3" type="submit">
                                 {{ __('Search') }}
                             </x-primary-button>
-                            
                         </div>
                     </form>
-                    <button onclick="openCreateModal()" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-300">+ Create New</button>                            
+
+                    <!-- Button group aligned to the right -->
+                    <div class="flex space-x-2 ml-auto">
+                        <button onclick="openCreateModal()" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-300">
+                            Create New
+                        </button>
+                        <button onclick="openEditModal()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-300">
+                            Update
+                        </button>
+                    </div>
                 </div>
                  @if ($errors->any())
                     <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-300">
@@ -51,7 +59,11 @@
                                         class="border border-gray-300 text-center px-6 py-3 text-lg font-semibold text-gray-600 uppercase tracking-wider">
                                         {{ $center['location'] }}
                                     </th>
+                                    
                                 @endforeach
+                                <th rowspan="2" class="border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                    Action
+                                </th>
                             </tr>
                             <tr>
                                 @foreach ($centers as $center)
@@ -72,6 +84,11 @@
                                     @foreach (array_slice($row, 1) as $count)
                                         <td class="px-6 py-4 text-sm text-gray-800 text-center">{{ $count }}</td>
                                     @endforeach
+                                    <td>
+                                        <a class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-300" href="{{ route('statistics.pdf', ['report_date' => $row['date']]) }}" class="text-blue-600 hover:underline">
+                                            Report
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -182,24 +199,73 @@
             });
         }
 
-        function openEditModal(id, nameValue) {
-            document.getElementById("modalTitle").innerText = "Edit Designation";
+        function openEditModal(statistic = null) {
+            document.getElementById("modalTitle").innerText = statistic ? "Edit Report" : "Create New Report";
 
             const form = document.getElementById("modalForm");
-            form.action = "{{ url('designations') }}/" + id; // update route
+            form.action = "{{ route('statistics.upsert') }}"; // unified route
 
+            // Build center dropdown
+            let centerOptions = `<option value="">-- Select Center --</option>`;
+            centersData.forEach(center => {
+                const selected = statistic && statistic.center_id === center.id ? 'selected' : '';
+                centerOptions += `<option value="${center.id}" ${selected}>${center.location}</option>`;
+            });
+
+            // Build service dropdown
+            let serviceOptions = `<option value="">-- Select Service --</option>`;
+            const allServices = centersData.flatMap(c => c.services);
+            const uniqueServices = Object.values(
+                allServices.reduce((acc, s) => {
+                    acc[s.id] = s;
+                    return acc;
+                }, {})
+            );
+            uniqueServices.forEach(service => {
+                const selected = statistic && statistic.service_id === service.id ? 'selected' : '';
+                serviceOptions += `<option value="${service.id}" ${selected}>${service.service}</option>`;
+            });
+
+            // Build form
             document.getElementById("formFields").innerHTML = `
                 @csrf
-                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="_method" value="POST">
+
                 <div class="mb-4">
-                    <label class="block text-sm font-medium">Designation</label>
-                    <input type="text" name="designation" id="designation" class="w-full border rounded p-2 mt-1" value="${nameValue}">
+                    <label class="block text-sm font-medium">Select Center</label>
+                    <select name="center_id" class="w-full border rounded p-2 mt-1">
+                        ${centerOptions}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium">Select Service</label>
+                    <select name="service_id" class="w-full border rounded p-2 mt-1">
+                        ${serviceOptions}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium">Report Date</label>
+                    <input type="date"
+                        name="report_date"
+                        value="${statistic?.report_date ?? '{{ now()->toDateString() }}'}"
+                        class="w-full border rounded p-2 mt-1">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium">Service Count</label>
+                    <input type="number"
+                        name="service_count"
+                        min="0"
+                        value="${statistic?.service_count ?? ''}"
+                        class="w-full border rounded p-2 mt-1"
+                        placeholder="Enter count">
                 </div>
             `;
 
             document.getElementById("dynamicModal").classList.remove("hidden");
         }
-
         function closeModal() {
             document.getElementById("dynamicModal").classList.add("hidden");
         }

@@ -102,17 +102,40 @@ class StatisticsController extends Controller
                 continue;
             }
 
-            Statistics::create([
-                'center_id' => $validated['center_id'],
-                'service_id' => $serviceId,
-                'service_count' => $count,
-                'report_date' => $validated['report_date'],
-            ]);
+            Statistics::updateOrCreate(
+                [
+                    'center_id' => $validated['center_id'],
+                    'service_id' => $serviceId,
+                    'report_date' => $validated['report_date'],
+                ],
+                ['service_count' => $count]
+            );
+
         }
 
         return redirect()
             ->back()
             ->with('success', 'Daily report created successfully!');
+    }
+    public function upsert(Request $request)
+    {
+        $validated = $request->validate([
+            'center_id' => 'required|integer',
+            'service_id' => 'required|integer',
+            'report_date' => 'required|date',
+            'service_count' => 'required|integer|min:0',
+        ]);
+
+        $stat = Statistics::updateOrCreate(
+            [
+                'center_id' => $validated['center_id'],
+                'service_id' => $validated['service_id'],
+                'report_date' => $validated['report_date'],
+            ],
+            ['service_count' => $validated['service_count']]
+        );
+
+        return redirect()->back()->with('success', 'Report saved successfully.');
     }
 
 }

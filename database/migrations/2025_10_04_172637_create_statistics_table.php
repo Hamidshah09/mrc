@@ -41,6 +41,7 @@ return new class extends Migration
             $table->integer('service_id');
             $table->integer('service_count');
             $table->date('report_date');
+            $table->unique(['center_id', 'service_id', 'report_date']);
             $table->timestamps();
         });
     }

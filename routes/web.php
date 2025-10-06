@@ -86,8 +86,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/passcodes/report', [AdminController::class, 'report'])->name('Passcodes.report');
     Route::get('/admin/downloads', [AdminController::class, 'downloads'])->name('downloads');
     
+
     Route::get('/statistics/pdf-report', [StatisticsController::class, 'pdf_report'])->name('statistics.pdf');
     Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+    Route::post('/statistics/upsert', [StatisticsController::class, 'upsert'])->name('statistics.upsert');
     Route::get('/statistics/create', [StatisticsController::class, 'create'])->name('statistics.create');
     Route::post('/statistics/store', [StatisticsController::class, 'store'])->name('statistics.store');
 

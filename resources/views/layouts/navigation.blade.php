@@ -13,6 +13,11 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <a href="{{route('dashboard')}}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
                 </div>
+                @if (auth()->user()->role!= 'customer')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <a href="{{route('statistics.index')}}" class="block px-4 py-2 hover:bg-gray-100">Statistics</a>
+                    </div>
+                @endif
                 @if (auth()->user()->role== 'admin')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <a href="{{route('users.index')}}" class="block px-4 py-2 hover:bg-gray-100">Users</a>

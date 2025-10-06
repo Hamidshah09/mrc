@@ -7,10 +7,11 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\domicileController;
 use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\idpController;
+use App\Http\Controllers\IDPController;
 use App\Http\Controllers\MrcController;
 use App\Http\Controllers\MrcStatusController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,19 +38,17 @@ Route::get('/birth-info', function(){
             return view('birth.info');
         })->name('birth.info');
 
-Route::post('/idp/check', [idpController::class, 'check'])->name('idp.check');
+Route::post('/idp/check', [IDPController::class, 'check'])->name('idp.check');
 Route::post('/mrc/check', [MrcController::class, 'check'])->name('mrc.check');
 Route::post('/domicile/check', [domicileController::class, 'apiCheck'])->name('domicile.check');
 Route::get('/statistics/check', [domicileController::class, 'get_statistics'])->name('statistics.check');
 Route::get('/inactive', function () {
     return view('auth.inactive');
 })->name('inactive');
-Route::controller(idpController::class)->group(function () {
-    Route::get('/idp/create', 'create')->name('idp.create');
-    Route::post('/idp/store', 'store')->name('idp.store');
-    Route::get('/idp/edit/{id}/{cnic}', 'edit')->name('idp.edit');
+Route::controller(IDPController::class)->group(function () {
+    Route::get('/idp/show', 'show')->name('idp.show');
+    Route::get('/idp', 'index')->name('idp.index');
     Route::post('/idp/update/{id}', 'update')->name('idp.update');
-    Route::get('/idp/success/{id}/{cnic}', 'success')->name('idp.success');
 });
 Route::controller(domicileController::class)->group(function () {
     Route::get('/domicile/noc/success/{id}', 'noc_success')->name('noc.success');
@@ -87,6 +86,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/passcodes/report', [AdminController::class, 'report'])->name('Passcodes.report');
     Route::get('/admin/downloads', [AdminController::class, 'downloads'])->name('downloads');
     
+    Route::get('/statistics/pdf-report', [StatisticsController::class, 'pdf_report'])->name('statistics.pdf');
+    Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+    Route::get('/statistics/create', [StatisticsController::class, 'create'])->name('statistics.create');
+    Route::post('/statistics/store', [StatisticsController::class, 'store'])->name('statistics.store');
+
     Route::get('/mrc', [MrcController::class, 'index'])->name('mrc.index');
     Route::post('/mrc/store', [MrcController::class, 'store'])->name('mrc.store');
     Route::get('/mrc/create', [MrcController::class, 'create'])->name('mrc.create');

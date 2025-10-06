@@ -137,7 +137,7 @@ class RegisteredUserController extends Controller
             'license_number' => 'required|string',
             'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status'       => 'string|in:Active,Not active',
-            'role'         => 'string|in:admin, registrar, mrc, idp, verifier, domicile, customer, ea', // Add this
+            'role'         => 'string|in:admin,registrar,mrc,idp,verifier,domicile,customer,ea', // Add this
             'password'       => 'nullable|string|min:8|confirmed', // Add this line
         ]);
 

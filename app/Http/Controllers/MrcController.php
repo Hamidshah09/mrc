@@ -78,8 +78,14 @@ class MrcController extends Controller
             'image'              => 'required|image|mimes:jpg,jpeg,png|max:4048',
 
         ]);
+        $exist = Mrc::where('groom_cnic', $request->groom_cnic)->Where('bride_cnic', $request->bride_cnic)->first();
+        if ($exist){
+            return back()
+        ->withErrors(['duplicate' => 'This Nikkah record already exists'])
+        ->withInput();
+        }
         $validated['registrar_id'] = Auth::id(); // Assuming the registrar is the currently authenticated user
-        $validated['status'] = 'pending';
+        $validated['status'] = 'Pending';
         
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('mrc_images', 'public');

@@ -9,9 +9,14 @@
         
         <div class="w-full flex justify-end">
             <a href="{{ route('mrc_status.create') }}"
-               class="mb-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+               class="mb-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 mr-3">
                 New
             </a>
+
+            <button type="button" onclick="openModal()"
+               class="mb-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 mr-3">
+                Update Status
+            </button>
         </div>
 
         <!-- Filters -->
@@ -62,6 +67,11 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
+            </div>
+        @endif
+        @if (session('success'))
+            <div class="text-green-700 bg-green-100 p-3 rounded-md mb-4">
+                {{ session('success') }}
             </div>
         @endif
 
@@ -222,8 +232,67 @@
             @endforeach
         </div>
     </div>
+    <!-- Update Status Modal -->
+    <div id="updateModel"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+
+        <!-- Inner Modal -->
+        <div class="bg-white rounded-2xl shadow-xl w-[95vw] sm:w-[80vw] md:w-[70vw] lg:w-[50vw] max-h-[90vh] overflow-y-auto p-6">
+
+            <!-- Modal Title -->
+            <h2 class="text-xl font-bold mb-4">Update Status</h2>
+
+            <!-- Modal Form -->
+            <form method="POST" action="{{route('mrc_status.update_bulk_status')}}">
+                @csrf
+
+                <!-- Date Select -->
+                <div class="mb-4">
+                    <label for="record_date" class="block text-sm font-medium text-gray-700 mb-1">Select Date</label>
+                    <select name="record_date" id="record_date"
+                        class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                        @foreach ($dates as $date)
+                            <option value="{{ $date }}">{{ \Carbon\Carbon::parse($date)->format('d M Y') }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Status Select -->
+                <div class="mb-4">
+                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select name="status" id="status"
+                        class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                        <option value="Sent for Verification">Sent for Verification</option>
+                        <option value="Certificate Signed">Certificate Signed</option>
+                        <option value="Objection">Objection</option>
+                    </select>
+                </div>
+
+                <!-- Footer Buttons -->
+                <div class="flex justify-end space-x-2 mt-4">
+                    <button type="button"
+                            onclick="closeModal()"
+                            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
+        function openModal() {
+            document.getElementById('updateModel').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('updateModel').classList.add('hidden');
+        }
+
         async function updateStatus(id, status) {
             try {
                 let response = await fetch(`/mrc_status/update_status/${id}`, {

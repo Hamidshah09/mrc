@@ -12,6 +12,12 @@ class MrcStatusController extends Controller
      */
     public function index(Request $request)
     {
+        $dates = MrcStatus::selectRaw('DATE(created_at) as date')
+        ->groupBy('date')
+        ->orderByDesc('date')
+        ->limit(10)
+        ->pluck('date');
+
         $query = MrcStatus::query();
         // Filters
         if ($request->filled('search')) {
@@ -37,7 +43,7 @@ class MrcStatusController extends Controller
 
         $mrcStatuses = $query->latest()->paginate(10);
 
-        return view('mrc_status.index', compact('mrcStatuses'));
+        return view('mrc_status.index', compact('mrcStatuses', 'dates'));
     }
 
     /**
@@ -145,4 +151,18 @@ class MrcStatusController extends Controller
             'status' => $mrcStatus->status,
         ]);
     }
+    public function update_bulk_status(Request $request)
+    {
+        $request->validate([
+            'status' => 'required|string|in:Certificate Signed,Sent for Verification,Objection',
+            'record_date' => 'required|date',
+        ]);
+
+        MrcStatus::whereDate('created_at', $request->record_date)
+            ->update(['status' => $request->status]);
+
+        return redirect()->route('mrc_status.index')->with('success', 'Status updated successfully.');
+    }
+
+
 }

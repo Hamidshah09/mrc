@@ -117,6 +117,9 @@ Route::middleware('auth')->group(function () {
     Route::put('mrc_status/update_status/{mrcStatus}', [MrcStatusController::class, 'update_status'])
         ->name('mrc_status.update_status');
 
+    Route::post('mrc_status/update_bulk_status}', [MrcStatusController::class, 'update_bulk_status'])
+        ->name('mrc_status.update_bulk_status');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

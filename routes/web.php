@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ArmsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DepartmentController;
@@ -86,6 +87,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/passcodes/report', [AdminController::class, 'report'])->name('Passcodes.report');
     Route::get('/admin/downloads', [AdminController::class, 'downloads'])->name('downloads');
     
+    Route::get('/arms', [ArmsController::class, 'index'])->name('arms.index');
+    Route::get('/arms/approve/{id}', [ArmsController::class, 'approve'])->name('arms.approve');
+    Route::get('/arms/deliver/{id}', [ArmsController::class, 'deliver'])->name('arms.deliver');
+    Route::get('/arms/trash/{id}', [ArmsController::class, 'trash'])->name('arms.trash');
+    Route::get('/arms/approve/all', [ArmsController::class, 'approveall'])->name('arms.approveall');
+    Route::get('/arms/trash/all', [ArmsController::class, 'trashall'])->name('arms.trashall');
+    Route::get('/arms/pdf-report', [ArmsController::class, 'pdf_report'])->name('arms.pdf');
 
     Route::get('/statistics/pdf-report', [StatisticsController::class, 'pdf_report'])->name('statistics.pdf');
     Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');

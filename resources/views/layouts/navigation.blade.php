@@ -13,7 +13,7 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <a href="{{route('dashboard')}}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
                 </div>
-                @if (auth()->user()->role!= 'customer' or auth()->user()->role!= 'registrar' or auth()->user()->role!= 'verifier')
+                @if (auth()->user()->role== 'admin' or auth()->user()->role== 'domicile' or auth()->user()->role== 'idp')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <a href="{{route('statistics.index')}}" class="block px-4 py-2 hover:bg-gray-100">Statistics</a>
                     </div>
@@ -21,6 +21,9 @@
                 @if (auth()->user()->role== 'admin')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <a href="{{route('users.index')}}" class="block px-4 py-2 hover:bg-gray-100">Users</a>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <a href="{{route('arms.index')}}" class="block px-4 py-2 hover:bg-gray-100">Arms</a>
                     </div>
                 @endif
                 @if (auth()->user()->role== 'registrar' or auth()->user()->role== 'mrc' or auth()->user()->role== 'verifier' or auth()->user()->role== 'admin')
@@ -170,7 +173,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
-        @if (auth()->user()->role!= 'customer' or  auth()->user()->role!= 'registrar' or auth()->user()->role!= 'verifier')
+        @if (auth()->user()->role== 'admin' or  auth()->user()->role== 'domicile' or auth()->user()->role== 'idp')
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('statistics.index')" :active="request()->routeIs('statistics.index')">
                     {{ __('CFC Statistics') }}
@@ -200,6 +203,11 @@
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                     {{ __('Users') }}
+                </x-responsive-nav-link>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('arms.index')" :active="request()->routeIs('arms.index')">
+                    {{ __('Arms') }}
                 </x-responsive-nav-link>
             </div>
         @endif

@@ -9,3 +9,6 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('counters:update')->everyFifteenMinutes();
+Schedule::command('import:domicile-status')
+    ->hourly()
+    ->appendOutputTo(storage_path('logs/domicile_import.log'));

@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Console\Commands;
+
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -17,7 +19,7 @@ class UpdateCounters extends Command
         $apiUrl = config('services.api.url');
         try {
             $response = Http::timeout(60) // 60 seconds
-                        ->get($this->apiUrl.'/domicile/statistics/check');
+                        ->get($apiUrl.'/domicile/statistics/check');
 
             if ($response->successful()) {
                 $data = $response->json();
@@ -30,7 +32,7 @@ class UpdateCounters extends Command
                     'domiciles' => $data['domicile'] ?? 0,
                     'driving_permits' => $data['idp'] ?? 0,
                 ];
-                \Log::info('Fetched stats from API', $finalData);
+                Log::info('Fetched stats from API', $finalData);
                 // \Log::info('Cache value after storing', Cache::get('counters'));
                 // Save in cache for 1 hour
                 Cache::put('counters', $finalData, now()->addHour());

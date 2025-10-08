@@ -111,6 +111,20 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+        'remote_mysql' => [
+            'driver' => 'mysql',
+            'host' => env('REMOTE_DB_HOST', '192.168.1.100'), // IP of the remote machine
+            'port' => env('REMOTE_DB_PORT', '3306'),
+            'database' => env('REMOTE_DB_DATABASE', 'source_db'),
+            'username' => env('REMOTE_DB_USERNAME', 'source_user'),
+            'password' => env('REMOTE_DB_PASSWORD', 'source_pass'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
 
     ],
 

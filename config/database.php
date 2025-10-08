@@ -125,6 +125,20 @@ return [
             'engine' => null,
         ],
 
+        'arms_mysql' => [
+            'driver' => 'mysql',
+            'host' => env('ARMS_DB_HOST', '192.168.1.100'), // IP of the ARMS machine
+            'port' => env('ARMS_DB_PORT', '3306'),
+            'database' => env('ARMS_DB_DATABASE', 'source_db'),
+            'username' => env('ARMS_DB_USERNAME', 'source_user'),
+            'password' => env('ARMS_DB_PASSWORD', 'source_pass'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
 
     ],
 

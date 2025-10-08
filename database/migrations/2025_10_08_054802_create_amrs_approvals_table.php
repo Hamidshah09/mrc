@@ -12,16 +12,18 @@ return new class extends Migration
     public function up()
     {
         Schema::create('arms_approvals', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
+            $table->integer('applicant_id')->nullable();
             $table->string('cnic', 13)->nullable();
-            $table->string('name', 60)->nullable(); 
+            $table->string('name', 60)->nullable();
             $table->string('license_no', 45)->nullable();
             $table->string('weapon_no', 20)->nullable();
             $table->string('request_type', 20)->nullable();
-            $table->string('file_status', 45)->nullable(); 
+            $table->string('action', 45)->nullable();
+            $table->string('operator', 45)->nullable();
+            $table->string('file_status', 45)->nullable();
             $table->string('url', 80)->nullable();
-            $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamps();
         });
     }
 

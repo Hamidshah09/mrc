@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\children;
 use App\Models\districts;
 use App\Models\DomicileApplicants;
+use App\Models\DomicileStatus;
 use App\Models\NocApplicants;
 use App\Models\NocLetters;
 use App\Models\Passcode;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class domicileController extends Controller
 {   
@@ -534,40 +536,25 @@ class domicileController extends Controller
     }
     public function apiCheck(Request $request)
     {
-        session()->forget('status');
-        session()->forget('error');
+        session()->forget(['status', 'error']);
 
         $request->validate([
-            'cnic' => ['required', 'regex:/^[0-9]{5}-[0-9]{7}-[0-9]{1}$/']
+            'cnic' => ['required', 'regex:/^[0-9]{13}$/']
         ], [
-            'cnic.regex' => 'CNIC format must be like 61101-4561237-8'
+            'cnic.regex' => 'CNIC format must be like 6110145612378'
         ]);
 
-        try {
-            $response = Http::get($this->apiUrl.'/domicile/check/'. $request->cnic);
-
-            if ($response->successful()) {
-                $data = $response->json();
-
-                if (isset($data['error'])) {
-                    return redirect()->back()->with('error', $data['error']);
-                }
-
-                // unwrap 'status' if FastAPI returns { "status": {...} }
-                if (isset($data['status'])) {
-                    return redirect()->back()->with('status', $data['status']);
-                }
-
-                return redirect()->back()->with('status', $data);
-            } else {
-                $error = $response->json()['error'] ?? $response->json()['detail'] ?? 'Unknown error from API';
-                return redirect()->back()->with('error', $error);
-            }
-        } catch (\Exception $e) {
-            \Log::error('API call failed: '.$e->getMessage());
-            return redirect()->back()->with('error', 'Something went wrong: '.$e->getMessage());
+        // Fetch the domicile record
+        $data = DomicileStatus::where('cnic', $request->cnic)->first();
+        
+        if ($data) {
+            // Convert to array so you can access like session('status')['Status']
+            return redirect()->back()->with('status', $data->toArray());
+        } else {
+            return redirect()->back()->with('error', 'Record not found');
         }
     }
+
 
     public function get_statistics()
     {
@@ -599,7 +586,7 @@ class domicileController extends Controller
                     'domiciles' => $data['domicile'] ?? 0,
                     'driving_permits' => $data['idp'] ?? 0,
                 ];
-                \Log::info('Fetched stats from API', $finalData);
+                Log::info('Fetched stats from API', $finalData);
                 // \Log::info('Cache value after storing', Cache::get('counters'));
                 // Save in cache for 1 hour
                 Cache::put('counters', $finalData, now()->addHour());

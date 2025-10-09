@@ -21,7 +21,7 @@ class MrcStatusController extends Controller
         $query = MrcStatus::query();
         // Filters
         if ($request->filled('search')) {
-            $query->where('tracking_id', 'like', '%' . $request->search . '%')
+            $query->where('applicant_cnic', 'like', '%' . $request->search . '%')
                   ->orWhere('applicant_name', 'like', '%' . $request->search . '%');
         }
 

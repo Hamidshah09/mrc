@@ -12,7 +12,7 @@ class IDPController extends Controller
     public function __construct()
     {
         // point this to your server's FastAPI base URL
-        $this->fastapiUrl = env('FASTAPI_URL', 'http://127.0.0.1:5500/idp');
+        $this->fastapiUrl = env('FASTAPI_URL', 'http://127.0.0.1:8000');
     }
     public function index(Request $request)
     {
@@ -52,6 +52,40 @@ class IDPController extends Controller
         }
         // Match what your JS expects
         return redirect()->route('idp.index')->with('success','Application Approved');
+    }
+    public function check(Request $request)
+    {
+        session()->forget('status');
+        session()->forget('error');
+
+        $request->validate([
+            'idp' => ['required', 'integer']
+        ]);
+
+        try {
+            $response = Http::get($this->fastapiUrl.'/idp/check/'. $request->idp);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                if (isset($data['error'])) {
+                    return redirect()->back()->with('error', $data['error']);
+                }
+
+                // unwrap 'status' if FastAPI returns { "status": {...} }
+                if (isset($data['result'])) {
+                    return redirect()->back()->with('status', $data['result']);
+                }
+
+                return redirect()->back()->with('status', $data);
+            } else {
+                $error = $response->json()['error'] ?? $response->json()['detail'] ?? 'Unknown error from API';
+                return redirect()->back()->with('error', $error);
+            }
+        } catch (\Exception $e) {
+            \Log::error('API call failed: '.$e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong: '.$e->getMessage());
+        }
     }
 
 }

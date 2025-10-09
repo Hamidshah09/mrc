@@ -9,10 +9,9 @@ return new class extends Migration {
     {
         Schema::create('center_services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('centers_id')->constrained()->onDelete('cascade');
-            $table->foreignId('services_id')->constrained()->onDelete('cascade');
+            $table->foreignId('centers_id');
+            $table->foreignId('services_id');
             $table->timestamps();
-
             $table->unique(['center_id', 'service_id']);
         });
     }

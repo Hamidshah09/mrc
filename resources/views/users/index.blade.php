@@ -84,6 +84,7 @@
                                 <div class="flex items-center space-x-2">
                                     <a href="{{route('users.edit', $user->id)}}" >
                                         <x-icons.pencil-square class="text-blue-500 hover:text-blue-700" />
+                                    
                                     </a>
                                 </div>
                             </td>

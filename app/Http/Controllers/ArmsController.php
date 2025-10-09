@@ -13,7 +13,7 @@ class ArmsController extends Controller
     public function __construct()
     {
         // point this to your server's FastAPI base URL
-        $this->fastapiUrl = env('API_URL', 'http://127.0.0.1:5500');
+        $this->fastapiUrl = env('API_URL', 'http://127.0.0.1:8000');
     }
     public function index_(){
         $armsRecords = [ [ "id"=> 753, "applicant_id"=> 75481, "cnic"=> "8130104129327", "name"=> "OMAR IBN ABDUL AZIZ CHAUDHAREY", "license_no"=> "202504780385460", "weapon_no"=> "T0620-25DK00247", "request_type"=> "New", "action"=> "Need approval", "operator"=> "Zulkifal", "file_status"=> "Pending", "url"=> "https://admin-icta.nitb.gov.pk/arm/applicant/75481/application/edit/85460", "created_at"=> "2025-04-28T15:12:31", "updated_at"=> null ], ["id"=> 752, "applicant_id"=> 75481, "cnic"=> "8130104129327", "name"=> "OMAR IBN ABDUL AZIZ CHAUDHAREY", "license_no"=> "202504780385460", "weapon_no"=> "T0620-25DK00247", "request_type"=> "New", "action"=> "Need approval", "operator"=> "Zulkifal", "file_status"=> "Pending", "url"=> "https://admin-icta.nitb.gov.pk/arm/applicant/75481/application/edit/85460", "created_at"=> "2025-04-28T15=>12=>31", "updated_at"=> null ]];
@@ -42,7 +42,7 @@ class ArmsController extends Controller
 
     public function approve($id)
     {
-        $response = Http::timeout(90)->post("{$this->fastapiUrl}/arms/approve/{$id}");
+        $response = Http::timeout(120)->post("{$this->fastapiUrl}/arms/approve/{$id}");
         if ($response->failed()) {
             return back()->withErrors(['Failed to fetch records']);
         }

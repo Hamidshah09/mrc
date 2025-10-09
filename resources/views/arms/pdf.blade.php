@@ -6,7 +6,6 @@
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
-            font-size: 12px;
         }
         h2 {
             text-align: center;
@@ -22,12 +21,12 @@
         }
         th, td {
             border: 1px solid #333;
-            padding: 6px;
+            padding: 4px;
             text-align: left;
             vertical-align: top;
             word-wrap: break-word;
             word-break: break-word;
-            font-size: 15px;
+            font-size: 13px;
         }
         th {
             background-color: #f2f2f2;

@@ -52,11 +52,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th>#</th>
-                <th>CNIC</th>
+                <th style="width:20px">#</th>
+                <th style="width:130px">CNIC</th>
                 <th>Name</th>
-                <th>License No</th>
-                <th>Request Type</th>
+                <th style="width:150px">License No</th>
+                <th style="width:100px">Request Type</th>
             </tr>
         </thead>
         <tbody>

@@ -92,19 +92,19 @@
                 @elseif(session('status'))
                     @php
                         $class_type = 'blue';
-                        if (session('status')['Status']=="Approval Received"){
+                        if (session('status')['status']=="Approval Received"){
                             $class_type = 'green';
                             $current_status = 'Documents Approved';
-                        }elseif (session('status')['Status']=="Sent for Approval"){
+                        }elseif (session('status')['status']=="Sent for Approval"){
                             $class_type = 'yellow';
                             $current_status = 'Documents sent for approval';
-                        }elseif (session('status')['Status']=="Objection"){
+                        }elseif (session('status')['status']=="Objection"){
                             $class_type = 'red';
                             $current_status = 'Objection';
-                        }elseif (session('status')['Status']=="Exported"){
+                        }elseif (session('status')['status']=="Exported"){
                             $class_type = 'blue';
                             $current_status = 'Domicile Issued';
-                        }elseif (session('status')['Status']=="Pending"){
+                        }elseif (session('status')['status']=="Pending"){
                             $class_type = 'gray';
                             $current_status = 'Pending';
                         }
@@ -112,7 +112,7 @@
                     <div class="mt-4 bg-{{$class_type}}-100 border border-{{$class_type}}-400 text-{{$class_type}}-700 px-4 py-3 rounded">
                         <h3 class="font-semibold text-lg text-center">Domicile Status</h3>
                         <p><strong>Receipt No:</strong> {{ session('status')['receipt_no'] }}</p>
-                        <p><strong>Applicant Name:</strong> {{ session('status')['First_Name'] }}</p>
+                        <p><strong>Applicant Name:</strong> {{ session('status')['first_name'] }}</p>
                         <p><strong>Status:</strong> {{ $current_status }}</p>
                         @if ($current_status=='Objection')
                             <p><strong>Remarks:</strong> {{ session('status')['remarks'] }}</p>

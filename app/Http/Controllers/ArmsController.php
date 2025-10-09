@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ArmsApproval;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -84,27 +85,20 @@ class ArmsController extends Controller
     }
     public function pdf_report(Request $request)
     {
-        $date1 = Carbon::parse($request->input('report_date1'));
-    $date2 = Carbon::parse($request->input('report_date2'));
+        $date1 = Carbon::parse($request->input('report_date1'))->startOfDay();
+        $date2 = Carbon::parse($request->input('report_date2'))->endOfDay();
 
-    $response = Http::timeout(30)->get("{$this->fastapiUrl}/arms/report", [
-        'report_date1' => $date1->toDateString(), // 'YYYY-MM-DD'
-        'report_date2' => $date2->toDateString(),
-    ]);
+        $data = ArmsApproval::where('file_status', 'Approved')
+        ->whereBetween('updated_at', [$date1, $date2])
+        ->get();
+        
+        $pdf = Pdf::loadView('arms.pdf', [
+            'reportDate1' => $date1->format('d M Y'),
+            'reportDate2' => $date2->format('d M Y'),
+            'data' => $data,
+        ]);
 
-    if ($response->failed()) {
-        return back()->withErrors('Failed to fetch report data');
-    }
-
-    $data = $response->json()['data'];
-
-    $pdf = Pdf::loadView('arms.pdf', [
-        'reportDate1' => $date1->format('d M Y'),
-        'reportDate2' => $date2->format('d M Y'),
-        'data' => $data,
-    ]);
-
-    return $pdf->download("report_{$date1->format('Ymd')}.pdf");
+    return $pdf->download("report_{$date1->format('dmY')}.pdf");
 
 
     }

@@ -20,11 +20,11 @@ return new class extends Migration
             $table->timestamps();
         });
         DB::table('application_types')->insert([
-            ['application_type'=>'Noc for other District Domicile'],
-            ['application_type'=>'Noc for events'],
-            ['application_type'=>'Permission for open fuel'],
-            ['application_type'=>'L4 (Explosive License)'],
-            ['application_type'=>'L7 (Explosive License)'],
+            ['application_type'=>'Noc for other District Domicile', 'route'=>'noc.other_district.create', 'icon'=>'📄'],
+            ['application_type'=>'Noc for events', 'route'=>'hcg.noc_events.create', 'icon'=>'🎉'],
+            ['application_type'=>'Permission for open fuel', 'route'=>'hcg.noc_fuel.create', 'icon'=>'⛽'],
+            ['application_type'=>'L4 (Explosive Usage License)', 'route'=>'alc.l4.create', 'icon'=>'🧨'],
+            ['application_type'=>'L7 (Explosive Transportaion License)', 'route'=>'hcg.l7.create', 'icon'=>'🚚'],
         ]);
     }
 

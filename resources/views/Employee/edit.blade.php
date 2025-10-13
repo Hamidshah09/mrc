@@ -117,8 +117,8 @@
                                 <x-input-label for="emp_type_id" :value="__('Employee Status')" />
                                 <select name="emp_type_id" id="emp_type_id"
                                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="1" @if($employee->emp_type_id == 1) selected @endif>Temporary</option>
-                                    <option value="2" @if($employee->emp_type_id == 2) selected @endif>Permanent</option>
+                                    <option value="1" @if($employee->emp_type_id == 1) selected @endif>Daily Wages</option>
+                                    <option value="2" @if($employee->emp_type_id == 2) selected @endif>Regular</option>
                                 </select>
                                 <x-input-error :messages="$errors->get('emp_type_id')" class="mt-2" />
                             </div>

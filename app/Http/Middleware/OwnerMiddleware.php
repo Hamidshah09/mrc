@@ -20,20 +20,22 @@ class OwnerMiddleware
         $user = Auth::user();
 
         // Check if user is a registrar
-        if ($user->role !== 'registrar') {
-            abort(403, 'Unauthorized: Not a registrar.');
+        if ($user->role->role == 'registrar' or $user->role->role == 'verifier' or $user->role->role == 'admin') {
+            // Assuming route has a model binding like /records/{record}
+            $id = $request->route('id');
+            $record = Mrc::findOrFail($id);
+
+            // Check if the record belongs to the registrar
+            if ($record->registrar_id !== $user->id) {
+                abort(403, 'Unauthorized: You do not own this record.');
+            }
+
+            return $next($request);    
+        }else{
+            abort(403, 'Unauthorized: You are Not a registrar or varifier.');
         }
 
-        // Assuming route has a model binding like /records/{record}
-        $id = $request->route('id');
-        $record = Mrc::findOrFail($id);
-
-        // Check if the record belongs to the registrar
-        if ($record->registrar_id !== $user->id) {
-            abort(403, 'Unauthorized: You do not own this record.');
-        }
-
-        return $next($request);
+        
 
 
     }

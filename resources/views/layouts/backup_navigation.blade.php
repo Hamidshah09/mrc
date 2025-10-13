@@ -20,22 +20,10 @@
                 @endif
                 @if (auth()->user()->role->role== 'admin')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <div class="relative" x-data="{ dropdown: false }">
-                            <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
-                                Admin
-                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div x-show="dropdown" @click.outside="dropdown = false"
-                                x-transition
-                                class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
-                                <a href="{{route('users.index')}}" class="block px-4 py-2 hover:bg-gray-100">Users</a>
-                                <a href="{{route('arms.index')}}" class="block px-4 py-2 hover:bg-gray-100">Arms</a>
-                                <a href="{{route('finance.index')}}" class="block px-4 py-2 hover:bg-gray-100">Finance</a>
-                            </div>
-                        </div>
+                        <a href="{{route('users.index')}}" class="block px-4 py-2 hover:bg-gray-100">Users</a>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <a href="{{route('arms.index')}}" class="block px-4 py-2 hover:bg-gray-100">Arms</a>
                     </div>
                 @endif
                 @if (auth()->user()->role->role== 'registrar' or auth()->user()->role->role== 'mrc' or auth()->user()->role->role== 'verifier' or auth()->user()->role->role== 'admin')
@@ -220,11 +208,6 @@
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('arms.index')" :active="request()->routeIs('arms.index')">
                     {{ __('Arms') }}
-                </x-responsive-nav-link>
-            </div>
-            <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('finance.index')" :active="request()->routeIs('arms.index')">
-                    {{ __('Finance') }}
                 </x-responsive-nav-link>
             </div>
         @endif

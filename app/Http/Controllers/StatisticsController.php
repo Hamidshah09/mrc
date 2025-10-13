@@ -21,6 +21,7 @@ class StatisticsController extends Controller
 
         $statistics = Statistics::with(['center:id,location', 'service:id,service'])
             ->whereBetween('report_date', [$startDate, $endDate])
+            ->orderBy('id', 'desc')
             ->get();
 
         // Group by date → then by center → then by service

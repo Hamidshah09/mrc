@@ -19,7 +19,7 @@ class MrcController extends Controller
         $query = MRC::with(['registrar', 'verifier'])->orderBy('id', 'desc');
 
         // Limit to registrar's own records if applicable
-    if ($user->role === 'registrar') {
+    if ($user->role->role === 'registrar') {
         $query->where('registrar_id', $user->id);
     }
 
@@ -93,7 +93,7 @@ class MrcController extends Controller
 
         Mrc::create($validated);
 
-        return redirect()->route('dashboard')->with('success', 'MRC record created successfully.');
+        return redirect()->route('mrc.index')->with('success', 'MRC record created successfully.');
     }
     public function show($id){
         $record = Mrc::findorfail($id);
@@ -138,27 +138,29 @@ class MrcController extends Controller
 
         $mrc->update($validated);
 
-        return redirect()->route('dashboard')->with('success', 'MRC record updated successfully.');
+        return redirect()->route('mrc.index')->with('success', 'MRC record updated successfully.');
     }
     public function verify(Request $request, $id)
     {
         $user = Auth::user();
-        if ($user->role !== 'admin') {
-            return redirect()->route('dashboard')->with('error', 'You are not authorized to verify MRC records.');
+        if ($user->role->role == 'admin' or $user->role->role == 'verifier') {
+            $mrc = Mrc::findOrFail($id);
+            $validated = $request->validate([
+                'remarks' => 'nullable|string|max:100',
+            ]);
+
+            $mrc->update([
+                'status' => 'Verified',
+                'verifier_id' => $user->id,
+                'verification_date' => now()->toDateString(),
+                'remarks' => $validated['remarks'],
+            ]);
+
+            return redirect()->route('mrc.index')->with('success', 'MRC record verified successfully.');    
+        }else{
+            return redirect()->route('mrc.index')->with('error', 'You are not authorized to verify MRC records.');
         }
-        $mrc = Mrc::findOrFail($id);
-        $validated = $request->validate([
-            'remarks' => 'nullable|string|max:100',
-        ]);
-
-        $mrc->update([
-            'status' => 'Verified',
-            'verifier_id' => $user->id,
-            'verification_date' => now()->toDateString(),
-            'remarks' => $validated['remarks'],
-        ]);
-
-        return redirect()->route('dashboard')->with('success', 'MRC record verified successfully.');
+        
     }
     public function upload_(Request $request){
         return view('mrc.import');        

@@ -27,6 +27,7 @@ class ImportDomicileStatus extends Command
                 'Status',
                 'receipt_no',
                 'remarks',
+                'created_at',
             ])
             ->where('Dom_id', '>', $localMaxId)
             ->orderBy('Dom_id')
@@ -39,6 +40,7 @@ class ImportDomicileStatus extends Command
                         'status' => $row->Status,
                         'receipt_no' => $row->receipt_no,
                         'remarks' => $row->remarks,
+                        'created_at'=>$row->created_at,
                     ];
                 })->toArray();
 

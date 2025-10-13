@@ -76,7 +76,7 @@
                                 <span class="inline-block px-2 py-1 rounded-full text-xs font-medium
                                     {{
                                         $mrc->status === 'Verified' ? 'bg-green-100 text-green-800' :
-                                        ($mrc->status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                        ($mrc->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
                                         'bg-red-100 text-red-800')
                                     }}">
                                     {{ ucfirst($mrc->status) }}
@@ -89,12 +89,12 @@
                                             <x-icons.pencil-square />
                                         </a>
                                     @endif
-                                    @if ($user->role === 'admin' && $mrc->status === 'pending' or $user->role === 'verifier' && $mrc->status === 'pending')
+                                    @if ($user->role->role === 'admin' && $mrc->status === 'Pending' or $user->role->role === 'verifier' && $mrc->status === 'Pending')
                                         <a href="#" onclick="openVerifyModal({{ $mrc->id }})">
                                             <x-icons.check-circle class="text-green-500 hover:text-green-700" />
                                         </a>
                                     @endif
-                                    @if ($user->role === 'admin' or $user->role === 'mrc')
+                                    @if ($user->role->role === 'admin' or $user->role->role === 'mrc')
                                         @if($mrc->image)
                                             <a href="{{ asset('storage/' . $mrc->image) }}">
                                                 <x-icons.document-text class="text-yellow-500 hover:text-yellow-700" />
@@ -146,8 +146,8 @@
                             <td class="p-3">
                                 <span class="inline-block px-2 py-1 rounded-full text-xs font-medium
                                     {{
-                                        $mrc->status === 'approved' ? 'bg-green-100 text-green-800' :
-                                        ($mrc->status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                        $mrc->status === 'Verified' ? 'bg-green-100 text-green-800' :
+                                        ($mrc->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
                                         'bg-red-100 text-red-800')
                                     }}">
                                     {{ ucfirst($mrc->status) }}
@@ -156,8 +156,26 @@
                         </tr>
                         <tr>
                             <td class="p-3 font-semibold text-gray-700">Actions:</td>
-                            <td class="p-3">
-                                <a href="#" class="text-blue-600 hover:text-blue-800">View</a>
+                            <td class="px-6 py-4 text-sm">
+                                <div class="flex items-center space-x-2">
+                                    @if ($user->id=== $mrc->registrar_id)
+                                        <a href="{{ route('mrc.edit', $mrc->id) }}" class="text-blue-600 hover:text-blue-800">
+                                            <x-icons.pencil-square />
+                                        </a>
+                                    @endif
+                                    @if ($user->role->role === 'admin' && $mrc->status === 'Pending' or $user->role->role === 'verifier' && $mrc->status === 'Pending')
+                                        <a href="#" onclick="openVerifyModal({{ $mrc->id }})">
+                                            <x-icons.check-circle class="text-green-500 hover:text-green-700" />
+                                        </a>
+                                    @endif
+                                    @if ($user->role->role === 'admin' or $user->role->role === 'mrc')
+                                        @if($mrc->image)
+                                            <a href="{{ asset('storage/' . $mrc->image) }}">
+                                                <x-icons.document-text class="text-yellow-500 hover:text-yellow-700" />
+                                            </a>
+                                        @endif
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     </tbody>

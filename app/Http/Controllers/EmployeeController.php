@@ -161,7 +161,7 @@ class EmployeeController extends Controller
             $dob        = Carbon::parse($employee->date_of_birth)->format('d-m-Y');
 
             // Handle permanent vs non-permanent
-            if ($emp_status === 'Permanent') {
+            if ($emp_status === 'Regular') {
                 $existingCard = DB::table('employee_cards')->where('employee_id', $emp_id)->first();
 
                 if ($existingCard) {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\api\DomicileController;
 use App\Http\Controllers\Api\IdpController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,4 +15,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/users/update-password', [IdpController::class, 'update_password']);
     Route::post('/idp/store', [IdpController::class, 'store']);
     Route::post('/idp-history/store', [IdpController::class, 'idp_his_store']); 
+    Route::post('/domicile/update', [DomicileController::class, 'update']);
 });

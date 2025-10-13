@@ -69,7 +69,7 @@
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $user->father_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $user->license_number ? $user->license_number : 'N/A'}}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $user->mobile }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $user->role }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ ucfirst($user->role->role)  }}</td>
                             <td class="px-6 py-4 text-sm">
                                 <span class="inline-block px-2 py-1 rounded-full text-xs font-medium
                                     {{

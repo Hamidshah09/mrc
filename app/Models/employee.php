@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Mattiverse\Userstamps\Traits\Userstamps;
 
 class employee extends Model
 {
+    use Userstamps;
     public $guarded=[];
     public function designations()
     {

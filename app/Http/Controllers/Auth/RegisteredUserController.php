@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +20,7 @@ class RegisteredUserController extends Controller
      */
     public function index(Request $request)
 {
-    $query = User::query();
+    $query = User::query()->with('role');
 
     // Apply search by type
     if ($request->filled('search') && $request->filled('search_type')) {
@@ -56,7 +57,7 @@ class RegisteredUserController extends Controller
 }
 
      public function create(): View
-    {   $roles = ['admin', 'registrar', 'mrc', 'idp', 'verifier', 'domicile', 'customer', 'ea'];
+    {   $roles = Role::all();
         return view('auth.register', compact('roles'));
     }
 
@@ -100,7 +101,6 @@ class RegisteredUserController extends Controller
         'profile_image'  => $validated['profile_image'] ?? null,
         'password'       => Hash::make($validated['password']),
         'status'         => 'Not Active', // or 'Active' if auto-approved
-        'role'           => 'customer',   // default role
     ]);
 
     // Step 4: Fire Registered event and log in the user
@@ -118,7 +118,7 @@ class RegisteredUserController extends Controller
     public function edit(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        $roles = ['admin', 'registrar', 'mrc', 'idp', 'verifier', 'domicile', 'customer', 'ea'];
+        $roles = Role::all();
         return view('users.edit', compact('user', 'roles'));
     }
     public function update(Request $request, $id): RedirectResponse
@@ -137,7 +137,7 @@ class RegisteredUserController extends Controller
             'license_number' => 'required|string',
             'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status'       => 'string|in:Active,Not active',
-            'role'         => 'string|in:admin,registrar,mrc,idp,verifier,domicile,customer,ea', // Add this
+            'role'         => 'integer|in:roles,role', // Add this
             'password'       => 'nullable|string|min:8|confirmed', // Add this line
         ]);
 

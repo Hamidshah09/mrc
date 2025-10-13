@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Register Marriage') }}
+            {{ __('Edit Marriage Record') }}
         </h2>
     </x-slot>
 
@@ -18,96 +18,96 @@
             </div>
         @endif
 
-        <form action="{{ route('mrc.store') }}" method="POST" class="space-y-4" enctype="multipart/form-data">
+        <form action="{{ route('mrc.update', $mrc->id) }}" method="POST" class="space-y-4" enctype="multipart/form-data">
             @csrf
-
+            @method('PUT')
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium">Groom Name</label>
                     <input type="text" name="groom_name"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('groom_name') }}">
+                           value="{{ old('groom_name', $mrc->groom_name) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Bride Name</label>
                     <input type="text" name="bride_name"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('bride_name') }}">
+                           value="{{ old('bride_name', $mrc->bride_name) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Groom's Father Name</label>
                     <input type="text" name="groom_father_name"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('groom_father_name') }}">
+                           value="{{ old('groom_father_name', $mrc->groom_father_name) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Bride's Father Name</label>
                     <input type="text" name="bride_father_name"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('bride_father_name') }}">
+                           value="{{ old('bride_father_name', $mrc->bride_father_name) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Groom Passport</label>
                     <input type="text" name="groom_passport"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('groom_passport') }}">
+                           value="{{ old('groom_passport', $mrc->groom_passport) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Bride Passport</label>
                     <input type="text" name="bride_passport"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('bride_passport') }}">
+                           value="{{ old('bride_passport', $mrc->bride_passport) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Groom CNIC</label>
                     <input id="groom_cnic" type="text" name="groom_cnic"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('groom_cnic') }}">
+                           value="{{ old('groom_cnic', $mrc->groom_cnic) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Bride CNIC</label>
                     <input id="bride_cnic" type="text" name="bride_cnic"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('bride_cnic') }}">
+                           value="{{ old('bride_cnic', $mrc->bride_cnic)}}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Marriage Date</label>
                     <input type="date" name="marriage_date"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('marriage_date') }}">
+                           value="{{ old('marriage_date', $mrc->marriage_date) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Registration Date</label>
                     <input type="date" name="registration_date"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('registration_date') }}">
+                           value="{{ old('registration_date', $mrc->registraion_date) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Register No</label>
                     <input type="text" name="register_no"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('register_no') }}">
+                           value="{{ old('register_no', $mrc->register_no) }}">
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium">Remarks</label>
                     <textarea name="remarks" rows="3"
-                              class="w-full border-gray-300 rounded shadow-sm">{{ old('remarks') }}</textarea>
+                              class="w-full border-gray-300 rounded shadow-sm">{{ old('remarks', $mrc->remarks) }}</textarea>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Upload Nikkahnama (page 1)</label>
-                    <input type="file" required name="image"
+                    <input type="file" name="image"
                            class="w-full border-gray-300 rounded shadow-sm">
                 </div>
             </div>

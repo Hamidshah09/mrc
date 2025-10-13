@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Mattiverse\Userstamps\Traits\Userstamps;
 
 class Mrc extends Model
 {
+    use Userstamps;
     protected $fillable = [
         'groom_name',
         'bride_name',

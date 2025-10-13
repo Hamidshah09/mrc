@@ -26,7 +26,7 @@ class User extends Authenticatable
         'dob',
         'email',
         'status',
-        'role',
+        'role_id',
         'password',
         'mobile',
         'profile_image',
@@ -68,5 +68,13 @@ class User extends Authenticatable
     public function verifiedMrcs()
     {
         return $this->hasMany(Mrc::class, 'verifier_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+    public function online_application(){
+        return $this->hasMany(OnlineApplication::class, 'created_by', 'id');
     }
 }

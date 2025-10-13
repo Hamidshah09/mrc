@@ -8,6 +8,7 @@ use App\Models\DomicileApplicants;
 use App\Models\DomicileStatus;
 use App\Models\NocApplicants;
 use App\Models\NocLetters;
+use App\Models\OnlineApplication;
 use App\Models\Passcode;
 use App\Models\tehsils;
 use Illuminate\Http\Request;
@@ -389,7 +390,8 @@ class domicileController extends Controller
             ]);
     }
 
-    public function store_noc(Request $request){
+    public function store_noc(Request $request)
+    {
         
         $passcode = Passcode::where([
             ['code', '=', (string)$request->code],

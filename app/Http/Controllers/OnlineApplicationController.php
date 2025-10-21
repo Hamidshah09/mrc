@@ -12,7 +12,14 @@ use Illuminate\Support\Facades\Auth;
 class OnlineApplicationController extends Controller
 {
     public function dashboard()
-    {   $user= Auth::user();
+    {   
+        
+        $user= Auth::user();
+        // if registrar he dosent need dashbaord by defult
+        if ($user->role->role==='registrar'){
+            return view('mrc.index');
+        }
+        // admin will see all application whereas customer will see only his applied application.
         $query = OnlineApplication::with(['application_status', 'application_type', 'user']);
         if ($user->role->role==='admin'){
             $applications = $query->orderBy('id', 'desc')->get();

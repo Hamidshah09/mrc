@@ -166,7 +166,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/ea/employee/show/{id}', 'show')->name('Employee.show');
             Route::put('/ea/employee/update/{id}', 'update')->name('Employee.update');
             Route::get('/ea/issuecard/{id}', 'issueCard')->name('issueCard');
-        
+            Route::get('/ea/showcard/{id}', 'showCard')->name('showcard');
         });
     });
 });

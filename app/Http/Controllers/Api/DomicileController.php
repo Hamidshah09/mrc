@@ -19,12 +19,14 @@ class DomicileController extends Controller
             $validated=$request->validate([
                 'parm'=>'required',
                 'parm_type'=>'required|string|in:ID,Date',
-                'status'=>'required|string|in:Approval Received,Objection,Sent for Approval,Exported,Pending'
+                'status'=>'required|string|in:Approval Received,Objection,Sent for Approval,Exported,Pending',
+                'remarks'=>'nullable|string|max:120'
             ]);
             
             if ($request->parm_type==='ID'){
                 $doimicile = DomicileStatus::findOrFail($request->parm);
                 $doimicile->status = $request->status;
+                $doimicile->remarks = $request->remarks;
                 $doimicile->save();
             }else{
                 $date1 = Carbon::parse($request->input('parm'))->startOfDay();

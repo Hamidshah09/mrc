@@ -288,16 +288,31 @@ private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $depar
             $addText($dateofexpiry,542, 509);
 
             // Save the generated card
-            $outputPath = public_path('cards/' . $name . '_' . $emp_id . '.png');
-            $template->save($outputPath, 100, 'png'); // quality=100
-
-            // Free memory
+            $filename = $emp_id . '.png';
+            Storage::disk('local')->put('cards/' . $filename, $template->encode('png', 100));
 
             return true;
         } catch (\Exception $e) {
             return  $e->getMessage();
         }
     }
+    public function showCard($id)
+    {
+        $filename = 'private/cards/' . $id . '.png';
+
+        if (!Storage::disk('local')->exists($filename)) {
+            abort(404, 'Card not found');
+        }
+
+        $file = Storage::disk('local')->get($filename);
+        $path = storage_path('app/' . $filename);
+        $mime = mime_content_type($path);
+
+        return response($file, 200)->header('Content-Type', $mime);
+    }
+
+
+
 
 
     

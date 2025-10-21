@@ -77,11 +77,9 @@
                                             <a href="{{ route('Employee.edit', $employee->id) }}" class="text-blue-600 hover:text-blue-800">
                                                 <x-icons.pencil-square />
                                             </a>
-                                            @if(file_exists(public_path('\\cards\\'. $employee->name."_".$employee->id.".png")))
-                                                <a href="{{asset('/cards/'. $employee->name.'_'.$employee->id.'.png')}}" title="View Card">
-                                                    <x-icons.image />
-                                                </a>
-                                            @endif
+                                            <a href="{{route('showcard', $employee->id)}}" title="View Card">
+                                                <x-icons.image />
+                                            </a>
                                             <a href="{{route('issueCard', $employee->id)}}" title="Issue Card">
                                                 <x-icons.check-circle class="text-green-500 hover:text-green-700" />
                                             </a>

@@ -10,8 +10,8 @@
 
             {{-- Online Services --}}
             <div>
-                <h3 class="text-xl font-semibold text-gray-700 mb-4">Apply for an Online Service</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4 mx-3 sm:mx-2">Apply for an Online Service</h3>
+                <div class="grid grid-cols-1 mx-3 sm:mx-2 sm:grid-cols-2 lg:grid-cols-3 gap-6" >
                     @foreach ($services as $service)
                         <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
                             <div class="text-4xl mb-3">
@@ -29,11 +29,11 @@
 
             {{-- Submitted Applications --}}
             <div>
-                <h3 class="text-xl font-bold text-gray-700 mb-4">Your Submitted Applications</h3>
+                <h3 class="text-xl font-bold text-gray-700 mb-4 mx-3 sm:mx-2">Your Submitted Applications</h3>
                 @if ($applications->isEmpty())
                     <p class="text-gray-500">You haven’t submitted any applications yet.</p>
                 @else
-                    <div class="bg-white overflow-hidden shadow rounded-2xl">
+                    <div class="bg-white shadow rounded-2xl mx-3 sm:mx-2">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-200">
                                 <tr>
@@ -62,11 +62,11 @@
                                         <td class="px-6 py-4 text-right">
                                             <div class="flex justify-start items-center space-x-3">
                                                 <a href="{{ asset('storage/' . $app->documents) }}" 
-                                                target="_blank"
-                                                class="inline-flex items-center gap-1 hover:text-indigo-800 text-sm font-medium">
-                                                    {{-- View icon --}}
-                                                    <x-icon name="file-text" class="w-5 h-5 text-yellow-600" />
-                                                    Documents
+                                                    target="_blank"
+                                                    class="inline-flex items-center gap-1 hover:text-indigo-800 text-sm font-medium">
+                                                        {{-- View icon --}}
+                                                        <x-icon name="file-text" class="w-5 h-5 text-yellow-600" />
+                                                        Documents
                                                 </a>
                                             </div>
                                         </td>

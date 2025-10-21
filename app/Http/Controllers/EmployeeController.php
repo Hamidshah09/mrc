@@ -289,8 +289,7 @@ private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $depar
 
             // Save the generated card
             $filename = $emp_id . '.png';
-            Storage::disk('local')->put('cards/' . $filename, $template->encode('png', 100));
-
+Storage::disk('private')->put('cards/' . $filename, $template->encode('png', 100));
             return true;
         } catch (\Exception $e) {
             return  $e->getMessage();
@@ -298,15 +297,18 @@ private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $depar
     }
     public function showCard($id)
     {
-        $filename = 'private/cards/' . $id . '.png';
+        
+         $filename = 'cards/' . $id . '.png';
 
-        if (!Storage::disk('local')->exists($filename)) {
-            abort(404, 'Card not found');
-        }
+    if (!Storage::disk('private')->exists($filename)) {
+        abort(404, 'Card not found');
+    }
 
-        $file = Storage::disk('local')->get($filename);
-        $path = storage_path('app/' . $filename);
-        $mime = mime_content_type($path);
+    $path = storage_path('app/private/' . $filename);
+    $mime = mime_content_type($path);
+    $file = file_get_contents($path);
+
+
 
         return response($file, 200)->header('Content-Type', $mime);
     }

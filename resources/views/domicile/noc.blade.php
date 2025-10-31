@@ -27,7 +27,7 @@
         </div>
         <div>
             <label class="block font-medium text-gray-700 mb-2">Permenant District</label>
-            <input type="text" name="district" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" max="25"/>
+            <input type="text" max="30" name="district" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" max="25"/>
         </div>
 
         <div class="grid md:grid-cols-2 gap-4" id="officialFields">

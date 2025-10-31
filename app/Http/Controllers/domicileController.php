@@ -63,7 +63,7 @@ class domicileController extends Controller
         'religion' => 'required|string|max:45',
         'qualification_id' => 'nullable|integer',
         'occupation_id' => 'nullable|integer',
-        'contact' => 'nullable|string|max:15',
+        'contact' => 'nullable|string|max:11',
         'date_of_arrival' => 'required|date',
         'passcode'=>'string|min:6|max:6',
 

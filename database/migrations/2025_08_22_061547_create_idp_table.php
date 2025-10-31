@@ -10,6 +10,8 @@ return new class extends Migration
     {
         Schema::create('idps', function (Blueprint $table) {
             $table->id();
+            $table->string('idp_no',length:20)->nullable();
+            $table->string('token_no',length:22)->nullable();
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('father_name')->nullable();
@@ -40,7 +42,18 @@ return new class extends Migration
             $table->date('passport_issue_date')->nullable();
             $table->date('passport_expiry_date')->nullable();
             $table->unsignedBigInteger('passport_type_id')->nullable();
-            $table->string('passcode', length:10);
+            $table->unsignedInteger('applicant_type_id')->nullable();
+            $table->unsignedInteger('request_type_id')->nullable();
+            $table->unsignedInteger('service_type_id')->nullable();
+            $table->unsignedInteger('payment_type_id')->nullable();
+            $table->unsignedInteger('application_type')->nullable();
+            $table->date('app_issue_date')->nullable();
+            $table->date('app_expiry_date')->nullable();
+            $table->unsignedInteger('driving_years')->nullable();
+            $table->unsignedInteger('amount')->nullable();
+            $table->string('remarks',length:80)->nullable();
+            $table->string('status',length:20)->nullable()->default('Pending');
+            $table->string('photo',length:80)->nullable();
             $table->timestamps();
         });
     }

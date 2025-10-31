@@ -64,7 +64,7 @@ class domicileController extends Controller
         'qualification_id' => 'nullable|integer',
         'occupation_id' => 'nullable|integer',
         'contact' => 'nullable|string|max:15',
-        'date_of_arrival' => 'nullable|date',
+        'date_of_arrival' => 'required|date',
         'passcode'=>'string|min:6|max:6',
 
         // Temporary Address

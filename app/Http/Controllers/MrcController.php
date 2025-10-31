@@ -170,7 +170,6 @@ class MrcController extends Controller
         $request->validate([
             'file' => 'required|mimes:xlsx,csv,xls'
         ]);
-
         Excel::import(new MrcImport, $request->file('file'));
 
         return redirect()->back()->with('success', 'File imported successfully!');

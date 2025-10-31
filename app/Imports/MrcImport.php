@@ -13,6 +13,10 @@ class MrcImport implements ToModel
         if (empty($row[0])) {
             return null; // skip if no tracking_id
         }
+        // Skip duplicate tracking_id (already exists in DB)
+        if (MrcStatus::where('tracking_id', $row[0])->exists()) {
+            return null;
+        }
         $statuses = ['Certificate Signed', 'Sent for Verification', 'Objection'];
         if (empty($row[7])){
             $status  = 'Sent for Verification';

@@ -14,6 +14,10 @@ class IdpHistory extends Model
         'first_name',
         'father_name',
         'user_id',
-        'row_type'
+        'amount',
+        'driving_license_no',
+        'driving_license_issue',
+        'driving_license_expiry',
+        'status',
     ];
 }

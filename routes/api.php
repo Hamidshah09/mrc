@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\api\DomicileController;
+use App\Http\Controllers\Api\DomicileController;
 use App\Http\Controllers\Api\IdpController;
 use Illuminate\Support\Facades\Route;
 

@@ -98,6 +98,7 @@ class RegisteredUserController extends Controller
         'mobile'         => $validated['mobile'],
         'profile_image'  => $validated['profile_image'] ?? null,
         'password'       => Hash::make($validated['password']),
+        'role_id'       => 9,
         'status'         => 'Not Active', // or 'Active' if auto-approved
     ]);
 

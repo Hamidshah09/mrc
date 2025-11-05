@@ -121,7 +121,8 @@
                 </tbody>
             </table>
             <div>
-                {{ $armsRecords->links() }}
+                {{ $armsRecords->appends(request()->except('page'))->links() }}
+
             </div>
         </div>
 

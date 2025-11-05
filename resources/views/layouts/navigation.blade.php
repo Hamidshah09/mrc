@@ -18,7 +18,7 @@
                         <a href="{{route('statistics.index')}}" class="block px-4 py-2 hover:bg-gray-100">Statistics</a>
                     </div>
                 @endif
-                @if (auth()->user()->role->role== 'admin')
+                @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'arms')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <div class="relative" x-data="{ dropdown: false }">
                             <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
@@ -33,7 +33,7 @@
                                 class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
                                 <a href="{{route('users.index')}}" class="block px-4 py-2 hover:bg-gray-100">Users</a>
                                 <a href="{{route('arms.index')}}" class="block px-4 py-2 hover:bg-gray-100">Arms</a>
-                                <a href="{{route('finance.index')}}" class="block px-4 py-2 hover:bg-gray-100">Finance</a>
+                                {{-- <a href="{{route('finance.index')}}" class="block px-4 py-2 hover:bg-gray-100">Finance</a> --}}
                             </div>
                         </div>
                     </div>

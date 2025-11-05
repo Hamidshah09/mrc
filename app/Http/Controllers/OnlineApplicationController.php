@@ -16,9 +16,11 @@ class OnlineApplicationController extends Controller
         
         $user= Auth::user();
         // if registrar he dosent need dashbaord by defult
+        
         if ($user->role->role==='registrar'){
-            return view('mrc.index');
+            return redirect()->route('mrc.index');
         }
+        
         // admin will see all application whereas customer will see only his applied application.
         $query = OnlineApplication::with(['application_status', 'application_type', 'user']);
         if ($user->role->role==='admin'){
@@ -32,6 +34,7 @@ class OnlineApplicationController extends Controller
             $applications = $query->orderBy('id', 'desc')->get();
         }
         $services = ApplicationType::all();
+
         return view('dashboard', compact('applications', 'services'));
     }
     public function online_application_show($id)

@@ -83,11 +83,12 @@
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                 </div>
                 <!-- Role -->
+                
                 <div>
                     <x-input-label for="role" :value="__('Role')" />
-                    <select name="role" id="role" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full mt-1">
+                    <select name="role_id" id="role_id" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full mt-1">
                         @foreach ($roles as $role)
-                            <option value="{{ $role->id }}" {{ $user->role->role === $role ? 'selected' : '' }}>
+                            <option value="{{ $role->id }}" {{ $user->role_id == $role->id ? 'selected' : '' }}>
                                 {{ ucfirst($role->role) }}
                             </option>
                         @endforeach

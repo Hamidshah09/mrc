@@ -134,7 +134,7 @@ class RegisteredUserController extends Controller
             'mobile'         => 'required|string|size:11|unique:users,mobile,' . $user->id,
             'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status'       => 'string|in:Active,Not active',
-            'role'         => 'integer|in:roles,role', // Add this
+            'role_id' => 'required|integer|exists:roles,id',
             'password'       => 'nullable|string|min:8|confirmed', // Add this line
         ]);
 

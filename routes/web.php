@@ -101,8 +101,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/passcodes/gen-report', [AdminController::class, 'gen_report'])->name('Passcodes.gen_report');
     Route::post('/admin/passcodes/report', [AdminController::class, 'report'])->name('Passcodes.report');
     Route::get('/admin/downloads', [AdminController::class, 'downloads'])->name('downloads');
-    
-    Route::middleware('role:admin')->group(function(){
+
+    Route::middleware('role:arms,admin')->group(function(){
         Route::get('/arms', [ArmsController::class, 'index'])->name('arms.index');
         Route::get('/arms/edit/{id}', [ArmsController::class, 'edit'])->name('arms.edit');
         Route::put('/arms/update/{id}', [ArmsController::class, 'update'])->name('arms.update');
@@ -122,14 +122,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/statistics/store', [StatisticsController::class, 'store'])->name('statistics.store');
     });
     
-    Route::get('/mrc', [MrcController::class, 'index'])->name('mrc.index')->middleware('role:mrc,admin');
-    Route::post('/mrc/store', [MrcController::class, 'store'])->name('mrc.store')->middleware('role:mrc,admin');
-    Route::get('/mrc/create', [MrcController::class, 'create'])->name('mrc.create')->middleware('role:mrc,admin');
+    Route::get('/mrc', [MrcController::class, 'index'])->name('mrc.index')->middleware('role:mrc,admin,registrar,verifier');
+    Route::post('/mrc/store', [MrcController::class, 'store'])->name('mrc.store')->middleware('role:mrc,admin,registrar,verifier');
+    Route::get('/mrc/create', [MrcController::class, 'create'])->name('mrc.create')->middleware('role:mrc,admin,registrar,verifier');
     Route::get('/mrc/edit/{id}', [MrcController::class, 'edit'])->name('mrc.edit')->middleware('owner');
-    Route::put('/mrc/{id}', [MrcController::class, 'update'])->name('mrc.update')->middleware('role:mrc,admin');
+    Route::put('/mrc/{id}', [MrcController::class, 'update'])->name('mrc.update')->middleware('role:mrc,admin,registrar,verifier');
     Route::put('/mrc/verify/{id}', [MrcController::class, 'verify'])->name('mrc.verify')->middleware('role:verifier,admin');;
-    Route::get('/mrc/file/upload', [MrcController::class, 'upload_'])->name('mrc.upload')->middleware('role:mrc,admin');
-    Route::post('/mrc/import', [MrcController::class, 'import'])->name('mrc.import')->middleware('role:mrc,admin');
+    Route::get('/mrc/file/upload', [MrcController::class, 'upload_'])->name('mrc.upload')->middleware('role:mrc,admin,registrar,verifier');
+    Route::post('/mrc/import', [MrcController::class, 'import'])->name('mrc.import')->middleware('role:mrc,admin,registrar,verifier');
     
     Route::middleware('role:admin,mrc')->group(function(){
         Route::resource('mrc_status', MrcStatusController::class);

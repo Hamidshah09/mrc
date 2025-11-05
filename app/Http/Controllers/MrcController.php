@@ -15,7 +15,6 @@ class MrcController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
         $query = MRC::with(['registrar', 'verifier'])->orderBy('id', 'desc');
 
         // Limit to registrar's own records if applicable

@@ -78,7 +78,6 @@ class RegisteredUserController extends Controller
         'dob'            => 'required|date',
         'email'          => 'required|email|unique:users,email',
         'mobile'         => 'required|string|size:11|unique:users,mobile',
-        'license_number' => 'required|string',
         'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'password'       => 'required|string|min:8|confirmed',
     ]);
@@ -97,7 +96,6 @@ class RegisteredUserController extends Controller
         'dob'            => $validated['dob'],
         'email'          => $validated['email'],
         'mobile'         => $validated['mobile'],
-        'license_number' => $validated['license_number'],
         'profile_image'  => $validated['profile_image'] ?? null,
         'password'       => Hash::make($validated['password']),
         'status'         => 'Not Active', // or 'Active' if auto-approved
@@ -134,7 +132,6 @@ class RegisteredUserController extends Controller
             'dob'            => 'required|date',
             'email'          => 'required|email|unique:users,email,' . $user->id,
             'mobile'         => 'required|string|size:11|unique:users,mobile,' . $user->id,
-            'license_number' => 'required|string',
             'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status'       => 'string|in:Active,Not active',
             'role'         => 'integer|in:roles,role', // Add this

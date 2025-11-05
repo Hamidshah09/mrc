@@ -67,14 +67,6 @@
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 
-                <!-- License Number -->
-                <div>
-                    <x-input-label for="license_number" :value="__('License Number')" />
-                    <x-text-input id="license_number" name="license_number" type="text" maxlength="10" class="block mt-1 w-full"
-                                :value="old('license_number', $user->license_number)" required />
-                    <x-input-error :messages="$errors->get('license_number')" class="mt-2" />
-                </div>
-
                 <!-- Password -->
                 <div>
                     <x-input-label for="password" :value="__('Password')" />

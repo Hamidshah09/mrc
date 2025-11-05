@@ -95,8 +95,8 @@
                     <x-input-label for="role" :value="__('Role')" />
                     <select name="role" id="role" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full mt-1">
                         @foreach ($roles as $role)
-                            <option value="{{ $role }}" {{ $user->role->role === $role ? 'selected' : '' }}>
-                                {{ ucfirst($role) }}
+                            <option value="{{ $role->id }}" {{ $user->role->role === $role ? 'selected' : '' }}>
+                                {{ ucfirst($role->role) }}
                             </option>
                         @endforeach
                     </select>

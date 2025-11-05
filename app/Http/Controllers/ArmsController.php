@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\ArmsApproval;
+use App\Models\ArmsLicense;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class ArmsController extends Controller
@@ -20,13 +22,13 @@ class ArmsController extends Controller
         $armsRecords = [ [ "id"=> 753, "applicant_id"=> 75481, "cnic"=> "8130104129327", "name"=> "OMAR IBN ABDUL AZIZ CHAUDHAREY", "license_no"=> "202504780385460", "weapon_no"=> "T0620-25DK00247", "request_type"=> "New", "action"=> "Need approval", "operator"=> "Zulkifal", "file_status"=> "Pending", "url"=> "https://admin-icta.nitb.gov.pk/arm/applicant/75481/application/edit/85460", "created_at"=> "2025-04-28T15:12:31", "updated_at"=> null ], ["id"=> 752, "applicant_id"=> 75481, "cnic"=> "8130104129327", "name"=> "OMAR IBN ABDUL AZIZ CHAUDHAREY", "license_no"=> "202504780385460", "weapon_no"=> "T0620-25DK00247", "request_type"=> "New", "action"=> "Need approval", "operator"=> "Zulkifal", "file_status"=> "Pending", "url"=> "https://admin-icta.nitb.gov.pk/arm/applicant/75481/application/edit/85460", "created_at"=> "2025-04-28T15=>12=>31", "updated_at"=> null ]];
         return view('arms.index', compact('armsRecords'));
     }
-    public function index(Request $request)
+    public function index__(Request $request)
     {
-        $dates = collect();
+        // $dates = collect();
 
-        for ($i = 0; $i < 9; $i++) {
-            $dates->push(Carbon::today()->subDays($i)->toDateString()); // Format: 'YYYY-MM-DD'
-        }
+        // for ($i = 0; $i < 9; $i++) {
+        //     $dates->push(Carbon::today()->subDays($i)->toDateString()); // Format: 'YYYY-MM-DD'
+        // }
 
         // $keyword = $request->query('keyword', '');
         $response = Http::get("{$this->fastapiUrl}/arms");
@@ -39,6 +41,20 @@ class ArmsController extends Controller
         $armsRecords = $data['data'] ?? [];
         // return $armsRecords;
         return view('arms.index', compact('armsRecords', 'dates'));
+    }
+    public function index(Request $request)
+    {
+        
+        $query = ArmsLicense::with('user');
+        if ($request->keyword){
+            $query->where('cnic', $request->keyword);
+        }
+        if ($request->issue_date){
+            $query->where('issue_date', $request->issue_date);
+        }
+        $armsRecords = $query->paginate(25);
+        
+        return view('arms.index', compact('armsRecords'));
     }
 
     public function approve($id)
@@ -102,5 +118,33 @@ class ArmsController extends Controller
 
 
     }
+    public function edit($id){
+        $armsLicense=ArmsLicense::findOrFail($id);
+        return view('arms.edit', compact('armsLicense'));
+    }
+    public function update(Request $request, $id)
+    {
+        $user_id = Auth::id();
+        $validated = $request->validate([
+            'approver_id' => 'nullable|integer',
+            'character_certificate' => 'nullable|in:0,1',
+            'address_on_cnic' => 'nullable|in:0,1',
+            'affidavit' => 'nullable|in:0,1',
+        ]);
+
+        $armsLicense = ArmsLicense::findOrFail($id);
+
+        $armsLicense->update([
+            'approver_id' => $validated['approver_id'] ?? $armsLicense->approver_id,
+            'character_certificate' => $validated['character_certificate'] ?? $armsLicense->character_certificate,
+            'address_on_cnic' => $validated['address_on_cnic'] ?? $armsLicense->address_on_cnic,
+            'affidavit' => $validated['affidavit'] ?? $armsLicense->affidavit,
+            'updated_by' => $user_id,
+        ]);
+
+        return redirect()->route('arms.index')
+                        ->with('success', 'Record updated successfully.');
+    }
+
 
 }

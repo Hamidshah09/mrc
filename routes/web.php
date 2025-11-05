@@ -104,6 +104,8 @@ Route::middleware('auth')->group(function () {
     
     Route::middleware('role:admin')->group(function(){
         Route::get('/arms', [ArmsController::class, 'index'])->name('arms.index');
+        Route::get('/arms/edit/{id}', [ArmsController::class, 'edit'])->name('arms.edit');
+        Route::put('/arms/update/{id}', [ArmsController::class, 'update'])->name('arms.update');
         Route::get('/arms/approve/{id}', [ArmsController::class, 'approve'])->name('arms.approve');
         Route::get('/arms/deliver/{id}', [ArmsController::class, 'deliver'])->name('arms.deliver');
         Route::get('/arms/trash/{id}', [ArmsController::class, 'trash'])->name('arms.trash');

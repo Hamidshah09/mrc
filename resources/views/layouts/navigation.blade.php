@@ -13,7 +13,7 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <a href="{{route('dashboard')}}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
                 </div>
-                @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'domicile' or auth()->user()->role->role== 'idp')
+                @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'domicile' or auth()->user()->role->role== 'idp' or auth()->user()->role->role== 'arms')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <a href="{{route('statistics.index')}}" class="block px-4 py-2 hover:bg-gray-100">Statistics</a>
                     </div>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                 @endif
-                @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'domicile')
+                @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'domicile' or auth()->user()->role->role== 'idp')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <div class="relative" x-data="{ dropdown: false }">
                             <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">

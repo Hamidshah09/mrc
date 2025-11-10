@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/idp/card/{id}', [IdpController::class, 'card_data']);
     Route::get('/idp/get-oldid', [IdpController::class, 'get_old_id']);
     Route::post('/idp/update-oldid/{oldid}', [IdpController::class, 'update_old_id']);
-    Route::post('/idp-history/store', [IdpController::class, 'idp_his_store']); 
+    Route::post('/idp-history/store', [IdpController::class, 'idp_his_store']);
+    Route::get('/idp-history', [IdpController::class, 'idp_his_get']); 
     Route::post('/domicile/update', [DomicileController::class, 'update']);
 });

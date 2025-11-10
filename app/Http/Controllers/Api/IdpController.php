@@ -331,5 +331,16 @@ class IdpController extends Controller
             'data' => $idphis,
         ]);
     }
+    public function idp_his_get(Request $request)
+    {
+        $id = $request->query('id');
+        $record = IdpHistory::where('nitb_id', $id)->orderBy('id', 'desc')-> first();
+
+        return response()->json([
+            'success'=>true,
+            'message'=>'Record Retrived',
+            'data'=>$record
+        ]);
+    }
 }
 

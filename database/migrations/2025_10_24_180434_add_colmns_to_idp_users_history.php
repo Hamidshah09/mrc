@@ -17,6 +17,11 @@ return new class extends Migration
         });
         Schema::table('idp_history', function(Blueprint $table){
             
+            $table->date('date_of_birth')->nullable();
+            $table->string('place_of_birth', 15)->nullable();
+            $table->string('contact',15)->nullable();
+            $table->date('app_issue_date')->nullable();
+            $table->date('app_expiry_date')->nullable();
             $table->string('driving_license_no', length:50)->nullable();
             $table->date('driving_license_issue')->nullable();
             $table->date('driving_license_expiry')->nullable();

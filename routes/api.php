@@ -10,7 +10,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/nitbuser/{id}', [IdpController::class, 'get_nitbuser']); 
+    Route::get('/nitbuser', [IdpController::class, 'get_user']);
+    Route::get('/user', [IdpController::class, 'test_method']); 
     Route::post('/nitbuser/store', [IdpController::class, 'store_nitbuser']);   // Example GET route
     Route::post('/users/update-password', [IdpController::class, 'update_password']);
     Route::post('/idp/store-oldid', [IdpController::class, 'store_old_id']);

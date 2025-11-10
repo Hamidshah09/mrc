@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\Idp;
+use App\Models\idp;
 use App\Models\IdpHistory;
 use App\Models\IdpUser;
 use App\Models\User;
@@ -61,8 +61,17 @@ class IdpController extends Controller
             'message' => 'Record created successfully',
         ]);
     }
-    public function get_nitbuser($id){
-        $user_data = IdpUser::where('userid', $id)->first();
+    public function test_method(Request $request){
+        $user = $request->user();
+        return response()->json([
+            'success' => true,
+            'message' => 'Authenticated user retrieved successfully',
+            'data' => $user,
+        ]);
+    }
+    public function get_user(Request $request){
+
+        $user_data = IdpUser::where('userid', $request->input('userid'))->first();
         if ($user_data){
             return response()->json([
                             'success' => true,
@@ -122,9 +131,8 @@ class IdpController extends Controller
     }
     public function card_data($id)
     {
-        $record = Idp::select([
+        $record = idp::select([
             'id',
-            'idp_no',
             'first_name',
             'last_name',
             'temporary_address',
@@ -134,7 +142,7 @@ class IdpController extends Controller
             'passport_number',
             'app_issue_date',
             'app_expiry_date',
-            'photo', // include photo path
+             // include photo path
         ])->find($id);
 
         if (!$record) {

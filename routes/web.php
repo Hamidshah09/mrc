@@ -9,12 +9,12 @@ use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\domicileController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FinanceController;
-use App\Http\Controllers\IDPController;
 use App\Http\Controllers\MrcController;
 use App\Http\Controllers\MrcStatusController;
 use App\Http\Controllers\OnlineApplicationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\idpController;
 use App\Models\ApplicationType;
 use App\Models\OnlineApplication;
 use Illuminate\Support\Facades\Route;
@@ -43,14 +43,14 @@ Route::get('/birth-info', function(){
             return view('birth.info');
         })->name('birth.info');
 
-Route::post('/idp/check', [IDPController::class, 'check'])->name('idp.check');
+Route::post('/idp/check', [idpController::class, 'check'])->name('idp.check');
 Route::post('/mrc/check', [MrcController::class, 'check'])->name('mrc.check');
 Route::post('/domicile/check', [domicileController::class, 'apiCheck'])->name('domicile.check');
 Route::get('/statistics/check', [domicileController::class, 'get_statistics'])->name('statistics.check');
 Route::get('/inactive', function () {
     return view('auth.inactive');
 })->name('inactive');
-Route::controller(IDPController::class)->group(function () {
+Route::controller(idpController::class)->group(function () {
     Route::get('/idp/show', 'show')->name('idp.show');
     Route::get('/idp', 'index')->name('idp.index');
     Route::post('/idp/update/{id}', 'update')->name('idp.update');
@@ -114,7 +114,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/arms/pdf-report', [ArmsController::class, 'pdf_report'])->name('arms.pdf');
     });
     
-    Route::middleware('role:admin,domicile,idp')->group(function(){
+    Route::middleware('role:admin,domicile,idp,arms')->group(function(){
         Route::get('/statistics/pdf-report', [StatisticsController::class, 'pdf_report'])->name('statistics.pdf');
         Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
         Route::post('/statistics/upsert', [StatisticsController::class, 'upsert'])->name('statistics.upsert');

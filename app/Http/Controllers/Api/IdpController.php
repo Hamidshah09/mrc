@@ -326,11 +326,19 @@ class IdpController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'father_name' => 'nullable|string|max:255',
+            'date_of_birth'=>'nullable|date',
+            'place_of_birth'=>'string',
+            'contact'=>'string|max:15',
+            'app_issue_date'=>'nullable|date',
+            'app_expiry_date'=>'nullable|date',
             'user_id'=>'required|integer',
             'amount'=>'required|integer',
             'driving_license_no'=>'required|string', 
             'driving_license_issue'=>'required|date',
             'driving_license_expiry'=>'required|date',
+            'driving_years'=>'integer',
+            'application_type'=>'string|max:20',
+            'center_id'=>'integer',
         ]);
         $idphis = IdpHistory::create($validated);
         return response()->json([

@@ -323,9 +323,9 @@ class IdpController extends Controller
         $validated = $request->validate([
             'nitb_id' => 'required|integer',
             'cnic'=>'required|string|min:13|max:13',
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'father_name' => 'nullable|string|max:255',
+            'first_name' => 'required|string|max:60',
+            'last_name' => 'nullable|string|max:60',
+            'father_name' => 'nullable|string|max:60',
             'date_of_birth'=>'nullable|date',
             'place_of_birth'=>'string',
             'contact'=>'string|max:15',

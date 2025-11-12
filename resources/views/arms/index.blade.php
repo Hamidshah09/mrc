@@ -95,7 +95,13 @@
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $arms->license_number }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $arms->weapon_number }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $arms->weapon_type }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $arms->approver }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">
+                                @if (is_null($arms->status_id))
+                                    -
+                                @else
+                                    {{ $arms->status_id == 1 ? 'Approved' : 'Not Approved' }}
+                                @endif
+                            </td>
                             <td class="px-6 py-4 text-sm">
                                 @if ($arms->user)
                                     <span class="inline-block px-2 py-2 rounded-full text-xs font-medium bg-green-300">

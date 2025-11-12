@@ -166,6 +166,15 @@
                         <option value="0" {{ old('should_cancel', $armsLicense->should_cancel) == 0 ? 'selected' : '' }}>No</option>
                     </select>
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">File Status</label>
+                    <select name="status_id"
+                            class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Select</option>
+                        <option value="1" {{ old('status_id', $armsLicense->status_id) == 1 ? 'selected' : '' }}>Approved</option>
+                        <option value="0" {{ old('status_id', $armsLicense->status_id) == 0 ? 'selected' : '' }}>Not Approved</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Submit Button -->

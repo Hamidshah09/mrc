@@ -30,6 +30,7 @@ return new class extends Migration
             $table->tinyInteger('address_on_cnic')->nullable();
             $table->tinyInteger('affidavit')->nullable();
             $table->tinyInteger('should_cancel')->nullable();
+            $table->tinyInteger('status_id')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
         });

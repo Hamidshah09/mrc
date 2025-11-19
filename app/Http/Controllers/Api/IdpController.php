@@ -329,6 +329,7 @@ class IdpController extends Controller
             'date_of_birth'=>'nullable|date',
             'place_of_birth'=>'string',
             'contact'=>'string|max:15',
+            'address'=>'string|max:150',
             'app_issue_date'=>'nullable|date',
             'app_expiry_date'=>'nullable|date',
             'user_id'=>'required|integer',

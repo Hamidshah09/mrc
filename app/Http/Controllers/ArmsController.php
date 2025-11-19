@@ -130,6 +130,7 @@ class ArmsController extends Controller
             'character_certificate' => 'nullable|in:0,1',
             'address_on_cnic' => 'nullable|in:0,1',
             'affidavit' => 'nullable|in:0,1',
+            'status_id' => 'nullable|in:0,1',
         ]);
 
         $armsLicense = ArmsLicense::findOrFail($id);
@@ -140,6 +141,7 @@ class ArmsController extends Controller
             'address_on_cnic' => $validated['address_on_cnic'] ?? $armsLicense->address_on_cnic,
             'affidavit' => $validated['affidavit'] ?? $armsLicense->affidavit,
             'updated_by' => $user_id,
+            'status_id' => $validated['status_id'] ?? $armsLicense->status_id,
         ]);
 
         return redirect()->route('arms.index')

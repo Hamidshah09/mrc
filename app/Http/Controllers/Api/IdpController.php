@@ -333,7 +333,8 @@ class IdpController extends Controller
             'app_expiry_date'=>'nullable|date',
             'user_id'=>'required|integer',
             'amount'=>'required|integer',
-            'driving_license_no'=>'required|string', 
+            'passport_no'=>'string|max:50',
+            'driving_license_no'=>'required|string|max:50', 
             'driving_license_issue'=>'required|date',
             'driving_license_expiry'=>'required|date',
             'driving_years'=>'integer',
@@ -350,7 +351,7 @@ class IdpController extends Controller
     public function idp_his_get(Request $request)
     {
         $id = $request->query('id');
-        $record = IdpHistory::where('nitb_id', $id)->orderBy('id', 'desc')-> first();
+        $record = IdpHistory::where('nitb_id', $id)->orderBy('id', 'desc')->first();
 
         return response()->json([
             'success'=>true,

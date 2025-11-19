@@ -22,6 +22,7 @@ class IdpHistory extends Model
         'user_id',
         'amount',
         'driving_license_no',
+        'passport_no',
         'driving_license_issue',
         'driving_license_expiry',
         'driving_years',

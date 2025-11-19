@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('contact',15)->nullable();
             $table->date('app_issue_date')->nullable();
             $table->date('app_expiry_date')->nullable();
+            $table->string('passport_no', length:50)->nullable();
             $table->string('driving_license_no', length:50)->nullable();
             $table->date('driving_license_issue')->nullable();
             $table->date('driving_license_expiry')->nullable();

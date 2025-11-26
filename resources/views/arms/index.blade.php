@@ -6,53 +6,112 @@
     </x-slot>
     <div class="max-w-full mx-auto px-8 p-6 bg-white shadow-lg rounded-lg mt-10">
 
-        <div class="flex flex-col md:flex-row md:items-center gap-6 mb-5 px-6">
+        
+            <form method="GET" action="{{ route('arms.index') }}"
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6 bg-white p-4 rounded-lg shadow">
 
-            <!-- 🔍 Search Block -->
-            <div class="bg-white border border-gray-200 shadow-sm rounded-md p-4 w-full md:w-auto">
-                <form action="" class="flex flex-col md:flex-row md:items-center gap-4">
-                    <input type="text" name="keyword" placeholder="Search..." value="{{ request('keyword') }}"
-                        class="border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-auto" />
-                    <label for="report_date1" class="text-sm font-medium text-gray-700">Issue Date</label>
-                    <input type="date" name="issue_date" value="{{ request('issue_date') }}"
-                        class="border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-auto" />
+                <!-- CNIC -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">CNIC</label>
+                    <input type="text" name="keyword" placeholder="Search CNIC"
+                        class="border border-gray-300 w-full p-2 rounded"
+                        value="{{ request('keyword') }}">
+                </div>
 
-                    <button type="submit"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 w-full md:w-auto">
-                        Search
+                <!-- Issue Date -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Issue Date</label>
+                    <input type="date" name="issue_date"
+                        class="border border-gray-300 w-full p-2 rounded"
+                        value="{{ request('issue_date') }}">
+                </div>
+
+                <!-- Approver -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Approver</label>
+                    <select name="approver_id" class="border border-gray-300 w-full p-2 rounded">
+                        <option value="">Select</option>
+                        <option value="1" {{ request('approver_id') === "1" ? 'selected' : '' }}>DC</option>
+                        <option value="2" {{ request('approver_id') === "2" ? 'selected' : '' }}>ADCG</option>
+                    </select>
+                </div>
+
+                <!-- Status -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Status</label>
+                    <select name="status_id" class="border border-gray-300 w-full p-2 rounded">
+                        <option value="">Select</option>
+                        <option value="1" {{ request('status_id') === "1" ? 'selected' : '' }}>Approved</option>
+                        <option value="0" {{ request('status_id') === "0" ? 'selected' : '' }}>Not Approved</option>
+                    </select>
+                </div>
+
+                <!-- Character Certificate -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Character Certificate</label>
+                    <select name="character_certificate" class="border border-gray-300 w-full p-2 rounded">
+                        <option value="">Select</option>
+                        <option value="1" {{ request('character_certificate') === "1" ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ request('character_certificate') === "0" ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+
+                <!-- Address on CNIC -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Character Certificate</label>
+                    <select name="address_on_cnic" class="border border-gray-300 w-full p-2 rounded">
+                        <option value="">Select</option>
+                        <option value="1" {{ request('address_on_cnic') === "1" ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ request('address_on_cnic') === "0" ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+
+                <!-- Affidavit -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Affidavit</label>
+                    <select name="affidavit" class="border border-gray-300 w-full p-2 rounded">
+                        <option value="">Select</option>
+                        <option value="1" {{ request('affidavit') === "1" ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ request('affidavit') === "0" ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+
+                <!-- Called -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Called</label>
+                    <select name="called" class="border border-gray-300 w-full p-2 rounded">
+                        <option value="">Select</option>
+                        <option value="1" {{ request('called') === "1" ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ request('called') === "0" ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+
+                <!-- Letter Issued -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Letter Issued</label>
+                    <select name="letter_issued" class="border border-gray-300 w-full p-2 rounded">
+                        <option value="">Select</option>
+                        <option value="1" {{ request('letter_issued') === "1" ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ request('letter_issued') === "0" ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+                <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex gap-4 mt-2">
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto">
+                        Apply Filters
                     </button>
-                </form>
-            </div>
 
-            <!-- 📅 Report Block -->
-            <div class="bg-white border border-gray-200 shadow-sm rounded-md p-4 w-full md:w-auto">
-                <form action="" class="flex flex-col md:flex-row md:items-center gap-4">
-                    <div class="flex flex-col md:flex-row md:items-center gap-2">
-                        <label for="report_date1" class="text-sm font-medium text-gray-700">From</label>
-                        <select name="report_date1" id="report_date1"
-                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 px-8 w-full md:w-auto">
-                            {{-- @foreach ($dates as $date)
-                                <option value="{{ $date }}">{{ \Carbon\Carbon::parse($date)->format('d M Y') }}</option>
-                            @endforeach --}}
-                        </select>
-                    </div>
-                    <div class="flex flex-col md:flex-row md:items-center gap-2">
-                        <label for="report_date2" class="text-sm font-medium text-gray-700">To</label>
-                        <select name="report_date2" id="report_date2"
-                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 px-8 w-full md:w-auto">
-                            {{-- @foreach ($dates as $date)
-                                <option value="{{ $date }}">{{ \Carbon\Carbon::parse($date)->format('d M Y') }}</option>
-                            @endforeach --}}
-                        </select>
-                    </div>
+                    <a href="{{ route('arms.index') }}"
+                    class="bg-gray-300 text-black px-4 py-2 rounded w-full sm:w-auto text-center">
+                        Reset
+                    </a>
+                </div>
 
-                    <button type="submit"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 w-full md:w-auto">
-                        Report
-                    </button>
-                </form>
-            </div>
-        </div>
+            </form>
+
+
+        
 
         @if (session('success'))
             <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-md border border-green-300">

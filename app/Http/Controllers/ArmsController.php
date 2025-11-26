@@ -24,13 +24,7 @@ class ArmsController extends Controller
     }
     public function index__(Request $request)
     {
-        // $dates = collect();
-
-        // for ($i = 0; $i < 9; $i++) {
-        //     $dates->push(Carbon::today()->subDays($i)->toDateString()); // Format: 'YYYY-MM-DD'
-        // }
-
-        // $keyword = $request->query('keyword', '');
+        
         $response = Http::get("{$this->fastapiUrl}/arms");
 
         if ($response->failed()) {
@@ -44,18 +38,62 @@ class ArmsController extends Controller
     }
     public function index(Request $request)
     {
-        
-        $query = ArmsLicense::with('user');
-        if ($request->keyword){
-            $query->where('cnic', $request->keyword);
+        $query = ArmsLicense::query()->with('user');
+
+        // Keyword search
+        if ($request->keyword !== null && $request->keyword !== '') {
+            $keyword = $request->keyword;
+
+            $query->where(function ($q) use ($keyword) {
+                $q->where('cnic', 'LIKE', "%$keyword%")
+                ->orWhere('name', 'LIKE', "%$keyword%")
+                ->orWhere('license_number', 'LIKE', "%$keyword%")
+                ->orWhere('weapon_number', 'LIKE', "%$keyword%");
+            });
         }
-        if ($request->issue_date){
-            $query->where('issue_date', $request->issue_date);
+
+        // Issue Date
+        if ($request->issue_date !== null && $request->issue_date !== '') {
+            $query->whereDate('issue_date', $request->issue_date);
         }
-        $armsRecords = $query->paginate(25);
-        
+
+        // Approver ID
+        if ($request->approver_id !== null && $request->approver_id !== '') {
+            $query->where('approver_id', (int) $request->approver_id);
+        }
+
+        // Status ID
+        if ($request->status_id !== null && $request->status_id !== '') {
+            $query->where('status_id', (int) $request->status_id);
+        }
+
+        // Character Certificate
+        if ($request->character_certificate !== null && $request->character_certificate !== '') {
+            $query->where('character_certificate', $request->character_certificate);
+        }
+
+        // Affidavit
+        if ($request->affidavit !== null && $request->affidavit !== '') {
+            $query->where('affidavit', $request->affidavit);
+        }
+
+        // Called
+        if ($request->called !== null && $request->called !== '') {
+            $query->where('called', $request->called);
+        }
+
+        // Letter Issued
+        if ($request->letter_issued !== null && $request->letter_issued !== '') {
+            $query->where('letter_issued', $request->letter_issued);
+        }
+
+        // Pagination with appends
+        $armsRecords = $query->paginate(25)->appends($request->all());
+
         return view('arms.index', compact('armsRecords'));
     }
+
+
 
     public function approve($id)
     {

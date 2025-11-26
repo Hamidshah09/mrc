@@ -114,15 +114,23 @@
                 </div>
 
                 <!-- Approver ID -->
-                <div>
+               <div>
                     <label class="block text-sm font-medium text-gray-700">Approver</label>
                     <select name="approver_id"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select</option>
-                        <option value="1" {{ old('approver_id', $armsLicense->approver_id) == 1 ? 'selected' : '' }}>DC</option>
-                        <option value="2" {{ old('approver_id', $armsLicense->approver_id) == 2 ? 'selected' : '' }}>ADCG</option>
+
+                        <option value="" {{ $armsLicense->approver_id?->value === null ? 'selected' : '' }}>Select</option>
+
+                        <option value="1" {{ $armsLicense->approver_id?->value == 1 ? 'selected' : '' }}>DC</option>
+
+                        <option value="2" {{ $armsLicense->approver_id?->value == 2 ? 'selected' : '' }}>ADCG</option>
+
                     </select>
                 </div>
+
+
+
+
 
                 <!-- Character Certificate -->
                 <div>
@@ -170,11 +178,27 @@
                     <label class="block text-sm font-medium text-gray-700">File Status</label>
                     <select name="status_id"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select</option>
-                        <option value="1" {{ old('status_id', $armsLicense->status_id) == 1 ? 'selected' : '' }}>Approved</option>
-                        <option value="0" {{ old('status_id', $armsLicense->status_id) == 0 ? 'selected' : '' }}>Not Approved</option>
+
+                        <option value=""
+                            {{ in_array(old('status_id', $armsLicense->status_id), [null, ''], true) ? 'selected' : '' }}>
+                            Select
+                        </option>
+
+                        <option value="1"
+                            {{ old('status_id', $armsLicense->status_id) == 1 ? 'selected' : '' }}>
+                            Approved
+                        </option>
+
+                        <option value="0"
+                            {{ old('status_id', $armsLicense->status_id) === 0 || old('status_id', $armsLicense->status_id) === '0' ? 'selected' : '' }}>
+                            Not Approved
+                        </option>
+
+
                     </select>
                 </div>
+
+
             </div>
 
             <!-- Submit Button -->

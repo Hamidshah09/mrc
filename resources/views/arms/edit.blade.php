@@ -175,6 +175,27 @@
                         <option value="0" {{ old('status_id', $armsLicense->status_id) == 0 ? 'selected' : '' }}>Not Approved</option>
                     </select>
                 </div>
+                <!-- Phone call -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Called for Character Certificate?</label>
+                    <select name="called"
+                            class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Select</option>
+                        <option value="1" {{ old('called', $armsLicense->called) == 1 ? 'selected' : '' }}>Yes</option>
+                        <option value="2" {{ old('called', $armsLicense->called) == 2 ? 'selected' : '' }}>No Answer</option>
+                        <option value="3" {{ old('called', $armsLicense->called) == 3 ? 'selected' : '' }}>Wrong Number</option>
+                    </select>
+                </div>
+                <!-- Response -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Should We Cancel it</label>
+                    <select name="called"
+                            class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Select</option>
+                        <option value="1" {{ old('called', $armsLicense->called) == 1 ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ old('called', $armsLicense->called) == 0 ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Submit Button -->

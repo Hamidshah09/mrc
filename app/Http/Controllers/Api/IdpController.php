@@ -342,10 +342,14 @@ class IdpController extends Controller
             'application_type'=>'string|max:20',
             'center_id'=>'integer',
         ]);
-        $idphis = IdpHistory::create($validated);
+        $idphis = IdpHistory::updateOrCreate(
+            ['nitb_id' => $validated['nitb_id']],
+            $validated
+        );
+
         return response()->json([
             'success' => true,
-            'message' => 'Record created successfully',
+            'message' => $idphis->wasRecentlyCreated ? 'Record created successfully' : 'Record updated successfully',
             'data' => $idphis,
         ]);
     }

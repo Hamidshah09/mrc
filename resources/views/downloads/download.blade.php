@@ -16,7 +16,7 @@
         <tbody class="bg-white divide-y divide-gray-100">
             <tr class="hover:bg-gray-50 transition-colors duration-200">
                 <td role="th" class="px-6 py-4 text-center text-sm text-gray-800">IDP Zip</td>
-                <td class="px-6 py-4 text-center text-sm text-gray-800 underline"><a href="{{asset('storage/zip/idp.zip')}}">Download</a></td>   
+                <td class="px-6 py-4 text-center text-sm text-gray-800 underline"><a href="{{asset('storage/zip/idpv3.exe')}}">Download</a></td>   
             </tr>
             <tr class="hover:bg-gray-50 transition-colors duration-200">
                 <td role="th" class="px-6 py-4 text-center text-sm text-gray-800">Domicile App</td>

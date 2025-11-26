@@ -5,6 +5,7 @@
 .env.production
 .phpactor.json
 .phpunit.result.cache
+idpv3.exe
 /.fleet
 /.idea
 /.nova

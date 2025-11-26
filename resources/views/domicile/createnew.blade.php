@@ -122,7 +122,7 @@
                             </div>
                             <div class="form-control">
                                 <x-input-label for="contact" :value="__('Contact')" />
-                                <x-text-input id="contact" class="block mt-1 w-full p-2" type="text" max="11" name="contact" :value="old('contact')" min="11" max=11 autofocus autocomplete="contact" />
+                                <x-text-input id="contact" class="block mt-1 w-full p-2" type="text" required name="contact" :value="old('contact')" min="11" max=11 autofocus autocomplete="contact" />
                                 <x-input-error :messages="$errors->get('contact')" class="mt-2" />
                             </div>
                             <div class="form-control">

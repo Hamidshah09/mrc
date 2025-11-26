@@ -126,11 +126,14 @@ class ArmsController extends Controller
     {
         $user_id = Auth::id();
         $validated = $request->validate([
+            'address' => 'nullable|string',
             'approver_id' => 'nullable|integer',
             'character_certificate' => 'nullable|in:0,1',
             'address_on_cnic' => 'nullable|in:0,1',
             'affidavit' => 'nullable|in:0,1',
             'status_id' => 'nullable|in:0,1',
+            'called' => 'nullable|in:1,2,3',
+            'letter_issued' => 'nullable|in:0,1',
         ]);
 
         $armsLicense = ArmsLicense::findOrFail($id);

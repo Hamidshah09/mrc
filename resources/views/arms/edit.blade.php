@@ -202,18 +202,18 @@
                     <label class="block text-sm font-medium text-gray-700">Called for Character Certificate?</label>
                     <select name="called"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select</option>
+                        <option value="" {{ in_array(old('called', $armsLicense->called), [null, ''], true) ? 'selected' : '' }}> Select</option>
                         <option value="1" {{ old('called', $armsLicense->called) == 1 ? 'selected' : '' }}>Yes</option>
                         <option value="2" {{ old('called', $armsLicense->called) == 2 ? 'selected' : '' }}>No Answer</option>
                         <option value="3" {{ old('called', $armsLicense->called) == 3 ? 'selected' : '' }}>Wrong Number</option>
                     </select>
                 </div>
-                <!-- Response -->
+                <!-- Letter_issued -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Should We Cancel it</label>
+                    <label class="block text-sm font-medium text-gray-700">is Notice issued?</label>
                     <select name="letter_issued"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select</option>
+                        <option value="" {{ in_array(old('letter_issued', $armsLicense->letter_issued), [null, ''], true) ? 'selected' : '' }}> Select</option>
                         <option value="1" {{ old('letter_issued', $armsLicense->letter_issued) == 1 ? 'selected' : '' }}>Yes</option>
                         <option value="0" {{ old('letter_issued', $armsLicense->letter_issued) == 0 ? 'selected' : '' }}>No</option>
                     </select>

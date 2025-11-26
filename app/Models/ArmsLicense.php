@@ -13,7 +13,7 @@ class ArmsLicense extends Model
         'weapon_number', 'license_number', 'caliber', 
         'weapon_type', 'issue_date', 'expire_date', 'address',
         'approver_id', 'character_certificate', 'address_on_cnic', 'affidavit', 'updated_by',
-        'status_id'
+        'status_id', 'called', 'letter_issued'
     ];
 
 

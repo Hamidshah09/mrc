@@ -112,14 +112,17 @@
                            class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                            value="{{ old('address', $armsLicense->address) }}">
                 </div>
-
                 <!-- Approver ID -->
                <div>
                     <label class="block text-sm font-medium text-gray-700">Approver</label>
                     <select name="approver_id"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
 
-                        <option value="" {{ $armsLicense->approver_id?->value === null ? 'selected' : '' }}>Select</option>
+                        @if (!$armsLicense->approver_id)
+                            <option value="" selected>Select</option>
+                        @else
+                            <option value="">Select</option>
+                        @endif
 
                         <option value="1" {{ $armsLicense->approver_id?->value == 1 ? 'selected' : '' }}>DC</option>
 
@@ -137,9 +140,13 @@
                     <label class="block text-sm font-medium text-gray-700">Character Certificate</label>
                     <select name="character_certificate"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select</option>
-                        <option value="1" {{ old('character_certificate', $armsLicense->character_certificate) == 1 ? 'selected' : '' }}>Yes</option>
-                        <option value="0" {{ old('character_certificate', $armsLicense->character_certificate) == 0 ? 'selected' : '' }}>No</option>
+                        @if (!$armsLicense->character_certificate)
+                            <option value="" selected>Select</option>
+                        @else
+                            <option value="">Select</option>
+                        @endif
+                        <option value="1" {{ old('character_certificate', $armsLicense->character_certificate) === 1 ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ old('character_certificate', $armsLicense->character_certificate) === 0 ? 'selected' : '' }}>No</option>
                     </select>
                 </div>
 
@@ -148,9 +155,13 @@
                     <label class="block text-sm font-medium text-gray-700">Address on CNIC</label>
                     <select name="address_on_cnic"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select</option>
-                        <option value="1" {{ old('address_on_cnic', $armsLicense->address_on_cnic) == 1 ? 'selected' : '' }}>Yes</option>
-                        <option value="0" {{ old('address_on_cnic', $armsLicense->address_on_cnic) == 0 ? 'selected' : '' }}>No</option>
+                        @if (!$armsLicense->address_on_cnic)
+                            <option value="" selected>Select</option>
+                        @else
+                            <option value="">Select</option>
+                        @endif
+                        <option value="1" {{ old('address_on_cnic', $armsLicense->address_on_cnic) === 1 ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ old('address_on_cnic', $armsLicense->address_on_cnic) === 0 ? 'selected' : '' }}>No</option>
                     </select>
                 </div>
 
@@ -159,9 +170,13 @@
                     <label class="block text-sm font-medium text-gray-700">Affidavit</label>
                     <select name="affidavit"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select</option>
-                        <option value="1" {{ old('affidavit', $armsLicense->affidavit) == 1 ? 'selected' : '' }}>Yes</option>
-                        <option value="0" {{ old('affidavit', $armsLicense->affidavit) == 0 ? 'selected' : '' }}>No</option>
+                         @if (!$armsLicense->affidavit)
+                            <option value="" selected>Select</option>
+                        @else
+                            <option value="">Select</option>
+                        @endif
+                        <option value="1" {{ old('affidavit', $armsLicense->affidavit) === 1 ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ old('affidavit', $armsLicense->affidavit) === 0 ? 'selected' : '' }}>No</option>
                     </select>
                 </div>
                 <!-- should cancel -->
@@ -169,9 +184,13 @@
                     <label class="block text-sm font-medium text-gray-700">Should We Cancel it</label>
                     <select name="should_cancel"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select</option>
-                        <option value="1" {{ old('should_cancel', $armsLicense->should_cancel) == 1 ? 'selected' : '' }}>Yes</option>
-                        <option value="0" {{ old('should_cancel', $armsLicense->should_cancel) == 0 ? 'selected' : '' }}>No</option>
+                        @if (!$armsLicense->should_cancel)
+                            <option value="" selected>Select</option>
+                        @else
+                            <option value="">Select</option>
+                        @endif
+                        <option value="1" {{ old('should_cancel', $armsLicense->should_cancel) === 1 ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ old('should_cancel', $armsLicense->should_cancel) === 0 ? 'selected' : '' }}>No</option>
                     </select>
                 </div>
                 <div>
@@ -179,13 +198,14 @@
                     <select name="status_id"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
 
-                        <option value=""
-                            {{ in_array(old('status_id', $armsLicense->status_id), [null, ''], true) ? 'selected' : '' }}>
-                            Select
-                        </option>
+                        @if (!$armsLicense->status_id)
+                            <option value="" selected>Select</option>
+                        @else
+                            <option value="">Select</option>
+                        @endif
 
                         <option value="1"
-                            {{ old('status_id', $armsLicense->status_id) == 1 ? 'selected' : '' }}>
+                            {{ old('status_id', $armsLicense->status_id) === 1 ? 'selected' : '' }}>
                             Approved
                         </option>
 
@@ -202,20 +222,29 @@
                     <label class="block text-sm font-medium text-gray-700">Called for Character Certificate?</label>
                     <select name="called"
                             class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="" {{ in_array(old('called', $armsLicense->called), [null, ''], true) ? 'selected' : '' }}> Select</option>
-                        <option value="1" {{ old('called', $armsLicense->called) == 1 ? 'selected' : '' }}>Yes</option>
-                        <option value="2" {{ old('called', $armsLicense->called) == 2 ? 'selected' : '' }}>No Answer</option>
-                        <option value="3" {{ old('called', $armsLicense->called) == 3 ? 'selected' : '' }}>Wrong Number</option>
+                        @if (!$armsLicense->called)
+                            <option value="" selected>Select</option>
+                        @else
+                            <option value="">Select</option>
+                        @endif
+                        <option value="1" {{ old('called', $armsLicense->called) === 1 ? 'selected' : '' }}>Yes</option>
+                        <option value="2" {{ old('called', $armsLicense->called) === 2 ? 'selected' : '' }}>No Answer</option>
+                        <option value="3" {{ old('called', $armsLicense->called) === 3 ? 'selected' : '' }}>Wrong Number</option>
                     </select>
                 </div>
                 <!-- Letter_issued -->
                 <div>
+                    {{-- @dd($armsLicense->letter_issued) --}}
                     <label class="block text-sm font-medium text-gray-700">is Notice issued?</label>
-                    <select name="letter_issued"
-                            class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="" {{ in_array(old('letter_issued', $armsLicense->letter_issued), [null, ''], true) ? 'selected' : '' }}> Select</option>
-                        <option value="1" {{ old('letter_issued', $armsLicense->letter_issued) == 1 ? 'selected' : '' }}>Yes</option>
-                        <option value="0" {{ old('letter_issued', $armsLicense->letter_issued) == 0 ? 'selected' : '' }}>No</option>
+                    <select name="letter_issued" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        @if (!$armsLicense->letter_issued)
+                            <option value="" selected>Select</option>
+                        @else
+                            <option value="">Select</option>
+                        @endif
+                        
+                        <option value="1" {{ old('letter_issued', $armsLicense->letter_issued) === 1 ? 'selected' : '' }}>Yes</option>
+                        <option value="0" {{ old('letter_issued', $armsLicense->letter_issued) === 0 ? 'selected' : '' }}>No</option>
                     </select>
                 </div>
             </div>

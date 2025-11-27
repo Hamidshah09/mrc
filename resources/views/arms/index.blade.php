@@ -12,8 +12,8 @@
 
                 <!-- CNIC -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">CNIC</label>
-                    <input type="text" name="keyword" placeholder="Search CNIC"
+                    <label class="block text-sm font-medium mb-1">Keyword</label>
+                    <input type="text" name="keyword" placeholder="Search by Name, License No, weapon no"
                         class="border border-gray-300 w-full p-2 rounded"
                         value="{{ request('keyword') }}">
                 </div>
@@ -58,7 +58,7 @@
 
                 <!-- Address on CNIC -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">Character Certificate</label>
+                    <label class="block text-sm font-medium mb-1">is Islamabad address written on cnic?</label>
                     <select name="address_on_cnic" class="border border-gray-300 w-full p-2 rounded">
                         <option value="">Select</option>
                         <option value="1" {{ request('address_on_cnic') === "1" ? 'selected' : '' }}>Yes</option>
@@ -137,7 +137,7 @@
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">CNIC</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Name</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">License No</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Weapon No</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Mobile</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Weapon Type</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Approved By</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Updated By</th>
@@ -152,7 +152,7 @@
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $arms->cnic }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $arms->name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $arms->license_number }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $arms->weapon_number }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $arms->mobile }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $arms->weapon_type }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">
                                 @if (is_null($arms->status_id))
@@ -177,7 +177,10 @@
                                         <x-icons.pencil-square class="text-green-500 hover:text-green-700" />
                                     </a>
                                     <a target="_blank" href="https://admin-icta.nitb.gov.pk/arm/applicant/{{$arms->applicant_id}}/application/show/{{$arms->id}}" >
-                                        <x-icons.document-text class="text-green-500 hover:text-green-700" />
+                                        <x-icons.document-text class="text-yellow-500 hover:text-yellow-700" />
+                                    </a>
+                                    <a href="{{ route('arms.letter', $arms->id) }}" >
+                                        <x-icons.check-circle class="text-blue-500 hover:text-blue-700" />
                                     </a>
                                 </div>
                             </td>

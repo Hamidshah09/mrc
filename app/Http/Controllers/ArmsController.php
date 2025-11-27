@@ -183,10 +183,42 @@ class ArmsController extends Controller
             'affidavit' => $validated['affidavit'] ?? $armsLicense->affidavit,
             'updated_by' => $user_id,
             'status_id' => $validated['status_id'] ?? $armsLicense->status_id,
+            'called' => $validated['called'] ?? $armsLicense->called,
+            'letter_issued' => $validated['letter_issued'] ?? $armsLicense->letter_issued,
         ]);
 
         return redirect()->route('arms.index')
                         ->with('success', 'Record updated successfully.');
+    }
+    public function generateLetter($id)
+    {
+        $record = ArmsLicense::findOrFail($id);
+
+        // Paragraph logic
+        $paragraph = "Your arms license record has been scrutinized and it has been found that ";
+
+        // Address issue
+        if ($record->address_on_cnic === 0) {
+            $paragraph .= "you are not a resident of Islamabad. Please explain within 15 days from the  date of issuance of this letter, as to why your license may not be cancelled for being a non-resident of Islamabad.";
+        }
+
+        // Character certificate issue
+        if ($record->character_certificate === 0 and $record->address_on_cnic === 0) {
+            $paragraph .= " Furthermore, your character certificate has not been provided. You are required to furnish a valid character certificate.";
+        } else if ($record->character_certificate === 0) {
+            $paragraph .= " Your character certificate has not been provided. You are required to furnish a valid character certificate within 15 days from the date of issuance of this letter to ovaid cancellation of license.";
+        }
+
+        // Pass variables to view
+        $pdf = Pdf::loadView('arms.letter', [
+            'record' => $record,
+            'paragraph' => $paragraph
+        ]);
+
+        $fileName = 'Letter_' . $record->name . '.pdf';
+        $record->letter_issued = 1;
+        $record->save();
+        return $pdf->download($fileName);
     }
 
 

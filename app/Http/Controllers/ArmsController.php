@@ -67,6 +67,11 @@ class ArmsController extends Controller
             $query->where('status_id', (int) $request->status_id);
         }
 
+        // Address on CNIC
+        if ($request->address_on_cnic !== null && $request->address_on_cnic !== '') {
+            $query->where('address_on_cnic', $request->address_on_cnic);
+        }
+
         // Character Certificate
         if ($request->character_certificate !== null && $request->character_certificate !== '') {
             $query->where('character_certificate', $request->character_certificate);

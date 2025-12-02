@@ -191,9 +191,6 @@ class ArmsController extends Controller
             'status_id' => $validated['status_id'] ?? $armsLicense->status_id,
             'called' => $validated['called'] ?? $armsLicense->called,
             'letter_issued' => $validated['letter_issued'] ?? $armsLicense->letter_issued,
-            'letter_issuance_date' => ($validated['letter_issued'] ?? $armsLicense->letter_issued) == 1
-                ? now()
-                : $armsLicense->letter_issuance_date,
         ]);
 
         return redirect()->route('arms.index')
@@ -226,6 +223,7 @@ class ArmsController extends Controller
 
         $fileName = 'Letter_' . $record->name . '.pdf';
         $record->letter_issued = 1;
+        $record->letter_issuance_date = now()->toDateString();
         $record->save();
         return $pdf->download($fileName);
     }

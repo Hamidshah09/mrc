@@ -187,6 +187,7 @@ class ArmsController extends Controller
             'address_on_cnic' => $validated['address_on_cnic'] ?? $armsLicense->address_on_cnic,
             'affidavit' => $validated['affidavit'] ?? $armsLicense->affidavit,
             'updated_by' => $user_id,
+            'address' => $validated['address'] ?? $armsLicense->address,
             'status_id' => $validated['status_id'] ?? $armsLicense->status_id,
             'called' => $validated['called'] ?? $armsLicense->called,
             'letter_issued' => $validated['letter_issued'] ?? $armsLicense->letter_issued,

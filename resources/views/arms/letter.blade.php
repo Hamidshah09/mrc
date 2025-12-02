@@ -73,6 +73,10 @@
     </tr>
     <tr>
         <td style="margin-left: 100px;width:100px"></td>
+        <td>s/d/w/o {{$record->guardian_name}},</td>
+    </tr>
+    <tr>
+        <td style="margin-left: 100px;width:100px"></td>
         <td>{{$record->address}}</td>
     </tr>
 </table>

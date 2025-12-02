@@ -163,7 +163,8 @@ class ArmsController extends Controller
     }
     public function edit($id){
         $armsLicense=ArmsLicense::findOrFail($id);
-        return view('arms.edit', compact('armsLicense'));
+        $role = Auth::user()->role->role;
+        return view('arms.edit', compact('armsLicense', 'role'));
     }
     public function update(Request $request, $id)
     {
@@ -177,6 +178,7 @@ class ArmsController extends Controller
             'status_id' => 'nullable|in:0,1',
             'called' => 'nullable|in:1,2,3',
             'letter_issued' => 'nullable|in:0,1',
+            'audit_result' => 'nullable|in:0,1',
         ]);
 
         $armsLicense = ArmsLicense::findOrFail($id);
@@ -190,6 +192,7 @@ class ArmsController extends Controller
             'address' => $validated['address'] ?? $armsLicense->address,
             'status_id' => $validated['status_id'] ?? $armsLicense->status_id,
             'called' => $validated['called'] ?? $armsLicense->called,
+            'audit_result' => $validated['audit_result'] ?? $armsLicense->audit_result,
             'letter_issued' => $validated['letter_issued'] ?? $armsLicense->letter_issued,
         ]);
 

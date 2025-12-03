@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class ArmsController extends Controller
@@ -230,6 +231,44 @@ class ArmsController extends Controller
         $record->save();
         return $pdf->download($fileName);
     }
+    public function statistics()
+    {
+        $totalAudited = ArmsLicense::where('status_id', 0)->orWhere('status_id', 1)->count();
+        $approvedByDc = ArmsLicense::where('status_id', 1)->where('approver_id', 1)->count();
+        $approvedByAdcg = ArmsLicense::where('status_id', 1)->where('approver_id', 2)->count();
+        $noAddressByDc = ArmsLicense::where('status_id', 1)->where('approver_id', 1)->where('address_on_cnic', 0)->count();
+        $noAddressByAdcg = ArmsLicense::where('status_id', 1)->where('approver_id', 2)->where('address_on_cnic', 0)->count();
+        $nocharacterByDc = ArmsLicense::where('status_id', 1)->where('approver_id', 1)->where('character_certificate', 0)->count();
+        $nocharacterByAdcg = ArmsLicense::where('status_id', 1)->where('approver_id', 2)->where('character_certificate', 0)->count();
+        $notApproved = ArmsLicense::where('status_id', 0)->count();
+        $monthlyApprovedByDc = DB::table('arms_licenses')
+        ->selectRaw("YEAR(issue_date) AS year, MONTH(issue_date) AS month, DATE_FORMAT(issue_date, '%M') AS month_name, COUNT(*) AS total_approved")
+        ->where('status_id', 1)
+        ->where('approver_id', 1)
+        ->groupByRaw("YEAR(issue_date), MONTH(issue_date), DATE_FORMAT(issue_date, '%M')")
+        ->orderByRaw("YEAR(issue_date), MONTH(issue_date)")
+        ->get();
 
+        $monthlyApprovedByAdcg = DB::table('arms_licenses')
+            ->selectRaw("YEAR(issue_date) AS year, MONTH(issue_date) AS month, DATE_FORMAT(issue_date, '%M') AS month_name, COUNT(*) AS total_approved")
+            ->where('status_id', 1)
+            ->where('approver_id', 2)
+            ->groupByRaw("YEAR(issue_date), MONTH(issue_date), DATE_FORMAT(issue_date, '%M')")
+            ->orderByRaw("YEAR(issue_date), MONTH(issue_date)")
+            ->get();
+        // return $monthlyApproved;
+        return view('arms.armstatistics', compact(
+            'totalAudited',
+            'approvedByDc',
+            'approvedByAdcg',
+            'notApproved',
+            'monthlyApprovedByDc',
+            'monthlyApprovedByAdcg',
+            'noAddressByDc',
+            'noAddressByAdcg',
+            'nocharacterByDc',
+            'nocharacterByAdcg'
+        ));
+    }
 
 }

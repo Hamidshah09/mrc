@@ -18,9 +18,6 @@ use App\Http\Controllers\idpController;
 use App\Models\ApplicationType;
 use App\Models\OnlineApplication;
 use Illuminate\Support\Facades\Route;
-Route::get('/letter', function () {
-    return view('arms.letter');
-})->name('home');
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -115,6 +112,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/arms/trash/all', [ArmsController::class, 'trashall'])->name('arms.trashall');
         Route::get('/arms/pdf-report', [ArmsController::class, 'pdf_report'])->name('arms.pdf');
         Route::get('/arms/{id}/letter', [ArmsController::class, 'generateLetter'])->name('arms.letter');
+        Route::get('/arms/statistics', [ArmsController::class, 'statistics'])->name('arms.statistics');
 
     });
     

@@ -33,6 +33,7 @@
                                 class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
                                 <a href="{{route('users.index')}}" class="block px-4 py-2 hover:bg-gray-100">Users</a>
                                 <a href="{{route('arms.index')}}" class="block px-4 py-2 hover:bg-gray-100">Arms</a>
+                                <a href="{{route('arms.statistics')}}" class="block px-4 py-2 hover:bg-gray-100">Arms Statistics</a>
                                 {{-- <a href="{{route('finance.index')}}" class="block px-4 py-2 hover:bg-gray-100">Finance</a> --}}
                             </div>
                         </div>
@@ -223,8 +224,8 @@
                 </x-responsive-nav-link>
             </div>
             <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('finance.index')" :active="request()->routeIs('arms.index')">
-                    {{ __('Finance') }}
+                <x-responsive-nav-link :href="route('arms.statistics')" :active="request()->routeIs('arms.statistics')">
+                    {{ __('Arms Statistics') }}
                 </x-responsive-nav-link>
             </div>
         @endif

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ArmsApproval;
+use App\Models\ArmsHistory;
 use App\Models\ArmsLicense;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -165,7 +166,8 @@ class ArmsController extends Controller
     public function edit($id){
         $armsLicense=ArmsLicense::findOrFail($id);
         $role = Auth::user()->role->role;
-        return view('arms.edit', compact('armsLicense', 'role'));
+        $armsHistory = ArmsHistory::with('armsLicense', 'user')->where('arms_license_id', $id)->get();
+        return view('arms.edit', compact('armsLicense', 'role', 'armsHistory'));
     }
     public function update(Request $request, $id)
     {
@@ -197,6 +199,12 @@ class ArmsController extends Controller
             'letter_issued' => $validated['letter_issued'] ?? $armsLicense->letter_issued,
         ]);
 
+        ArmsHistory::create([
+            'arms_license_id' => $id,
+            'user_id' => $user_id,
+            'action' => 'Record Updated',
+        ]);
+
         return redirect()->route('arms.index')
                         ->with('success', 'Record updated successfully.');
     }
@@ -224,7 +232,11 @@ class ArmsController extends Controller
             'record' => $record,
             'paragraph' => $paragraph
         ]);
-
+        ArmsHistory::create([
+            'arms_license_id' => $record->id,
+            'user_id' => Auth::id(),
+            'action' => 'Letter Generated',
+        ]);
         $fileName = 'Letter_' . $record->name . '.pdf';
         $record->letter_issued = 1;
         $record->letter_issuance_date = now()->toDateString();
@@ -270,5 +282,6 @@ class ArmsController extends Controller
             'nocharacterByAdcg'
         ));
     }
+    
 
 }

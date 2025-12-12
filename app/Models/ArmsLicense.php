@@ -38,4 +38,9 @@ class ArmsLicense extends Model
     public function user(){
         return $this->belongsTo(User::class, 'updated_by', 'id');
     }
+
+    public function history()
+    {
+        return $this->hasMany(ArmsHistory::class, 'arms_license_id');
+    }
 }

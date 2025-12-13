@@ -79,6 +79,7 @@
         <td style="margin-left: 100px;width:100px"></td>
         <td>{{$record->address}}</td>
     </tr>
+    
 </table>
 
 <p style="margin-left: 50px;"><strong>Subject: <u>NOTICE</u></strong></p>
@@ -101,8 +102,19 @@
     </tr>
     <tr>
         <td style="margin-left: 100px;width:100px"></td>
+        <td>s/d/w/o {{$record->guardian_name}},</td>
+    </tr>
+    <tr>
+        <td style="margin-left: 100px;width:100px"></td>
         <td>{{$record->address}}</td>
     </tr>
+    @if ($record->mobile!='00000000000')
+        <tr>
+            <td style="margin-left: 100px;width:100px"></td>
+            <td>{{$record->mobile}}</td>
+        </tr>    
+    @endif
+    
 </table>
 <div class="bottom-footer">From: Deputy Commissioner's Office,  Islamabad</div>
 </body>

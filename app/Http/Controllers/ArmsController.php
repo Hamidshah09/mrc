@@ -245,7 +245,9 @@ class ArmsController extends Controller
     }
     public function statistics()
     {
+        $totalLicenses = ArmsLicense::whereBetween('issue_date', ['2022-04-01', '2024-03-31'])->count();
         $totalAudited = ArmsLicense::where('status_id', 0)->orWhere('status_id', 1)->count();
+        $percentAudited = $totalLicenses > 0 ? ($totalAudited / $totalLicenses) * 100 : 0;
         $approvedByDc = ArmsLicense::where('status_id', 1)->where('approver_id', 1)->count();
         $approvedByAdcg = ArmsLicense::where('status_id', 1)->where('approver_id', 2)->count();
         $noAddressByDc = ArmsLicense::where('status_id', 1)->where('approver_id', 1)->where('address_on_cnic', 0)->count();
@@ -270,7 +272,9 @@ class ArmsController extends Controller
             ->get();
         // return $monthlyApproved;
         return view('arms.armstatistics', compact(
+            'totalLicenses',
             'totalAudited',
+            'percentAudited',
             'approvedByDc',
             'approvedByAdcg',
             'notApproved',

@@ -12,12 +12,20 @@
             <div class="grid grid-cols-1 mx-3 sm:mx-2 sm:grid-cols-2 lg:grid-cols-3 gap-6" >
                 
                 <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
-                    <div class="text-4xl mb-3">
-                        
+                    <div class="text-lg mb-3">
+                        Audit Progress      
                     </div>
-                    <h4 class="text-lg font-medium text-gray-800 mb-3">Total Audited</h4>
-                    <div class="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                        {{$totalAudited}}
+                    <div class="flex justify-between">
+                        <h4 class="text-lg font-medium text-gray-800">{{$percentAudited}}%</h4>
+                        <h4 class="text-lg font-medium text-gray-800">{{$totalAudited}}</h4>
+                        <h4 class="text-lg font-medium text-gray-800">{{$totalLicenses}}</h4>
+                    </div>
+                    
+                    
+                    <div class="relative pt-1">
+                        <div class="overflow-hidden h-4 mb-4 text-xs flex rounded-lg bg-blue-100">
+                            <div style="width: {{$percentAudited}}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                        </div>
                     </div>
                 </div>
 

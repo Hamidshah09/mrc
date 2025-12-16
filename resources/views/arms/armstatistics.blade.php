@@ -21,10 +21,12 @@
                         <h4 class="text-lg font-medium text-gray-800">{{$totalLicenses}}</h4>
                     </div>
                     
-                    
+                    @php
+                        $progress_width = round($percentAudited);
+                    @endphp
                     <div class="relative pt-1">
                         <div class="overflow-hidden h-4 mb-4 text-xs flex rounded-lg bg-blue-100">
-                            <div style="width: {{$percentAudited}}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                            <div style="width: {{$progress_width}}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
                         </div>
                     </div>
                 </div>
@@ -94,47 +96,59 @@
     </div>
 
     <div class="max-w-7xl mx-auto p-6 bg-white shadow-md rounded mt-10">
-        <div class="grid grid-cols-1 mx-3 sm:mx-2 sm:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 mx-3">
             <div>
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-200">
                         <tr>
                             <th class="px-6 py-3 text-left text-sm font-medium text-gray-900 uppercase">Year</th>
                             <th class="px-6 py-3 text-left text-sm font-medium text-gray-900 uppercase">Month</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-900 uppercase">Approved Licenses</th>
+                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-900 uppercase">Total Issued</th>
+                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-900 uppercase">Identified as Approved By DC</th>
+                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-900 uppercase">Identified as Approved By ADCG</th>
+                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-900 uppercase">Remaining</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
-                        @foreach ($monthlyApprovedByDc as $approvedApps)
+                        @foreach ($monthlyissued as $issued)
+                            @php
+                                $key = $issued->year . '-' . $issued->month;
+
+                                $dcCount   = $dcApproved[$key]->total_approved ?? 0;
+                                $adcgCount = $adcgApproved[$key]->total_approved ?? 0;
+
+                                $remaining = $issued->total_approved - ($dcCount + $adcgCount);
+                            @endphp
+
                             <tr>
-                                <td class="px-6 py-4 text-gray-700">{{ $approvedApps->year }}</td>
-                                <td class="px-6 py-4 text-gray-700">{{ $approvedApps->month_name }}</td>
-                                <td class="px-6 py-4 text-gray-700">{{ $approvedApps->total_approved }}</td>
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ $issued->year }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ $issued->month_name }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ $issued->total_approved }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ $dcCount }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ $adcgCount }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-700 font-semibold">
+                                    {{ $remaining }}
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-            </div>
-            <div>
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-200">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-900 uppercase">Year</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-900 uppercase">Month</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium text-gray-900 uppercase">Approved Licenses</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
-                        @foreach ($monthlyApprovedByAdcg as $approvedApps)
-                            <tr>
-                                <td class="px-6 py-4 text-gray-700">{{ $approvedApps->year }}</td>
-                                <td class="px-6 py-4 text-gray-700">{{ $approvedApps->month_name }}</td>
-                                <td class="px-6 py-4 text-gray-700">{{ $approvedApps->total_approved }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>     
+            </div> 
         </div>
     </div>
 </x-app-layout>

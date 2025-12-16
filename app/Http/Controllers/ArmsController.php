@@ -277,13 +277,20 @@ class ArmsController extends Controller
             ->groupByRaw("YEAR(issue_date), MONTH(issue_date), DATE_FORMAT(issue_date, '%M')")
             ->orderByRaw("YEAR(issue_date), MONTH(issue_date)")
             ->get();
+        $monthlyremaining = DB::table('arms_licenses')
+            ->selectRaw("YEAR(issue_date) AS year, MONTH(issue_date) AS month, DATE_FORMAT(issue_date, '%M') AS month_name, COUNT(*) AS total_approved")
+            ->whereNull('status_id')
+            ->whereBetween('issue_date', ['2022-04-01', '2025-11-30'])
+            ->groupByRaw("YEAR(issue_date), MONTH(issue_date), DATE_FORMAT(issue_date, '%M')")
+            ->orderByRaw("YEAR(issue_date), MONTH(issue_date)")
+            ->get();
         
-        $dcApproved = $monthlyApprovedByDc->keyBy(function ($item) {
-            return $item->year . '-' . $item->month;
-        });
-        $adcgApproved = $monthlyApprovedByAdcg->keyBy(function ($item) {
-            return $item->year . '-' . $item->month;
-        });
+        $dcApproved = $monthlyApprovedByDc->keyBy(fn ($i) => $i->year . '-' . $i->month);
+
+        $adcgApproved = $monthlyApprovedByAdcg->keyBy(fn ($i) => $i->year . '-' . $i->month);
+
+        $remainingLicenses = $monthlyremaining->keyBy(fn ($i) => $i->year . '-' . $i->month);
+
         // return $monthlyApproved;
         return view('arms.armstatistics', compact(
             'totalLicenses',
@@ -300,7 +307,8 @@ class ArmsController extends Controller
             'nocharacterByDc',
             'nocharacterByAdcg',
             'dcApproved',
-            'adcgApproved'
+            'adcgApproved',
+            'remainingLicenses'
         ));
     }
     

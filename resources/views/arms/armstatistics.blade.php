@@ -12,24 +12,52 @@
             <div class="grid grid-cols-1 mx-3 sm:mx-2 sm:grid-cols-2 lg:grid-cols-3 gap-6" >
                 
                 <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
-                    <div class="text-lg mb-3">
-                        Audit Progress      
+                    <div class="text-lg font-semibold mb-4 text-gray-800">
+                        Audit Progress
                     </div>
-                    <div class="flex justify-between">
-                        <h4 class="text-lg font-medium text-gray-800">{{$percentAudited}}%</h4>
-                        <h4 class="text-lg font-medium text-gray-800">{{$totalAudited}}</h4>
-                        <h4 class="text-lg font-medium text-gray-800">{{$totalLicenses}}</h4>
-                    </div>
-                    
-                    @php
-                        $progress_width = round($percentAudited);
-                    @endphp
-                    <div class="relative pt-1">
-                        <div class="overflow-hidden h-4 mb-4 text-xs flex rounded-lg bg-blue-100">
-                            <div style="width: {{$progress_width}}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+
+                    {{-- Stats --}}
+                    <div class="grid grid-cols-3 gap-4 mb-4 text-center">
+                        <div>
+                            <div class="text-sm text-gray-500">Progress</div>
+                            <div class="text-lg font-medium text-gray-800">
+                                {{ $percentAudited }}%
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="text-sm text-gray-500">Audited</div>
+                            <div class="text-lg font-medium text-gray-800">
+                                {{ $totalAudited }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="text-sm text-gray-500">Total</div>
+                            <div class="text-lg font-medium text-gray-800">
+                                {{ $totalLicenses }}
+                            </div>
                         </div>
                     </div>
+
+                    @php
+                        $progressWidth = max(0, min(100, round($percentAudited)));
+                    @endphp
+
+                    {{-- Progress Bar --}}
+                    <div class="w-full bg-blue-100 rounded-full h-4 overflow-hidden">
+                        <div
+                            class="h-full bg-blue-600 transition-all duration-700 ease-out"
+                            style="width: {{ $progressWidth }}%;">
+                        </div>
+                    </div>
+
+                    {{-- Label --}}
+                    <div class="mt-2 text-sm text-gray-600 text-right">
+                        {{ $totalAudited }} of {{ $totalLicenses }} audited
+                    </div>
                 </div>
+
 
                 <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
                     <div class="text-4xl mb-3">
@@ -114,10 +142,9 @@
                             @php
                                 $key = $issued->year . '-' . $issued->month;
 
-                                $dcCount   = $dcApproved[$key]->total_approved ?? 0;
-                                $adcgCount = $adcgApproved[$key]->total_approved ?? 0;
-
-                                $remaining = $issued->total_approved - ($dcCount + $adcgCount);
+                                $dcCount       = $dcApproved[$key]->total_approved ?? 0;
+                                $adcgCount     = $adcgApproved[$key]->total_approved ?? 0;
+                                $remainingCount = $remainingLicenses[$key]->total_approved ?? 0;
                             @endphp
 
                             <tr>
@@ -129,7 +156,7 @@
                                     {{ $issued->month_name }}
                                 </td>
 
-                                <td class="px-6 py-4 text-gray-700">
+                                <td class="px-6 py-4 text-gray-700 font-semibold">
                                     {{ $issued->total_approved }}
                                 </td>
 
@@ -142,11 +169,12 @@
                                 </td>
 
                                 <td class="px-6 py-4 text-gray-700 font-semibold">
-                                    {{ $remaining }}
+                                    {{ $remainingCount }}
                                 </td>
                             </tr>
                         @endforeach
-                    </tbody>
+                        </tbody>
+
                 </table>
             </div> 
         </div>

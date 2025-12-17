@@ -247,7 +247,7 @@
                         <option value="0" {{ old('letter_issued', $armsLicense->letter_issued) === 0 ? 'selected' : '' }}>No</option>
                     </select>
                 </div>
-                @if ($role=='admin')
+                @if ($role=='admin' or $id == 66)
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Audit Result</label>
                         <select name="audit_result" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">

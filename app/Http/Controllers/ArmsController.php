@@ -166,8 +166,9 @@ class ArmsController extends Controller
     public function edit($id){
         $armsLicense=ArmsLicense::findOrFail($id);
         $role = Auth::user()->role->role;
+        $id = Auth::user()->id;
         $armsHistory = ArmsHistory::with('armsLicense', 'user')->where('arms_license_id', $id)->get();
-        return view('arms.edit', compact('armsLicense', 'role', 'armsHistory'));
+        return view('arms.edit', compact('armsLicense', 'role', 'id', 'armsHistory'));
     }
     public function update(Request $request, $id)
     {

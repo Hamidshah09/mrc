@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArmsController;
+use App\Http\Controllers\AuqafOfficialsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DepartmentController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\OnlineApplicationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\idpController;
+use App\Http\Controllers\MousqueController;
 use App\Models\ApplicationType;
 use App\Models\OnlineApplication;
 use Illuminate\Support\Facades\Route;
@@ -116,6 +118,21 @@ Route::middleware('auth')->group(function () {
 
     });
     
+    Route::middleware('role:auqaf,admin')->group(function(){
+        Route::get('/auqaf/mousques', [MousqueController::class, 'index'])->name('mousques.index');
+        Route::get('/auqaf/mousques/create', [MousqueController::class, 'create'])->name('mousques.create');
+        Route::get('/auqaf/mousques/edit/{id}', [MousqueController::class, 'edit'])->name('mousques.edit');
+        Route::put('/auqaf/mousques/update/{id}', [MousqueController::class, 'update'])->name('mousques.update');
+        Route::post('/auqaf/mousques/store', [MousqueController::class, 'store'])->name('mousques.store');
+        Route::get('/auqaf/mousques/show/{id}', [MousqueController::class, 'show'])->name('mousques.show');
+
+        Route::get('/auqaf/officials', [AuqafOfficialsController::class, 'index'])->name('auqaf-officials.index');
+        Route::get('/auqaf/officials/create', [AuqafOfficialsController::class, 'create'])->name('auqaf-officials.create');
+        Route::get('/auqaf/officials/edit/{id}', [AuqafOfficialsController::class, 'edit'])->name('auqaf-officials.edit');
+        Route::put('/auqaf/officials/update/{id}', [AuqafOfficialsController::class, 'update'])->name('auqaf-officials.update');
+        Route::post('/auqaf/officials/store', [AuqafOfficialsController::class, 'store'])->name('auqaf-officials.store');
+
+    });
     Route::middleware('role:admin,domicile,idp,arms')->group(function(){
         Route::get('/statistics/pdf-report', [StatisticsController::class, 'pdf_report'])->name('statistics.pdf');
         Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');

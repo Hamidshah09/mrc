@@ -27,7 +27,7 @@ return new class extends Migration
             ['name' => 'D-12'], ['name' => 'D-13'], ['name' => 'D-14'], ['name' => 'D-15'], ['name'=>'D-16'], ['name' => 'D-17'],
             ['name' => 'C-13'], ['name' => 'C-14'], ['name' => 'C-15'], ['name'=>'C-16'],
             ['name' => 'B-14'], ['name' => 'B-15'], ['name'=>'B-16'],
-            ['name' => 'A-15'], ['name'=>'A-16'],
+            ['name' => 'A-15'], ['name'=>'A-16'], ['name'=>'R-1'],
         ]);
     }
 

@@ -154,7 +154,7 @@
                                     class="border rounded">
 
                                 <select name="officials[{{ $i }}][type]" class="border rounded">
-                                    @foreach(['Regular','Shrine','Private'] as $type)
+                                    @foreach(['Regular','Shrine','Private', 'Shrine Daily Wages', 'Retired'] as $type)
                                         <option value="{{ $type }}"
                                             {{ old("officials.$i.type", $official->type) === $type ? 'selected' : '' }}>
                                             {{ $type }}
@@ -415,6 +415,8 @@
                             <option value="Regular">Regular</option>
                             <option value="Shrine">Shrine</option>
                             <option value="Private">Private</option>
+                            <option value="Shrine Daily Wages">Shrine Daily Wages</option>
+                            <option value="Retired">Retired</option>
                         </select>
 
                         <select name="officials[${officialIndex}][position]"

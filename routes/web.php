@@ -89,11 +89,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/domicile/noc-to-other-district/create', 'noc_to_other_district_create')->name('noc.other_district.create');
         Route::get('/online-application/show/{id}', 'online_application_show')->name('online.application.show');
         Route::post('/domicile/noc-to-other-district/store', 'noc_to_other_district_store')->name('noc.other_district.store');
+        
     });
     
+
     
     Route::get('/domicile/admin', [domicileController::class, 'admin_index'])->name('domicile.admin');
     Route::get('/domicile/form-p/{id}', [domicileController::class,'form_p'])->name('domicile.form_p');
+    Route::get('/domicile/noc-ict/create', [domicileController::class, 'noc_ict_create'])->name('noc-ict.create');
+    Route::post('/domicile/noc-ict/store', [domicileController::class, 'noc_ict_store'])->name('noc-ict.store');
     
     
     

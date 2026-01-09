@@ -153,6 +153,8 @@
                                 <option value="Regular">Regular</option>
                                 <option value="Shrine">Shrine</option>
                                 <option value="Private">Private</option>
+                                <option value="Shrine Daily Wages">Shrine Daily Wages</option>
+                                <option value="Retired">Retired</option>
                             </select>
 
                             
@@ -474,6 +476,8 @@
                             <option value="Regular">Regular</option>
                             <option value="Shrine">Shrine</option>
                             <option value="Private">Private</option>
+                            <option value="Shrine Daily Wages">Shrine Daily Wages</option>
+                            <option value="Retired">Retired</option>
                         </select>
 
                         <select name="officials[${officialIndex}][position]"

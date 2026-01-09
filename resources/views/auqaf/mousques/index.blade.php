@@ -416,6 +416,10 @@
             </div>
         @endforeach
     </div>
+    {{-- ===================== PAGINATION ===================== --}}
+    <div class="max-w-7xl mx-auto p-6 bg-white shadow-md rounded mt-6">
+        {{ $mousques->withQueryString()->links() }}
+    </div>
 
     {{-- JS --}}
     <script>

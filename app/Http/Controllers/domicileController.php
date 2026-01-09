@@ -601,4 +601,10 @@ class domicileController extends Controller
             return ['error' => 'Something went wrong: ' . $e->getMessage()];
         }
     }
+    public function noc_ict_create(){
+        return view('domicile.createnocict');
+    }
+    public function noc_ict_store(Request $request){
+        
+    }
 }

@@ -220,8 +220,8 @@ private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $depar
     $card_no = date('Ymd') . $nextId;
 
     // Format dates
-    $dateofissue = date('Y-m-d');
-    $dateofexpiry = $isPermanent ? 'Till Service' : date('Y-m-d', strtotime('+1 year'));
+    $dateofissue = date('d-m-Y');
+    $dateofexpiry = $isPermanent ? 'Till Service' : date('d-m-Y', strtotime('+1 year'));
 
     // Insert new card record
     DB::table('employee_cards')->insert([

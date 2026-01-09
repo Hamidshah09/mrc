@@ -158,7 +158,7 @@ class EmployeeController extends Controller
             $department  = $employee->departments->department ?? '';
             $emp_status  = $employee->employee_types->employee_type ?? '';
             $pic        = $employee->pic;
-            $dob        = Carbon::parse($employee->date_of_birth)->format('d-m-Y');
+            $dob        = Carbon::parse($employee->date_of_birth)->format('Y-m-d');
 
             // Handle permanent vs non-permanent
             if ($emp_status === 'Regular') {
@@ -220,8 +220,8 @@ private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $depar
     $card_no = date('Ymd') . $nextId;
 
     // Format dates
-    $dateofissue = date('d-m-Y');
-    $dateofexpiry = $isPermanent ? 'Till Service' : date('d-m-Y', strtotime('+1 year'));
+    $dateofissue = date('Y-m-d');
+    $dateofexpiry = $isPermanent ? 'Till Service' : date('Y-m-d', strtotime('+1 year'));
 
     // Insert new card record
     DB::table('employee_cards')->insert([

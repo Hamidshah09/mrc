@@ -20,6 +20,8 @@ use App\Http\Controllers\MousqueController;
 use App\Models\ApplicationType;
 use App\Models\OnlineApplication;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostalServiceController;
+
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -48,6 +50,7 @@ Route::post('/idp/check', [idpController::class, 'check'])->name('idp.check');
 Route::post('/mrc/check', [MrcController::class, 'check'])->name('mrc.check');
 Route::post('/domicile/check', [domicileController::class, 'apiCheck'])->name('domicile.check');
 Route::get('/statistics/check', [domicileController::class, 'get_statistics'])->name('statistics.check');
+Route::get('/postalservice/create', [PostalServiceController::class, 'create'])->name('postalservice.create');
 Route::get('/inactive', function () {
     return view('auth.inactive');
 })->name('inactive');
@@ -93,7 +96,15 @@ Route::middleware('auth')->group(function () {
     });
     
 
-    
+    Route::controller(PostalServiceController::class)->group(function(){
+        
+        Route::post('/postalservice/store', 'store')->name('postalservice.store');
+        Route::get('/postalservice/index', 'index')->name('postalservice.index');
+        Route::get('/postalservice/show/{id}', 'show')->name('postalservice.show');
+        Route::get('/postalservice/edit/{id}', 'edit')->name('postalservice.edit');
+        Route::put('/postalservice/update/{id}', 'update')->name('postalservice.update');
+        Route::put('/postalservice/update-status/{id}', 'updateStatus')->name('postalservice.update-status');
+    });
     Route::get('/domicile/admin', [domicileController::class, 'admin_index'])->name('domicile.admin');
     Route::get('/domicile/form-p/{id}', [domicileController::class,'form_p'])->name('domicile.form_p');
     Route::get('/domicile/noc-ict/create', [domicileController::class, 'noc_ict_create'])->name('noc-ict.create');

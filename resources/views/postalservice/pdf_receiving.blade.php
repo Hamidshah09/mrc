@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-    <h2>Postal Service Report</h2>
+    <h2>Postal Receiving Report</h2>
     <table>
         <thead>
             <tr>

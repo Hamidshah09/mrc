@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    <h2>Postal Service Report</h2>
+    <h2>Postal Summary</h2>
     <table>
         <thead>
             <tr>

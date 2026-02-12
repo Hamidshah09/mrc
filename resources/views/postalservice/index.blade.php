@@ -85,10 +85,16 @@
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div class="flex items-center space-x-2">
-                                    @if ($user->id === $record->user_id)
-                                        <a href="{{ route('postalservice.edit', $record->id) }}" class="text-blue-600 hover:text-blue-800">
-                                            <x-icons.pencil-square />
-                                        </a>
+                                    @if($record->user_id)
+                                        @if ($user->id === $record->user_id)
+                                            <a href="{{ route('postalservice.edit', $record->id) }}" class="text-blue-600 hover:text-blue-800">
+                                                <x-icons.pencil-square />
+                                            </a>
+                                        @else
+                                            <a href="{{ route('postalservice.edit', $record->id) }}" class="text-blue-600 hover:text-blue-800">
+                                                <x-icons.pencil-square />
+                                            </a>
+                                        @endif
                                     @endif
                                     <a href="{{ route('postalservice.show', $record->id) }}" class="text-green-600 hover:text-green-800">
                                         <x-icons.exclamation-triangle />

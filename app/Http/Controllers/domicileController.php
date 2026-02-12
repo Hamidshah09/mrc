@@ -53,12 +53,12 @@ class domicileController extends Controller
         }
     $validated = $request->validate([
         'cnic' => 'required|regex:/^[0-9]{13}$/',
-        'name' => 'required|string|max:255',
-        'fathername' => 'required|string|max:255',
-        'spousename' => 'nullable|string|max:255',
+        'name' => 'required|string|max:45',
+        'fathername' => 'required|string|max:45',
+        'spousename' => 'nullable|string|max:45',
         'date_of_birth' => 'required|date',
         'gender_id' => 'required|integer',
-        'place_of_birth' => 'required|string|max:255',
+        'place_of_birth' => 'required|string|max:45',
         'marital_status_id' => 'required|integer',
         'religion' => 'required|string|max:45',
         'qualification_id' => 'nullable|integer',
@@ -71,20 +71,20 @@ class domicileController extends Controller
         'temporaryAddress_province_id' => 'required|integer',
         'temporaryAddress_district_id' => 'required|integer',
         'temporaryAddress_tehsil_id' => 'required|integer',
-        'temporaryAddress' => 'required|string|max:255',
+        'temporaryAddress' => 'required|string|max:100',
 
         // Permanent Address
         'permanentAddress_province_id' => 'required|integer',
         'permanentAddress_district_id' => 'required|integer',
         'permanentAddress_tehsil_id' => 'required|integer',
-        'permanentAddress' => 'required|string|max:255',
+        'permanentAddress' => 'required|string|max:100',
 
         'children_checkbox' => 'nullable|boolean',
     ]);
 
     $request->validate([
-    'children.*.cnic' => 'required|string',
-    'children.*.name' => 'required|string',
+    'children.*.cnic' => 'required|regex:/^[0-9]{13}$/',
+    'children.*.name' => 'required|string|max:45',
     'children.*.dob' => 'required|date',
     'children.*.gender_id' => 'required|in:1,2',
     ]);
@@ -222,12 +222,12 @@ class domicileController extends Controller
     } 
     $validated = $request->validate([
         'cnic' => 'required|string|max:13',
-        'name' => 'required|string|max:255',
-        'fathername' => 'required|string|max:255',
-        'spousename' => 'nullable|string|max:255',
+        'name' => 'required|string|max:45',
+        'fathername' => 'required|string|max:45',
+        'spousename' => 'nullable|string|max:45',
         'date_of_birth' => 'required|date',
         'gender_id' => 'required|integer',
-        'place_of_birth' => 'required|string|max:255',
+        'place_of_birth' => 'required|string|max:45',
         'marital_status_id' => 'required|integer',
         'religion' => 'required|string|max:45',
         'qualification_id' => 'nullable|integer',
@@ -239,13 +239,13 @@ class domicileController extends Controller
         'temporaryAddress_province_id' => 'required|integer',
         'temporaryAddress_district_id' => 'required|integer',
         'temporaryAddress_tehsil_id' => 'required|integer',
-        'temporaryAddress' => 'required|string|max:255',
+        'temporaryAddress' => 'required|string|max:100',
 
         // Permanent Address
         'permanentAddress_province_id' => 'required|integer',
         'permanentAddress_district_id' => 'required|integer',
         'permanentAddress_tehsil_id' => 'required|integer',
-        'permanentAddress' => 'required|string|max:255',
+        'permanentAddress' => 'required|string|max:100',
 
         'children_checkbox' => 'nullable|boolean',
 

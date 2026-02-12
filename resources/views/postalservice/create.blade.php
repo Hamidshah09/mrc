@@ -1,6 +1,50 @@
 <x-guest-layout>
-    
-    
+
+    {{-- Flash messages: success, fail, or validation errors --}}
+    @if(session('success') || session('fail') || session('error') || $errors->any())
+        <div class="max-w-4xl mx-auto mt-6 px-4">
+            @if(session('success'))
+                <div class="mb-4 rounded-lg bg-green-50 border border-green-200 text-green-800 p-4">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                        <div class="flex-1 text-sm">
+                            <p class="font-semibold">Success</p>
+                            <p class="mt-1">{{ session('success') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if(session('fail') || session('error'))
+                <div class="mb-4 rounded-lg bg-red-50 border border-red-200 text-red-800 p-4">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3a1 1 0 002 0V7zm-1 7a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5z" clip-rule="evenodd"></path></svg>
+                        <div class="flex-1 text-sm">
+                            <p class="font-semibold">Error</p>
+                            <p class="mt-1">{{ session('fail') ?? session('error') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="mb-4 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-800 p-4">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.257 3.099c.765-1.36 2.72-1.36 3.485 0l5.516 9.8c.75 1.333-.213 2.99-1.742 2.99H4.483c-1.53 0-2.492-1.657-1.742-2.99l5.516-9.8z"></path></svg>
+                        <div class="flex-1 text-sm">
+                            <p class="font-semibold">There were some problems with your input:</p>
+                            <ul class="mt-2 list-disc list-inside space-y-1">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
+    @endif
+
     <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
         <h1 class="font-semibold text-xl text-gray-800 leading-tight mb-4">
                 {{ __('Apply for Postal Service') }}

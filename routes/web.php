@@ -51,6 +51,7 @@ Route::post('/mrc/check', [MrcController::class, 'check'])->name('mrc.check');
 Route::post('/domicile/check', [domicileController::class, 'apiCheck'])->name('domicile.check');
 Route::get('/statistics/check', [domicileController::class, 'get_statistics'])->name('statistics.check');
 Route::get('/postalservice/create', [PostalServiceController::class, 'create'])->name('postalservice.create');
+Route::post('/postalservice/store', [PostalServiceController::class, 'store'])->name('postalservice.store');
 Route::get('/inactive', function () {
     return view('auth.inactive');
 })->name('inactive');
@@ -98,7 +99,7 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(PostalServiceController::class)->group(function(){
         
-        Route::post('/postalservice/store', 'store')->name('postalservice.store');
+        
         Route::get('/postalservice/index', 'index')->name('postalservice.index');
         Route::get('/postalservice/show/{id}', 'show')->name('postalservice.show');
         Route::get('/postalservice/edit/{id}', 'edit')->name('postalservice.edit');

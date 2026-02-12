@@ -146,7 +146,7 @@ class domicileController extends Controller
     // if both district are differenet then we will create postal record
     DB::table('postalservice')->insert([
         'receiver_name' => $validated['name'],
-        'receiver_address' => $validated['presentAddress'],
+        'receiver_address' => $validated['temporaryAddress'],
         'status_id' => 1, // Assuming 1 is the initial status
         'user_id' => null, // No user assigned yet
         'phone_number' => $validated['contact'],

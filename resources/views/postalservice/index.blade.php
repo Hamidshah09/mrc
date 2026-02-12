@@ -6,17 +6,33 @@
     </x-slot>
     <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
         <div class="w-full flex justify-end">
-
-                <a href="{{route('postalservice.create')}}" class="mb-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">New</a>
-
+            <a href="{{route('postalservice.create')}}" class="mb-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">New</a>
+            <form method="GET" action="{{ route('postalservice.export.pdf') }}" class="ml-2 inline">
+                <input type="hidden" name="search" value="{{ request('search') }}">
+                <input type="hidden" name="search_type" value="{{ request('search_type') }}">
+                <input type="hidden" name="from" value="{{ request('from') }}">
+                <input type="hidden" name="to" value="{{ request('to') }}">
+                <input type="hidden" name="status" value="{{ request('status') }}">
+                <button type="submit" class="mb-2 px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">Export Report</button>
+            </form>
+            <form method="GET" action="{{ route('postalservice.export.pdf_receiving') }}" class="ml-2 inline">
+                <input type="hidden" name="search" value="{{ request('search') }}">
+                <input type="hidden" name="search_type" value="{{ request('search_type') }}">
+                <input type="hidden" name="from" value="{{ request('from') }}">
+                <input type="hidden" name="to" value="{{ request('to') }}">
+                <input type="hidden" name="status" value="{{ request('status') }}">
+                <button type="submit" class="mb-2 px-4 py-2 bg-green-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-800 focus:bg-green-800 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">Export Receiving</button>
+            </form>
         </div>
         <div class="w-full">
             <form action="" class="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0 mb-4 w-full">
                 <input type="text" name="search" placeholder="Search by Article Number or Receiver Name" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3 lg:w-1/2" value="{{ request('search') }}">
                 <select name="search_type" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
-                    <option selected>Choose an option</option>
+                    
                     <option value="article_number">Article Number</option>
-                    <option value="receiver_name">Receiver Name</option>
+                    <option selected value="receiver_name">Receiver Name</option>
+                    <option value="receiver_address">Receiver Address</option>
+                    <option value="phone_number">Phone Number</option>
                 </select>
 
                 <label for="from">From</label>

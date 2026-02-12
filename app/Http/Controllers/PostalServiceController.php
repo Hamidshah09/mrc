@@ -56,6 +56,10 @@ class PostalServiceController extends Controller
                 $query->where('article_number', 'like', '%' . $search . '%');
             } elseif ($searchType === 'receiver_name') {
                 $query->where('receiver_name', 'like', '%' . $search . '%');
+            } elseif ($searchType === 'receiver_address') {
+                $query->where('receiver_address', 'like', '%' . $search . '%');
+            } elseif ($searchType === 'phone_number') {
+                $query->where('phone_number', 'like', '%' . $search . '%');
             }
         }
 

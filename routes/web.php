@@ -5,6 +5,7 @@ use App\Http\Controllers\ArmsController;
 use App\Http\Controllers\AuqafOfficialsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PostalServiceExportController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\domicileController;
@@ -106,6 +107,11 @@ Route::middleware('auth')->group(function () {
         Route::put('/postalservice/update/{id}', 'update')->name('postalservice.update');
         Route::put('/postalservice/update-status/{id}', 'updateStatus')->name('postalservice.update-status');
     });
+
+    // PDF Export Routes
+    Route::get('/postalservice/export/pdf-report', [PostalServiceExportController::class, 'exportPdf'])->name('postalservice.export.pdf');
+    Route::get('/postalservice/export/pdf-receiving', [PostalServiceExportController::class, 'exportPdfWithReceiving'])->name('postalservice.export.pdf_receiving');
+    
     Route::get('/domicile/admin', [domicileController::class, 'admin_index'])->name('domicile.admin');
     Route::get('/domicile/form-p/{id}', [domicileController::class,'form_p'])->name('domicile.form_p');
     Route::get('/domicile/noc-ict/create', [domicileController::class, 'noc_ict_create'])->name('noc-ict.create');

@@ -48,7 +48,7 @@ class PostalServiceController extends Controller
     public function index(Request $request)
     {
         $query = PostalService::with('status');
-
+        
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
@@ -86,7 +86,8 @@ class PostalServiceController extends Controller
         $records = $query->paginate(10);
         $user = Auth::user();
         $statuses = PostalStatuses::all();
-        return view('postalservice.index', compact('records', 'user', 'statuses'));
+        $services = Services::all();
+        return view('postalservice.index', compact('records', 'user', 'statuses', 'services'));
     }
 
     /**
@@ -125,11 +126,7 @@ class PostalServiceController extends Controller
     {
         $record = PostalService::findOrFail($id);
         // Check if user is authorized to update (owner or admin)
-        if ($record->user_id){
-            if ($record->user_id !== Auth::id()) {
-                abort(403, 'Unauthorized action.');
-            }
-        }
+        
 
         // Validate the incoming data
         $validated = $request->validate([
@@ -139,12 +136,14 @@ class PostalServiceController extends Controller
             'phone_number' => 'nullable|string|max:15',
             'weight' => 'required|string|max:20',
             'rate' => 'required|integer',
+            'service_id' => 'nullable|exists:services,id',
+            'status_id' => 'required|exists:postalstatuses,id',
         ]);
 
         // Update the record
         $record->update($validated);
-
-        return redirect()->route('postalservice.index')->with('success', 'Postal service record updated successfully.');
+        $services = Services::all();
+        return redirect()->route('postalservice.index', compact('services'))->with('success', 'Postal service record updated successfully.');
     }
 
     /**

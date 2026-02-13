@@ -16,16 +16,33 @@
     </style>
 </head>
 <body>
-    <h2>Postal Receiving Report</h2>
+    <h2 class="text-center w-full">DEPUTY COMMISSIONER ICT ISLAMABAD OFFICE</h2>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    Sheet No.___________
+                </td>
+                <td>
+                    Date _______________
+                </td>
+            </tr>
+            <tr>
+                <td>Insured Registered Letters</td>
+            </tr>
+        </tbody>
+    </table>
     <table>
         <thead>
             <tr>
                 <th>Sr. No.</th>
-                <th>Article Number</th>
-                <th>Receiver Name</th>
-                <th>Address</th>
+                <th>No of Articiles</th>
                 <th>Weight</th>
-                <th>Rate</th>
+                <th>Rate Rs.</th>
+                <th>Insurance Fee</th>
+                <th>Total Rs.</th>
+                <th>Amount Sub Total</th>
+                <th>Remarks</th>
             </tr>
         </thead>
         <tbody>
@@ -42,8 +59,12 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="4">Total</td>
-                <td>{{ $totalWeight }}</td>
+                <td >Total</td>
+                <td>{{$totalArticles}}</td>
+                <td>20 grams</td>
+                <td>60</td>
+                <td>100</td>
+                <td>160</td>
                 <td>{{ $totalRate }}</td>
             </tr>
         </tfoot>

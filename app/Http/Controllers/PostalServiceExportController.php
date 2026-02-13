@@ -40,13 +40,14 @@ class PostalServiceExportController extends Controller
                 $query->where('status_id', $statusId->id);
             }
         }
+        $query->where('status_id', 2);
         $records = $query->get();
+        $totalArticles = $records->count();
         $totalRate = $records->sum('rate');
-        $totalWeight = $records->sum('weight');
         $pdf = Pdf::loadView('postalservice.pdf', [
             'records' => $records,
             'totalRate' => $totalRate,
-            'totalWeight' => $totalWeight,
+            'totalArticles' => $totalArticles,
         ]);
         return $pdf->download('postalservice_report.pdf');
     }
@@ -81,13 +82,15 @@ class PostalServiceExportController extends Controller
                 $query->where('status_id', $statusId->id);
             }
         }
+        $query->where('status_id', 2);
         $records = $query->get();
+        $totalArticles= $records->count();
         $totalRate = $records->sum('rate');
         $totalWeight = $records->sum('weight');
         $pdf = Pdf::loadView('postalservice.pdf_receiving', [
             'records' => $records,
             'totalRate' => $totalRate,
-            'totalWeight' => $totalWeight,
+            'totalArticles' => $totalArticles,
         ]);
         return $pdf->download('postalservice_report_with_receiving.pdf');
     }
@@ -96,10 +99,12 @@ class PostalServiceExportController extends Controller
     {
         $request->validate([
             'date' => 'required|date',
+            'service_id' => 'required|exists:services,id',
         ]);
 
         // Use the EnvelopeLabel model for clarity, but same table as PostalService
         $labels = \App\Models\PostalService::whereDate('created_at', $request->date)
+            ->where('service_id', $request->service_id)
             ->select('receiver_name', 'receiver_address', 'phone_number')
             ->get();
 

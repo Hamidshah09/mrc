@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('receiver_address');
             $table->string('weight')->nullable();
             $table->integer('rate')->nullable();
+            $table->unsignedInteger('service_id')->nullable();
             $table->integer('status_id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();

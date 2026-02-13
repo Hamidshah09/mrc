@@ -110,7 +110,27 @@
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
-
+            {{-- Service --}}
+            <div class="mb-6">
+                <label for="service_id" class="block text-sm font-medium text-gray-700 mb-2">
+                    Service <span class="text-red-500">*</span>
+                </label>
+                <select 
+                    name="service_id" 
+                    id="service_id" 
+                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('service_id') border-red-500 @enderror" 
+                    required>
+                    <option value="">Choose a Service</option>
+                    @foreach($services as $service)
+                        <option value="{{ $service->id }}" {{ old('service_id') == $service->id ? 'selected' : '' }}>
+                            {{ ucfirst($service->service) }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('service_id')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
             <!-- Status -->
             <div class="mb-6">
                 <label for="status_id" class="block text-sm font-medium text-gray-700 mb-2">

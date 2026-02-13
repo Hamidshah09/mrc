@@ -149,6 +149,7 @@ class domicileController extends Controller
         'receiver_address' => $validated['temporaryAddress'],
         'status_id' => 1, // Assuming 1 is the initial status
         'user_id' => null, // No user assigned yet
+        'service_id' => 2, // No service assigned yet
         'phone_number' => $validated['contact'],
         'created_at' => now(),
         'updated_at' => now(),

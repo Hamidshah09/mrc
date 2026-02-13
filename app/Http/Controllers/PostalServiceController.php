@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PostalService;
 use App\Models\PostalStatuses;
+use App\Models\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +16,8 @@ class PostalServiceController extends Controller
     public function create()
     {
         $statuses = PostalStatuses::all();
-        return view('postalservice.create', compact('statuses'));
+        $services = Services::all();
+        return view('postalservice.create', compact('statuses', 'services'));
     }
 
     /**
@@ -107,13 +109,13 @@ class PostalServiceController extends Controller
     {
         $record = PostalService::findOrFail($id);
         $statuses = PostalStatuses::all();
-
+        $services = Services::all();
         // Check if user is authorized to edit (owner or admin)
         if ($record->user_id !== Auth::id() && Auth::user()->role->role !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
 
-        return view('postalservice.edit', compact('record', 'statuses'));
+        return view('postalservice.edit', compact('record', 'statuses', 'services'));
     }
 
     /**

@@ -16,6 +16,8 @@
                 <button type="submit" class="mb-2 px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">Export Report</button>
             </form>
             <form method="GET" action="{{ route('postalservice.export.pdf_receiving') }}" class="ml-2 inline">
+                            <button type="button" onclick="openEnvelopeLabelModal()" class="mb-2 px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 ml-2">Envelope Labels PDF</button>
+                    
                 <input type="hidden" name="search" value="{{ request('search') }}">
                 <input type="hidden" name="search_type" value="{{ request('search_type') }}">
                 <input type="hidden" name="from" value="{{ request('from') }}">
@@ -23,6 +25,25 @@
                 <input type="hidden" name="status" value="{{ request('status') }}">
                 <button type="submit" class="mb-2 px-4 py-2 bg-green-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-800 focus:bg-green-800 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">Export Receiving</button>
             </form>
+        </div>
+        <!-- Envelope Label Modal -->
+        <div id="envelopeLabelModal" class="fixed inset-0 z-50 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded shadow-md w-full max-w-md">
+                <h2 class="text-lg font-semibold mb-4">Generate Envelope Labels PDF</h2>
+                <form id="envelopeLabelForm" method="POST" action="{{ route('postalservice.export.envelope_labels') }}" target="_blank">
+                    @csrf
+                    <div class="mb-4">
+                        <label for="report_date" class="block text-sm font-medium text-gray-700 mb-2">
+                            Select Report Date <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" name="date" id="report_date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                    </div>
+                    <div class="flex justify-end space-x-2">
+                        <button type="button" onclick="closeEnvelopeLabelModal()" class="px-4 py-2 text-sm bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+                        <button type="submit" class="px-4 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700">Generate PDF</button>
+                    </div>
+                </form>
+            </div>
         </div>
         <div class="w-full">
             <form action="" class="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0 mb-4 w-full">
@@ -69,6 +90,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-100">
                     <tr>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">ID</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Article Number</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Receiver Name</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Phone Number</th>
@@ -82,6 +104,7 @@
                 <tbody class="bg-white divide-y divide-gray-100">
                     @foreach ($records as $record)
                         <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->id }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->article_number }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->receiver_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->phone_number ?? 'N/A' }}</td>
@@ -130,6 +153,10 @@
             @foreach ($records as $record)
                 <table class="w-full border border-gray-200 rounded-lg shadow-sm bg-gray-50 text-sm">
                     <tbody>
+                        <tr class="border-b">
+                            <td class="p-3 font-semibold text-gray-700 w-1/3">ID:</td>
+                            <td class="p-3 text-gray-900">{{ $record->id }}</td>
+                        </tr>
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700 w-1/3">Article Number:</td>
                             <td class="p-3 text-gray-900">{{ $record->article_number }}</td>
@@ -228,6 +255,13 @@
     </div>
 
     <script>
+                function openEnvelopeLabelModal() {
+                    document.getElementById('envelopeLabelModal').classList.remove('hidden');
+                }
+                function closeEnvelopeLabelModal() {
+                    document.getElementById('envelopeLabelModal').classList.add('hidden');
+                    document.getElementById('envelopeLabelForm').reset();
+                }
         function openStatusModal(recordId) {
             const modal = document.getElementById('statusModal');
             const form = document.getElementById('statusForm');

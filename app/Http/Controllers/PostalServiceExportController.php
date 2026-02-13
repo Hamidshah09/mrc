@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\PostalService;
 use App\Models\PostalStatuses;
 use Illuminate\Http\Request;
@@ -92,5 +90,27 @@ class PostalServiceExportController extends Controller
             'totalWeight' => $totalWeight,
         ]);
         return $pdf->download('postalservice_report_with_receiving.pdf');
+    }
+
+    public function exportEnvelopeLabels(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+        ]);
+
+        // Use the EnvelopeLabel model for clarity, but same table as PostalService
+        $labels = \App\Models\PostalService::whereDate('created_at', $request->date)
+            ->select('receiver_name', 'receiver_address', 'phone_number')
+            ->get();
+
+        if ($labels->isEmpty()) {
+            return back()->with('error', 'No records found for the selected date.');
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('postalservice.envelope_labels', [
+            'labels' => $labels,
+            'date' => $request->date,
+        ]);
+        return $pdf->download('envelope_labels_' . $request->date . '.pdf');
     }
 }

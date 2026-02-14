@@ -70,23 +70,33 @@
                 <input type="text" name="search" placeholder="Search by Article Number or Receiver Name" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3 lg:w-1/2" value="{{ request('search') }}">
                 <select name="search_type" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
                     
-                    <option value="article_number">Article Number</option>
-                    <option selected value="receiver_name">Receiver Name</option>
-                    <option value="receiver_address">Receiver Address</option>
-                    <option value="phone_number">Phone Number</option>
+                    <option value="article_number" {{ request('search_type') == 'article_number' ? 'selected' : '' }}>
+                        Article Number
+                    </option>
+                    <option value="receiver_name" {{ request('search_type') == 'receiver_name' ? 'selected' : '' }}>
+                        Receiver Name
+                    </option>
+                    <option value="receiver_address" {{ request('search_type') == 'receiver_address' ? 'selected' : '' }}>
+                        Receiver Address
+                    </option>
+                    <option value="phone_number" {{ request('search_type') == 'phone_number' ? 'selected' : '' }}>
+                        Phone Number
+                    </option>
+
                 </select>
 
                 <label for="from">From</label>
-                <input type="date" name="From" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('from') }}">
+                <input type="date" name="from" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('from') }}">
                 <label for="from">to</label>
-                <input type="date" name="To" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('to') }}">
+                <input type="date" name="to" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('to') }}">
                 <label for="status">Status</label>
                 <select name="status" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
-                    <option selected>Choose an option</option>
-                    <option value="pending">Pending</option>
-                    <option value="in_transit">In Transit</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="returned">Returned</option>
+                    <option value="">Choose an option</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="in_transit" {{ request('status') == 'in_transit' ? 'selected' : '' }}>In Transit</option>
+                    <option value="delivered" {{ request('status') == 'delivered' ? 'selected' : '' }}>Delivered</option>
+                    <option value="returned" {{ request('status') == 'returned' ? 'selected' : '' }}>Returned</option>
+
                 </select>
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">Search</button>
             </form>

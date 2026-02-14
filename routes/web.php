@@ -26,6 +26,11 @@ use App\Http\Controllers\PostalServiceController;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+Route::get('/reports', function () {
+    $totalArticles = 12;
+    $totalRate = 160 * $totalArticles;
+    return view('postalservice.pdf_receiving', compact('totalArticles', 'totalRate'));
+})->name('reports');
 Route::get('/about', function () {
     return view('about');
 })->name('about');

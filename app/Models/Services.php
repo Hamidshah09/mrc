@@ -16,4 +16,8 @@ class Services extends Model
     {
         return $this->belongsToMany(Centers::class, 'center_services');
     }
+    public function postalServices()
+    {
+        return $this->hasMany(PostalService::class, 'service_id');
+    }
 }

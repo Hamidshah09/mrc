@@ -83,6 +83,7 @@ class PostalServiceController extends Controller
         }
 
         // Paginate the results
+        $query->orderBy('id', 'desc');
         $records = $query->paginate(10);
         $user = Auth::user();
         $statuses = PostalStatuses::all();
@@ -125,7 +126,6 @@ class PostalServiceController extends Controller
     public function update(Request $request, $id)
     {
         $record = PostalService::findOrFail($id);
-        // Check if user is authorized to update (owner or admin)
         
 
         // Validate the incoming data
@@ -136,7 +136,7 @@ class PostalServiceController extends Controller
             'phone_number' => 'nullable|string|max:15',
             'weight' => 'required|string|max:20',
             'rate' => 'required|integer',
-            'service_id' => 'nullable|exists:services,id',
+            'service_id' => 'required|exists:services,id',
             'status_id' => 'required|exists:postalstatuses,id',
         ]);
 

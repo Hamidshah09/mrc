@@ -111,6 +111,7 @@
                 @enderror
             </div>
             {{-- Service --}}
+            
             <div class="mb-6">
                 <label for="service_id" class="block text-sm font-medium text-gray-700 mb-2">
                     Service <span class="text-red-500">*</span>
@@ -122,7 +123,7 @@
                     required>
                     <option value="">Choose a Service</option>
                     @foreach($services as $service)
-                        <option value="{{ $service->id }}" {{ old('service_id') == $service->id ? 'selected' : '' }}>
+                        <option value="{{ $service->id }}" {{ old('service_id', $record->service_id) === $service->id ? 'selected' : '' }}>
                             {{ ucfirst($service->service) }}
                         </option>
                     @endforeach

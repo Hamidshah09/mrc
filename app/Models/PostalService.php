@@ -14,6 +14,7 @@ class PostalService extends Model
         'weight',
         'rate',
         'status_id',
+        'service_id',
         'user_id',
     ];
     protected $table = 'postalservice';
@@ -25,6 +26,10 @@ class PostalService extends Model
     public function history()
     {
         return $this->hasMany(PostalHistory::class, 'postalservice_id');
+    }
+    public function service()
+    {
+        return $this->belongsTo(Services::class, 'service_id');
     }
     
 }

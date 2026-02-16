@@ -30,6 +30,7 @@ class PostalServiceController extends Controller
             'receiver_name' => 'required|string|max:255',
             'receiver_address' => 'required|string|max:255',
             'phone_number' => 'nullable|string|max:20',
+            'service_id' => 'required|exists:services,id',
         ]);
 
         // Add the authenticated user's ID;

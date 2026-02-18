@@ -36,6 +36,7 @@ class SyncPakistanPostTracking extends Command
                 $service->id,
                 $service->user_id
             );
+            $this->info("Updated tracking history for {$service->article_number}");
         }
 
         $this->info('Tracking sync completed.');

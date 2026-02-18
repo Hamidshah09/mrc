@@ -29,10 +29,10 @@ class PostalServiceExportController extends Controller
             }
         }
         if ($request->filled('from')) {
-            $query->whereDate('created_at', '>=', $request->from);
+            $query->whereDate('updated_at', '>=', $request->from);
         }
         if ($request->filled('to')) {
-            $query->whereDate('created_at', '<=', $request->to);
+            $query->whereDate('updated_at', '<=', $request->to);
         }
         if ($request->filled('status')) {
             $statusId = PostalStatuses::where('status', 'like', $request->status)->first();
@@ -73,10 +73,10 @@ class PostalServiceExportController extends Controller
             }
         }
         if ($request->filled('from')) {
-            $query->whereDate('created_at', '>=', $request->from);
+            $query->whereDate('updated_at', '>=', $request->from);
         }
         if ($request->filled('to')) {
-            $query->whereDate('created_at', '<=', $request->to);
+            $query->whereDate('updated_at', '<=', $request->to);
         }
         if ($request->filled('status')) {
             $statusId = PostalStatuses::where('status', 'like', $request->status)->first();

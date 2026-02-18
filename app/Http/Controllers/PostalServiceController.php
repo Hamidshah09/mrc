@@ -38,7 +38,12 @@ class PostalServiceController extends Controller
         $validated['weight'] = '20';
         $validated['rate'] = 160;
         // Create the record
-        PostalService::create($validated);
+        $record = PostalService::create($validated);
+        \App\Models\PostalHistory::create([
+            'postalservice_id' => $record->id,
+            'status_id' => 1,
+            'user_id' => null,
+        ]);
 
         return redirect()->route('postalservice.create')->with('success', 'Postal service record created successfully.');
     }

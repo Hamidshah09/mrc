@@ -26,6 +26,7 @@ use App\Http\Controllers\PostalServiceController;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+Route::get('/postalservice/postal-status', [PostalServiceController::class, 'getPakistanPostTracking'])->name('postalservice.status');
 Route::get('/reports', function () {
     $totalArticles = 12;
     $totalRate = 160 * $totalArticles;

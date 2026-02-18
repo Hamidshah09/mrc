@@ -96,12 +96,12 @@
                     <option value="in_transit" {{ request('status') == 'in_transit' ? 'selected' : '' }}>In Transit</option>
                     <option value="delivered" {{ request('status') == 'delivered' ? 'selected' : '' }}>Delivered</option>
                     <option value="returned" {{ request('status') == 'returned' ? 'selected' : '' }}>Returned</option>
+                    <option value="dispatched" {{ request('status') == 'dispatched' ? 'selected' : '' }}>Dispatched</option>
+                    <option value="Received by GPO" {{ request('status') == 'Received by GPO' ? 'selected' : '' }}>Received by GPO</option>
 
                 </select>
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">Search</button>
             </form>
-
-
         </div>
 
 

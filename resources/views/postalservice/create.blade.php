@@ -104,7 +104,24 @@
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
-
+            {{-- Reciver City --}}
+            
+            <div class="mb-6">
+                <label for="receiver_city_id" class="block text-sm font-medium text-gray-700 mb-2">
+                    Receiver City <span class="text-red-500">*</span>
+                </label>
+                <select name="receiver_city_id" id="receiver_city_id" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('receiver_city_id') border-red-500 @enderror">
+                    <option value="">Select a city</option>
+                    @foreach($cities as $city)
+                        <option value="{{ $city->id }}" {{ old('receiver_city_id') == $city->id ? 'selected' : '' }}>
+                            {{ $city->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('receiver_city_id')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
             <!-- Phone Number -->
             <div class="mb-6">
                 <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-2">

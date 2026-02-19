@@ -12,7 +12,7 @@ class PostalServiceExportController extends Controller
 
     public function exportPdf(Request $request)
     {
-        $query = PostalService::query();
+        $query = PostalService::with('city', 'status', 'service');
 
         // Apply filters (same as index)
         if ($request->filled('search')) {
@@ -56,7 +56,7 @@ class PostalServiceExportController extends Controller
 
     public function exportPdfWithReceiving(Request $request)
     {
-        $query = PostalService::query();
+        $query = PostalService::with('city', 'status', 'service');
 
         // Apply filters (same as index)
         if ($request->filled('search')) {

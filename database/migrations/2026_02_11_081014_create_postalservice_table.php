@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('article_number')->nullable();
             $table->string('receiver_name');
             $table->string('receiver_address');
+            $table->unsignedInteger('receiver_city_id')->nullable();
             $table->string('weight')->nullable();
             $table->integer('rate')->nullable();
             $table->unsignedInteger('service_id')->nullable();

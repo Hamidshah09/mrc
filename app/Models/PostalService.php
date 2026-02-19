@@ -10,6 +10,7 @@ class PostalService extends Model
         'article_number',
         'receiver_name',
         'receiver_address',
+        'receiver_city_id',
         'phone_number',
         'weight',
         'rate',
@@ -30,6 +31,10 @@ class PostalService extends Model
     public function service()
     {
         return $this->belongsTo(Services::class, 'service_id');
+    }
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'receiver_city_id');
     }
     
 }

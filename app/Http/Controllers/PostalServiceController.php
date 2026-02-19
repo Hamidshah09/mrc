@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PostalService;
 use App\Models\PostalStatuses;
+use App\Models\City;
 use App\Models\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,8 @@ class PostalServiceController extends Controller
     {
         $statuses = PostalStatuses::all();
         $services = Services::all();
-        return view('postalservice.create', compact('statuses', 'services'));
+        $cities = City::all();
+        return view('postalservice.create', compact('statuses', 'services', 'cities'));
     }
 
     /**
@@ -30,6 +32,7 @@ class PostalServiceController extends Controller
             'receiver_name' => 'required|string|max:255',
             'receiver_address' => 'required|string|max:255',
             'phone_number' => 'nullable|string|max:20',
+            'receiver_city_id' => 'required|exists:cities,id',
             'service_id' => 'required|exists:services,id',
         ]);
 
@@ -118,12 +121,13 @@ class PostalServiceController extends Controller
         $record = PostalService::findOrFail($id);
         $statuses = PostalStatuses::all();
         $services = Services::all();
+        $cities = City::all();
         // Check if user is authorized to edit (owner or admin)
         if ($record->user_id !== Auth::id() && Auth::user()->role->role !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
 
-        return view('postalservice.edit', compact('record', 'statuses', 'services'));
+        return view('postalservice.edit', compact('record', 'statuses', 'services', 'cities'));
     }
 
     /**
@@ -139,6 +143,7 @@ class PostalServiceController extends Controller
             'article_number' => 'nullable|string|max:255',
             'receiver_name' => 'required|string|max:255',
             'receiver_address' => 'required|string|max:255',
+            'receiver_city_id' => 'required|exists:cities,id',
             'phone_number' => 'nullable|string|max:15',
             'weight' => 'required|string|max:20',
             'rate' => 'required|integer',
@@ -149,7 +154,8 @@ class PostalServiceController extends Controller
         // Update the record
         $record->update($validated);
         $services = Services::all();
-        return redirect()->route('postalservice.index', compact('services'))->with('success', 'Postal service record updated successfully.');
+        $cities = City::all();
+        return redirect()->route('postalservice.index', compact('services', 'cities'))->with('success', 'Postal service record updated successfully.');
     }
 
     /**

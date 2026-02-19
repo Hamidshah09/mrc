@@ -122,10 +122,6 @@ class PostalServiceController extends Controller
         $statuses = PostalStatuses::all();
         $services = Services::all();
         $cities = City::all();
-        // Check if user is authorized to edit (owner or admin)
-        if ($record->user_id !== Auth::id() && Auth::user()->role->role !== 'admin') {
-            abort(403, 'Unauthorized action.');
-        }
 
         return view('postalservice.edit', compact('record', 'statuses', 'services', 'cities'));
     }

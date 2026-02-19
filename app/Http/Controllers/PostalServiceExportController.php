@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Models\PostalService;
 use App\Models\PostalStatuses;
+use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;

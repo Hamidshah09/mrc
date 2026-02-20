@@ -8,6 +8,7 @@ use App\Models\City;
 use App\Models\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostalServiceController extends Controller
 {
@@ -265,6 +266,10 @@ class PostalServiceController extends Controller
             'success' => true,
             'data' => $data
         ]);
+    }
+    public function sendToPo(){
+        DB::table('postalservice')->where('status_id', 2)->update(['status_id' => 6]);
+        return redirect()->route('postalservice.index')->with('success', 'All records with status "Pending" have been updated to "Received BY GPO".');
     }
 
 }

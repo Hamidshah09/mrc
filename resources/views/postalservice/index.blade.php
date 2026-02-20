@@ -15,17 +15,9 @@
                 <input type="hidden" name="status" value="{{ request('status') }}">
                 <button type="submit" class="mb-2 px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">Export Report</button>
             </form>
-            <form method="GET" action="{{ route('postalservice.export.pdf_receiving') }}" class="ml-2 inline">
-                            <button type="button" onclick="openEnvelopeLabelModal()" class="mb-2 px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 ml-2">Envelope Labels PDF</button>
-                    
-                <input type="hidden" name="search" value="{{ request('search') }}">
-                <input type="hidden" name="search_type" value="{{ request('search_type') }}">
-                <input type="hidden" name="from" value="{{ request('from') }}">
-                <input type="hidden" name="to" value="{{ request('to') }}">
-                <input type="hidden" name="status" value="{{ request('status') }}">
-                <button type="submit" class="mb-2 px-4 py-2 bg-green-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-800 focus:bg-green-800 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">Export Receiving</button>
-            </form>
+            <a href="{{route('postalservice.send_to_po')}}" class="mb-2 px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">Send to PO</a>
         </div>
+        
         <!-- Envelope Label Modal -->
         <div id="envelopeLabelModal" class="fixed inset-0 z-50 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded shadow-md w-full max-w-md">

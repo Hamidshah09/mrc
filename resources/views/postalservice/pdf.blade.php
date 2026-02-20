@@ -47,6 +47,7 @@
                 <th>Article Number</th>
                 <th>Receiver Name</th>
                 <th>Receiver City</th>
+                <th>Value</th>
                 <th>Weight</th>
                 <th>Rate</th>
             </tr>
@@ -58,6 +59,7 @@
                 <td>{{ $row->article_number }}</td>
                 <td>{{ $row->receiver_name }}</td>
                 <td>{{ $row->city->name ?? 'N/A' }}</td>
+                <td>5000</td>
                 <td>{{ $row->weight }}</td>
                 <td>{{ $row->rate }}</td>
             </tr>
@@ -65,30 +67,53 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="4">Total</td>
+                <td colspan="5">Total</td>
                 <td>{{ $totalWeight }}</td>
-                <td>{{ $totalRate }}</td>
+                <td>{{ $subTotal }}</td>
             </tr>
         </tfoot>
+    </table>
+    <table class="records">
+        <thead>
+            <tr>
+                <th>Sr. No.</th>
+                <th>No of Articiles</th>
+                <th>Weight</th>
+                <th>Rate Rs.</th>
+                <th>Insurance Fee</th>
+                <th>Total Rs.</th>
+                <th>Amount Sub Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Total</td>
+                <td>{{ $totalArticles }}</td>
+                <td>20 grams</td>
+                <td>60</td>
+                <td>100</td>
+                <td>160</td>
+                <td>{{ $subTotal }}</td>
+            </tr>
+        </tbody>
     </table>
     <table style="width:100%; margin-top:60px; border:1px solid #333; border-collapse: collapse;">
         <tr>
             <td style="width:50%; vertical-align:top; border:1px solid #333; border-collapse: collapse;">
                 <div class="receiving-box" style="width:100%;">
-                    <span class="receiving-label">Focal Person</span>
-                    <span class="receiving-label">Deputy Commissioner's Office</span>
                     <div style="height: 40px;"></div>
                     <div class="signature-line"></div>
-                    <span style="font-size: 11px;">Signature</span>
+                    <div style="font-size: 11px;font-weight: bold;">Signature Focal Person</div>
+                    <div style="font-size: 11px;font-weight:bold;">Deputy Commissiner's Office</div>
                 </div>
             </td>
             <td style="width:50%; vertical-align:top; border:1px solid #333; border-collapse: collapse;">
                 <div class="receiving-box" style="width:100%; ">
-                    <span class="receiving-label">Focal Person</span>
-                    <span class="receiving-label">Pakistan Post Office</span>
                     <div style="height: 40px;"></div>
                     <div class="signature-line"></div>
-                    <span style="font-size: 11px;">Signature</span>
+                    <div style="font-size: 11px;font-weight: bold;">Signature Focal Person</div>
+                    <div style="font-size: 11px;font-weight:bold;">Pakistan Post Office</div>
+                    
                 </div>
             </td>
         </tr>

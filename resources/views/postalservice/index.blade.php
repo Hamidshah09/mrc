@@ -66,42 +66,87 @@
             </div>
         </div>
         <div class="w-full">
-            <form action="" class="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0 mb-4 w-full">
-                <input type="text" name="search" placeholder="Search by Article Number or Receiver Name" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3 lg:w-1/2" value="{{ request('search') }}">
-                <select name="search_type" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
-                    
-                    <option value="article_number" {{ request('search_type') == 'article_number' ? 'selected' : '' }}>
-                        Article Number
-                    </option>
-                    <option value="receiver_name" {{ request('search_type') == 'receiver_name' ? 'selected' : '' }}>
-                        Receiver Name
-                    </option>
-                    <option value="receiver_address" {{ request('search_type') == 'receiver_address' ? 'selected' : '' }}>
-                        Receiver Address
-                    </option>
-                    <option value="phone_number" {{ request('search_type') == 'phone_number' ? 'selected' : '' }}>
-                        Phone Number
-                    </option>
+            <form action="" class="grid grid-cols-1 md:grid-cols-6 gap-3 mb-4 w-full">
 
+            <!-- Search -->
+            <div class="flex flex-col space-y-1 md:col-span-2">
+                <label class="text-xs font-medium text-gray-600">Search</label>
+                <input type="text"
+                    name="search"
+                    placeholder="Article / Receiver"
+                    value="{{ request('search') }}"
+                    class="border border-gray-300 rounded-md px-3 py-2">
+            </div>
+
+            <!-- Search Type -->
+            <div class="flex flex-col space-y-1">
+                <label class="text-xs font-medium text-gray-600">Search By</label>
+                <select name="search_type"
+                        class="border border-gray-300 rounded-md px-3 py-2">
+                    <option value="article_number" {{ request('search_type') == 'article_number' ? 'selected' : '' }}>Article No</option>
+                    <option value="receiver_name" {{ request('search_type') == 'receiver_name' ? 'selected' : '' }}>Receiver Name</option>
+                    <option value="receiver_address" {{ request('search_type') == 'receiver_address' ? 'selected' : '' }}>Address</option>
+                    <option value="phone_number" {{ request('search_type') == 'phone_number' ? 'selected' : '' }}>Phone</option>
                 </select>
+            </div>
 
-                <label for="from">From</label>
-                <input type="date" name="from" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('from') }}">
-                <label for="from">to</label>
-                <input type="date" name="to" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('to') }}">
-                <label for="status">Status</label>
-                <select name="status" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
-                    <option value="">Choose an option</option>
+            <!-- From Date -->
+            <div class="flex flex-col space-y-1">
+                <label class="text-xs font-medium text-gray-600">From</label>
+                <input type="date"
+                    name="from"
+                    value="{{ request('from') }}"
+                    class="border border-gray-300 rounded-md px-3 py-2">
+            </div>
+
+            <!-- To Date -->
+            <div class="flex flex-col space-y-1">
+                <label class="text-xs font-medium text-gray-600">To</label>
+                <input type="date"
+                    name="to"
+                    value="{{ request('to') }}"
+                    class="border border-gray-300 rounded-md px-3 py-2">
+            </div>
+
+            <!-- Service -->
+            <div class="flex flex-col space-y-1">
+                <label class="text-xs font-medium text-gray-600">Service</label>
+                <select name="service_id"
+                        class="border border-gray-300 rounded-md px-3 py-2">
+                    <option value="">All Services</option>
+                    @foreach ($services as $service)
+                        <option value="{{ $service->id }}"
+                            {{ request('service_id') == $service->id ? 'selected' : '' }}>
+                            {{ ucfirst($service->service) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Status -->
+            <div class="flex flex-col space-y-1">
+                <label class="text-xs font-medium text-gray-600">Status</label>
+                <select name="status"
+                        class="border border-gray-300 rounded-md px-3 py-2">
+                    <option value="">All</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="in_transit" {{ request('status') == 'in_transit' ? 'selected' : '' }}>In Transit</option>
                     <option value="delivered" {{ request('status') == 'delivered' ? 'selected' : '' }}>Delivered</option>
                     <option value="returned" {{ request('status') == 'returned' ? 'selected' : '' }}>Returned</option>
                     <option value="dispatched" {{ request('status') == 'dispatched' ? 'selected' : '' }}>Dispatched</option>
                     <option value="Received by GPO" {{ request('status') == 'Received by GPO' ? 'selected' : '' }}>Received by GPO</option>
-
                 </select>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">Search</button>
-            </form>
+            </div>
+
+            <!-- Submit -->
+            <div class="flex items-end">
+                <button type="submit"
+                        class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Search
+                </button>
+            </div>
+
+        </form>
         </div>
 
 

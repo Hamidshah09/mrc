@@ -44,13 +44,14 @@ class PostalServiceExportController extends Controller
         $query->where('status_id', 2);
         $records = $query->get();
         $totalArticles = $records->count();
-        $totalRate = $records->sum('rate');
+        $subTotal = $records->sum('rate');
         $totalWeight = $records->sum('weight');
         $pdf = Pdf::loadView('postalservice.pdf', [
             'records' => $records,
-            'totalRate' => $totalRate,
+            'subTotal' => $subTotal,
             'totalWeight' => $totalWeight,
             'reportDate' => now()->format('Y-m-d'),
+            'totalArticles' => $totalArticles,
         ]);
         return $pdf->download('postalservice_report.pdf');
     }

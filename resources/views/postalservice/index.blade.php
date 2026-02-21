@@ -201,13 +201,19 @@
                                     </a>
                                         
                                     <a href="{{ route('postalservice.show', $record->id) }}" class="text-green-600 hover:text-green-800">
-                                        <x-icons.exclamation-triangle />
+                                        <x-icon name="eye" class="w-5 h-5 text-yellow-600" />
                                     </a>
                                     <button onclick="openStatusModal({{ $record->id }})" class="text-purple-600 hover:text-purple-800" title="Update Status">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </button>
+                                    <a href="https://ep.gov.pk/emtts/EPTrack_Live.aspx?ArticleIDz={{ urlencode($record->article_number) }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="text-blue-600 underline text-sm">
+                                        <x-icon name="search" class="w-5 h-5 text-green-600" />
+                                    </a>
                                 </div>
                             </td>
                         </tr>

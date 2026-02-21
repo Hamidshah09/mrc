@@ -9,6 +9,7 @@ use App\Models\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class PostalServiceController extends Controller
 {
@@ -107,9 +108,7 @@ class PostalServiceController extends Controller
     public function show($id)
     {
         $record = PostalService::with('status', 'history', 'history.user')->findOrFail($id);
-        
-        // Check if user is authorized to view (optional: only owner or admin)
-        // You can add authorization logic here if needed
+
 
         return view('postalservice.show', compact('record'));
     }
@@ -185,87 +184,6 @@ class PostalServiceController extends Controller
         ]);
 
         return redirect()->route('postalservice.index')->with('success', 'Postal service status updated successfully.');
-    }
-    public function getPakistanPostTracking(Request $request)
-    {
-        $trackingId = $request->query('trackingId');
-
-        if (!$trackingId) {
-            return response()->json([
-                'success' => false,
-                'error' => 'trackingId parameter is missing'
-            ], 422);
-        }
-
-        $url = "https://ep.gov.pk/emtts/EPTrack_Live.aspx?ArticleIDz=" . urlencode($trackingId);
-
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_USERAGENT      => "Mozilla/5.0",
-            CURLOPT_TIMEOUT        => 30,
-            CURLOPT_SSL_VERIFYPEER => false, // IMPORTANT for local dev
-        ]);
-
-        $html = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            return response()->json([
-                'success' => false,
-                'error' => curl_error($ch)
-            ], 500);
-        }
-
-        curl_close($ch);
-
-        if (!$html) {
-            return response()->json([
-                'success' => false,
-                'error' => 'Empty response from Pakistan Post'
-            ], 500);
-        }
-
-        libxml_use_internal_errors(true);
-        $dom = new \DOMDocument();
-        $dom->loadHTML($html);
-        libxml_clear_errors();
-
-        $xpath = new \DOMXPath($dom);
-
-        $data = [
-            'tracking_id'     => trim($xpath->evaluate("string(//span[@id='LblArticleTrackingNo'])")),
-            'booking_office'  => trim($xpath->evaluate("string(//span[@id='LblBookingOffice'])")),
-            'delivery_office' => trim($xpath->evaluate("string(//span[@id='LblDeliveryOffice'])")),
-            'events'          => []
-        ];
-
-        $rows = $xpath->query("//div[@id='TrackDetailDiv']//table//tr");
-
-        $currentDate = null;
-
-        foreach ($rows as $row) {
-            $dateNode = $xpath->query(".//div[contains(@class,'date-heading')]", $row);
-            if ($dateNode->length > 0) {
-                $currentDate = trim($dateNode->item(0)->textContent);
-                continue;
-            }
-
-            $cells = $row->getElementsByTagName("td");
-            if ($cells->length === 4) {
-                $data['events'][] = [
-                    'date'     => $currentDate,
-                    'time'     => trim($cells->item(1)->textContent),
-                    'location' => trim($cells->item(2)->textContent),
-                    'status'   => trim($cells->item(3)->textContent),
-                ];
-            }
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => $data
-        ]);
     }
     public function sendToPo(){
         $inTransit = DB::table('postalservice')->where('status_id', 2)->get();

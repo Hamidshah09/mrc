@@ -7,7 +7,7 @@ return [
     'allowed_methods' => ['*'],
 
     // 👇 Your React app’s origin (update if needed)
-    'allowed_origins' => ['http://localhost:5173', 'http://localhost:5174'],
+    'allowed_origins' => ['http://localhost:5173', 'http://localhost:5174', 'https://ep.gov.pk/'],
 
     'allowed_origins_patterns' => [],
 

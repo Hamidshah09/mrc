@@ -82,7 +82,7 @@
             <h3 class="text-xl font-semibold text-gray-800 mb-6">
                 Work Done at CFC
             </h3>
-
+            
             @if ($record->history && $record->history->count())
 
                 {{-- ===== Mobile / Small screens ===== --}}
@@ -174,24 +174,6 @@
                     No postal history available for this record.
                 </p>
             @endif
-        </div>
-        {{-- Replace $trackingUrl with the full URL including the tracking number --}}
-        @php
-            $trackingUrl = "https://ep.gov.pk/emtts/EPTrack_Live.aspx?ArticleIDz=" . urlencode($record->article_number);
-        @endphp
-
-        <div class="mt-8">
-            <h3 class="font-semibold text-xl text-gray-800 mb-4">Post Office Tracking</h3>
-
-            <iframe
-                src="{{ $trackingUrl }}"
-                width="100%"
-                height="600"
-                frameborder="0"
-                class="border rounded-md"
-            >
-                Tracking not available.
-            </iframe>
         </div>
     </div>
 </x-app-layout>

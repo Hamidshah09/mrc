@@ -162,8 +162,7 @@
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Receiver Name</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Phone Number</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Address</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Weight</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Rate</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Delay Status</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -176,8 +175,13 @@
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->receiver_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->phone_number ?? 'N/A' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->receiver_address }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->weight }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->rate }}</td>
+                            @php($badge = $record->gpoDelayBadge())
+
+                            <td class="px-6 py-4 text-sm">
+                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold {{ $badge['class'] }}">
+                                    {{ $badge['text'] }}
+                                </span>
+                            </td>
                             <td class="px-6 py-4 text-sm">
                                 <span class="inline-block px-2 py-1 rounded-full text-xs font-medium
                                     {{
@@ -241,12 +245,13 @@
                             <td class="p-3 text-gray-900">{{ $record->receiver_address }}</td>
                         </tr>
                         <tr class="border-b">
-                            <td class="p-3 font-semibold text-gray-700">Weight:</td>
-                            <td class="p-3 text-gray-900">{{ $record->weight }}</td>
-                        </tr>
-                        <tr class="border-b">
-                            <td class="p-3 font-semibold text-gray-700">Rate:</td>
-                            <td class="p-3 text-gray-900">{{ $record->rate }}</td>
+                            <td class="p-3 font-semibold text-gray-700">Delay Status:</td>
+                            <td class="p-3">
+                                @php($badge = $record->gpoDelayBadge())
+                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold {{ $badge['class'] }}">
+                                    {{ $badge['text'] }}
+                                </span>
+                            </td>
                         </tr>
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700">Status:</td>

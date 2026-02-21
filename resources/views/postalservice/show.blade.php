@@ -17,7 +17,6 @@
                     'Receiver Address'  => $record->receiver_address,
                     'Phone Number'      => $record->phone_number ?? 'N/A',
                     'Weight'            => $record->weight,
-                    'Rate'              => $record->rate,
                 ];
             @endphp
 
@@ -45,6 +44,9 @@
                         'In Transit' => 'bg-blue-100 text-blue-800',
                         'Pending'    => 'bg-yellow-100 text-yellow-800',
                         'Returned'   => 'bg-red-100 text-red-800',
+                        'Dispatched' => 'bg-indigo-100 text-indigo-800',
+                        'Received by GPO' => 'bg-purple-100 text-purple-800',
+                        'Attempt Failed' => 'bg-pink-100 text-pink-800',
                         default      => 'bg-gray-100 text-gray-800',
                     };
                 @endphp
@@ -57,7 +59,7 @@
             {{-- Created At --}}
             <div class="border rounded-lg p-4">
                 <label class="block text-sm font-medium text-gray-600 mb-1">
-                    Created At
+                    Application Submitted at CFC
                 </label>
                 <p class="text-gray-900">
                     {{ $record->created_at->format('M d, Y h:i A') }}
@@ -67,19 +69,18 @@
             {{-- Updated At --}}
             <div class="border rounded-lg p-4">
                 <label class="block text-sm font-medium text-gray-600 mb-1">
-                    Last Updated
+                    Last Status Updated on
                 </label>
                 <p class="text-gray-900">
                     {{ $record->updated_at->format('M d, Y h:i A') }}
                 </p>
             </div>
-
         </div>
 
         {{-- ================= POSTAL HISTORY ================= --}}
         <div class="mt-12 border-t pt-8">
             <h3 class="text-xl font-semibold text-gray-800 mb-6">
-                Postal History
+                Work Done at CFC
             </h3>
 
             @if ($record->history && $record->history->count())
@@ -94,6 +95,9 @@
                                 'In Transit' => 'bg-blue-100 text-blue-800',
                                 'Pending'    => 'bg-yellow-100 text-yellow-800',
                                 'Returned'   => 'bg-red-100 text-red-800',
+                                'Dispatched' => 'bg-indigo-100 text-indigo-800',
+                                'Received by GPO' => 'bg-purple-100 text-purple-800',
+                                'Attempt Failed' => 'bg-pink-100 text-pink-800',
                                 default      => 'bg-gray-100 text-gray-800',
                             };
                         @endphp
@@ -141,7 +145,8 @@
                                         'In Transit' => 'bg-blue-100 text-blue-800',
                                         'Pending'    => 'bg-yellow-100 text-yellow-800',
                                         'Returned'   => 'bg-red-100 text-red-800',
-                                        'Received BY GPO' => 'bg-purple-100 text-purple-800',
+                                        'Dispatched' => 'bg-indigo-100 text-indigo-800',
+                                        'Received by GPO' => 'bg-purple-100 text-purple-800',
                                         'Attempt Failed' => 'bg-pink-100 text-pink-800',
                                         default      => 'bg-gray-100 text-gray-800',
                                     };
@@ -170,19 +175,23 @@
                 </p>
             @endif
         </div>
+        {{-- Replace $trackingUrl with the full URL including the tracking number --}}
+        @php
+            $trackingUrl = "https://ep.gov.pk/emtts/EPTrack_Live.aspx?ArticleIDz=" . urlencode($record->article_number);
+        @endphp
 
-        {{-- ================= ACTIONS ================= --}}
-        <div class="mt-10 flex justify-end space-x-3">
-            <a href="{{ route('postalservice.index') }}"
-               class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
-                Back
-            </a>
+        <div class="mt-8">
+            <h3 class="font-semibold text-xl text-gray-800 mb-4">Post Office Tracking</h3>
 
-            <a href="{{ route('postalservice.edit', $record->id) }}"
-               class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-                Edit
-            </a>
+            <iframe
+                src="{{ $trackingUrl }}"
+                width="100%"
+                height="600"
+                frameborder="0"
+                class="border rounded-md"
+            >
+                Tracking not available.
+            </iframe>
         </div>
-
     </div>
 </x-app-layout>

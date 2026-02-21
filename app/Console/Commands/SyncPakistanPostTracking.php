@@ -104,18 +104,31 @@ class SyncPakistanPostTracking extends Command
     {
         foreach ($events as $event) {
 
-            $text = strtolower($event['status']);
+            $text = strtolower(trim($event['status']));
 
-            if (str_contains($text, 'sent out for delivery')) {
-                $statusId = 5; // Dispatched
-            } elseif (str_contains($text, 'undelivered')) {
-                $statusId = 7; // Delivered
-            } elseif (str_contains($text, 'delivered')) {
-                $statusId = 3; // Delivered
-            } else {
-                continue;
+            // Extract first word only
+            $firstWord = strtok($text, ' ');
+
+            switch ($firstWord) {
+                case 'dispatch':
+                    $statusId = 5; // Dispatched
+                    break;
+
+                case 'delivered':
+                    $statusId = 3; // Delivered
+                    break;
+
+                case 'undelivered':
+                    $statusId = 7; // Returned / Undelivered
+                    break;
+
+                case 'received':
+                    $statusId = 6; // Received at GPO (if you use it)
+                    break;
+
+                default:
+                    continue 2; // Skip unknown statuses safely
             }
-
             $createdAt = Carbon::createFromFormat(
                 'F d, Y h:i A',
                 $event['date'] . ' ' . $event['time']

@@ -15,7 +15,7 @@
                 <input type="hidden" name="status" value="{{ request('status') }}">
                 <button type="submit" class="mb-2 px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">Export Report</button>
             </form>
-            <a href="{{route('postalservice.send_to_po')}}" class="mb-2 px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">Send to PO</a>
+            <a href="{{route('postalservice.send_to_po')}}" class="ml-2 mb-2 px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">Send to PO</a>
         </div>
         
         <!-- Envelope Label Modal -->
@@ -58,10 +58,10 @@
             </div>
         </div>
         <div class="w-full">
-            <form action="" class="grid grid-cols-1 md:grid-cols-6 gap-3 mb-4 w-full">
+            <form action="" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-3 items-end mb-6">
 
             <!-- Search -->
-            <div class="flex flex-col space-y-1 md:col-span-2">
+            <div class="flex flex-col space-y-1">
                 <label class="text-xs font-medium text-gray-600">Search</label>
                 <input type="text"
                     name="search"
@@ -211,7 +211,7 @@
                 </tbody>
             </table>
             <div>
-                {{ $records->links() }}
+                {{ $records->appends(request()->query())->links() }}
             </div>
         </div>
 
@@ -287,7 +287,7 @@
                 
             @endforeach
             <div>
-                {{ $records->links() }}
+                {{ $records->appends(request()->query())->links() }}
             </div>
         </div>
 

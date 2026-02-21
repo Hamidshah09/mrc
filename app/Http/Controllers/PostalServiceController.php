@@ -268,7 +268,15 @@ class PostalServiceController extends Controller
         ]);
     }
     public function sendToPo(){
-        DB::table('postalservice')->where('status_id', 2)->update(['status_id' => 6]);
+        $inTransit = DB::table('postalservice')->where('status_id', 2)->get();
+        foreach($inTransit as $record){
+            DB::table('postalservice')->where('id', $record->id)->update(['status_id' => 6]);
+            \App\Models\PostalHistory::create([
+                'postalservice_id' => $record->id,
+                'status_id' => 6,
+                'user_id' => Auth::id(),
+            ]);
+        }
         return redirect()->route('postalservice.index')->with('success', 'All records with status "Pending" have been updated to "Received BY GPO".');
     }
 

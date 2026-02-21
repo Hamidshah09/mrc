@@ -141,6 +141,8 @@
                                         'In Transit' => 'bg-blue-100 text-blue-800',
                                         'Pending'    => 'bg-yellow-100 text-yellow-800',
                                         'Returned'   => 'bg-red-100 text-red-800',
+                                        'Received BY GPO' => 'bg-purple-100 text-purple-800',
+                                        'Attempt Failed' => 'bg-pink-100 text-pink-800',
                                         default      => 'bg-gray-100 text-gray-800',
                                     };
                                 @endphp

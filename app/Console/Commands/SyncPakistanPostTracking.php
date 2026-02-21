@@ -17,7 +17,7 @@ class SyncPakistanPostTracking extends Command
 
         // ---- 1. Get all In-Transit postal services ----
         $postalServices = DB::table('postalservice')
-            ->where('status_id', 2) // In Transit
+            ->where('status_id', 6) // Received in GPO
             ->whereNotNull('article_number')
             ->get();
 
@@ -108,6 +108,8 @@ class SyncPakistanPostTracking extends Command
 
             if (str_contains($text, 'sent out for delivery')) {
                 $statusId = 5; // Dispatched
+            } elseif (str_contains($text, 'undelivered')) {
+                $statusId = 7; // Delivered
             } elseif (str_contains($text, 'delivered')) {
                 $statusId = 3; // Delivered
             } else {

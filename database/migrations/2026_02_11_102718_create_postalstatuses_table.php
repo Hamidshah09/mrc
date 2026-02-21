@@ -22,6 +22,9 @@ return new class extends Migration
                 ['status' => 'In Transit'],
                 ['status' => 'Delivered'],
                 ['status' => 'Returned'],
+                ['status' => 'Dispatched'],
+                ['status' => 'Received BY GPO'],
+                ['status' => 'Attempt Failed']
             ]);
     }
 

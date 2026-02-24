@@ -118,7 +118,7 @@ Route::middleware('auth')->group(function () {
     // PDF Export Routes
     Route::get('/postalservice/export/pdf-report', [PostalServiceExportController::class, 'exportPdf'])->name('postalservice.export.pdf');
     Route::get('/postalservice/export/pdf-receiving', [PostalServiceExportController::class, 'exportPdfWithReceiving'])->name('postalservice.export.pdf_receiving');
-    Route::post('/postalservice/export/pdf-envelope-labels', [PostalServiceExportController::class, 'exportEnvelopeLabels'])->name('postalservice.export.envelope_labels');
+    Route::get('/postalservice/export/pdf-envelope-labels', [PostalServiceExportController::class, 'exportEnvelopeLabels'])->name('postalservice.export.envelope_labels');
     
     Route::get('/domicile/admin', [domicileController::class, 'admin_index'])->name('domicile.admin');
     Route::get('/domicile/form-p/{id}', [domicileController::class,'form_p'])->name('domicile.form_p');

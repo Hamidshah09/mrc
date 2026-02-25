@@ -73,5 +73,37 @@ class PostalService extends Model
             ],
         };
     }
+    public function scopeDelayStatus($query, ?string $delay)
+    {
+        if (!$delay) {
+            return $query;
+        }
+
+        // Only records received by GPO
+        $RECEIVED_GPO_STATUS_ID = 6;
+        $query->where('status_id', $RECEIVED_GPO_STATUS_ID);
+
+        return match ($delay) {
+            'normal' =>
+                $query->whereDate('updated_at', '>=', now()->subDays(3)),
+
+            'delayed' =>
+                $query->whereBetween('updated_at', [
+                    now()->subDays(7),
+                    now()->subDays(3),
+                ]),
+
+            'alarming' =>
+                $query->whereBetween('updated_at', [
+                    now()->subDays(10),
+                    now()->subDays(7),
+                ]),
+
+            'critical' =>
+                $query->whereDate('updated_at', '<', now()->subDays(10)),
+
+            default => $query,
+        };
+    }
     
 }

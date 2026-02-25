@@ -112,7 +112,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/postalservice/edit/{id}', 'edit')->name('postalservice.edit');
         Route::put('/postalservice/update/{id}', 'update')->name('postalservice.update');
         Route::put('/postalservice/update-status/{id}', 'updateStatus')->name('postalservice.update-status');
-        Route::get('/postalservice/send-to-po', 'sendToPo')->name('postalservice.send_to_po');
+        Route::post(
+                    '/postalservice/bulk-update-status',
+                    [PostalServiceController::class, 'bulkUpdateStatus']
+                )->name('postalservice.bulk_update_status');
     });
 
     // PDF Export Routes

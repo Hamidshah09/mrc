@@ -15,7 +15,11 @@
                 <input type="hidden" name="status" value="{{ request('status') }}">
                 <button type="submit" class="mb-2 px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">Export Report</button>
             </form>
-            <a href="{{route('postalservice.send_to_po')}}" class="ml-2 mb-2 px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">Send to PO</a>
+            <a href="#"
+                onclick="openBulkStatusModal(); return false;"
+                class="ml-2 mb-2 px-4 py-2 bg-blue-600 text-white rounded-md">
+                    Send to PO
+            </a>
             <a href="#"
             onclick="openEnvelopeLabelModal(); return false;"
             class="ml-2 mb-2 px-4 py-2 bg-indigo-600 border border-transparent
@@ -62,6 +66,68 @@
                     <div class="flex justify-end space-x-2">
                         <button type="button" onclick="closeEnvelopeLabelModal()" class="px-4 py-2 text-sm bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
                         <button type="submit" class="px-4 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700">Generate PDF</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Bulk Status Update Modal -->
+        <div id="bulkStatusModal"
+            class="fixed inset-0 z-50 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
+
+            <div class="bg-white p-6 rounded shadow-md w-full max-w-md">
+                <h2 class="text-lg font-semibold mb-4">
+                    Bulk Status Update
+                </h2>
+
+                <form method="POST"
+                    action="{{ route('postalservice.bulk_update_status') }}">
+                    @csrf
+
+                    <!-- From Status -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            From Status <span class="text-red-500">*</span>
+                        </label>
+                        <select name="from_status_id"
+                                required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2">
+                            <option value="">Select status</option>
+                            @foreach ($statuses as $status)
+                                <option value="{{ $status->id }}">
+                                    {{ ucfirst($status->status) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- To Status -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            To Status <span class="text-red-500">*</span>
+                        </label>
+                        <select name="to_status_id"
+                                required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2">
+                            <option value="">Select status</option>
+                            @foreach ($statuses as $status)
+                                <option value="{{ $status->id }}">
+                                    {{ ucfirst($status->status) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-end space-x-2">
+                        <button type="button"
+                                onclick="closeBulkStatusModal()"
+                                class="px-4 py-2 bg-gray-300 rounded">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded">
+                            Update
+                        </button>
                     </div>
                 </form>
             </div>
@@ -138,7 +204,18 @@
                     <option value="Received by GPO" {{ request('status') == 'Received by GPO' ? 'selected' : '' }}>Received by GPO</option>
                 </select>
             </div>
-
+            <!-- Delay Status -->
+            <div class="flex flex-col space-y-1">
+                <label class="text-xs font-medium text-gray-600">Delay Level</label>
+                <select name="delay"
+                        class="border border-gray-300 rounded-md px-3 py-2">
+                    <option value="">All</option>
+                    <option value="normal" {{ request('delay') == 'normal' ? 'selected' : '' }}>Normal</option>
+                    <option value="delayed" {{ request('delay') == 'delayed' ? 'selected' : '' }}>Delayed</option>
+                    <option value="alarming" {{ request('delay') == 'alarming' ? 'selected' : '' }}>Alarming</option>
+                    <option value="critical" {{ request('delay') == 'critical' ? 'selected' : '' }}>Critical</option>
+                </select>
+            </div>
             <!-- Submit -->
             <div class="flex items-end">
                 <button type="submit"
@@ -342,13 +419,20 @@
     </div>
 
     <script>
-                function openEnvelopeLabelModal() {
-                    document.getElementById('envelopeLabelModal').classList.remove('hidden');
-                }
-                function closeEnvelopeLabelModal() {
-                    document.getElementById('envelopeLabelModal').classList.add('hidden');
-                    document.getElementById('envelopeLabelForm').reset();
-                }
+        function openBulkStatusModal() {
+            document.getElementById('bulkStatusModal').classList.remove('hidden');
+        }
+
+        function closeBulkStatusModal() {
+            document.getElementById('bulkStatusModal').classList.add('hidden');
+        }
+        function openEnvelopeLabelModal() {
+            document.getElementById('envelopeLabelModal').classList.remove('hidden');
+        }
+        function closeEnvelopeLabelModal() {
+            document.getElementById('envelopeLabelModal').classList.add('hidden');
+            document.getElementById('envelopeLabelForm').reset();
+        }
         function openStatusModal(recordId) {
             const modal = document.getElementById('statusModal');
             const form = document.getElementById('statusForm');

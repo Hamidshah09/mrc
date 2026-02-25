@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PostalService;
+use App\Models\PostalHistory;
 use App\Models\PostalStatuses;
 use App\Models\City;
 use App\Models\Services;
@@ -185,17 +186,54 @@ class PostalServiceController extends Controller
 
         return redirect()->route('postalservice.index')->with('success', 'Postal service status updated successfully.');
     }
-    public function sendToPo(){
-        $inTransit = DB::table('postalservice')->where('status_id', 2)->get();
-        foreach($inTransit as $record){
-            DB::table('postalservice')->where('id', $record->id)->update(['status_id' => 6]);
-            \App\Models\PostalHistory::create([
-                'postalservice_id' => $record->id,
-                'status_id' => 6,
-                'user_id' => Auth::id(),
+    public function bulkUpdateStatus(Request $request)
+    {
+        $data = $request->validate([
+            'from_status_id' => 'required|exists:postalstatuses,id',
+            'to_status_id'   => 'required|exists:postalstatuses,id',
+        ]);
+
+        if ($data['from_status_id'] == $data['to_status_id']) {
+            return back()->withErrors([
+                'to_status_id' => 'From and To status cannot be the same.',
             ]);
         }
-        return redirect()->route('postalservice.index')->with('success', 'All records with status "Pending" have been updated to "Received BY GPO".');
+
+        // Get all matching records (same as your original logic)
+        $records = DB::table('postalservice')
+            ->where('status_id', $data['from_status_id'])
+            ->get();
+
+        if ($records->isEmpty()) {
+            return redirect()
+                ->route('postalservice.index')
+                ->with('success', 'No records found for the selected status.');
+        }
+
+        foreach ($records as $record) {
+
+            // Update postalservice table
+            DB::table('postalservice')
+                ->where('id', $record->id)
+                ->update([
+                    'status_id'  => $data['to_status_id'],
+                    'updated_at' => now(),
+                ]);
+
+            // Insert history (same as before)
+            PostalHistory::create([
+                'postalservice_id' => $record->id,
+                'status_id'        => $data['to_status_id'],
+                'user_id'          => Auth::id(),
+            ]);
+        }
+
+        return redirect()
+            ->route('postalservice.index')
+            ->with(
+                'success',
+                $records->count() . ' records updated successfully.'
+            );
     }
 
 }

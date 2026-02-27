@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Models\PostalService;
 use App\Models\PostalStatuses;
 use App\Models\City;
+use App\Models\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -102,24 +103,25 @@ class PostalServiceExportController extends Controller
     public function exportEnvelopeLabels(Request $request)
     {
         $request->validate([
-            'date' => 'required|date',
+            'status_id' => 'required|exists:postalstatuses,id',
             'service_id' => 'required|exists:services,id',
         ]);
 
         // Use the EnvelopeLabel model for clarity, but same table as PostalService
-        $labels = \App\Models\PostalService::whereDate('created_at', $request->date)
+        $labels = \App\Models\PostalService::where('status_id', $request->status_id)
             ->where('service_id', $request->service_id)
             ->select('receiver_name', 'receiver_address', 'phone_number')
             ->get();
 
         if ($labels->isEmpty()) {
-            return back()->with('error', 'No records found for the selected date.');
+            return back()->with('error', 'No records found for the selected status and service.');
         }
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('postalservice.envelope_labels', [
             'labels' => $labels,
-            'date' => $request->date,
+            'status' => PostalStatuses::find($request->status_id)->status,
+            'service' => Services::find($request->service_id)->name,
         ]);
-        return $pdf->download('envelope_labels_' . $request->date . '.pdf');
+        return $pdf->download('envelope_labels_' . now()->format('Y-m-d') . '.pdf');
     }
 }

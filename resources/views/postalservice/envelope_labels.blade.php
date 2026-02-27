@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Envelope Labels - {{ $date }}</title>
+    <title>Envelope Labels - {{ $status }} - {{ $service }}</title>
     <style>
         body { font-family: Arial, sans-serif; }
         .label {
@@ -21,7 +21,7 @@
     </style>
 </head>
 <body>
-    <h2>Envelope Labels for {{ $date }}</h2>
+    <h2>Envelope Labels for {{ $status }} - {{ $service }}</h2>
     <div>
         @foreach ($labels as $label)
             <div class="label">

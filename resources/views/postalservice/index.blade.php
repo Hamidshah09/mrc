@@ -38,10 +38,21 @@
                 <form id="envelopeLabelForm" method="POST" action="{{ route('postalservice.export.envelope_labels') }}" target="_blank">
                     @csrf
                     <div class="mb-4">
-                        <label for="report_date" class="block text-sm font-medium text-gray-700 mb-2">
-                            Select Report Date <span class="text-red-500">*</span>
-                        </label>
-                        <input type="date" name="date" id="report_date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Status <span class="text-red-500">*</span>
+                            </label>
+                            <select name="status_id"
+                                    required
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                <option value="">Select status</option>
+                                @foreach ($statuses as $status)
+                                    <option value="{{ $status->id }}">
+                                        {{ ucfirst($status->status) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="mb-6">
                             <label for="service_id" class="block text-sm font-medium text-gray-700 mb-2">
                                 Service <span class="text-red-500">*</span>

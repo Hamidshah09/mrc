@@ -144,16 +144,16 @@ class domicileController extends Controller
     ]);
     
     // if both district are differenet then we will create postal record
-    DB::table('postalservice')->insert([
-        'receiver_name' => $validated['name'],
-        'receiver_address' => $validated['temporaryAddress'],
-        'status_id' => 1, // Assuming 1 is the initial status
-        'user_id' => null, // No user assigned yet
-        'service_id' => 2, // No service assigned yet
-        'phone_number' => $validated['contact'],
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
+    // DB::table('postalservice')->insert([
+    //     'receiver_name' => $validated['name'],
+    //     'receiver_address' => $validated['temporaryAddress'],
+    //     'status_id' => 1, // Assuming 1 is the initial status
+    //     'user_id' => null, // No user assigned yet
+    //     'service_id' => 2, // No service assigned yet
+    //     'phone_number' => $validated['contact'],
+    //     'created_at' => now(),
+    //     'updated_at' => now(),
+    // ]);
     return redirect()->route('domicile.success', [
     'id'   => $domicile->id,
     'cnic' => $domicile->cnic,

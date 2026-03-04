@@ -67,7 +67,7 @@ class PostalService extends Model
                 'text'  => 'Alarming',
                 'class' => 'bg-red-100 text-red-800',
             ],
-            default => [
+            $days >=10 => [
                 'text'  => 'Critical',
                 'class' => 'bg-red-800 text-white',
             ],

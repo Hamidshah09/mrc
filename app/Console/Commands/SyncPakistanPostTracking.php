@@ -160,7 +160,7 @@ class SyncPakistanPostTracking extends Command
                         'status_id'  => 3,
                         'updated_at' => now(),
                     ]);
-                $this->info("Updated status as Delivered for {$service->article_number}");
+                $this->info("Updated status as Delivered for {$postalServiceId}");
             }
         }
     }

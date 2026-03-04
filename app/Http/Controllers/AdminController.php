@@ -13,24 +13,29 @@ class AdminController extends Controller
         return view('domicile.passcode');
     }
     
-    public function store(Request $request)
-{
-    $request->validate([
-        'date' => 'required|date',
-        'count' => 'required|integer|min:1|max:300'
-    ]);
+   public function store(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+            'count' => 'required|integer|min:1|max:300'
+        ]);
 
-    $codes = [];
-    while (count($codes) < $request->count) {
-        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        if (!Passcode::where('code', $code)->where('valid_on', $request->date)->exists()) {
-            $codes[] = ['code' => $code, 'valid_on' => $request->date];
+        $codes = [];
+        $now = now();
+
+        for ($i = 0; $i < $request->count; $i++) {
+
+            $codes[] = [
+                'code' => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT),
+                'valid_on' => $request->date,
+                'created_at' => $now,
+                'updated_at' => $now
+            ];
         }
-    }
 
-    Passcode::insert($codes);
+        Passcode::insertOrIgnore($codes);
 
-    return back()->with('status', 'Passcodes Generated');
+        return back()->with('status', 'Passcodes Generated Successfully');
     }
     public function gen_report(){
         return view('domicile.createreport');

@@ -18,6 +18,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\idpController;
 use App\Http\Controllers\MousqueController;
+use App\Http\Controllers\NocIctController;
+use App\Http\Controllers\NocOtherDistrictController;
 use App\Models\ApplicationType;
 use App\Models\OnlineApplication;
 use Illuminate\Support\Facades\Route;
@@ -125,11 +127,20 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/domicile/admin', [domicileController::class, 'admin_index'])->name('domicile.admin');
     Route::get('/domicile/form-p/{id}', [domicileController::class,'form_p'])->name('domicile.form_p');
-    Route::get('/domicile/noc-ict/create', [domicileController::class, 'noc_ict_create'])->name('noc-ict.create');
-    Route::post('/domicile/noc-ict/store', [domicileController::class, 'noc_ict_store'])->name('noc-ict.store');
+    Route::get('/domicile/noc-ict/create', [NocIctController::class, 'noc_ict_create'])->name('noc-ict.create');
+    Route::post('/domicile/noc-ict/store', [NocIctController::class, 'noc_ict_store'])->name('noc-ict.store');
+    Route::get('/domicile/noc-ict', [NocIctController::class, 'noc_ict_index'])->name('noc-ict.index');
+    Route::get('/domicile/noc-ict/edit/{id}', [NocIctController::class, 'noc_ict_edit'])->name('noc-ict.edit');
+    Route::put('/domicile/noc-ict/update/{id}', [NocIctController::class, 'noc_ict_update'])->name('noc-ict.update');
+    Route::get('/domicile/noc-ict/letter/{id}', [NocIctController::class, 'generateLetter'])->name('noc-ict.letter');
     
-    
-    
+    Route::get('/domicile/noc-other-district', [NocOtherDistrictController::class, 'index'])->name('noc-other-district.index');
+    Route::get('/domicile/noc-other-district/create', [NocOtherDistrictController::class, 'create'])->name('noc-other-district.create');
+    Route::post('/domicile/noc-other-district/store', [NocOtherDistrictController::class, 'store'])->name('noc-other-district.store');
+    Route::get('/domicile/noc-other-district/edit/{id}', [NocOtherDistrictController::class, 'edit'])->name('noc-other-district.edit');
+    Route::put('/domicile/noc-other-district/update/{id}', [NocOtherDistrictController::class, 'update'])->name('noc-other-district.update');
+    Route::get('/domicile/noc-other-district/letter/{id}', [NocOtherDistrictController::class, 'issueletter'])->name('noc-other-district.letter');
+
     Route::get('/admin/generate-passcodes/create', [AdminController::class, 'create'])->name('Passcode.create');
     Route::post('/admin/generate-passcodes/store', [AdminController::class, 'store'])->name('Passcode.store');
     Route::get('/admin/passcodes/gen-report', [AdminController::class, 'gen_report'])->name('Passcodes.gen_report');

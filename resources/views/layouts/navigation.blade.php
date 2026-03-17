@@ -97,7 +97,8 @@
                                 <a href="{{route('Passcodes.gen_report')}}" class="block px-4 py-2 hover:bg-gray-100">Passcode Report</a>
                                 <a href="{{route('domicile.admin')}}" class="block px-4 py-2 hover:bg-gray-100">Form P</a>
                                 <a href="{{route('downloads')}}" class="block px-4 py-2 hover:bg-gray-100">Downloads</a>
-                                <a href="{{route('chatbot.questions')}}" class="block px-4 py-2 hover:bg-gray-100">Bot Questions</a>
+                                <a href="{{route('noc-ict.index')}}" class="block px-4 py-2 hover:bg-gray-100">Noc for ICT</a>
+                                <a href="{{route('noc-other-district.index')}}" class="block px-4 py-2 hover:bg-gray-100">Noc Other District</a>
                             </div>
                         </div>
                     </div>
@@ -286,9 +287,19 @@
             </div>
         @endif
         @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'domicile')
-            <div class="pt-2 pb-3 space-y-1">
+            {{-- <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('chatbot.questions')" :active="request()->routeIs('chatbot.questions')">
                     {{ __('Pending Questions') }}
+                </x-responsive-nav-link>
+            </div> --}}
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('noc-ict.index')" :active="request()->routeIs('noc-ict.index')">
+                    {{ __('Noc for ICT') }}
+                </x-responsive-nav-link>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('noc-other-district.index')" :active="request()->routeIs('noc-other-district.index')">
+                    {{ __('Noc Other District') }}
                 </x-responsive-nav-link>
             </div>
             <div class="pt-2 pb-3 space-y-1">

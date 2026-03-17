@@ -8,9 +8,12 @@ use App\Models\DomicileApplicants;
 use App\Models\DomicileStatus;
 use App\Models\NocApplicants;
 use App\Models\NocLetters;
+use App\Models\NocICT;
+use App\Models\NocICTApplicants;
 use App\Models\OnlineApplication;
 use App\Models\Passcode;
 use App\Models\tehsils;
+use App\Models\DispatchDiary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -612,10 +615,5 @@ class domicileController extends Controller
             return ['error' => 'Something went wrong: ' . $e->getMessage()];
         }
     }
-    public function noc_ict_create(){
-        return view('domicile.createnocict');
-    }
-    public function noc_ict_store(Request $request){
-        
-    }
+    
 }

@@ -44,7 +44,7 @@
 
                 <div>
                     <label class="text-sm font-medium">Relation</label>
-                    <select name="Relation]" id="" class="mt-1 block w-full border-gray-300 rounded-md">
+                    <select name="Relation" id="" class="mt-1 block w-full border-gray-300 rounded-md">
                         <option value="">Select Relation</option>
                         <option value="s/o" {{ old('Relation', $letter->Relation) == 's/o' ? 'selected' : '' }}>S/O</option>
                         <option value="d/o" {{ old('Relation', $letter->Relation) == 'd/o' ? 'selected' : '' }}>D/O</option>

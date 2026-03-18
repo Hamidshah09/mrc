@@ -25,6 +25,7 @@ use App\Models\OnlineApplication;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostalServiceController;
 use App\Http\Controllers\DomicileCancellationController;
+use App\Http\Controllers\BlackListController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -149,6 +150,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/domicile/cancellation/update/{id}', [DomicileCancellationController::class, 'update'])->name('domicile.cancellation.update');
     Route::get('/domicile/cancellation/letter/{id}', [DomicileCancellationController::class, 'issueletter'])->name('domicile.cancellation.letter');
 
+    Route::get('/domicile/blacklist/create', [BlackListController::class, 'create'])->name('domicile.blacklist.create');
+    Route::post('/domicile/blacklist/store', [BlackListController::class, 'store'])->name('domicile.blacklist.store');
+    Route::get('/domicile/blacklist', [BlackListController::class, 'index'])->name('domicile.blacklist.index');
+    Route::get('/domicile/blacklist/edit/{id}', [BlackListController::class, 'edit'])->name('domicile.blacklist.edit');
+    Route::put('/domicile/blacklist/update/{id}', [BlackListController::class, 'update'])->name('domicile.blacklist.update');
+    
     Route::get('/admin/generate-passcodes/create', [AdminController::class, 'create'])->name('Passcode.create');
     Route::post('/admin/generate-passcodes/store', [AdminController::class, 'store'])->name('Passcode.store');
     Route::get('/admin/passcodes/gen-report', [AdminController::class, 'gen_report'])->name('Passcodes.gen_report');

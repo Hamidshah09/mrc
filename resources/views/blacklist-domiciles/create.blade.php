@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Domicile Cancellation Letters') }}
+            {{ __('Black List CNICs for Domicile Applications') }}
         </h2>
     </x-slot>
 
@@ -15,57 +15,40 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('domicile.cancellation.create') }}">
+        <form method="POST" action="{{ route('domicile.blacklist.create') }}">
             @csrf
 
             {{-- LETTER INFORMATION --}}
             <h3 class="text-lg font-semibold text-gray-700 mb-4">
-                Letter Information
+                Black List Information
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 
                 <div>
                     <label class="text-sm font-medium">CNIC</label>
-                    <input type="text" name="CNIC"
+                    <input type="text" name="cnic"
                             class="mt-1 block w-full border-gray-300 rounded-md"
                             placeholder="xxxxxxxxxxxxx">
                 </div>
 
                 <div>
-                    <label class="text-sm font-medium">Applicant Name</label>
-                    <input type="text" name="Applicant_Name"
-                            class="mt-1 block w-full border-gray-300 rounded-md">
-                </div>
-
-                <div>
-                    <label class="text-sm font-medium">Relation</label>
-                    <select name="Relation" id="" class="mt-1 block w-full border-gray-300 rounded-md">
-                        <option value="">Select Relation</option>
-                        <option value="s/o">S/O</option>
-                        <option value="d/o">D/O</option>
-                        <option value="w/o">W/O</option>
+                    <label class="text-sm font-medium">Status</label>
+                    <select name="status" id="" class="mt-1 block w-full border-gray-300 rounded-md">
+                        <option value="">Select Status</option>
+                        <option value="Blocked">Blocked</option>
+                        <option value="Unblocked">Unblocked</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="text-sm font-medium">Father / Husband Name</label>
-                    <input type="text" name="Father_Name"
+                    <label class="text-sm font-medium">Reason</label>
+                    <input type="text" name="reason"
                             class="mt-1 block w-full border-gray-300 rounded-md">
                 </div>
                 <div>
-                    <label class="text-sm font-medium">Address</label>
-                    <input type="text" name="Address"
-                            class="mt-1 block w-full border-gray-300 rounded-md">
-                </div>
-                <div>
-                    <label class="text-sm font-medium">Domicile No</label>
-                    <input type="text" name="Domicile_No"
-                            class="mt-1 block w-full border-gray-300 rounded-md">
-                </div>
-                <div>
-                    <label class="text-sm font-medium">Domicile Date</label>
-                    <input type="date" name="Domicile_Date"
+                    <label class="text-sm font-medium">Clearance Reason</label>
+                    <input type="text" name="clearance_reason"
                             class="mt-1 block w-full border-gray-300 rounded-md">
                 </div>
 

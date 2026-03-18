@@ -99,6 +99,7 @@
                                 <a href="{{route('downloads')}}" class="block px-4 py-2 hover:bg-gray-100">Downloads</a>
                                 <a href="{{route('noc-ict.index')}}" class="block px-4 py-2 hover:bg-gray-100">Noc for ICT</a>
                                 <a href="{{route('noc-other-district.index')}}" class="block px-4 py-2 hover:bg-gray-100">Noc Other District</a>
+                                <a href="{{route('domicile.cancellation.index')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile Cancellation</a>
                             </div>
                         </div>
                     </div>
@@ -300,6 +301,11 @@
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('noc-other-district.index')" :active="request()->routeIs('noc-other-district.index')">
                     {{ __('Noc Other District') }}
+                </x-responsive-nav-link>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('domicile.cancellation.index')" :active="request()->routeIs('domicile.cancellation.index')">
+                    {{ __('Cancellation of Domicile Certificate') }}
                 </x-responsive-nav-link>
             </div>
             <div class="pt-2 pb-3 space-y-1">

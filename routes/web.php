@@ -24,6 +24,7 @@ use App\Models\ApplicationType;
 use App\Models\OnlineApplication;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostalServiceController;
+use App\Http\Controllers\DomicileCancellationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -140,6 +141,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/domicile/noc-other-district/edit/{id}', [NocOtherDistrictController::class, 'edit'])->name('noc-other-district.edit');
     Route::put('/domicile/noc-other-district/update/{id}', [NocOtherDistrictController::class, 'update'])->name('noc-other-district.update');
     Route::get('/domicile/noc-other-district/letter/{id}', [NocOtherDistrictController::class, 'issueletter'])->name('noc-other-district.letter');
+
+    Route::get('/domicile/cancellation/create', [DomicileCancellationController::class, 'create'])->name('domicile.cancellation.create');
+    Route::post('/domicile/cancellation/store', [DomicileCancellationController::class, 'store'])->name('domicile.cancellation.store');
+    Route::get('/domicile/cancellation', [DomicileCancellationController::class, 'index'])->name('domicile.cancellation.index');
+    Route::get('/domicile/cancellation/edit/{id}', [DomicileCancellationController::class, 'edit'])->name('domicile.cancellation.edit');
+    Route::put('/domicile/cancellation/update/{id}', [DomicileCancellationController::class, 'update'])->name('domicile.cancellation.update');
+    Route::get('/domicile/cancellation/letter/{id}', [DomicileCancellationController::class, 'issueletter'])->name('domicile.cancellation.letter');
 
     Route::get('/admin/generate-passcodes/create', [AdminController::class, 'create'])->name('Passcode.create');
     Route::post('/admin/generate-passcodes/store', [AdminController::class, 'store'])->name('Passcode.store');

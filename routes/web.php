@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostalServiceController;
 use App\Http\Controllers\DomicileCancellationController;
 use App\Http\Controllers\BlackListController;
+use App\Http\Controllers\VerificationLetterController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -156,6 +157,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/domicile/blacklist/edit/{id}', [BlackListController::class, 'edit'])->name('domicile.blacklist.edit');
     Route::put('/domicile/blacklist/update/{id}', [BlackListController::class, 'update'])->name('domicile.blacklist.update');
     
+    Route::get('/domicile/verification-letter/create', [VerificationLetterController::class, 'create'])->name('domicile.verification_letter.create');
+    Route::post('/domicile/verification-letter/store', [VerificationLetterController::class, 'store'])->name('domicile.verification_letter.store');
+    Route::get('/domicile/verification-letter', [VerificationLetterController::class, 'index'])->name('domicile.verification_letter.index');
+    Route::get('/domicile/verification-letter/edit/{id}', [VerificationLetterController::class, 'edit'])->name('domicile.verification_letter.edit');
+    Route::put('/domicile/verification-letter/update/{id}', [VerificationLetterController::class, 'update'])->name('domicile.verification_letter.update');
+    Route::get('/domicile/verification-letter/letter/{id}', [VerificationLetterController::class, 'issueletter'])->name('domicile.verification_letter.letter');
+
     Route::get('/admin/generate-passcodes/create', [AdminController::class, 'create'])->name('Passcode.create');
     Route::post('/admin/generate-passcodes/store', [AdminController::class, 'store'])->name('Passcode.store');
     Route::get('/admin/passcodes/gen-report', [AdminController::class, 'gen_report'])->name('Passcodes.gen_report');

@@ -20,6 +20,7 @@ use App\Http\Controllers\idpController;
 use App\Http\Controllers\MousqueController;
 use App\Http\Controllers\NocIctController;
 use App\Http\Controllers\NocOtherDistrictController;
+use App\Http\Controllers\ExpenseRegisterController;
 use App\Models\ApplicationType;
 use App\Models\OnlineApplication;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,7 @@ use App\Http\Controllers\PostalServiceController;
 use App\Http\Controllers\DomicileCancellationController;
 use App\Http\Controllers\BlackListController;
 use App\Http\Controllers\VerificationLetterController;
+use App\Http\Controllers\SuretyController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -184,7 +186,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/arms/statistics', [ArmsController::class, 'statistics'])->name('arms.statistics');
 
     });
-    
+    Route::middleware('role:admin')->group(function(){
+        Route::get('/admin/expense-register', [ExpenseRegisterController::class, 'index'])->name('expense_register.index');
+        Route::get('/admin/expense-register/create', [ExpenseRegisterController::class, 'create'])->name('expense_register.create');
+        Route::post('/admin/expense-register/store', [ExpenseRegisterController::class, 'store'])->name('expense_register.store');
+        Route::get('/admin/expense-register/edit/{id}', [ExpenseRegisterController::class, 'edit'])->name('expense_register.edit');
+        Route::put('/admin/expense-register/update/{id}', [ExpenseRegisterController::class, 'update'])->name('expense_register.update');
+    });
     Route::middleware('role:auqaf,admin')->group(function(){
         Route::get('/auqaf/mousques', [MousqueController::class, 'index'])->name('mousques.index');
         Route::get('/auqaf/mousques/create', [MousqueController::class, 'create'])->name('mousques.create');
@@ -199,6 +207,16 @@ Route::middleware('auth')->group(function () {
         Route::put('/auqaf/officials/update/{id}', [AuqafOfficialsController::class, 'update'])->name('auqaf-officials.update');
         Route::post('/auqaf/officials/store', [AuqafOfficialsController::class, 'store'])->name('auqaf-officials.store');
 
+    });
+    Route::middleware('role:surety,admin')->group(function(){
+        Route::get('/surety', [SuretyController::class, 'index'])->name('surety.index');
+        Route::get('/surety/dashboard', [SuretyController::class, 'dashboard'])->name('surety.dashboard');
+        Route::get('/surety/create', [SuretyController::class, 'create'])->name('surety.create');
+        Route::post('/surety/store', [SuretyController::class, 'store'])->name('surety.store');
+        Route::get('/surety/show/{id}', [SuretyController::class, 'show'])->name('surety.show');
+        Route::get('/surety/edit/{id}', [SuretyController::class, 'edit'])->name('surety.edit');
+        Route::put('/surety/update/{id}', [SuretyController::class, 'update'])->name('surety.update');
+        Route::put('/surety/updatestatus/{id}', [SuretyController::class, 'updatestatus'])->name('surety.updatestatus');
     });
     Route::middleware('role:admin,domicile,idp,arms')->group(function(){
         Route::get('/statistics/pdf-report', [StatisticsController::class, 'pdf_report'])->name('statistics.pdf');

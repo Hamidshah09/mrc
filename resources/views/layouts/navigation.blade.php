@@ -61,7 +61,7 @@
                         </div>
                     </div>
                 @endif
-                @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'mrc' or auth()->user()->role->role== 'domicile')
+                {{-- @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'mrc' or auth()->user()->role->role== 'domicile')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <div class="relative" x-data="{ dropdown: false }">
                             <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
@@ -75,6 +75,25 @@
                                 x-transition
                                 class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
                                 <a href="{{route('postalservice.index')}}" class="block px-4 py-2 hover:bg-gray-100">Postal Services</a>
+            
+                            </div>
+                        </div>
+                    </div>
+                @endif --}}
+                @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'surety')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <div class="relative" x-data="{ dropdown: false }">
+                            <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
+                                Surety Service
+                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="dropdown" @click.outside="dropdown = false"
+                                x-transition
+                                class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
+                                <a href="{{route('surety.index')}}" class="block px-4 py-2 hover:bg-gray-100">Surety Services</a>
                                 {{-- <a href="{{route('postal-status.index')}}" class="block px-4 py-2 hover:bg-gray-100">Postal Status</a> --}}
                             </div>
                         </div>
@@ -233,6 +252,13 @@
                     {{ __('CFC Statistics') }}
                 </x-responsive-nav-link>
             </div>
+        @endif
+        @if (auth()->user()->role->role== 'surety' or auth()->user()->role->role== 'admin')
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('surety.index')" :active="request()->routeIs('surety.index')">
+                    {{ __('Surety Records') }}
+                </x-responsive-nav-link>
+            </div>       
         @endif
         @if (auth()->user()->role->role== 'registrar' or auth()->user()->role->role== 'mrc' or auth()->user()->role->role== 'verifier' or auth()->user()->role->role== 'admin')
             <div class="pt-2 pb-3 space-y-1">

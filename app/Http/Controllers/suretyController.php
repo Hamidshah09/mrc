@@ -9,6 +9,7 @@ use App\Models\SuretyHistory;
 use App\Models\SuretyType;
 use App\Models\SuretyStatus;
 use App\Models\PoliceStation;
+use App\Models\User;
 
 class suretyController extends Controller
 {
@@ -144,8 +145,12 @@ class suretyController extends Controller
 
     public function dashboard(Request $request)
     {
-        $from = $request->input('from') ?? now()->subMonth()->format('Y-m-d');
-        $to = $request->input('to') ?? now()->format('Y-m-d');
+        // Default date range: use request values if provided, otherwise use min/max receipt_date from records
+        $minDate = SuretyRegister::min('receipt_date');
+        $maxDate = SuretyRegister::max('receipt_date');
+
+        $from = $request->input('from') ?? ($minDate ? Carbon::parse($minDate)->format('Y-m-d') : now()->subMonth()->format('Y-m-d'));
+        $to = $request->input('to') ?? ($maxDate ? Carbon::parse($maxDate)->format('Y-m-d') : now()->format('Y-m-d'));
         $status = $request->input('status');
 
         $query = SuretyRegister::whereDate('receipt_date', '>=', $from)
@@ -159,6 +164,11 @@ class suretyController extends Controller
             ->select('surety_type_id', \DB::raw('count(*) as total'))
             ->groupBy('surety_type_id')
             ->get();
+
+        // For debugging: get matched records and total
+        $matchedRecords = (clone $query)->get();
+        $totalRecords = SuretyRegister::count();
+        $firstRecord = SuretyRegister::first();
 
         $typeIds = $typeCounts->pluck('surety_type_id')->toArray();
         $typeNames = SuretyType::whereIn('id', $typeIds)->pluck('name', 'id')->toArray();
@@ -181,7 +191,29 @@ class suretyController extends Controller
 
         $surityStatuses = SuretyStatus::all();
 
-        return view('surety.dashboard', compact('pieLabels', 'pieData', 'dailyLabels', 'dailyData', 'from', 'to', 'status', 'surityStatuses'));
+        // User performance: count of history actions by user within date range (and optional status)
+        $historyQuery = SuretyHistory::whereDate('created_at', '>=', $from)
+            ->whereDate('created_at', '<=', $to);
+
+        if ($status) {
+            $historyQuery->where('status_id', $status);
+        }
+
+        $userCounts = $historyQuery
+            ->select('updated_by', \DB::raw('count(*) as total'))
+            ->groupBy('updated_by')
+            ->orderBy('total', 'desc')
+            ->get();
+
+        $userIds = $userCounts->pluck('updated_by')->toArray();
+        $userNames = User::whereIn('id', $userIds)->pluck('name', 'id')->toArray();
+
+        $userLabels = $userCounts->map(function ($u) use ($userNames) {
+            return $userNames[$u->updated_by] ?? ('User '.$u->updated_by);
+        })->toArray();
+        $userData = $userCounts->pluck('total')->toArray();
+
+        return view('surety.dashboard', compact('pieLabels', 'pieData', 'dailyLabels', 'dailyData', 'from', 'to', 'status', 'surityStatuses', 'userLabels', 'userData', 'matchedRecords', 'totalRecords', 'firstRecord'));
     }
 
     public function show($id)

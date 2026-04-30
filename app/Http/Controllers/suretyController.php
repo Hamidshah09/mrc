@@ -192,17 +192,15 @@ class suretyController extends Controller
         $surityStatuses = SuretyStatus::all();
 
         // User performance: count of history actions by user within date range (and optional status)
-        $historyQuery = SuretyHistory::whereDate('created_at', '>=', $from)
-            ->whereDate('created_at', '<=', $to);
+      
+        $start = Carbon::today('Asia/Karachi')->startOfDay()->utc();
+        $end   = Carbon::today('Asia/Karachi')->endOfDay()->utc();
 
-        if ($status) {
-            $historyQuery->where('status_id', $status);
-        }
-
-        $userCounts = $historyQuery
+        $userCounts = SuretyHistory::whereBetween('created_at', [$start, $end])
+            ->whereNotNull('updated_by')
             ->select('updated_by', \DB::raw('count(*) as total'))
             ->groupBy('updated_by')
-            ->orderBy('total', 'desc')
+            ->orderByDesc('total')
             ->get();
 
         $userIds = $userCounts->pluck('updated_by')->toArray();
@@ -211,6 +209,7 @@ class suretyController extends Controller
         $userLabels = $userCounts->map(function ($u) use ($userNames) {
             return $userNames[$u->updated_by] ?? ('User '.$u->updated_by);
         })->toArray();
+
         $userData = $userCounts->pluck('total')->toArray();
 
         return view('surety.dashboard', compact('pieLabels', 'pieData', 'dailyLabels', 'dailyData', 'from', 'to', 'status', 'surityStatuses', 'userLabels', 'userData', 'matchedRecords', 'totalRecords', 'firstRecord'));

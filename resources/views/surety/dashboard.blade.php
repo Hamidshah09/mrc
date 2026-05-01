@@ -4,6 +4,29 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+
+            <div class="bg-blue-100 p-4 rounded">
+                <div class="text-sm text-gray-600">Total Records</div>
+                <div class="text-xl font-bold">{{ $totalRecords }}</div>
+            </div>
+
+            <div class="bg-green-100 p-4 rounded">
+                <div class="text-sm text-gray-600">Total Amount</div>
+                <div class="text-xl font-bold">{{ number_format($totalAmount) }}</div>
+            </div>
+
+            <div class="bg-yellow-100 p-4 rounded">
+                <div class="text-sm text-gray-600">Today Entries</div>
+                <div class="text-xl font-bold">{{ $todayCount }}</div>
+            </div>
+
+            <div class="bg-purple-100 p-4 rounded">
+                <div class="text-sm text-gray-600">Completed</div>
+                <div class="text-xl font-bold">{{ $completedCount }}</div>
+            </div>
+
+        </div>
         <form method="GET" class="flex flex-col md:flex-row md:items-end md:space-x-6 mb-4">
             <div>
                 <label class="block text-sm text-gray-600">From</label>
@@ -27,7 +50,7 @@
             </div>
         </form>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white p-4 rounded shadow">
                 <h3 class="font-semibold mb-2">Surety Types (Pie)</h3>
                 <canvas id="pieChart"></canvas>
@@ -41,29 +64,9 @@
                 <canvas id="userChart"></canvas>
             </div>
         </div>
-
-        <div class="mt-6 bg-gray-50 p-4 rounded">
-            <h4 class="font-medium mb-2">Debug (server-side)</h4>
-            <div class="text-sm text-gray-700 mb-2">Total records in `suretyregister`: <strong>{{ $totalRecords ?? 0 }}</strong></div>
-            <div class="text-sm text-gray-700 mb-2">Matched records for filters: <strong>{{ $matchedRecords->count() ?? 0 }}</strong></div>
-            <details class="text-sm"><summary class="cursor-pointer">Show matched records (JSON)</summary>
-                <pre class="whitespace-pre-wrap text-xs bg-white p-2 rounded mt-2">{{ json_encode($matchedRecords->map->toArray(), JSON_PRETTY_PRINT) }}</pre>
-            </details>
-        </div>
-
-        <div class="mt-4 bg-gray-50 p-4 rounded">
-            <h4 class="font-medium mb-2">First record (server-side)</h4>
-            @if(isset($firstRecord) && $firstRecord)
-                <div class="text-sm text-gray-700">ID: <strong>{{ $firstRecord->id }}</strong></div>
-                <div class="text-sm text-gray-700">register_id: <strong>{{ $firstRecord->register_id }}</strong></div>
-                <div class="text-sm text-gray-700">receipt_date: <strong>{{ optional($firstRecord->receipt_date)->format('Y-m-d H:i:s') ?? $firstRecord->receipt_date }}</strong></div>
-                <div class="text-sm text-gray-700">surety_status_id: <strong>{{ $firstRecord->surety_status_id }}</strong></div>
-                <details class="text-sm mt-2"><summary class="cursor-pointer">Full JSON</summary>
-                    <pre class="whitespace-pre-wrap text-xs bg-white p-2 rounded mt-2">{{ json_encode($firstRecord->toArray(), JSON_PRETTY_PRINT) }}</pre>
-                </details>
-            @else
-                <div class="text-sm text-gray-700">No records found.</div>
-            @endif
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-semibold mb-2">Daily Amount</h3>
+            <canvas id="amountChart"></canvas>
         </div>
     </div>
 
@@ -125,5 +128,21 @@
                 userCtx.parentNode.innerHTML = '<p class="text-sm text-gray-600">No user activity for selected filters.</p>';
             }
         });
+        const amountLabels = {!! json_encode($amountLabels ?? []) !!};
+        const amountData = {!! json_encode($amountData ?? []) !!};
+
+        const amountCtx = document.getElementById('amountChart');
+        if (amountCtx && amountData.length) {
+            new Chart(amountCtx, {
+                type: 'line',
+                data: {
+                    labels: amountLabels,
+                    datasets: [{
+                        label: 'Amount',
+                        data: amountData
+                    }]
+                }
+            });
+        }
     </script>
 </x-app-layout>

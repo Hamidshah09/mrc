@@ -214,6 +214,7 @@ class suretyController extends Controller
 
     public function dashboard(Request $request)
     {
+        
         // Default date range: use request values if provided, otherwise use min/max receiving_date from records
         $minDate = SuretyRegister::min('receiving_date');
         $maxDate = SuretyRegister::max('receiving_date');
@@ -225,6 +226,14 @@ class suretyController extends Controller
         $query = SuretyRegister::whereDate('receiving_date', '>=', $from)
             ->whereDate('receiving_date', '<=', $to);
 
+        $totalRecords = (clone $query)->count();
+
+        $totalAmount = (clone $query)->sum('amount');
+
+        $todayCount = SuretyRegister::whereDate('receiving_date', today())->count();
+
+        $completedCount = SuretyRegister::where('surety_status_id', 2)->count(); // adjust ID
+        
         if ($status) {
             $query->where('surety_status_id', $status);
         }
@@ -265,23 +274,37 @@ class suretyController extends Controller
         $start = Carbon::today('Asia/Karachi')->startOfDay()->utc();
         $end   = Carbon::today('Asia/Karachi')->endOfDay()->utc();
 
-        $userCounts = SuretyHistory::whereBetween('created_at', [$start, $end])
-            ->whereNotNull('updated_by')
-            ->select('updated_by', \DB::raw('count(*) as total'))
-            ->groupBy('updated_by')
+        $userCounts = SuretyRegister::whereBetween('receiving_date', [$from, $to])
+            ->select('user_id', DB::raw('count(*) as total'))
+            ->groupBy('user_id')
             ->orderByDesc('total')
             ->get();
 
-        $userIds = $userCounts->pluck('updated_by')->toArray();
-        $userNames = User::whereIn('id', $userIds)->pluck('name', 'id')->toArray();
+        $userIds = $userCounts->pluck('user_id');
 
-        $userLabels = $userCounts->map(function ($u) use ($userNames) {
-            return $userNames[$u->updated_by] ?? ('User '.$u->updated_by);
-        })->toArray();
+        $userNames = User::whereIn('id', $userIds)
+            ->pluck('name', 'id');
 
-        $userData = $userCounts->pluck('total')->toArray();
+        $userLabels = $userCounts->map(fn($u) =>
+            $userNames[$u->user_id] ?? 'User '.$u->user_id
+        );
 
-        return view('surety.dashboard', compact('pieLabels', 'pieData', 'dailyLabels', 'dailyData', 'from', 'to', 'status', 'surityStatuses', 'userLabels', 'userData', 'matchedRecords', 'totalRecords', 'firstRecord'));
+        $userData = $userCounts->pluck('total');
+
+
+        $amountDaily = SuretyRegister::whereBetween('receiving_date', [$from, $to])
+            ->select(DB::raw('DATE(receiving_date) as date'), DB::raw('SUM(amount) as total'))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        $amountLabels = $amountDaily->pluck('date');
+        $amountData = $amountDaily->pluck('total');
+
+        return view('surety.dashboard', compact('totalAmount', 'pieLabels', 'pieData', 
+                                                'dailyLabels', 'dailyData', 'from', 'to', 'status',
+                                                 'surityStatuses', 'userLabels', 'userData', 
+                                                 'matchedRecords', 'totalRecords', 'firstRecord', 'amountLabels', 'amountData', 'todayCount', 'completedCount'));
     }
 
     public function show($id)

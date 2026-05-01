@@ -93,7 +93,8 @@
                             <div x-show="dropdown" @click.outside="dropdown = false"
                                 x-transition
                                 class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
-                                <a href="{{route('surety.index')}}" class="block px-4 py-2 hover:bg-gray-100">Surety Services</a>
+                                <a href="{{route('suretydocuments.index')}}" class="block px-4 py-2 hover:bg-gray-100">Surety Register</a>
+                                <a href="{{route('surety.index')}}" class="block px-4 py-2 hover:bg-gray-100">Surety Records</a>
                                 {{-- <a href="{{route('postal-status.index')}}" class="block px-4 py-2 hover:bg-gray-100">Postal Status</a> --}}
                             </div>
                         </div>

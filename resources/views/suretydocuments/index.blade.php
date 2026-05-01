@@ -15,7 +15,58 @@
                 Upload Document
             </a>
         </div>
+        <form method="GET" class="mb-4 flex flex-wrap gap-3 items-end">
 
+        {{-- Status --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Status</label>
+            <select name="status" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                <option value="">All</option>
+                <option value="uploaded" {{ request('status')=='uploaded'?'selected':'' }}>Uploaded</option>
+                <option value="processing" {{ request('status')=='processing'?'selected':'' }}>Processing</option>
+                <option value="completed" {{ request('status')=='completed'?'selected':'' }}>Completed</option>
+            </select>
+        </div>
+
+        {{-- Entries --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Entries Min</label>
+            <input type="number" name="entries_min" value="{{ request('entries_min') }}"
+                class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Entries Max</label>
+            <input type="number" name="entries_max" value="{{ request('entries_max') }}"
+                class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+        </div>
+
+        {{-- Amount --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Amount Min</label>
+            <input type="number" name="amount_min" value="{{ request('amount_min') }}"
+                class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Amount Max</label>
+            <input type="number" name="amount_max" value="{{ request('amount_max') }}"
+                class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+        </div>
+
+        {{-- Buttons --}}
+        <div class="flex gap-2">
+            <button class="px-3 py-1 bg-blue-600 text-white rounded">
+                Filter
+            </button>
+
+            <a href="{{ route('suretydocuments.index') }}"
+            class="px-3 py-1 bg-gray-300 rounded">
+            Reset
+            </a>
+        </div>
+
+    </form>
         <div class="overflow-x-auto">
             <table class="min-w-full border border-gray-200">
                 <thead class="bg-gray-100">
@@ -23,6 +74,7 @@
                         <th class="px-4 py-2 text-left">File</th>
                         <th class="px-4 py-2 text-left">Status</th>
                         <th class="px-4 py-2 text-left">Progress</th>
+                        <th class="px-4 py-2 text-left">Locked By</th>
                         <th class="px-4 py-2 text-left">Action</th>
                     </tr>
                 </thead>
@@ -43,14 +95,41 @@
                             <td class="px-4 py-2">
                                 {{ $doc->entered_entries }} / {{ $doc->total_expected_entries ?? '-' }}
                             </td>
-
                             <td class="px-4 py-2">
+                                @if($doc->locked_by)
+
+                                    @if($doc->locked_by === auth()->id())
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">
+                                            You
+                                        </span>
+                                    @else
+                                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">
+                                            {{ $doc->locker->name ?? 'User '.$doc->locked_by }}
+                                        </span>
+                                    @endif
+
+                                @else
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
+                                        Available
+                                    </span>
+                                @endif
+                            </td>
+
+                            <td class="flex items-center px-4 py-2">
                                 <form method="POST" action="{{ route('suretydocuments.lock', $doc->id) }}">
                                     @csrf
                                     <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
                                         Open
                                     </button>
                                 </form>
+
+                                 {{-- Admin only edit --}}
+                                @if(auth()->user()->isAdmin())
+                                    <a href="{{ route('suretydocuments.edit', $doc->id) }}"
+                                        class="ml-2 px-3 py-1 bg-yellow-500 text-white rounded">
+                                    Edit
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                     @empty

@@ -76,4 +76,9 @@ class User extends Authenticatable
     public function online_application(){
         return $this->hasMany(OnlineApplication::class, 'created_by', 'id');
     }
+
+    public function isAdmin()
+    {
+        return $this->role->role && $this->role->role === 'admin';
+    }
 }

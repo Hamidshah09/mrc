@@ -29,13 +29,18 @@ return new class extends Migration
             $table->enum('status', [
                 'uploaded',     // just uploaded
                 'processing',   // currently being worked on
-                'completed'     // fully digitized
+                'completed',    // fully digitized
+                'audit failed'
             ])->default('uploaded');
 
             // Optional metadata
+            $table->unsignedInteger('total_amount')->nullable(); // e.g. total amount in the document
             $table->integer('total_expected_entries')->nullable(); // e.g. 20+ entries
             $table->integer('entered_entries')->default(0);
-            $table->index(['status', 'locked_by']);
+            $table->index('locked_by');
+            $table->index('status');
+            $table->index('entered_entries');
+            $table->index('total_amount');
             $table->timestamps();
         });
     }

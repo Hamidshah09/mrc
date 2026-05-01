@@ -24,9 +24,9 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Guarantor Name</label>
-                    <input type="text" name="guarantaor_name" value="{{ old('guarantaor_name', $record->guarantaor_name) }}"
+                    <input type="text" name="guarantor_name" value="{{ old('guarantor_name', $record->guarantor_name) }}"
                         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
-                    @error('guarantaor_name')
+                    @error('guarantor_name')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -50,10 +50,10 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Receipt Date</label>
-                    <input type="date" name="receipt_date" value="{{ old('receipt_date', optional($record->receipt_date)->format('Y-m-d') ?? $record->receipt_date) }}"
+                    <label class="block text-sm font-medium text-gray-700">Receiving Date</label>
+                    <input type="date" name="receiving_date" value="{{ old('receiving_date', optional($record->receiving_date)->format('Y-m-d') ?? $record->receiving_date) }}"
                         class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
-                    @error('receipt_date')
+                    @error('receiving_date')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -122,6 +122,14 @@
                         @endforeach
                     </select>
                     @error('surety_status_id')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Releasing Date</label>
+                    <input type="date" name="releasing_date" value="{{ old('releasing_date', optional($record->releasing_date)->format('Y-m-d') ?? $record->releasing_date) }}"
+                        class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                    @error('releasing_date')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>

@@ -212,7 +212,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:surety,admin')->group(function(){
         Route::get('/surety', [suretyController::class, 'index'])->name('surety.index');
         Route::get('/surety/dashboard', [suretyController::class, 'dashboard'])->name('surety.dashboard');
-        // Route::get('/surety/create/{id}', [suretyController::class, 'create'])->name('surety.create');
+        Route::get('/surety/fetch/{register_id}', [SuretyController::class, 'fetchByRegisterId']);
         Route::post('/surety/store', [suretyController::class, 'store'])->name('surety.store');
         Route::get('/surety/show/{id}', [suretyController::class, 'show'])->name('surety.show');
         Route::get('/surety/edit/{id}', [suretyController::class, 'edit'])->name('surety.edit');
@@ -224,6 +224,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/surety/documents', [SuretyDocumentController::class, 'index'])->name('suretydocuments.index');
         Route::get('/surety/documents/create', [SuretyDocumentController::class, 'create'])->name('suretydocuments.create');
         Route::post('/surety/documents/store', [SuretyDocumentController::class, 'store'])->name('suretydocuments.store');
+        Route::get('/surety/documents/edit/{id}', [SuretyDocumentController::class, 'edit'])->name('suretydocuments.edit');
+        Route::put('/surety/documents/update/{id}', [SuretyDocumentController::class, 'update'])->name('suretydocuments.update');
         Route::post('/surety/documents/{id}/lock', [SuretyDocumentController::class, 'lock'])->name('suretydocuments.lock');
     });
     Route::middleware('role:admin,domicile,idp,arms')->group(function(){

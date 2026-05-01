@@ -12,7 +12,7 @@
                 Dashboard
             </a>
 
-            <a href="{{ route('surety.create') }}"
+            <a href="{{ route('suretydocuments.index') }}"
                class="mb-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 mr-3">
                 New
             </a>
@@ -92,7 +92,7 @@
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Guarantor</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Mobile</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Receipt No</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Receipt Date</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Receiving Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Accused</th>
                         <th class="px-6 py-3 text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Type</th>
@@ -104,10 +104,10 @@
                     @foreach ($records as $record)
                         <tr class="hover:bg-gray-50 transition-colors duration-200">
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->register_id }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->guarantaor_name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->guarantor_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->mobile_no }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->receipt_no }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ optional($record->receipt_date)->format('Y-m-d') ?? $record->receipt_date }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ optional($record->receiving_date)->format('Y-m-d') ?? $record->receiving_date }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->accused_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800 text-right">{{ number_format($record->amount, 0) }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ optional($record->suretyType)->name ?? $record->surety_type_id }}</td>
@@ -147,7 +147,7 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="block text-sm text-gray-700 mb-1">Date</label>
-                                                    <input type="date" name="manual_date" value="{{ now()->format('Y-m-d') }}" class="w-full border border-gray-300 rounded-md px-3 py-2" />
+                                                    <input type="date" name="releasing_date" value="{{ now()->format('Y-m-d') }}" class="w-full border border-gray-300 rounded-md px-3 py-2" />
                                                 </div>
                                                 <div class="flex justify-end space-x-2">
                                                     <button type="button" @click="open = false" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>

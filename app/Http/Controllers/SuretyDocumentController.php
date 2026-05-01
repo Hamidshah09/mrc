@@ -9,14 +9,34 @@ use App\Models\SuretyDocument;
 
 class SuretyDocumentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $documents = \App\Models\SuretyDocument::where(function ($q) {
-                $q->whereNull('locked_by')
-                ->orWhere('locked_by', auth()->id());
-            })
-            ->orderBy('created_at')
-            ->get();
+        $query = SuretyDocument::with('locker');
+
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Entries filter
+        if ($request->filled('entries_min')) {
+            $query->where('entered_entries', '>=', $request->entries_min);
+        }
+
+        if ($request->filled('entries_max')) {
+            $query->where('entered_entries', '<=', $request->entries_max);
+        }
+
+        // Amount filter
+        if ($request->filled('amount_min')) {
+            $query->where('total_amount', '>=', $request->amount_min);
+        }
+
+        if ($request->filled('amount_max')) {
+            $query->where('total_amount', '<=', $request->amount_max);
+        }
+
+        $documents = $query->orderBy('created_at', 'desc')->get();
 
         return view('suretydocuments.index', compact('documents'));
     }
@@ -30,18 +50,20 @@ class SuretyDocumentController extends Controller
     {
         $request->validate([
             'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'total_expected_entries' => 'nullable|integer|min:1'
+            'total_expected_entries' => 'nullable|integer|min:1',
+            'total_amount' => 'nullable|integer|min:0',
         ]);
 
         $file = $request->file('document');
 
         $path = $file->store('documents', 'public');
 
-        \App\Models\SuretyDocument::create([
+        SuretyDocument::create([
             'file_path' => $path,
             'original_name' => $file->getClientOriginalName(),
             'uploaded_by' => auth()->id(),
             'total_expected_entries' => $request->total_expected_entries,
+            'total_amount' => $request->total_amount,
             'status' => 'uploaded'
         ]);
 
@@ -82,5 +104,53 @@ class SuretyDocumentController extends Controller
         }
 
         return redirect()->route('surety.create', $document->id);
+    }
+
+    public function edit($id)
+    {
+        $doc = SuretyDocument::findOrFail($id);
+        return view('suretydocuments.edit', compact('doc'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
+        $doc = SuretyDocument::findOrFail($id);
+
+        $request->validate([
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'total_expected_entries' => 'nullable|integer|min:1',
+            'total_amount' => 'nullable|numeric|min:0',
+        ]);
+
+        // Replace file if uploaded
+        if ($request->hasFile('file')) {
+
+            // delete old file
+            if ($doc->file_path && file_exists(storage_path('app/public/'.$doc->file_path))) {
+                unlink(storage_path('app/public/'.$doc->file_path));
+            }
+
+            $path = $request->file('file')->store('documents', 'public');
+
+            $doc->file_path = $path;
+            $doc->original_name = $request->file('file')->getClientOriginalName();
+            $doc->update([
+            'file_path' => $path,
+            'original_name' => $file->getClientOriginalName(),
+            ]);
+        }
+
+        $doc->update([
+            'uploaded_by' => auth()->id(),
+            'total_expected_entries' => $request->total_expected_entries,
+            'total_amount' => $request->total_amount,
+        ]);
+
+        return redirect()->route('suretydocuments.index')
+            ->with('success', 'Document updated successfully');
     }
 }

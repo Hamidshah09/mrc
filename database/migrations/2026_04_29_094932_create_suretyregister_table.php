@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('suretyregister', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('register_id');
-            $table->string('guarantaor_name', 80);
+            $table->unsignedBigInteger('register_id')->unique();
+            $table->string('guarantor_name', 80);
             $table->string('mobile_no', 15);
             $table->string('receipt_no', 50);
-            $table->date('reciving_date');
-            $table->date('releasing_date');
+            $table->date('receiving_date');
+            $table->date('releasing_date')->nullable();
             $table->unsignedInteger('police_station_id');
             $table->string('section_of_law', 50);
             $table->string('accused_name', 80);

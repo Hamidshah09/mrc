@@ -9,16 +9,18 @@ class SuretyRegister extends Model
     protected $table = 'suretyregister';
     protected $fillable = [
         'register_id',
-        'guarantaor_name',
+        'guarantor_name',
         'mobile_no',
         'receipt_no',
-        'receipt_date',
+        'receiving_date',
         'police_station_id',
         'section_of_law',
         'accused_name',
         'amount',
         'surety_type_id',
         'surety_status_id',
+        'user_id',
+        'document_id'
     ];
 
     public function suretyType()
@@ -34,5 +36,10 @@ class SuretyRegister extends Model
     public function policeStation()
     {
         return $this->belongsTo(PoliceStation::class, 'police_station_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -11,6 +11,7 @@ use App\Models\SuretyStatus;
 use App\Models\SuretyDocument;
 use App\Models\PoliceStation;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class suretyController extends Controller
 {
@@ -22,7 +23,7 @@ class suretyController extends Controller
             $q = $request->search;
             $query->where(function ($wr) use ($q) {
                 $wr->where('register_id', 'like', "%{$q}%")
-                   ->orWhere('guarantaor_name', 'like', "%{$q}%");
+                   ->orWhere('guarantor_name', 'like', "%{$q}%");
             });
         }
 
@@ -39,17 +40,17 @@ class suretyController extends Controller
         }
 
         if ($request->filled('from')) {
-            $query->whereDate('receipt_date', '>=', $request->from);
+            $query->whereDate('receiving_date', '>=', $request->from);
         }
         if ($request->filled('to')) {
-            $query->whereDate('receipt_date', '<=', $request->to);
+            $query->whereDate('receiving_date', '<=', $request->to);
         }
 
         $records = $query->orderBy('register_id', 'desc')->paginate(15)->withQueryString();
 
         $policeStations = PoliceStation::all();
         $suretyTypes = SuretyType::all();
-
+        $surityStatuses = SuretyStatus::all();
         return view('surety.index', compact('records', 'surityStatuses', 'policeStations', 'suretyTypes'));
     }
 
@@ -61,20 +62,23 @@ class suretyController extends Controller
         if ($doc->locked_by !== auth()->id()) {
             abort(403, 'Unauthorized');
         }
+
+        if ($doc->status == 'completed') {
+            return redirect()->route('suretydocuments.index')->with('error', 'This document is already completed.');
+        }   
         $suretyTypes = SuretyType::all();
-        $surityStatuses = SuretyStatus::all();
         $policeStations = PoliceStation::all();
-        return view('surety.create', compact('surityStatuses', 'suretyTypes', 'policeStations', 'doc'));
+        return view('surety.create', compact('suretyTypes', 'policeStations', 'doc'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'register_id' => 'required|integer',
-            'guarantaor_name' => 'required|string|max:80',
+            'register_id' => 'required|integer|unique:suretyregister,register_id',
+            'guarantor_name' => 'required|string|max:80',
             'mobile_no' => 'required|string|max:15',
             'receipt_no' => 'required|string|max:50',
-            'reciving_date' => 'required|date',
+            'receiving_date' => 'required|date',
             'police_station_id' => 'required|integer',
             'section_of_law' => 'required|string|max:50',
             'accused_name' => 'required|string|max:80',
@@ -93,10 +97,10 @@ class suretyController extends Controller
         // ✅ Create record
         $surety = SuretyRegister::create([
             'register_id' => $request->register_id,
-            'guarantaor_name' => $request->guarantaor_name,
+            'guarantor_name' => $request->guarantor_name,
             'mobile_no' => $request->mobile_no,
             'receipt_no' => $request->receipt_no,
-            'reciving_date' => $request->reciving_date,
+            'receiving_date' => $request->receiving_date,
             'releasing_date' => null, // hidden field
             'police_station_id' => $request->police_station_id,
             'section_of_law' => $request->section_of_law,
@@ -107,6 +111,11 @@ class suretyController extends Controller
             'user_id' => auth()->id(),
             'document_id' => $request->document_id,
         ]);
+        SuretyHistory::create([
+            'surety_id' => $surety->id,
+            'status_id' => 1, // "Received"
+            'updated_by' => auth()->id(),
+        ]);
 
         // 📊 Update progress
         $doc->increment('entered_entries');
@@ -115,14 +124,39 @@ class suretyController extends Controller
         if ($doc->total_expected_entries &&
             $doc->entered_entries >= $doc->total_expected_entries) {
 
+            $totalAmount = SuretyRegister::where('document_id', $doc->id)
+            ->sum('amount');
+
+        if ($doc->total_amount != $totalAmount) {
+
             $doc->update([
-                'status' => 'completed',
-                'locked_by' => null,
-                'locked_at' => null,
+                'status' => 'audit failed'
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'entered' => $doc->entered_entries,
+                'total' => $doc->total_expected_entries,
+                'audit' => 'failed',
+                'message' => 'Amount mismatch detected'
             ]);
         }
 
-        return back()->with('success', 'Record saved successfully.');
+        // ✅ If correct
+        $doc->update([
+            'status' => 'completed',
+            'locked_by' => null,
+            'locked_at' => null,
+        ]);
+
+
+        }
+
+        return response()->json([
+            'success' => true,
+            'entered' => $doc->entered_entries,
+            'total' => $doc->total_expected_entries
+        ]);
     }
 
     public function edit($id)
@@ -138,10 +172,10 @@ class suretyController extends Controller
     {
         $request->validate([
             'register_id' => 'required|integer',
-            'guarantaor_name' => 'required|string|max:80',
+            'guarantor_name' => 'required|string|max:80',
             'mobile_no' => 'required|string|max:15',
             'receipt_no' => 'required|string|max:50',
-            'receipt_date' => 'required|date',
+            'receiving_date' => 'required|date',
             'police_station_id' => 'required|integer',
             'section_of_law' => 'required|string|max:50',
             'accused_name' => 'required|string|max:80',
@@ -163,11 +197,11 @@ class suretyController extends Controller
     {
         $request->validate([
             'surety_status_id' => 'required|integer',
-                'manual_date' => 'required|date',
+                'releasing_date' => 'required|date',
         ]);
 
         $record = SuretyRegister::findOrFail($id);
-        $record->update(['surety_status_id' => $request->surety_status_id]);
+        $record->update(['surety_status_id' => $request->surety_status_id, 'releasing_date' => $request->releasing_date]);
 
         $history = SuretyHistory::create([
             'surety_id' => $record->id,
@@ -175,26 +209,21 @@ class suretyController extends Controller
             'updated_by' => auth()->id(),
         ]);
 
-            $manual = Carbon::parse($request->input('manual_date'));
-            $history->created_at = $manual;
-            $history->updated_at = $manual;
-            $history->save();
-
         return redirect()->route('surety.index')->with('success', 'Surety status updated successfully.');
     }
 
     public function dashboard(Request $request)
     {
-        // Default date range: use request values if provided, otherwise use min/max receipt_date from records
-        $minDate = SuretyRegister::min('receipt_date');
-        $maxDate = SuretyRegister::max('receipt_date');
+        // Default date range: use request values if provided, otherwise use min/max receiving_date from records
+        $minDate = SuretyRegister::min('receiving_date');
+        $maxDate = SuretyRegister::max('receiving_date');
 
         $from = $request->input('from') ?? ($minDate ? Carbon::parse($minDate)->format('Y-m-d') : now()->subMonth()->format('Y-m-d'));
         $to = $request->input('to') ?? ($maxDate ? Carbon::parse($maxDate)->format('Y-m-d') : now()->format('Y-m-d'));
         $status = $request->input('status');
 
-        $query = SuretyRegister::whereDate('receipt_date', '>=', $from)
-            ->whereDate('receipt_date', '<=', $to);
+        $query = SuretyRegister::whereDate('receiving_date', '>=', $from)
+            ->whereDate('receiving_date', '<=', $to);
 
         if ($status) {
             $query->where('surety_status_id', $status);
@@ -218,10 +247,10 @@ class suretyController extends Controller
         })->toArray();
         $pieData = $typeCounts->pluck('total')->toArray();
 
-        $daily = SuretyRegister::whereDate('receipt_date', '>=', $from)
-            ->whereDate('receipt_date', '<=', $to)
+        $daily = SuretyRegister::whereDate('receiving_date', '>=', $from)
+            ->whereDate('receiving_date', '<=', $to)
             ->when($status, function ($q) use ($status) { return $q->where('surety_status_id', $status); })
-            ->select(\DB::raw('DATE(receipt_date) as date'), \DB::raw('count(*) as total'))
+            ->select(\DB::raw('DATE(receiving_date) as date'), \DB::raw('count(*) as total'))
             ->groupBy('date')
             ->orderBy('date')
             ->get();
@@ -267,5 +296,18 @@ class suretyController extends Controller
         $statuses = SuretyStatus::pluck('status_name', 'id');
 
         return view('surety.show', compact('record', 'history', 'statuses'));
+    }
+    public function fetchByRegisterId($register_id)
+    {
+        $record = DB::table('suretyregisterold')->where('register_id', $register_id)->first();
+
+        if (!$record) {
+            return response()->json(['found' => false]);
+        }
+
+        return response()->json([
+            'found' => true,
+            'data' => $record
+        ]);
     }
 }

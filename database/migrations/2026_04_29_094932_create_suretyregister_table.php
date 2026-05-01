@@ -17,13 +17,16 @@ return new class extends Migration
             $table->string('guarantaor_name', 80);
             $table->string('mobile_no', 15);
             $table->string('receipt_no', 50);
-            $table->date('receipt_date');
+            $table->date('reciving_date');
+            $table->date('releasing_date');
             $table->unsignedInteger('police_station_id');
             $table->string('section_of_law', 50);
             $table->string('accused_name', 80);
             $table->unsignedInteger('amount');
             $table->unsignedInteger('surety_type_id');
             $table->unsignedInteger('surety_status_id');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('document_id')->constrained('suretydocuments')->cascadeOnDelete();
             $table->timestamps();
         });
     }

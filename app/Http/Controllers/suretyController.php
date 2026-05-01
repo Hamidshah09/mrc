@@ -8,6 +8,7 @@ use App\Models\SuretyRegister;
 use App\Models\SuretyHistory;
 use App\Models\SuretyType;
 use App\Models\SuretyStatus;
+use App\Models\SuretyDocument;
 use App\Models\PoliceStation;
 use App\Models\User;
 
@@ -46,19 +47,24 @@ class suretyController extends Controller
 
         $records = $query->orderBy('register_id', 'desc')->paginate(15)->withQueryString();
 
-        $surityStatuses = SuretyStatus::all();
         $policeStations = PoliceStation::all();
         $suretyTypes = SuretyType::all();
 
         return view('surety.index', compact('records', 'surityStatuses', 'policeStations', 'suretyTypes'));
     }
 
-    public function create()
+    public function create($id)
     {
+         $doc = SuretyDocument::findOrFail($id);
+
+        // امنیت: only locker can access
+        if ($doc->locked_by !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
         $suretyTypes = SuretyType::all();
         $surityStatuses = SuretyStatus::all();
         $policeStations = PoliceStation::all();
-        return view('surety.create', compact('surityStatuses', 'suretyTypes', 'policeStations'));
+        return view('surety.create', compact('surityStatuses', 'suretyTypes', 'policeStations', 'doc'));
     }
 
     public function store(Request $request)
@@ -68,21 +74,55 @@ class suretyController extends Controller
             'guarantaor_name' => 'required|string|max:80',
             'mobile_no' => 'required|string|max:15',
             'receipt_no' => 'required|string|max:50',
-            'receipt_date' => 'required|date',
+            'reciving_date' => 'required|date',
             'police_station_id' => 'required|integer',
             'section_of_law' => 'required|string|max:50',
             'accused_name' => 'required|string|max:80',
             'amount' => 'required|integer',
             'surety_type_id' => 'required|integer',
-            'surety_status_id' => 'required|integer',
+            'document_id' => 'required|exists:suretydocuments,id',
         ]);
-        SuretyRegister::create($request->all());
-        SuretyHistory::create([
-            'surety_id' => $request->register_id,
-            'status_id' => $request->surety_status_id,
-            'updated_by' => auth()->id(),
+
+        // 🔒 Ensure document is locked by current user
+        $doc = SuretyDocument::findOrFail($request->document_id);
+
+        if ($doc->locked_by !== auth()->id()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        // ✅ Create record
+        $surety = SuretyRegister::create([
+            'register_id' => $request->register_id,
+            'guarantaor_name' => $request->guarantaor_name,
+            'mobile_no' => $request->mobile_no,
+            'receipt_no' => $request->receipt_no,
+            'reciving_date' => $request->reciving_date,
+            'releasing_date' => null, // hidden field
+            'police_station_id' => $request->police_station_id,
+            'section_of_law' => $request->section_of_law,
+            'accused_name' => $request->accused_name,
+            'amount' => $request->amount,
+            'surety_type_id' => $request->surety_type_id,
+            'surety_status_id' => 1, // default "Received"
+            'user_id' => auth()->id(),
+            'document_id' => $request->document_id,
         ]);
-        return redirect()->route('surety.index')->with('success', 'Surety record created successfully.');   
+
+        // 📊 Update progress
+        $doc->increment('entered_entries');
+
+        // ✅ Auto-complete document (smart behavior)
+        if ($doc->total_expected_entries &&
+            $doc->entered_entries >= $doc->total_expected_entries) {
+
+            $doc->update([
+                'status' => 'completed',
+                'locked_by' => null,
+                'locked_at' => null,
+            ]);
+        }
+
+        return back()->with('success', 'Record saved successfully.');
     }
 
     public function edit($id)
@@ -112,7 +152,7 @@ class suretyController extends Controller
         $record = SuretyRegister::findOrFail($id);
         $record->update($request->all());
         SuretyHistory::create([
-            'surety_id' => $record->register_id,
+            'surety_id' => $record->id,
             'status_id' => $request->surety_status_id,
             'updated_by' => auth()->id(),
         ]);
@@ -130,7 +170,7 @@ class suretyController extends Controller
         $record->update(['surety_status_id' => $request->surety_status_id]);
 
         $history = SuretyHistory::create([
-            'surety_id' => $record->register_id,
+            'surety_id' => $record->id,
             'status_id' => $request->surety_status_id,
             'updated_by' => auth()->id(),
         ]);
@@ -220,7 +260,7 @@ class suretyController extends Controller
         $record = SuretyRegister::with(['suretyType', 'suretyStatus', 'policeStation'])->findOrFail($id);
 
         $history = SuretyHistory::with(['status', 'updatedBy'])
-            ->where('surety_id', $record->register_id)
+            ->where('surety_id', $record->id)
             ->orderBy('created_at', 'desc')
             ->get();
 

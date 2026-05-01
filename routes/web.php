@@ -29,6 +29,7 @@ use App\Http\Controllers\DomicileCancellationController;
 use App\Http\Controllers\BlackListController;
 use App\Http\Controllers\VerificationLetterController;
 use App\Http\Controllers\suretyController;
+use App\Http\Controllers\SuretyDocumentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -211,12 +212,19 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:surety,admin')->group(function(){
         Route::get('/surety', [suretyController::class, 'index'])->name('surety.index');
         Route::get('/surety/dashboard', [suretyController::class, 'dashboard'])->name('surety.dashboard');
-        Route::get('/surety/create', [suretyController::class, 'create'])->name('surety.create');
+        // Route::get('/surety/create/{id}', [suretyController::class, 'create'])->name('surety.create');
         Route::post('/surety/store', [suretyController::class, 'store'])->name('surety.store');
         Route::get('/surety/show/{id}', [suretyController::class, 'show'])->name('surety.show');
         Route::get('/surety/edit/{id}', [suretyController::class, 'edit'])->name('surety.edit');
         Route::put('/surety/update/{id}', [suretyController::class, 'update'])->name('surety.update');
         Route::put('/surety/updatestatus/{id}', [suretyController::class, 'updatestatus'])->name('surety.updatestatus');
+
+        Route::get('/surety/documents/{id}/entry', [SuretyController::class, 'create'])
+            ->name('surety.create');
+        Route::get('/surety/documents', [SuretyDocumentController::class, 'index'])->name('suretydocuments.index');
+        Route::get('/surety/documents/create', [SuretyDocumentController::class, 'create'])->name('suretydocuments.create');
+        Route::post('/surety/documents/store', [SuretyDocumentController::class, 'store'])->name('suretydocuments.store');
+        Route::post('/surety/documents/{id}/lock', [SuretyDocumentController::class, 'lock'])->name('suretydocuments.lock');
     });
     Route::middleware('role:admin,domicile,idp,arms')->group(function(){
         Route::get('/statistics/pdf-report', [StatisticsController::class, 'pdf_report'])->name('statistics.pdf');

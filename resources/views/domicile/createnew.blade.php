@@ -25,13 +25,13 @@
                             
                             <div class="form-control">
                                 <x-input-label for="cnic" :value="__('CNIC')" />
-                                <x-text-input id="cnic" class="block mt-1 w-full p-2" type="text" name="cnic" maxlength="13" :value="old('cnic')" required autofocus autocomplete="cnic" />
+                                <x-text-input id="cnic" placeholder="13 digit CNIC No without dashes" class="block mt-1 w-full p-2" type="text" name="cnic" maxlength="13" :value="old('cnic')" required autofocus autocomplete="cnic" />
                                 <x-input-error :messages="$errors->get('cnic')" class="mt-2" />
                             </div>
         
                             <div class="form-control">
                                 <x-input-label for="name" :value="__('Name')" />
-                                <x-text-input id="name" class="block mt-1 w-full p-2" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                                <x-text-input id="name" placeholder="Name of the domicile applicant" class="block mt-1 w-full p-2" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
                                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
                             </div>
 
@@ -43,7 +43,7 @@
 
                             <div class="form-control">
                                 <x-input-label for="spousename" :value="__('Spouse Name')" />
-                                <x-text-input id="spousename" class="block mt-1 w-full p-2" type="text" name="spousename" :value="old('spousename')" required autofocus autocomplete="spousename" />
+                                <x-text-input id="spousename" placeholder="type nill if unmarried" class="block mt-1 w-full p-2" type="text" name="spousename" :value="old('spousename')" required autofocus autocomplete="spousename" />
                                 <x-input-error :messages="$errors->get('spousename')" class="mt-2" />
                             </div>
 
@@ -66,7 +66,7 @@
 
                             <div class="form-control">
                                 <x-input-label for="place_of_birth" :value="__('City of Birth')" />
-                                <x-text-input id="place_of_birth" class="block mt-1 w-full p-2" type="text" name="place_of_birth" :value="old('place_of_birth')" max="45" required autofocus autocomplete="place_of_birth" />
+                                <x-text-input id="place_of_birth" placeholder="name of the city only" class="block mt-1 w-full p-2" type="text" name="place_of_birth" :value="old('place_of_birth')" max="45" required autofocus autocomplete="place_of_birth" />
                                 <x-input-error :messages="$errors->get('place_of_birth')" class="mt-2" />
                             </div>
 
@@ -242,7 +242,7 @@
                             </div>
                             <div class="form-control">
                                 <x-input-label for="passcode" :value="__('Please write down this Passcode')" class="text-red-500" />
-                                <x-text-input id="passcode" class="block mt-1 w-full p-2" type="text" name="passcode" :value="old('passcode', $passcode->code)" min="6" max=6 autofocus autocomplete="passcode" />
+                                <x-text-input id="passcode" readonly class="block mt-1 w-full p-2" type="text" name="passcode" :value="old('passcode', $passcode->code)" min="6" max=6 autofocus autocomplete="passcode" />
                                 <x-input-error :messages="$errors->get('passcode')" class="mt-2" />
                             </div>
                         </div>

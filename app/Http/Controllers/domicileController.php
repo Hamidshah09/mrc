@@ -22,8 +22,32 @@ use Illuminate\Support\Facades\Log;
 
 class domicileController extends Controller
 {   
-    public function admin_index(){
-        $records = DomicileApplicants::select('id', 'name', 'passcode')->orderBy('id', 'desc')->paginate(25);
+    public function admin_index(Request $request){
+        $query = DomicileApplicants::select('id', 'name', 'passcode')->orderBy('id', 'desc');
+
+        if ($request->filled('search')) {
+            $q = $request->search;
+            $query->where(function($wr) use ($q) {
+                $wr->where('name', 'like', "%{$q}%")
+                   ->orWhere('cnic', 'like', "%{$q}%")
+                   ->orWhere('id', $q);
+            });
+        }
+
+        if ($request->filled('passcode')) {
+            $query->where('passcode', 'like', "%{$request->passcode}%");
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $records = $query->paginate(25)->appends($request->query());
+
         return view('domicile.adminindex', compact('records'));
     }
     public function dom_index(){

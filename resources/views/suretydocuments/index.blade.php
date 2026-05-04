@@ -77,7 +77,9 @@
                         <th class="px-4 py-2 text-left">Progress</th>
                         <th class="px-4 py-2 text-left">Amount</th>
                         <th class="px-4 py-2 text-left">Locked By</th>
+                        <th class="px-4 py-2 text-left">Document</th>
                         <th class="px-4 py-2 text-left">Action</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -85,6 +87,7 @@
                         <tr class="border-t">
                             <td class="px-4 py-2">{{ $doc->id }}</td>
                             <td class="px-4 py-2">{{ $doc->original_name }}</td>
+                            
 
                             <td class="px-4 py-2">
                                 <span class="px-2 py-1 text-xs rounded
@@ -119,7 +122,15 @@
                                     </span>
                                 @endif
                             </td>
-
+                            <td class="px-4 py-2">
+                                @if($doc->file_path)
+                                    <a href="{{ asset('storage/'.$doc->file_path) }}" target="_blank" rel="noopener">
+                                        <x-icons.image class="w-5 h-5 text-blue-600 hover:text-blue-900" />
+                                    </a>
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td class="flex items-center px-4 py-2">
                                 <form method="POST" action="{{ route('suretydocuments.lock', $doc->id) }}">
                                     @csrf

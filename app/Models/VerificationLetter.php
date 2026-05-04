@@ -19,6 +19,10 @@ class VerificationLetter extends Model
         'Remarks',
     ];
     public function applicants(){
-        return $this->hasMany(VerificationLetterApplicant::class, 'Letter_ID', 'Letter_ID');
+        return $this->hasMany(VerificationLetterApplicants::class, 'Letter_ID', 'Letter_ID');
+    }
+
+    public function dispatchDiary(){
+        return $this->hasOne(DispatchDiary::class, 'Letter_ID', 'Letter_ID')->where('Letter_Type', 'Verification Letter');
     }
 }

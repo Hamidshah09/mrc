@@ -60,7 +60,7 @@ class VerificationLetterController extends Controller
                     continue;
                 }
 
-                VerificationLetterApplicant::create([
+                VerificationLetterApplicants::create([
                     'Letter_ID' => $letterId,
                     'Applicant_Name' => $app['Applicant_Name'] ?? null,
                     'CNIC' => $app['CNIC'] ?? null,
@@ -78,7 +78,7 @@ class VerificationLetterController extends Controller
 
     public function index(Request $request)
     {
-        $letters = VerificationLetter::with('applicants', 'dispatchDiary')->orderBy('Letter_ID', 'desc')->get();
+        $letters = VerificationLetter::with('applicants', 'dispatchDiary')->orderBy('Letter_ID', 'desc')->paginate(10);
         return view('domicile-verification.index', compact('letters'));
     }
     public function edit($id)

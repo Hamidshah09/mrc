@@ -30,10 +30,12 @@ return new class extends Migration
                 'uploaded',     // just uploaded
                 'processing',   // currently being worked on
                 'completed',    // fully digitized
-                'audit failed'
+                'audit failed', // failed quality check
+                'audit ok'      // passed quality check
             ])->default('uploaded');
 
             // Optional metadata
+            $table->string('serials', 100)->nullable();
             $table->unsignedInteger('total_amount')->nullable(); // e.g. total amount in the document
             $table->integer('total_expected_entries')->nullable(); // e.g. 20+ entries
             $table->integer('entered_entries')->default(0);

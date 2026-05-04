@@ -20,6 +20,13 @@
                        value="{{ $doc->total_expected_entries }}"
                        class="w-full border rounded px-3 py-2">
             </div>
+            
+            <div class="mb-4">
+                <label>Serials</label>
+                <input type="text" name="serials"
+                       value="{{ $doc->serials }}"
+                       class="w-full border rounded px-3 py-2">
+            </div>
 
             <div class="mb-4">
                 <label>Total Amount</label>

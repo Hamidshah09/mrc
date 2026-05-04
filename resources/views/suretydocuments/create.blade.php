@@ -22,6 +22,12 @@
             </div>
 
             <div>
+                <label class="block text-sm font-medium text-gray-700">Serials</label>
+                <input type="text" name="serials" placeholder="e.g. 1560 - 1670"
+                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+            </div>
+
+            <div>
                 <label class="block text-sm font-medium text-gray-700">Expected Entries</label>
                 <input type="number" name="total_expected_entries"
                     class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">

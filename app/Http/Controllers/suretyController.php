@@ -304,7 +304,7 @@ class suretyController extends Controller
         return view('surety.dashboard', compact('totalAmount', 'pieLabels', 'pieData', 
                                                 'dailyLabels', 'dailyData', 'from', 'to', 'status',
                                                  'surityStatuses', 'userLabels', 'userData', 
-                                                 'matchedRecords', 'totalRecords', 'firstRecord', 'amountLabels', 'amountData', 'todayCount', 'completedCount'));
+                                                 'matchedRecords', 'totalRecords', 'firstRecord', 'amountLabels', 'amountData', 'todayCount', 'completedCount'j));
     }
 
     public function show($id)

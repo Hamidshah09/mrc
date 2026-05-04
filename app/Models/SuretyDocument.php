@@ -32,4 +32,6 @@ class SuretyDocument extends Model
     {
         return $this->hasMany(SuretyRegister::class);
     }
+
+    
 }

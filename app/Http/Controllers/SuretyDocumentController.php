@@ -11,7 +11,8 @@ class SuretyDocumentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = SuretyDocument::with('locker');
+        // eager-load locker and sum of related records' amounts to avoid N+1 queries
+        $query = SuretyDocument::with('locker')->withSum('records', 'amount');
 
         // Status filter
         if ($request->filled('status')) {

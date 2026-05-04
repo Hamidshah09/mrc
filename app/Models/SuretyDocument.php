@@ -15,7 +15,8 @@ class SuretyDocument extends Model
         'locked_at',
         'status',
         'total_expected_entries',
-        'entered_entries'
+        'entered_entries',
+        'total_amount'
     ];
 
     public function uploader()
@@ -30,8 +31,19 @@ class SuretyDocument extends Model
 
     public function records()
     {
-        return $this->hasMany(SuretyRegister::class);
+        return $this->hasMany(SuretyRegister::class, 'document_id');
     }
 
-    
+    /**
+     * Sum of amounts from related SuretyRegister records.
+     * Uses the eager-loaded `records_sum_amount` when present to avoid N+1 queries.
+     */
+    public function getTotalAmountSoFarAttribute()
+    {
+        if (array_key_exists('records_sum_amount', $this->attributes)) {
+            return $this->attributes['records_sum_amount'];
+        }
+
+        return $this->records()->sum('amount');
+    }
 }

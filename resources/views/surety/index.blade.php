@@ -22,10 +22,12 @@
         <!-- Filters -->
         <div class="w-full">
             <form action="" class="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0 mb-4 w-full">
-                  <input type="text" name="search" placeholder="Search by Register ID or Guarantor Name"
+                <input type="text" name="search" placeholder="Search by Register ID or Guarantor Name"
                       class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3 lg:w-1/2"
                       value="{{ request('search') }}">
-
+                <input type="text" name="document_id"
+                    class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3"
+                    value="{{ request('document_id') }}" placeholder="Document ID">
                 <select name="surety_type_id"
                         class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
                     <option value="">All Types</option>
@@ -42,23 +44,15 @@
                     @endforeach
                 </select>
 
-                <select name="status"
-                        class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
-                    <option value="">All Statuses</option>
-                    @foreach($surityStatuses as $s)
-                        <option value="{{ $s->id }}" {{ request('status') == $s->id ? 'selected' : '' }}>{{ $s->status_name ?? $s->name }}</option>
-                    @endforeach
-                </select>
+                <label for="from">From</label>
+                <input type="date" name="from"
+                    class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3"
+                    value="{{ request('from') }}">
 
-                  <label for="from">From</label>
-                  <input type="date" name="from"
-                      class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3"
-                      value="{{ request('from') }}">
-
-                  <label for="to">To</label>
-                  <input type="date" name="to"
-                      class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3"
-                      value="{{ request('to') }}">
+                <label for="to">To</label>
+                <input type="date" name="to"
+                    class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3"
+                    value="{{ request('to') }}">
 
                 <button type="submit"
                         class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">
@@ -90,13 +84,13 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Register ID</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Guarantor</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Mobile</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Receipt No</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Receiving Date</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Accused</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Document ID</th>
                         <th class="px-6 py-3 text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Type</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">User</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
@@ -105,14 +99,13 @@
                         <tr class="hover:bg-gray-50 transition-colors duration-200">
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->register_id }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->guarantor_name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->mobile_no }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->receipt_no }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ optional($record->receiving_date)->format('Y-m-d') ?? $record->receiving_date }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->accused_name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->document_id }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800 text-right">{{ number_format($record->amount, 0) }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ optional($record->suretyType)->name ?? $record->surety_type_id }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ optional($record->suretyStatus)->status_name ?? optional($record->suretyStatus)->name ?? $record->surety_status_id }}</td>
-
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ optional($record->user)->name ?? $record->user_id }}</td>
                             <td class="px-6 py-4 text-sm">
                                 <div x-data="{ open: false }" class="relative">
                                     <div class="flex items-center space-x-2">

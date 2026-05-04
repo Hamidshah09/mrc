@@ -31,8 +31,8 @@ class suretyController extends Controller
             $query->where('surety_status_id', $request->status);
         }
 
-        if ($request->filled('police_station_id')) {
-            $query->where('police_station_id', $request->police_station_id);
+        if ($request->filled('document_id')) {
+            $query->where('document_id', $request->document_id);
         }
 
         if ($request->filled('surety_type_id')) {

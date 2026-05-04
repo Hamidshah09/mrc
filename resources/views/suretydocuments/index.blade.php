@@ -71,9 +71,11 @@
             <table class="min-w-full border border-gray-200">
                 <thead class="bg-gray-100">
                     <tr>
+                        <th class="px-4 py-2 text-left">Document ID</th>
                         <th class="px-4 py-2 text-left">File</th>
                         <th class="px-4 py-2 text-left">Status</th>
                         <th class="px-4 py-2 text-left">Progress</th>
+                        <th class="px-4 py-2 text-left">Amount</th>
                         <th class="px-4 py-2 text-left">Locked By</th>
                         <th class="px-4 py-2 text-left">Action</th>
                     </tr>
@@ -81,6 +83,7 @@
                 <tbody>
                     @forelse($documents as $doc)
                         <tr class="border-t">
+                            <td class="px-4 py-2">{{ $doc->id }}</td>
                             <td class="px-4 py-2">{{ $doc->original_name }}</td>
 
                             <td class="px-4 py-2">
@@ -91,9 +94,11 @@
                                     {{ ucfirst($doc->status) }}
                                 </span>
                             </td>
-
                             <td class="px-4 py-2">
                                 {{ $doc->entered_entries }} / {{ $doc->total_expected_entries ?? '-' }}
+                            </td>
+                            <td class="px-4 py-2">
+                                {{ $doc->total_amount_so_far ?? '-' }} / {{ $doc->total_amount ?? '-' }}
                             </td>
                             <td class="px-4 py-2">
                                 @if($doc->locked_by)

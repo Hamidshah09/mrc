@@ -22,8 +22,14 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700">Expected Entries (optional)</label>
+                <label class="block text-sm font-medium text-gray-700">Expected Entries</label>
                 <input type="number" name="total_expected_entries"
+                    class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Expected Amount</label>
+                <input type="number" name="total_amount"
                     class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
             </div>
 

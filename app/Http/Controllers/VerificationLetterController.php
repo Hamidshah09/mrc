@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\VerificationLetter;
-use App\Models\VerificationLetterApplicant;
+use App\Models\VerificationLetterApplicants;
 use App\Models\DispatchDiary;
 class VerificationLetterController extends Controller
 {
@@ -109,7 +109,7 @@ class VerificationLetterController extends Controller
         $applicants = $request->input('applicants', []);
 
         // existing applicant IDs
-        $existingIds = VerificationLetterApplicant::where('Letter_ID', $id)->pluck('App_ID')->map(function($v){ return (int)$v; })->toArray();
+        $existingIds = VerificationLetterApplicants::where('Letter_ID', $id)->pluck('App_ID')->map(function($v){ return (int)$v; })->toArray();
 
         $incomingIds = [];
         if (is_array($applicants) && count($applicants) > 0) {
@@ -125,7 +125,7 @@ class VerificationLetterController extends Controller
         // delete applicants removed on frontend
         $toDelete = array_diff($existingIds, $incomingIds);
         if (!empty($toDelete)){
-            VerificationLetterApplicant::whereIn('App_ID', $toDelete)->delete();
+            VerificationLetterApplicants::whereIn('App_ID', $toDelete)->delete();
         }
 
         // process incoming: update existing, create new
@@ -146,9 +146,9 @@ class VerificationLetterController extends Controller
                 ];
 
                 if ($appId > 0) {
-                    VerificationLetterApplicant::where('App_ID', $appId)->update($data);
+                    VerificationLetterApplicants::where('App_ID', $appId)->update($data);
                 } else {
-                    VerificationLetterApplicant::create($data);
+                    VerificationLetterApplicants::create($data);
                 }
             }
         }
@@ -159,6 +159,6 @@ class VerificationLetterController extends Controller
             return redirect()->route('domicile-verification.index')->withErrors(['notfound' => 'Letter not found']);
         }
         $pdf = \PDF::loadView('domicile-verification.letter', compact('letter'));
-        return $pdf->download('Verification_Letter_'.$letter->Letter_ID.'.pdf');
+        return $pdf->stream('Verification_Letter_'.$letter->Letter_ID.'.pdf');
     }
 }

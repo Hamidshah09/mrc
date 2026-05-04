@@ -59,7 +59,7 @@ class suretyController extends Controller
          $doc = SuretyDocument::findOrFail($id);
 
         // امنیت: only locker can access
-        if ($doc->locked_by !== auth()->id() or auth()->user()->role !== 'admin') {
+        if ($doc->locked_by !== auth()->id()) {
             abort(403, 'Unauthorized');
         }
 

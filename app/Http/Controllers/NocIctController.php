@@ -197,6 +197,7 @@ class NocIctController extends Controller
             return redirect()->route('noc-ict.index')->withErrors(['notfound' => 'Letter not found']);
         }
         $pdf = \PDF::loadView('nocict.letter', compact('letter'));
-        return $pdf->download('NOC_ICT_Letter_'.$letter->Letter_ID.'.pdf');
+        // stream the PDF so it opens in the browser instead of forcing a download
+        return $pdf->stream('NOC_ICT_Letter_'.$letter->Letter_ID.'.pdf');
     }
 }

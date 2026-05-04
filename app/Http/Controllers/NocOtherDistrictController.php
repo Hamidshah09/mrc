@@ -211,6 +211,6 @@ class NocOtherDistrictController extends Controller
         }
         $pdf = \PDF::loadView('nocotherdistrict.letter', compact('letter'));
         // return view('nocotherdistrict.letter', compact('letter'));
-        return $pdf->download('NOC_Other_District_Letter_'.$letter->Letter_ID.'.pdf');
+        return $pdf->stream('NOC_Other_District_Letter_'.$letter->Letter_ID.'.pdf');
     }
 }

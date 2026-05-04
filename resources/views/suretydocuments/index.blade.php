@@ -73,6 +73,7 @@
                     <tr>
                         <th class="px-4 py-2 text-left">Document ID</th>
                         <th class="px-4 py-2 text-left">File</th>
+                        <th class="px-4 py-2 text-left">Serials</th>
                         <th class="px-4 py-2 text-left">Status</th>
                         <th class="px-4 py-2 text-left">Progress</th>
                         <th class="px-4 py-2 text-left">Amount</th>
@@ -87,7 +88,7 @@
                         <tr class="border-t">
                             <td class="px-4 py-2">{{ $doc->id }}</td>
                             <td class="px-4 py-2">{{ $doc->original_name }}</td>
-                            
+                            <td class="px-4 py-2">{{ $doc->serials ?? '-' }}</td>
 
                             <td class="px-4 py-2">
                                 <span class="px-2 py-1 text-xs rounded

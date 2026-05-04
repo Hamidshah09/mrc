@@ -53,6 +53,7 @@ class SuretyDocumentController extends Controller
             'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'total_expected_entries' => 'nullable|integer|min:1',
             'total_amount' => 'nullable|integer|min:0',
+            'status' => 'nullable|string|in:uploaded,processing,completed,audit failed,audit ok',
         ]);
 
         $file = $request->file('document');
@@ -65,7 +66,7 @@ class SuretyDocumentController extends Controller
             'uploaded_by' => auth()->id(),
             'total_expected_entries' => $request->total_expected_entries,
             'total_amount' => $request->total_amount,
-            'status' => 'uploaded'
+            'status' => $request->status ?? 'uploaded'
         ]);
 
         return redirect()->route('suretydocuments.index')->with('success', 'Document uploaded successfully.');
@@ -125,6 +126,7 @@ class SuretyDocumentController extends Controller
             'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'total_expected_entries' => 'nullable|integer|min:1',
             'total_amount' => 'nullable|numeric|min:0',
+            'status' => 'nullable|string|in:uploaded,processing,completed,audit failed,audit ok',
         ]);
 
         // Replace file if uploaded
@@ -149,6 +151,7 @@ class SuretyDocumentController extends Controller
             'uploaded_by' => auth()->id(),
             'total_expected_entries' => $request->total_expected_entries,
             'total_amount' => $request->total_amount,
+            'status' => $request->status,
         ]);
 
         return redirect()->route('suretydocuments.index')

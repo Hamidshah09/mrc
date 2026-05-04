@@ -33,6 +33,17 @@
                     class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Status</label>
+                <select name="status" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                    <option value="uploaded" selected>Uploaded</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                    <option value="audit failed">Audit Failed</option>
+                    <option value="audit ok">Audit Ok</option>
+                </select>
+            </div>
+
             <div class="flex justify-end space-x-3">
                 <a href="{{ route('suretydocuments.index') }}"
                    class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">

@@ -16,7 +16,9 @@ class SuretyDocument extends Model
         'status',
         'total_expected_entries',
         'entered_entries',
-        'total_amount'
+        'total_amount',
+        'serials',
+
     ];
 
     public function uploader()

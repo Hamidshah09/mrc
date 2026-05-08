@@ -62,7 +62,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->reason }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->user->name ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('domicile.cancellation.edit', $letter->black_list_id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                            <a href="{{ route('domicile.blacklist.edit', $letter->black_list_id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
                         </td>
                     </tr>
                 @empty

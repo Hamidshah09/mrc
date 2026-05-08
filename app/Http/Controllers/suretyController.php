@@ -228,9 +228,9 @@ class suretyController extends Controller
 
         $totalAmount = (clone $query)->sum('amount');
 
-        $todayCount = SuretyRegister::whereDate('receiving_date', today())->count();
+        $todayCount = SuretyDocument::where('total_expected_entries', '>', 0)->count();
 
-        $completedCount = SuretyRegister::where('surety_status_id', 2)->count(); // adjust ID
+        $completedCount = 0; // adjust ID
         
         if ($status) {
             $query->where('surety_status_id', $status);
@@ -289,6 +289,15 @@ class suretyController extends Controller
 
         $userData = $userCounts->pluck('total');
 
+        // Build a simple array of users with their totals for table display
+        $userPerformance = $userCounts->map(function ($u) use ($userNames) {
+            return [
+                'user_id' => $u->user_id,
+                'name' => $userNames[$u->user_id] ?? 'User '.$u->user_id,
+                'total' => $u->total,
+            ];
+        })->values()->toArray();
+
 
         $amountDaily = SuretyRegister::whereBetween('receiving_date', [$from, $to])
             ->select(DB::raw('DATE(receiving_date) as date'), DB::raw('SUM(amount) as total'))
@@ -300,9 +309,9 @@ class suretyController extends Controller
         $amountData = $amountDaily->pluck('total');
 
         return view('surety.dashboard', compact('totalAmount', 'pieLabels', 'pieData', 
-                                                'dailyLabels', 'dailyData', 'from', 'to', 'status',
-                                                 'surityStatuses', 'userLabels', 'userData', 
-                                                 'matchedRecords', 'totalRecords', 'firstRecord', 'amountLabels', 'amountData', 'todayCount', 'completedCount'));
+                            'dailyLabels', 'dailyData', 'from', 'to', 'status',
+                             'surityStatuses', 'userLabels', 'userData', 'userPerformance',
+                             'matchedRecords', 'totalRecords', 'firstRecord', 'amountLabels', 'amountData', 'todayCount', 'completedCount'));
     }
 
     public function show($id)

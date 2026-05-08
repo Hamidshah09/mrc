@@ -54,5 +54,31 @@ class BlackListController extends Controller
         return view('blacklist-domiciles.index', compact('blacklists'));
     }
 
+    public function edit($id)
+    {
+        $letter = BlackListDomicileApplications::findOrFail($id);
+        return view('blacklist-domiciles.edit', compact('letter'));
+     }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'cnic' => 'required|max:13|min:13',
+            'reason' => 'required|string|max:100',
+            'status' => 'required|in:blocked,unblocked',
+            'clearance_reason' => 'nullable|string|max:100',
+        ]);
+
+        $letter = BlackListDomicileApplications::findOrFail($id);
+        $letter->update($request->all());
+
+        if ($letter->status === 'unblocked') {
+            return redirect()->route('domicile.blacklist.index')->with('success', 'Applicant unblocked successfully.');
+        } else {
+            return redirect()->route('domicile.blacklist.index')->with('success', 'Applicant updated successfully.');
+        }
+
+    }
+
 
 }

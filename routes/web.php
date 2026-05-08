@@ -30,6 +30,9 @@ use App\Http\Controllers\BlackListController;
 use App\Http\Controllers\VerificationLetterController;
 use App\Http\Controllers\suretyController;
 use App\Http\Controllers\SuretyDocumentController;
+use App\Http\Controllers\PublicRequestsController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\CashRecordController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -65,8 +68,7 @@ Route::post('/idp/check', [idpController::class, 'check'])->name('idp.check');
 Route::post('/mrc/check', [MrcController::class, 'check'])->name('mrc.check');
 Route::post('/domicile/check', [domicileController::class, 'apiCheck'])->name('domicile.check');
 Route::get('/statistics/check', [domicileController::class, 'get_statistics'])->name('statistics.check');
-Route::get('/postalservice/create', [PostalServiceController::class, 'create'])->name('postalservice.create');
-Route::post('/postalservice/store', [PostalServiceController::class, 'store'])->name('postalservice.store');
+
 Route::get('/inactive', function () {
     return view('auth.inactive');
 })->name('inactive');
@@ -75,31 +77,34 @@ Route::controller(idpController::class)->group(function () {
     Route::get('/idp', 'index')->name('idp.index');
     Route::post('/idp/update/{id}', 'update')->name('idp.update');
 });
-Route::controller(domicileController::class)->group(function () {
-    Route::get('/domicile/noc/success/{id}', 'noc_success')->name('noc.success');
-    Route::get('/domicile/success/{id}/{cnic}', 'domicile_success')->name('domicile.success');        
-    Route::get('/domicile/noc', 'show_noc')->name('noc.show');
-    Route::get('/domicile/noc/create', 'create_noc')->name('noc.create');
-    Route::post('/domicile/noc/store', 'store_noc')->name('noc.store');
-    Route::get('/domicile', 'dom_index')->name('domicile.index');
-    Route::get('/domicile/tehsils', 'dom_tehsils')->name('domicile.tehsils');
-    Route::get('/domicile/districts', 'dom_districts')->name('domicile.districts');
-    
-    
-    Route::get('/domicile/info', function(){
-        return view('domicile.info');
-    })->name('domicile.info');
-    Route::get('/domicile/create', 'create_new')->name('domicile.create');
-    Route::post('/domicile/store', 'store_new')->name('domicile.store');
-    Route::get('/domicile/edit/{id}/{cnic}', 'dom_edit')->name('domicile.edit');
-    Route::post('/domicile/update/{id}', 'dom_update')->name('domicile.update');
-    Route::get('/domicile/show', 'show_domicile')->name('domicile.show');
-    Route::get('/domicile/form-p/{id}', 'form_p')->name('domicile.form_p');
+Route::get('/domicile/info', function(){
+            return view('domicile.info');
+        })->name('domicile.info');
+Route::controller(PublicRequestsController::class)->middleware('daily.limit')->group(function () {
+        Route::get('/public/domicile/create', 'create_domicile')->name('domicile.public.create');
+        Route::post('/public/domicile/store', 'store_domicile')->name('domicile.public.store');
+        Route::get('/public/domicile/noc-other-district/create', 'create_noc')->name('noc-other-district.public.create');
+        Route::post('/public/domicile/noc-other-district/store', 'store_noc')->name('noc-other-district.public.store');
+        Route::get('/public/domicile/noc-ict/create', 'create_noc_ict')->name('noc-ict.public.create');
+        Route::post('/public/domicile/noc-ict/store', 'store_noc_ict')->name('noc-ict.public.store');
+        Route::get('/public/domicile/index', 'index')->name('public.index');
+        
+        Route::get('/domicile/tehsils', 'dom_tehsils')->name('domicile.tehsils');
+        Route::get('/domicile/districts', 'dom_districts')->name('domicile.districts');
+        
+        
+        
+        
+        Route::get('/domicile/show', 'show_domicile')->name('domicile.show');
     });
 
 Route::middleware('auth')->group(function () {
-
-    Route::controller(OnlineApplicationController::class)->group(function(){
+    Route::get('/admin/daily-limit', [SettingController::class, 'index'])
+    ->name('daily.limit.index');
+    Route::post('/admin/daily-limit/update', [SettingController::class, 'update'])
+        ->name('daily.limit.update');
+    
+        Route::controller(OnlineApplicationController::class)->group(function(){
         Route::get('/dashboard', 'dashboard')->name('dashboard');
         Route::get('/hcg/noc-events/create', 'noc_events_create')->name('hcg.noc_events.create');
         Route::get('/hcg/noc-fuel/create', 'noc_fuel_create')->name('hcg.noc_fuel.create');
@@ -131,8 +136,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/postalservice/export/pdf-receiving', [PostalServiceExportController::class, 'exportPdfWithReceiving'])->name('postalservice.export.pdf_receiving');
     Route::post('/postalservice/export/pdf-envelope-labels', [PostalServiceExportController::class, 'exportEnvelopeLabels'])->name('postalservice.export.envelope_labels');
     
-    Route::get('/domicile/admin', [domicileController::class, 'admin_index'])->name('domicile.admin');
+    Route::get('/domicile/index', [domicileController::class, 'index'])->name('domicile.index');
+    Route::get('/domicile/create', [domicileController::class, 'create'])->name('domicile.create');
+    Route::post('/domicile/store', [domicileController::class, 'store'])->name('domicile.store');
+    Route::get('/domicile/edit/{id}', [domicileController::class, 'edit'])->name('domicile.edit');
+    Route::post('/domicile/update/{id}', [domicileController::class, 'update'])->name('domicile.update');
     Route::get('/domicile/form-p/{id}', [domicileController::class,'form_p'])->name('domicile.form_p');
+    
     Route::get('/domicile/noc-ict/create', [NocIctController::class, 'noc_ict_create'])->name('noc-ict.create');
     Route::post('/domicile/noc-ict/store', [NocIctController::class, 'noc_ict_store'])->name('noc-ict.store');
     Route::get('/domicile/noc-ict', [NocIctController::class, 'noc_ict_index'])->name('noc-ict.index');
@@ -160,19 +170,26 @@ Route::middleware('auth')->group(function () {
     Route::get('/domicile/blacklist/edit/{id}', [BlackListController::class, 'edit'])->name('domicile.blacklist.edit');
     Route::put('/domicile/blacklist/update/{id}', [BlackListController::class, 'update'])->name('domicile.blacklist.update');
     
-    Route::get('/domicile/verification-letter/create', [VerificationLetterController::class, 'create'])->name('domicile.verification_letter.create');
-    Route::post('/domicile/verification-letter/store', [VerificationLetterController::class, 'store'])->name('domicile.verification_letter.store');
-    Route::get('/domicile/verification-letter', [VerificationLetterController::class, 'index'])->name('domicile.verification_letter.index');
-    Route::get('/domicile/verification-letter/edit/{id}', [VerificationLetterController::class, 'edit'])->name('domicile.verification_letter.edit');
-    Route::put('/domicile/verification-letter/update/{id}', [VerificationLetterController::class, 'update'])->name('domicile.verification_letter.update');
-    Route::get('/domicile/verification-letter/letter/{id}', [VerificationLetterController::class, 'issueletter'])->name('domicile.verification_letter.letter');
-
-    Route::get('/admin/generate-passcodes/create', [AdminController::class, 'create'])->name('Passcode.create');
-    Route::post('/admin/generate-passcodes/store', [AdminController::class, 'store'])->name('Passcode.store');
-    Route::get('/admin/passcodes/gen-report', [AdminController::class, 'gen_report'])->name('Passcodes.gen_report');
-    Route::post('/admin/passcodes/report', [AdminController::class, 'report'])->name('Passcodes.report');
+    Route::get('/domicile/verification-letters/create', [VerificationLetterController::class, 'create'])->name('domicile.verification_letter.create');
+    Route::post('/domicile/verification-letters/store', [VerificationLetterController::class, 'store'])->name('domicile.verification_letter.store');
+    Route::get('/domicile/verification-letters', [VerificationLetterController::class, 'index'])->name('domicile.verification_letter.index');
+    Route::get('/domicile/verification-letters/edit/{id}', [VerificationLetterController::class, 'edit'])->name('domicile.verification_letter.edit');
+    Route::put('/domicile/verification-letters/update/{id}', [VerificationLetterController::class, 'update'])->name('domicile.verification_letter.update');
+    Route::get('/domicile/verification-letters/letter/{id}', [VerificationLetterController::class, 'issueletter'])->name('domicile.verification_letter.letter');
+    
+    
     Route::get('/admin/downloads', [AdminController::class, 'downloads'])->name('downloads');
 
+    Route::controller(CashRecordController::class)->group(function(){
+        Route::get('/cash-records', 'index')->name('cash-records.index');
+        Route::get('/cash-records/report/note-sheet', 'noteSheet')->name('cash-records.note_sheet');
+        Route::get('/cash-records/report/challan', 'challan')->name('cash-records.challan');
+        Route::get('/cash-records/create', 'create')->name('cash-records.create');
+        Route::post('/cash-records/store', 'store')->name('cash-records.store');
+        Route::get('/cash-records/edit/{id}', 'edit')->name('cash-records.edit');
+        Route::put('/cash-records/update/{id}', 'update')->name('cash-records.update');
+        Route::post('/cash-records/upload', 'upload')->name('cash-records.upload');
+    });
     Route::middleware('role:arms,admin')->group(function(){
         Route::get('/arms', [ArmsController::class, 'index'])->name('arms.index');
         Route::get('/arms/edit/{id}', [ArmsController::class, 'edit'])->name('arms.edit');

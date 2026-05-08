@@ -68,6 +68,11 @@
                     <input type="date" name="Domicile_Date"
                             class="mt-1 block w-full border-gray-300 rounded-md">
                 </div>
+                <div>
+                    <label class="text-sm font-medium">Remarks</label>
+                    <input type="text" name="remarks"
+                            class="mt-1 block w-full border-gray-300 rounded-md">
+                </div>
 
             </div>
 

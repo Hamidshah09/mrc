@@ -76,7 +76,12 @@
                             class="mt-1 block w-full border-gray-300 rounded-md"
                             value="{{ old('Domicile_Date', $letter->Domicile_Date) }}">
                 </div>
-
+                <div>
+                    <label class="text-sm font-medium">Remarks</label>
+                    <input type="text" name="remarks"
+                            class="mt-1 block w-full border-gray-300 rounded-md"
+                            value="{{ old('remarks', $letter->remarks) }}">
+                </div>
             </div>
 
             {{-- ACTION BUTTONS --}}

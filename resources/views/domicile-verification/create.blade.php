@@ -15,7 +15,7 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('domicile-verification.store') }}">
+        <form method="POST" action="{{ route('domicile.verification_letter.store') }}">
             @csrf
 
             {{-- LETTER INFORMATION --}}

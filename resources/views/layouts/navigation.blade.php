@@ -113,9 +113,8 @@
                             <div x-show="dropdown" @click.outside="dropdown = false"
                                 x-transition
                                 class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
-                                <a href="{{route('Passcode.create')}}" class="block px-4 py-2 hover:bg-gray-100">Generate Passcode</a>
-                                <a href="{{route('Passcodes.gen_report')}}" class="block px-4 py-2 hover:bg-gray-100">Passcode Report</a>
-                                <a href="{{route('domicile.admin')}}" class="block px-4 py-2 hover:bg-gray-100">Form P</a>
+                                <a href="{{route('daily.limit.index')}}" class="block px-4 py-2 hover:bg-gray-100">Daily Limit</a>
+                                <a href="{{route('domicile.index')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile Applications</a>
                                 <a href="{{route('downloads')}}" class="block px-4 py-2 hover:bg-gray-100">Downloads</a>
                                 <a href="{{route('noc-ict.index')}}" class="block px-4 py-2 hover:bg-gray-100">Noc for ICT</a>
                                 <a href="{{route('noc-other-district.index')}}" class="block px-4 py-2 hover:bg-gray-100">Noc Other District</a>
@@ -317,11 +316,11 @@
             </div>
         @endif
         @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'domicile')
-            {{-- <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('chatbot.questions')" :active="request()->routeIs('chatbot.questions')">
-                    {{ __('Pending Questions') }}
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('domicile.index')" :active="request()->routeIs('domicile.index')">
+                    {{ __('Domicile Applications') }}
                 </x-responsive-nav-link>
-            </div> --}}
+            </div>
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('noc-ict.index')" :active="request()->routeIs('noc-ict.index')">
                     {{ __('Noc for ICT') }}
@@ -348,13 +347,8 @@
                 </x-responsive-nav-link>
             </div>
             <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('Passcode.create')" :active="request()->routeIs('Passcode.create')">
-                    {{ __('Generate Passcode') }}
-                </x-responsive-nav-link>
-            </div>
-            <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('Passcodes.gen_report')" :active="request()->routeIs('Passcodes.gen_report')">
-                    {{ __('Passcode report') }}
+                <x-responsive-nav-link :href="route('daily.limit.index')" :active="request()->routeIs('daily.limit.index')">
+                    {{ __('Daily Limit') }}
                 </x-responsive-nav-link>
             </div>
             <div class="pt-2 pb-3 space-y-1">

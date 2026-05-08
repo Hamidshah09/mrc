@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Update Domicile') }}
@@ -30,21 +30,21 @@
                             </div>
         
                             <div class="form-control">
-                                <x-input-label for="name" :value="__('Name')" />
-                                <x-text-input id="name" class="block mt-1 w-full p-2" type="text" name="name" :value="old('name', $applicant->name)" required autofocus autocomplete="name" />
-                                <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                                <x-input-label for="first_name" :value="__('Applicant Name')" />
+                                <x-text-input id="first_name" class="block mt-1 w-full p-2" type="text" name="first_name" :value="old('first_name', $applicant->first_name)" required autofocus autocomplete="first_name" />
+                                <x-input-error :messages="$errors->get('first_name')" class="mt-2" />
                             </div>
 
                             <div class="form-control">
-                                <x-input-label for="fathername" :value="__('Father/Husband Name')" />
-                                <x-text-input id="fathername" class="block mt-1 w-full p-2" type="text" name="fathername" :value="old('fathername', $applicant->fathername)" required autofocus autocomplete="fathername" />
-                                <x-input-error :messages="$errors->get('fathername')" class="mt-2" />
+                                <x-input-label for="father_name" :value="__('Father/Husband Name')" />
+                                <x-text-input id="father_name" class="block mt-1 w-full p-2" type="text" name="father_name" :value="old('father_name', $applicant->father_name)" required autofocus autocomplete="father_name" />
+                                <x-input-error :messages="$errors->get('father_name')" class="mt-2" />
                             </div>
 
                             <div class="form-control">
-                                <x-input-label for="spousename" :value="__('Spouse Name')" />
-                                <x-text-input id="spousename" class="block mt-1 w-full p-2" type="text" name="spousename" :value="old('spousename', $applicant->spousename)" required autofocus autocomplete="spousename" />
-                                <x-input-error :messages="$errors->get('spousename')" class="mt-2" />
+                                <x-input-label for="spouse_name" :value="__('Spouse Name')" />
+                                <x-text-input id="spouse_name" class="block mt-1 w-full p-2" type="text" name="spouse_name" :value="old('spouse_name', $applicant->spouse_name)" required autofocus autocomplete="spouse_name" />
+                                <x-input-error :messages="$errors->get('spouse_name')" class="mt-2" />
                             </div>
 
                             <div class="form-control">
@@ -54,7 +54,7 @@
                             </div>
 
                             <div class="form-control">
-                                <x-input-label for="gender" :value="__('Gender')" />
+                                <x-input-label for="gender_id" :value="__('Gender')" />
                                 <select name="gender_id" id="gender_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('gender_id', $applicant->gender_id)" required autofocus autocomplete="gender">
                                     <option value="">Select Gender</option>
                                     @foreach ($genders as $gender)
@@ -64,7 +64,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <x-input-error :messages="$errors->get('gender')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('gender_id')" class="mt-2" />
                             </div>
 
                             <div class="form-control">
@@ -123,55 +123,55 @@
                                 <x-input-error :messages="$errors->get('contact')" class="mt-2" />
                             </div>
                             <div class="form-control">
-                                <x-input-label for="date_of_arrival" :value="__('Date of arrival in Islamabad')" />
-                                <x-text-input id="date_of_arrival" class="block mt-1 w-full p-2" type="date" name="date_of_arrival" :value="old('date_of_arrival', $applicant->date_of_arrival)" autofocus autocomplete="date_of_arrival" />
-                                <x-input-error :messages="$errors->get('date_of_arrival')" class="mt-2" />
+                                <x-input-label for="arrival_date" :value="__('Date of arrival in Islamabad')" />
+                                <x-text-input id="arrival_date" class="block mt-1 w-full p-2" type="date" name="arrival_date" :value="old('arrival_date', $applicant->arrival_date)" autofocus autocomplete="arrival_date" />
+                                <x-input-error :messages="$errors->get('arrival_date')" class="mt-2" />
                             </div>
                             <div class="form-control">
-                                <x-input-label for="temp_province_id" :value="__('Present Province')" />
-                                <select name="temporaryAddress_province_id" id="temp_province_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('temporaryAddress_province_id', $applicant->temporaryAddress_province_id)" required autofocus autocomplete="temp_province_id">
+                                <x-input-label for="present_province_id" :value="__('Present Province')" />
+                                <select name="present_province_id" id="present_province_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('present_province_id', $applicant->present_province_id)" required autofocus autocomplete="present_province_id">
                                     @foreach ($provinces as $province)
-                                        @if ($province->ID==$applicant->temporaryAddress_province_id)
+                                        @if ($province->ID==$applicant->present_province_id)
                                             <option value="{{$province->ID}}" selected>{{$province->Province}}</option>
                                         @else
                                             <option value="{{$province->ID}}">{{$province->Province}}</option>
                                         @endif    
                                     @endforeach
                                 </select>
-                                <x-input-error :messages="$errors->get('temporaryAddress_province_id')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('present_province_id')" class="mt-2" />
                             </div>
                             <div class="form-control">
-                                <x-input-label for="temp_district_id" :value="__('Present District')" />
-                                <select name="temporaryAddress_district_id" id="temp_district_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('temporaryAddress_district_id', $applicant->temporaryAddress_district_id)" required autofocus autocomplete="temp_district_id">
+                                <x-input-label for="present_district_id" :value="__('Present District')" />
+                                <select name="present_district_id" id="present_district_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('present_district_id', $applicant->present_district_id)" required autofocus autocomplete="present_district_id">
                                     <option value="" selected="" disabled="">Select District</option>
                                         @foreach ($districts as $district)
-                                            @if ($district->ID==$applicant->temporaryAddress_district_id)
-                                                <option selected value="{{$district->ID}}" >{{$district->Dis_Name}}</option>
+                                            @if ($district->id==$applicant->present_district_id)
+                                                <option selected value="{{$district->id}}" >{{$district->name}}</option>
                                             @else
-                                                <option value="{{$district->ID}}" >{{$district->Dis_Name}}</option>
+                                                <option value="{{$district->id}}" >{{$district->name}}</option>
                                             @endif
                                         @endforeach
                                 </select>
-                                <x-input-error :messages="$errors->get('temporaryAddress_district_id')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('present_district_id')" class="mt-2" />
                             </div>
                             <div class="form-control">
-                                <x-input-label for="temp_tehsil_id" :value="__('Present Tehsil')" />
-                                <select name="temporaryAddress_tehsil_id" id="temp_tehsil_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('temporaryAddress_tehsil_id', $applicant->temporaryAddress_tehsil_id)" required autofocus autocomplete="temp_tehsil_id">
+                                <x-input-label for="present_tehsil_id" :value="__('Present Tehsil')" />
+                                <select name="present_tehsil_id" id="present_tehsil_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('present_tehsil_id', $applicant->present_tehsil_id)" required autofocus autocomplete="present_tehsil_id">
                                     <option value="" selected="" disabled="">Select Tehsil</option>
                                     @foreach ($tehsils as $tehsil)
-                                        @if ($tehsil->ID==$applicant->temporaryAddress_tehsil_id)
-                                            <option selected value="{{$tehsil->ID}}" >{{$tehsil->Teh_name}}</option>
+                                        @if ($tehsil->id==$applicant->present_tehsil_id)
+                                            <option selected value="{{$tehsil->id}}" >{{$tehsil->name}}</option>
                                         @else
-                                            <option value="{{$tehsil->ID}}" >{{$tehsil->Teh_name}}</option>
+                                            <option value="{{$tehsil->id}}" >{{$tehsil->name}}</option>
                                         @endif
                                     @endforeach
                                 </select>
-                                <x-input-error :messages="$errors->get('temporaryAddress_tehsil_id')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('present_tehsil_id')" class="mt-2" />
                             </div>
                             <div class="form-control">
-                                <x-input-label for="temp_address" :value="__('Present Address')" />
-                                <x-text-input id="temp_address" class="block mt-1 w-full p-2" type="text" name="temporaryAddress" :value="old('temporaryAddress', $applicant->temporaryAddress)" required autofocus autocomplete="temporaryAddress" />
-                                <x-input-error :messages="$errors->get('temporaryAddress')" class="mt-2" />
+                                <x-input-label for="present_address" :value="__('Present Address')" />
+                                <x-text-input id="present_address" class="block mt-1 w-full p-2" type="text" name="present_address" :value="old('present_address', $applicant->present_address)" required autofocus autocomplete="present_address" />
+                                <x-input-error :messages="$errors->get('present_address')" class="mt-2" />
                             </div>
                             <div class="form-control">
                                 <label class="float-start">
@@ -182,50 +182,50 @@
                         
                             <div class="form-control">
                                 <x-input-label for="permanent_province_id" :value="__('Permanent Province')" />
-                                <select name="permanentAddress_province_id" id="permanent_province_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('permanentAddress_province_id', $applicant->permanentAddress_province_id)" required autofocus autocomplete="permanent_province_id">
+                                <select name="permanent_province_id" id="permanent_province_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('permanent_province_id', $applicant->permanent_province_id)" required autofocus autocomplete="permanent_province_id">
                                     <option value="" selected="" disabled="">Select Province</option>
                                     @foreach ($provinces as $province)
-                                        @if ($province->ID==$applicant->permanentAddress_province_id)
+                                        @if ($province->ID==$applicant->permanent_province_id)
                                             <option value="{{$province->ID}}" selected>{{$province->Province}}</option>
                                         @else
                                             <option value="{{$province->ID}}">{{$province->Province}}</option>
                                         @endif    
                                     @endforeach
                                 </select>
-                                <x-input-error :messages="$errors->get('permanentAddress_province_id')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('permanent_province_id')" class="mt-2" />
                             </div>
                             <div class="form-control">
                                 <x-input-label for="permanent_district_id" :value="__('Permanent District')" />
-                                <select name="permanentAddress_district_id" id="permanent_district_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('permanentAddress_district_id', $applicant->permanentAddress_district_id)" required autofocus autocomplete="permanent_district_id">
+                                <select name="permanent_district_id" id="permanent_district_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('permanent_district_id', $applicant->permanent_district_id)" required autofocus autocomplete="permanent_district_id">
                                     <option value="" selected="" disabled="">Select District</option>
                                     @foreach ($districts as $district)
-                                        @if ($district->ID==$applicant->permanentAddress_district_id)
-                                            <option selected value="{{$district->ID}}" >{{$district->Dis_Name}}</option>
+                                        @if ($district->id==$applicant->permanent_district_id)
+                                            <option selected value="{{$district->id}}" >{{$district->name}}</option>
                                         @else
-                                            <option value="{{$district->ID}}" >{{$district->Dis_Name}}</option>
+                                            <option value="{{$district->id}}" >{{$district->name}}</option>
                                         @endif
                                     @endforeach
                                 </select>
-                                <x-input-error :messages="$errors->get('permanentAddress_district_id')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('permanent_district_id')" class="mt-2" />
                             </div>
                             <div class="form-control">
                                 <x-input-label for="permanent_tehsil_id" :value="__('Permanent Tehsil')" />
-                                <select name="permanentAddress_tehsil_id" id="permanent_tehsil_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('permanentAddress_tehsil_id', $applicant->permanentAddress_tehsil_id)" required autofocus autocomplete="permanent_tehsil_id">
+                                <select name="permanent_tehsil_id" id="permanent_tehsil_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('permanent_tehsil_id', $applicant->permanent_tehsil_id)" required autofocus autocomplete="permanent_tehsil_id">
                                     <option value="" selected="" disabled="">Select Tehsil</option>
                                     @foreach ($tehsils as $tehsil)
-                                        @if ($tehsil->ID==$applicant->permanentAddress_tehsil_id)
-                                            <option selected value="{{$tehsil->ID}}" >{{$tehsil->Teh_name}}</option>
+                                        @if ($tehsil->id==$applicant->permanent_tehsil_id)
+                                            <option selected value="{{$tehsil->id}}" >{{$tehsil->name}}</option>
                                         @else
-                                            <option value="{{$tehsil->ID}}" >{{$tehsil->Teh_name}}</option>
+                                            <option value="{{$tehsil->id}}" >{{$tehsil->name}}</option>
                                         @endif
                                     @endforeach
                                 </select>
-                                <x-input-error :messages="$errors->get('permanentAddress_tehsil_id')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('permanent_tehsil_id')" class="mt-2" />
                             </div>
                             <div>
                                 <x-input-label for="permanent_address" :value="__('Permanent Address')" />
-                                <x-text-input id="permanent_address" class="block mt-1 w-full p-2" type="text" name="permanentAddress" :value="old('permanentAddress', $applicant->permanentAddress)" required autofocus autocomplete="permanentAddress" />
-                                <x-input-error :messages="$errors->get('permanentAddress')" class="mt-2" />
+                                <x-text-input id="permanent_address" class="block mt-1 w-full p-2" type="text" name="permanent_address" :value="old('permanent_address', $applicant->permanent_address)" required autofocus autocomplete="permanent_address" />
+                                <x-input-error :messages="$errors->get('permanent_address')" class="mt-2" />
                             </div>
                             <div class="my-2 mx-3 hidden" id="children_div">
                                 <label class="">
@@ -247,11 +247,6 @@
                                         @endif    
                                     </select>
                                 <x-input-error :messages="$errors->get('purpose')" class="mt-2" />
-                            </div>
-                            <div class="form-control">
-                                <x-input-label for="passcode" :value="__('Please provide Passcode')" class="text-red-500" />
-                                <x-text-input id="passcode" class="block mt-1 w-full p-2" type="text" name="passcode" :value="old('passcode')" min="6" max=6 autofocus autocomplete="passcode" />
-                                <x-input-error :messages="$errors->get('passcode')" class="mt-2" />
                             </div>
                         </div>
                         

@@ -94,10 +94,10 @@
 
       <div class="paragraph justified">
         <p>
-          I, <span>{{$applicant->name}}</span> S/D/W/O <span>{{$applicant->fathername}}</span>,
+          I, <span>{{$applicant->first_name}}</span> S/D/W/O <span>{{$applicant->father_name}}</span>,
           Date of Birth: <span>{{ \Carbon\Carbon::parse($applicant->date_of_birth)->format('d-m-Y') }}</span>, Present Address:
-          <span>{{$applicant->temporaryAddress}}</span>, Permanent Address:
-          <span>{{$applicant->permanenAddress}}</span>, have arrived in Capital Islamabad,
+          <span>{{$applicant->present_address}}</span>, Permanent Address:
+          <span>{{$applicant->permanent_address}}</span>, have arrived in Capital Islamabad,
           Tehsil Islamabad, District Islamabad, Rev/Admin Federal Area in
           Pakistan on <span>{{ \Carbon\Carbon::parse($applicant->date_of_arrival)->format('d-m-Y') }}</span>. I have been continuously residing
           in Pakistan since <span>{{ \Carbon\Carbon::parse($applicant->date_of_arrival)->format('d-m-Y') }}</span>, immediately preceding this declaration
@@ -119,7 +119,7 @@
       <div class="paragraph details">
         <p>Other particulars are given below:</p>
         <p>Marital Status: <span>{{$applicant->marital_statuses->marital_status}}</span></p>
-        <p>Name of Wife/Husband: <span>{{$applicant->spousename}}</span></p>
+        <p>Name of Wife/Husband: <span>{{$applicant->spouse_name}}</span></p>
         <p>Name of Children & their ages including date of birth:</p>
             <table>
               <tbody>

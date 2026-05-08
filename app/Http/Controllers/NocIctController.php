@@ -65,7 +65,7 @@ class NocIctController extends Controller
             }
         }
 
-        return redirect()->route('noc-ict.create')->with('success', 'NOC ICT record saved successfully.');
+        return redirect()->route('noc-ict.index')->with('success', 'NOC ICT record saved successfully.');
     }
     public function noc_ict_index(Request $request){
         // Apply search filter based on search_type

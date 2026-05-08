@@ -4,6 +4,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\InactiveMiddleware;
 use App\Http\Middleware\OwnerMiddleware;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Middleware\DailyViewLimit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'owner' => OwnerMiddleware::class,
             'admin' => AdminMiddleware::class,
             'role' => RoleMiddleware::class,
+            'daily.limit' => DailyViewLimit::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

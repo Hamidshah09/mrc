@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('NOC – ICT Letters') }}
+            {{ __('Verification Letters') }}
         </h2>
     </x-slot>
 
     <div class="max-w-6xl mx-auto p-6 bg-white shadow-md rounded mt-10">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-semibold">Letters</h3>
-            <a href="{{ route('noc-ict.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded">New Letter</a>
+            <a href="{{ route('domicile.verification_letter.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded">New Letter</a>
         </div>
 
         @if(session('success'))
@@ -18,7 +18,7 @@
             <div class="mb-4 text-red-700">{{ session('error') }}</div>
         @endif
         <div class="flex justify-between items-center space-x-4 m-2 mb-4">
-            <form action="{{route('noc-ict.index')}}" method="GET" class="mt-3">
+            <form action="{{route('domicile.verification_letter.index')}}" method="GET" class="mt-3">
                 <div class="flex flex-row flex-wrap items-center">
                     <x-text-input id="search" class="mt-1 w-48 p-2 mx-2" type="text" name="search" value="{{ old('search') }}" autofocus autocomplete="cnic" />
                     <select name="search_type" id="search_type" class= "w-48 mt-1 border-gray-600 focus:ring-indigo-500  rounded-md shadow-sm" autofocus autocomplete="gender">
@@ -59,8 +59,8 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Letter_Sent_to }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->Applicant_Name ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('noc-ict.edit', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                            <a href="{{ route('noc-ict.letter', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Letter</a>
+                            <a href="{{ route('domicile.verification_letter.edit', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                            <a href="{{ route('domicile.verification_letter.letter', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Letter</a>
                         </td>
                     </tr>
                 @empty

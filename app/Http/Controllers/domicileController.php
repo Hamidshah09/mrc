@@ -22,21 +22,74 @@ use Illuminate\Support\Facades\Log;
 
 class domicileController extends Controller
 {   
-    public function admin_index(Request $request){
-        $query = DomicileApplicants::select('id', 'name', 'passcode')->orderBy('id', 'desc');
+
+    public $provinces;
+    public $qualifications;
+    public $occupations;
+    public $maritalStatuses;
+    public $genders;
+
+    public function __construct()
+    {
+        $this->provinces = collect([
+            (object)['ID'=>491, 'Province'=>'Balochistan'],
+            (object)['ID'=>663, 'Province'=>'Federal Capital'],
+            (object)['ID'=>1, 'Province'=>'Khyber Pakhtunkhwa'],
+            (object)['ID'=>167, 'Province'=>'Punjab'],
+            (object)['ID'=>344, 'Province'=>'Sindh'],
+        ]);
+
+        $this->qualifications = collect([
+            (object)['id' => 1, 'name' => 'Primary'],
+            (object)['id' => 2, 'name' => 'Middle'],
+            (object)['id' => 3, 'name' => 'SSC'],
+            (object)['id' => 4, 'name' => 'HSSC'],
+            (object)['id' => 5, 'name' => 'Bachelors'],
+            (object)['id' => 6, 'name' => 'Masters'],
+            (object)['id' => 7, 'name' => 'PhD'],
+            (object)['id' => 8, 'name' => 'Not Available'],
+            (object)['id' => 9, 'name' => 'Other'],
+            (object)['id' => 10, 'name' => 'Islamic Education'],
+        ]);
+
+        $this->occupations = collect([
+            (object)['id' => 1, 'name' => 'Government Employee'],
+            (object)['id' => 2, 'name' => 'Non Government Employee'],
+            (object)['id' => 3, 'name' => 'Own Business'],
+            (object)['id' => 4, 'name' => 'Student'],
+            (object)['id' => 5, 'name' => 'Other'],
+            (object)['id' => 6, 'name' => 'House wife'],
+            (object)['id' => 7, 'name' => 'Private Job'],
+        ]);
+
+        $this->maritalStatuses = collect([
+            (object)['id' => 1, 'name' => 'Single'],
+            (object)['id' => 2, 'name' => 'Married'],
+            (object)['id' => 3, 'name' => 'Divorced'],
+            (object)['id' => 4, 'name' => 'Widowed'],
+            (object)['id' => 5, 'name' => 'Widower'],
+        ]);
+
+        $this->genders = collect([
+            (object)['id' => 1, 'name' => 'Male'],
+            (object)['id' => 2, 'name' => 'Female'],
+            (object)['id' => 3, 'name' => 'Transgender'],
+        ]);
+    }
+    
+
+    public function index(Request $request){
+        $query = DomicileApplicants::select('id', 'first_name', 'cnic', 'contact')->orderBy('id', 'desc');
 
         if ($request->filled('search')) {
             $q = $request->search;
             $query->where(function($wr) use ($q) {
-                $wr->where('name', 'like', "%{$q}%")
+                $wr->where('first_name', 'like', "%{$q}%")
                    ->orWhere('cnic', 'like', "%{$q}%")
                    ->orWhere('id', $q);
             });
         }
 
-        if ($request->filled('passcode')) {
-            $query->where('passcode', 'like', "%{$request->passcode}%");
-        }
 
         if ($request->filled('from_date')) {
             $query->whereDate('created_at', '>=', $request->from_date);
@@ -48,41 +101,28 @@ class domicileController extends Controller
 
         $records = $query->paginate(25)->appends($request->query());
 
-        return view('domicile.adminindex', compact('records'));
+        return view('domicile.index', compact('records'));
+    
     }
-    public function dom_index(){
-        $records = DomicileApplicants::select('id', 'name')->orderBy('id', 'desc')->paginate(25);
-        return view('domicile.domicileindex', compact('records'));
+
+    public function create(){
+        $tehsils = tehsils::orderBy('name')->get();
+        $districts = districts::orderBy('name')->get();
+        $provinces = $this->provinces;
+        $qualifications = $this->qualifications;
+        $occupations = $this->occupations;
+        $maritalStatuses = $this->maritalStatuses;
+        $genders= $this->genders;
+        return view('domicile.create', compact('tehsils', 'districts', 'provinces', 'maritalStatuses','qualifications','occupations','genders'));
     }
-    public function create_new(){
-        $tehsils = tehsils::orderBy('Teh_name')->get();
-        $districts = districts::orderBy('Dis_Name')->get();
-        $passcode = Passcode::whereDate('valid_on', today())->where('used', 'No')->first();
-        if (!$passcode){
-            return view('domicile.nocode');
-        }
-        $passcode->update([
-            'used' => 'In Process',
-        ]);
-        return view('domicile.createnew',  compact('tehsils', 'districts', 'passcode'));
-    }
-    public function store_new(Request $request)
+    public function store(Request $request)
     {   
         
-        $passcode = Passcode::where([
-                ['code', '=', $request->passcode],
-                ['valid_on', '=', today()],
-                ['used', '=', 'In Process']
-            ])->first();
-
-        if (!$passcode) {
-            return back()->withErrors(['code' => 'Invalid or already used passcode.']);
-        }
     $validated = $request->validate([
         'cnic' => 'required|regex:/^[0-9]{13}$/',
         'name' => 'required|string|max:45',
-        'fathername' => 'required|string|max:45',
-        'spousename' => 'nullable|string|max:45',
+        'father_name' => 'required|string|max:45',
+        'spouse_name' => 'nullable|string|max:45',
         'date_of_birth' => 'required|date',
         'gender_id' => 'required|integer',
         'place_of_birth' => 'required|string|max:45',
@@ -91,20 +131,19 @@ class domicileController extends Controller
         'qualification_id' => 'nullable|integer',
         'occupation_id' => 'nullable|integer',
         'contact' => 'nullable|string|max:11',
-        'date_of_arrival' => 'required|date',
-        'passcode'=>'string|min:6|max:6',
+        'arrival_date' => 'required|date',
 
         // Temporary Address
-        'temporaryAddress_province_id' => 'required|integer',
-        'temporaryAddress_district_id' => 'required|integer',
-        'temporaryAddress_tehsil_id' => 'required|integer',
-        'temporaryAddress' => 'required|string|max:100',
+        'present_province_id' => 'required|integer',
+        'present_district_id' => 'required|integer',
+        'present_tehsil_id' => 'required|integer',
+        'present_address' => 'required|string|max:100',
 
         // Permanent Address
-        'permanentAddress_province_id' => 'required|integer',
-        'permanentAddress_district_id' => 'required|integer',
-        'permanentAddress_tehsil_id' => 'required|integer',
-        'permanentAddress' => 'required|string|max:100',
+        'permanent_province_id' => 'required|integer',
+        'permanent_district_id' => 'required|integer',
+        'permanent_tehsil_id' => 'required|integer',
+        'permanent_address' => 'required|string|max:100',
 
         'children_checkbox' => 'nullable|boolean',
     ]);
@@ -120,9 +159,9 @@ class domicileController extends Controller
 
     // Personal Info
     $domicile->cnic = strtoupper($validated['cnic']);
-    $domicile->name = strtoupper($validated['name']);
-    $domicile->fathername = strtoupper($validated['fathername']);
-    $domicile->spousename = strtoupper($validated['spousename']); // nullable
+    $domicile->first_name = strtoupper($validated['name']);
+    $domicile->father_name = strtoupper($validated['father_name']);
+    $domicile->spouse_name = strtoupper($validated['spouse_name']); // nullable
     $domicile->date_of_birth = $validated['date_of_birth'];
     $domicile->gender_id = $validated['gender_id'];
     $domicile->place_of_birth = $validated['place_of_birth'];
@@ -131,20 +170,19 @@ class domicileController extends Controller
     $domicile->qualification_id = $request->input('qualification_id'); // nullable
     $domicile->occupation_id = $request->input('occupation_id'); // nullable
     $domicile->contact = $request->input('contact');
-    $domicile->date_of_arrival = $request->input('date_of_arrival');
-    $domicile->passcode =$validated['passcode'];
+    $domicile->arrival_date = $request->input('arrival_date');
 
     // Temporary Address
-    $domicile->temporaryAddress_province_id = $validated['temporaryAddress_province_id'];
-    $domicile->temporaryAddress_district_id = $validated['temporaryAddress_district_id'];
-    $domicile->temporaryAddress_tehsil_id = $validated['temporaryAddress_tehsil_id'];
-    $domicile->temporaryAddress = strtoupper($validated['temporaryAddress']);
+    $domicile->present_province_id = $validated['present_province_id'];
+    $domicile->present_district_id = $validated['present_district_id'];
+    $domicile->present_tehsil_id = $validated['present_tehsil_id'];
+    $domicile->present_address = strtoupper($validated['present_address']);
 
     // Permanent Address
-    $domicile->permanentAddress_province_id = $validated['permanentAddress_province_id'];
-    $domicile->permanentAddress_district_id = $validated['permanentAddress_district_id'];
-    $domicile->permanentAddress_tehsil_id = $validated['permanentAddress_tehsil_id'];
-    $domicile->permanentAddress = strtoupper($validated['permanentAddress']);
+    $domicile->permanent_province_id = $validated['permanent_province_id'];
+    $domicile->permanent_district_id = $validated['permanent_district_id'];
+    $domicile->permanent_tehsil_id = $validated['permanent_tehsil_id'];
+    $domicile->permanent_address = strtoupper($validated['permanent_address']);
 
     // Children Checkbox
     // $domicile->has_children = $request->has('children_checkbox') ? true : false;
@@ -165,94 +203,37 @@ class domicileController extends Controller
         }
     }
     
-    $passcode->update([
-        'used' => 'Yes',
-        'submitted_by' => $domicile->id
-    ]);
     
-    // if both district are differenet then we will create postal record
-    // DB::table('postalservice')->insert([
-    //     'receiver_name' => $validated['name'],
-    //     'receiver_address' => $validated['temporaryAddress'],
-    //     'status_id' => 1, // Assuming 1 is the initial status
-    //     'user_id' => null, // No user assigned yet
-    //     'service_id' => 2, // No service assigned yet
-    //     'phone_number' => $validated['contact'],
-    //     'created_at' => now(),
-    //     'updated_at' => now(),
-    // ]);
-    return redirect()->route('domicile.success', [
-    'id'   => $domicile->id,
-    'cnic' => $domicile->cnic,
-]);
+    return redirect()->route('domicile.index')->with('success', 'Domicile record created successfully.');
     }
-    public function dom_edit($id, $cnic){
-        $tehsils = tehsils::orderBy('Teh_name')->get();
-        $districts = districts::orderBy('Dis_Name')->get();
-        $provinces = collect([
-            (object)['ID'=>491, 'Province'=>'Balochistan'],
-            (object)['ID'=>663, 'Province'=>'Federal Capital'],
-            (object)['ID'=>1, 'Province'=>'Khyber Pakhtunkhwa'],
-            (object)['ID'=>167, 'Province'=>'Punjab'],
-            (object)['ID'=>344, 'Province'=>'Sindh'],
-        ]);
-        $qualifications = collect([
-            (object)['id' => 1, 'name' => 'Primary'],
-            (object)['id' => 2, 'name' => 'Middle'],
-            (object)['id' => 3, 'name' => 'SSC'],
-            (object)['id' => 4, 'name' => 'HSSC'],
-            (object)['id' => 5, 'name' => 'Bachelors'],
-            (object)['id' => 6, 'name' => 'Masters'],
-            (object)['id' => 7, 'name' => 'PhD'],
-            (object)['id' => 8, 'name' => 'Not Available'],
-            (object)['id' => 9, 'name' => 'Other'],
-            (object)['id' => 10, 'name' => 'Islamic Education'],
-        ]);
-        $maritalStatuses = collect([
-            (object)['id' => 1, 'name' => 'Single'],
-            (object)['id' => 2, 'name' => 'Married'],
-            (object)['id' => 3, 'name' => 'Divorced'],
-            (object)['id' => 4, 'name' => 'Widowed'],
-            (object)['id' => 5, 'name' => 'Widower'],
-        ]);
 
-        $occupations = collect([
-            (object)['id' => 1, 'name' => 'Government Employee'],
-            (object)['id' => 2, 'name' => 'Non Government Employee'],
-            (object)['id' => 3, 'name' => 'Own Business'],
-            (object)['id' => 4, 'name' => 'Student'],
-            (object)['id' => 5, 'name' => 'Other'],
-            (object)['id' => 6, 'name' => 'House wife'],
-            (object)['id' => 7, 'name' => 'Private Job'],
-        ]);
-        $genders = collect([
-            (object)['id' => 1, 'name' => 'Male'],
-            (object)['id' => 2, 'name' => 'Female'],
-            (object)['id' => 3, 'name' => 'Transgender'],
-        ]);
+    public function edit($id){
+
+        $tehsils = tehsils::orderBy('name')->get();
+        $districts = districts::orderBy('name')->get();
+        $provinces = $this->provinces;
+        $qualifications = $this->qualifications;
+        $occupations = $this->occupations;
+        $maritalStatuses = $this->maritalStatuses;
+        $genders= $this->genders;
 
         
-        $applicant = DomicileApplicants::with('children')->where('id', $id)->where('cnic', $cnic)->whereDate('created_at', now()->toDateString())->first();
-        if ($applicant){
-            return view('domicile.domedit',  compact('genders','tehsils', 'districts', 'provinces', 'maritalStatuses','qualifications','occupations','applicant'));
-        } else {
-            return view('domicile.norecord');
+        $applicant = DomicileApplicants::with('children')->findOrFail($id);
+        
+            return view('domicile.edit',  compact('genders','tehsils', 'districts', 'provinces', 'maritalStatuses','qualifications','occupations','applicant'));
         }
-        // return $applicant;
-        
-    }
-    public function dom_update(Request $request, $id)
+    
+
+    public function update(Request $request, $id)
     {
     
     $domicile = DomicileApplicants::findOrFail($id);
-    if ($domicile->passcode!=$request->passcode){
-        return back()->withErrors(['code' => 'Passcode mismatch']);
-    } 
+    
     $validated = $request->validate([
         'cnic' => 'required|string|max:13',
-        'name' => 'required|string|max:45',
-        'fathername' => 'required|string|max:45',
-        'spousename' => 'nullable|string|max:45',
+        'first_name' => 'required|string|max:45',
+        'father_name' => 'required|string|max:45',
+        'spouse_name' => 'nullable|string|max:45',
         'date_of_birth' => 'required|date',
         'gender_id' => 'required|integer',
         'place_of_birth' => 'required|string|max:45',
@@ -261,19 +242,19 @@ class domicileController extends Controller
         'qualification_id' => 'nullable|integer',
         'occupation_id' => 'nullable|integer',
         'contact' => 'nullable|string|max:11',
-        'date_of_arrival' => 'nullable|date',
+        'arrival_date' => 'nullable|date',
 
-        // Temporary Address
-        'temporaryAddress_province_id' => 'required|integer',
-        'temporaryAddress_district_id' => 'required|integer',
-        'temporaryAddress_tehsil_id' => 'required|integer',
-        'temporaryAddress' => 'required|string|max:100',
+        // Present Address
+        'present_province_id' => 'required|integer',
+        'present_district_id' => 'required|integer',
+        'present_tehsil_id' => 'required|integer',
+        'present_address' => 'required|string|max:100',
 
         // Permanent Address
-        'permanentAddress_province_id' => 'required|integer',
-        'permanentAddress_district_id' => 'required|integer',
-        'permanentAddress_tehsil_id' => 'required|integer',
-        'permanentAddress' => 'required|string|max:100',
+        'permanent_province_id' => 'required|integer',
+        'permanent_district_id' => 'required|integer',
+        'permanent_tehsil_id' => 'required|integer',
+        'permanent_address' => 'required|string|max:100',
 
         'children_checkbox' => 'nullable|boolean',
 
@@ -288,9 +269,9 @@ class domicileController extends Controller
     // 🔹 Update applicant info
     $domicile->update([
         'cnic' => strtoupper($validated['cnic']),
-        'name' => strtoupper($validated['name']),
-        'fathername' => strtoupper($validated['fathername']),
-        'spousename' => strtoupper($validated['spousename']),
+        'first_name' => strtoupper($validated['first_name']),
+        'father_name' => strtoupper($validated['father_name']),
+        'spouse_name' => strtoupper($validated['spouse_name']),
         'date_of_birth' => $validated['date_of_birth'],
         'gender_id' => $validated['gender_id'],
         'place_of_birth' => $validated['place_of_birth'],
@@ -299,17 +280,17 @@ class domicileController extends Controller
         'qualification_id' => $request->input('qualification_id'),
         'occupation_id' => $request->input('occupation_id'),
         'contact' => $request->input('contact'),
-        'date_of_arrival' => $request->input('date_of_arrival'),
+        'arrival_date' => $request->input('arrival_date'),
 
-        'temporaryAddress_province_id' => $validated['temporaryAddress_province_id'],
-        'temporaryAddress_district_id' => $validated['temporaryAddress_district_id'],
-        'temporaryAddress_tehsil_id' => $validated['temporaryAddress_tehsil_id'],
-        'temporaryAddress' => strtoupper($validated['temporaryAddress']),
+        'present_province_id' => $validated['present_province_id'],
+        'present_district_id' => $validated['present_district_id'],
+        'present_tehsil_id' => $validated['present_tehsil_id'],
+        'present_address' => strtoupper($validated['present_address']),
 
-        'permanentAddress_province_id' => $validated['permanentAddress_province_id'],
-        'permanentAddress_district_id' => $validated['permanentAddress_district_id'],
-        'permanentAddress_tehsil_id' => $validated['permanentAddress_tehsil_id'],
-        'permanentAddress' => strtoupper($validated['permanentAddress']),
+        'permanent_province_id' => $validated['permanent_province_id'],
+        'permanent_district_id' => $validated['permanent_district_id'],
+        'permanent_tehsil_id' => $validated['permanent_tehsil_id'],
+        'permanent_address' => strtoupper($validated['permanent_address']),
     ]);
 
     // 🔹 Sync children
@@ -352,208 +333,9 @@ class domicileController extends Controller
         }
     }
 
-    return redirect()->route('domicile.success', [
-                    'id'   => $domicile->id,
-                    'cnic' => $domicile->cnic,
-                ]);
+        return redirect()->route('domicile.index')->with('success', 'Domicile record updated successfully.');
     }
 
-    public function create_noc(){
-        $passcode = Passcode::whereDate('valid_on', today())->where('used', 'No')->first();
-        if (!$passcode){
-            return view('domicile.nocode');
-        }
-        $passcode->update([
-        'used' => 'In Process',
-        ]);
-        return view('domicile.noc', compact('passcode'));
-    }
-    public function show_noc(Request $request)
-    {
-        $id = $request->query('id');
-        $cnic = $request->query('cnic');
-
-    // Start building the base query
-        $query = NocLetters::with(['nocapplicants' => function ($q) use ($cnic) {
-            if ($cnic) {
-                $q->where('cnic', $cnic);
-            }
-        }]);
-
-        if ($id) {
-            $noc_record = $query->find($id);
-
-            if (!$noc_record) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'NOC record not found.'
-                ], 404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'data' => $noc_record
-            ], 200);
-        }
-
-        // If no ID is provided but CNIC is
-        if ($cnic) {
-            $noc_records = $query
-                ->whereHas('nocapplicants', function ($q) use ($cnic) {
-                    $q->where('cnic', 'like', '%'.$cnic.'%');
-                })->get();
-
-            if ($noc_records->isEmpty()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No records found for the provided CNIC.'
-                ], 404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'data' => $noc_records
-            ]);
-        }
-
-        // If neither ID nor CNIC is provided
-        $noc_records = NocLetters::with('nocapplicants')
-        ->orderBy('id', 'desc') // or 'created_at' if you prefer timestamp
-        ->take(200)
-        ->get();
-
-        return response()->json([
-                'success' => true,
-                'data' => $noc_records
-            ]);
-    }
-
-    public function store_noc(Request $request)
-    {
-        
-        $passcode = Passcode::where([
-            ['code', '=', (string)$request->code],
-            ['valid_on', '=', today()],
-            ['used', '=', 'In Process']
-        ])->first();
-
-        if (!$passcode) {
-            return back()->withErrors(['code' => 'Invalid or already used passcode.']);
-        }
-
-        $request->validate([
-        'letterType'             => 'required|string',
-        'applicantName'          => 'required|array',
-        'applicantCnic'          => 'required|array',
-        'applicantRelation'      => 'required|array',
-        'applicantFather'        => 'required|array',
-        'district'              => 'required|string',
-        'referenced_letter_no'   => 'nullable|string',
-        'referenced_letter_date' => 'nullable|date',
-    ]);
-
-        // Step 1: Create NOC Letter
-    $letterData = [
-        'district'    => $request->district,
-    ];
-
-    if ($request->letterType !== 'Self') {
-        if (!$request->referenced_letter_no || !$request->referenced_letter_date) {
-            return back()->withErrors(['referenced_letter' => 'Reference number and date required.']);
-        }
-        $letterData['referenced_letter_no']   = $request->referenced_letter_no;
-        $letterData['referenced_letter_date'] = $request->referenced_letter_date;
-    }
-
-    $nocLetter = NocLetters::create($letterData);
-
-    // Step 2: Save Applicants
-    foreach ($request->applicantName as $i => $name) {
-        
-
-        $Nocapplicant = NocApplicants::create([
-            'letter_id'         => $nocLetter->id,
-            'applicant_name'        => $name,
-            'cnic'        => $request->applicantCnic[$i],
-            'relation'    => $request->applicantRelation[$i],
-            'applicant_father_name' => $request->applicantFather[$i],
-        ]);
-
-    }
-
-    // Mark as used and tie to applicant
-    $passcode->update([
-        'used' => 'Yes',
-        'submitted_by' => $Nocapplicant->id
-    ]);
-
-    return redirect()->route('noc.success', $nocLetter->id);
-    
-    }
-    public function noc_success($id){
-
-        return view('domicile.recordid', compact('id'));
-    }
-
-    public function domicile_success($id, $cnic){
-
-        return view('domicile.success', compact('id', 'cnic'));
-    }
-
-    public function show_domicile(Request $request)
-    {
-        $id = $request->query('id');
-        $cnic = $request->query('cnic');
-
-    // Start building the base query
-        $query = DomicileApplicants::with('children')->withCount('children');
-
-        
-        if ($id) {
-            $applicants = $query->find($id);
-
-            if (!$applicants) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'domicile record not found.'
-                ], 404);
-            }else{
-
-                return response()->json([
-                    'success' => true,
-                    'data' => $applicants
-                ], 200);
-            }
-        }
-
-        // If no ID is provided but CNIC is
-        if ($cnic) {
-            $applicants = $query->where('cnic', 'like', '%'.$cnic.'%')->get();
-
-            if ($applicants->isEmpty()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No records found for the provided CNIC.'
-                ], 404);
-            }else{
-                return response()->json([
-                'success' => true,
-                'data' => $applicants
-                ]);
-            }
-        }
-
-        // If neither ID nor CNIC is provided
-        $applicants = DomicileApplicants::with('children')->withCount('children')
-        ->orderBy('id', 'desc') // or 'created_at' if you prefer timestamp
-        ->take(200)
-        ->get();
-
-        return response()->json([
-                'success' => true,
-                'data' => $applicants
-            ]);
-    }
     public function form_p($id){
 
         $applicant = DomicileApplicants::with('children', 'occupations', 'marital_statuses')

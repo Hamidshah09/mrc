@@ -1,11 +1,12 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('NOC to Other District') }}
-        </h2>
-    </x-slot>
+<x-guest-layout>
+    {{-- <x-slot name="header">
+        
+    </x-slot> --}}
 
     <div class="max-w-5xl mx-auto p-6 bg-white shadow-md rounded mt-10">
+        <h2 class="font-semibold text-center text-xl text-gray-800 leading-tight">
+            {{ __('NOC to Other District') }}
+        </h2>
         @if ($errors->any())
             <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-300">
                 <ul class="list-disc pl-5 space-y-1">
@@ -15,7 +16,7 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('noc-other-district.store') }}">
+        <form method="POST" action="{{ route('noc-other-district.store') }}" class="mt-4">
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -182,7 +183,8 @@
 
     {{-- SIMPLE JS --}}
     <script>
-        let applicantIndex = 1;
+        // initialize applicantIndex from existing rows so dynamic add/delete keeps correct indexes
+        let applicantIndex = Math.max(1, document.querySelectorAll('.applicant-row').length);
 
         function reindexApplicants() {
             const wrapper = document.getElementById('applicants-wrapper');
@@ -210,7 +212,7 @@
 
             const html = `
             <div id="applicant-${applicantIndex}" class="border p-4 rounded applicant-row relative">
-                <button type="button" onclick="deleteApplicant('applicant-${applicantIndex}')" class="absolute top-2 right-2 text-red-600 hover:text-red-800" title="Remove applicant">&times;</button>
+                <button type="button" onclick="deleteApplicant('applicant-${applicantIndex}')" class="absolute top-2 right-2 px-3 py-1 rounded bg-red-300 text-red-600 hover:text-red-800" title="Remove applicant">x</button>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label class="text-sm font-medium">CNIC</label>
@@ -261,4 +263,4 @@
         }
 
     </script>
-</x-app-layout>
+</x-guest-layout>

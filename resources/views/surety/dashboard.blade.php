@@ -68,6 +68,34 @@
             <h3 class="font-semibold mb-2">Daily Amount</h3>
             <canvas id="amountChart"></canvas>
         </div>
+
+        <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
+            <h3 class="font-semibold mb-4">User Performance Today</h3>
+            @if(!empty($userPerformance) && count($userPerformance))
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">#</th>
+                                <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">User</th>
+                                <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Entries</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @foreach($userPerformance as $i => $u)
+                                <tr>
+                                    <td class="px-6 py-3 text-sm text-gray-700">{{ $i + 1 }}</td>
+                                    <td class="px-6 py-3 text-sm text-gray-700">{{ $u['name'] }}</td>
+                                    <td class="px-6 py-3 text-sm text-gray-700">{{ $u['total'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <p class="text-sm text-gray-600">No user activity for selected date range.</p>
+            @endif
+        </div>
     </div>
 
     <script src="{{ asset('js/chart.js') }}"></script>

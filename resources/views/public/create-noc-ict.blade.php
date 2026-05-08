@@ -1,11 +1,12 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('NOC to Other District') }}
-        </h2>
-    </x-slot>
+<x-guest-layout>
+    {{-- <x-slot name="header">
+        
+    </x-slot> --}}
 
     <div class="max-w-5xl mx-auto p-6 bg-white shadow-md rounded mt-10">
+        <h2 class="font-semibold text-center text-xl text-gray-800 leading-tight">
+            {{ __('NOC – ICT Applicants') }}
+        </h2>
         @if ($errors->any())
             <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-300">
                 <ul class="list-disc pl-5 space-y-1">
@@ -15,64 +16,35 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('noc-other-district.store') }}">
+        <form method="POST" action="{{ route('noc-ict.public.store') }}" class="mt-4">
             @csrf
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">
-                        Letter Type
-                    </label>
-                    @php $lt = old('letter_type', 'self'); @endphp
-                    <select name="letter_type" id="" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" onChange="toggleReferencedLetter(this.value)">
-                        <option value="self" {{ $lt === 'self' ? 'selected' : '' }}>Self</option>
-                        <option value="official" {{ $lt === 'official' ? 'selected' : '' }}>Official</option>
-                    </select>
-                </div>
-                <div></div>
-                <div id="referenced_letter_section" class="{{ old('letter_type') === 'official' ? '' : 'hidden' }}">
-                    <label class="block text-sm font-medium text-gray-700">
-                        Referenced Letter Date
-                    </label>
-                    <input type="date" name="referenced_letter_date"
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                           value="{{ old('referenced_letter_date', date('Y-m-d')) }}">
-                </div>
 
-                <div id="referenced_letter_no_section" class="{{ old('letter_type') === 'official' ? '' : 'hidden' }}">
-                    <label class="block text-sm font-medium text-gray-700">
-                        Referenced Letter No
-                    </label>
-                    <input type="text" name="referenced_letter_no"
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                           value="{{ old('referenced_letter_no') }}">
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700">
                         Letter Date
                     </label>
-                    <input type="date" name="Letter_Date"
+                    <input type="date" name="letter[Letter_Date]"
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                           value="{{ old('Letter_Date', date('Y-m-d')) }}">
+                           value="{{ old('letter.Letter_Date', date('Y-m-d')) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">
                         Letter Sent To
                     </label>
-                          <input type="text" name="NOC_Issued_To"
-                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                              value="{{ old('NOC_Issued_To') }}">
+                    <input type="text" name="letter[Letter_Sent_to]"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                           value="{{ old('letter.Letter_Sent_to') }}">
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700">
                         Remarks
                     </label>
-                          <input type="text" name="Remarks"
-                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                              value="{{ old('Remarks') }}">
+                    <input type="text" name="letter[Remarks]"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                           value="{{ old('letter.Remarks') }}">
                 </div>
             </div>
 
@@ -82,81 +54,79 @@
             </h3>
 
             <div id="applicants-wrapper" class="space-y-4">
-                @php $oldApplicants = old('applicants', []); @endphp
-                @if(!empty($oldApplicants) && is_array($oldApplicants))
-                    @foreach($oldApplicants as $index => $app)
-                        <div id="applicant-{{ $index }}" class="border p-4 rounded applicant-row relative">
-                            @if($index > 0)
-                                <button type="button" onclick="deleteApplicant('applicant-{{ $index }}')" class="absolute top-2 right-2 text-red-600 hover:text-red-800" title="Remove applicant">&times;</button>
+                @php
+                    $oldApplicants = old('applicants', []);
+                @endphp
+
+                @if(is_array($oldApplicants) && count($oldApplicants) > 0)
+                    @foreach($oldApplicants as $idx => $app)
+                        <div id="applicant-{{ $idx }}" class="border p-4 rounded applicant-row relative">
+                            @if($idx > 0)
+                                <button type="button" onclick="deleteApplicant('applicant-{{ $idx }}')" class="absolute top-2 right-2 px-3 py-1 rounded bg-red-300 text-red-600 hover:text-red-800" title="Remove applicant">x</button>
                             @endif
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div>
                                     <label class="text-sm font-medium">CNIC</label>
-                                    <input type="text" name="applicants[{{ $index }}][CNIC]"
+                                    <input type="text" name="applicants[{{ $idx }}][CNIC]" max="13" min="13"
                                            class="mt-1 block w-full border-gray-300 rounded-md"
-                                           placeholder="xxxxxxxxxxxxx"
-                                           value="{{ $app['CNIC'] ?? '' }}">
+                                           placeholder="xxxxxxxxxxxxx" value="{{ old("applicants.$idx.CNIC", $app['CNIC'] ?? '') }}">
                                 </div>
 
                                 <div>
                                     <label class="text-sm font-medium">Applicant Name</label>
-                                    <input type="text" name="applicants[{{ $index }}][Applicant_Name]"
-                                           class="mt-1 block w-full border-gray-300 rounded-md"
-                                           value="{{ $app['Applicant_Name'] ?? '' }}">
+                                    <input type="text" name="applicants[{{ $idx }}][Applicant_Name]"
+                                           class="mt-1 block w-full border-gray-300 rounded-md" value="{{ old("applicants.$idx.Applicant_Name", $app['Applicant_Name'] ?? '') }}">
                                 </div>
 
                                 <div>
                                     <label class="text-sm font-medium">Relation</label>
-                                    <select name="applicants[{{ $index }}][Relation]" id="" class="mt-1 block w-full border-gray-300 rounded-md">
+                                    <select name="applicants[{{ $idx }}][Relation]" id="" class="mt-1 block w-full border-gray-300 rounded-md">
                                         <option value="">Select Relation</option>
-                                        <option value="s/o" {{ (isset($app['Relation']) && $app['Relation'] === 's/o') ? 'selected' : '' }}>S/O</option>
-                                        <option value="d/o" {{ (isset($app['Relation']) && $app['Relation'] === 'd/o') ? 'selected' : '' }}>D/O</option>
-                                        <option value="w/o" {{ (isset($app['Relation']) && $app['Relation'] === 'w/o') ? 'selected' : '' }}>W/O</option>
+                                        <option value="s/o" {{ (old("applicants.$idx.Relation", $app['Relation'] ?? '') == 's/o') ? 'selected' : '' }}>S/O</option>
+                                        <option value="d/o" {{ (old("applicants.$idx.Relation", $app['Relation'] ?? '') == 'd/o') ? 'selected' : '' }}>D/O</option>
+                                        <option value="w/o" {{ (old("applicants.$idx.Relation", $app['Relation'] ?? '') == 'w/o') ? 'selected' : '' }}>W/O</option>
                                     </select>
                                 </div>
 
                                 <div>
                                     <label class="text-sm font-medium">Father / Husband Name</label>
-                                    <input type="text" name="applicants[{{ $index }}][Applicant_FName]"
-                                           class="mt-1 block w-full border-gray-300 rounded-md"
-                                           value="{{ $app['Applicant_FName'] ?? '' }}">
+                                    <input type="text" name="applicants[{{ $idx }}][Applicant_FName]"
+                                           class="mt-1 block w-full border-gray-300 rounded-md" value="{{ old("applicants.$idx.Applicant_FName", $app['Applicant_FName'] ?? '') }}">
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 @else
+                    {{-- default single empty row when no old inputs --}}
                     <div id="applicant-0" class="border p-4 rounded applicant-row">
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div>
                                 <label class="text-sm font-medium">CNIC</label>
-                                <input type="text" name="applicants[0][CNIC]"
+                                <input type="text" name="applicants[0][CNIC]" max="13" min="13"
                                        class="mt-1 block w-full border-gray-300 rounded-md"
-                                       placeholder="xxxxxxxxxxxxx"
-                                       value="{{ old('applicants.0.CNIC') }}">
+                                       placeholder="xxxxxxxxxxxxx" value="{{ old('applicants.0.CNIC') }}">
                             </div>
 
                             <div>
                                 <label class="text-sm font-medium">Applicant Name</label>
                                 <input type="text" name="applicants[0][Applicant_Name]"
-                                       class="mt-1 block w-full border-gray-300 rounded-md"
-                                       value="{{ old('applicants.0.Applicant_Name') }}">
+                                       class="mt-1 block w-full border-gray-300 rounded-md" value="{{ old('applicants.0.Applicant_Name') }}">
                             </div>
 
                             <div>
                                 <label class="text-sm font-medium">Relation</label>
                                 <select name="applicants[0][Relation]" id="" class="mt-1 block w-full border-gray-300 rounded-md">
                                     <option value="">Select Relation</option>
-                                    <option value="s/o" {{ old('applicants.0.Relation') === 's/o' ? 'selected' : '' }}>S/O</option>
-                                    <option value="d/o" {{ old('applicants.0.Relation') === 'd/o' ? 'selected' : '' }}>D/O</option>
-                                    <option value="w/o" {{ old('applicants.0.Relation') === 'w/o' ? 'selected' : '' }}>W/O</option>
+                                    <option value="s/o" {{ old('applicants.0.Relation') == 's/o' ? 'selected' : '' }}>S/O</option>
+                                    <option value="d/o" {{ old('applicants.0.Relation') == 'd/o' ? 'selected' : '' }}>D/O</option>
+                                    <option value="w/o" {{ old('applicants.0.Relation') == 'w/o' ? 'selected' : '' }}>W/O</option>
                                 </select>
                             </div>
 
                             <div>
                                 <label class="text-sm font-medium">Father / Husband Name</label>
                                 <input type="text" name="applicants[0][Applicant_FName]"
-                                       class="mt-1 block w-full border-gray-300 rounded-md"
-                                       value="{{ old('applicants.0.Applicant_FName') }}">
+                                       class="mt-1 block w-full border-gray-300 rounded-md" value="{{ old('applicants.0.Applicant_FName') }}">
                             </div>
                         </div>
                     </div>
@@ -210,7 +180,7 @@
 
             const html = `
             <div id="applicant-${applicantIndex}" class="border p-4 rounded applicant-row relative">
-                <button type="button" onclick="deleteApplicant('applicant-${applicantIndex}')" class="absolute top-2 right-2 text-red-600 hover:text-red-800" title="Remove applicant">&times;</button>
+                <button type="button" onclick="deleteApplicant('applicant-${applicantIndex}')" class="absolute top-2 right-2 px-3 py-1 rounded bg-red-300 text-red-600 hover:text-red-800" title="Remove applicant">x</button>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label class="text-sm font-medium">CNIC</label>
@@ -247,18 +217,5 @@
             applicantIndex++;
             reindexApplicants();
         }
-        function toggleReferencedLetter(value) {
-            const refLetterNoSection = document.getElementById('referenced_letter_no_section');
-            const refLetterDateSection = document.getElementById('referenced_letter_section');
-
-            if (value === 'official') {
-                refLetterNoSection.classList.remove('hidden');
-                refLetterDateSection.classList.remove('hidden');
-            } else {
-                refLetterNoSection.classList.add('hidden');
-                refLetterDateSection.classList.add('hidden');
-            }
-        }
-
     </script>
-</x-app-layout>
+</x-guest-layout>

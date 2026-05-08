@@ -113,7 +113,7 @@ return [
         ],
         'remote_mysql' => [
             'driver' => 'mysql',
-            'host' => env('REMOTE_DB_HOST', '192.168.1.100'), // IP of the remote machine
+            'host' => env('REMOTE_DB_HOST', '192.168.18.142'), // IP of the remote machine
             'port' => env('REMOTE_DB_PORT', '3306'),
             'database' => env('REMOTE_DB_DATABASE', 'source_db'),
             'username' => env('REMOTE_DB_USERNAME', 'source_user'),

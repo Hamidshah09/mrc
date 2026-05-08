@@ -23,5 +23,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/idp/update-oldid/{oldid}', [IdpController::class, 'update_old_id']);
     Route::post('/idp-history/store', [IdpController::class, 'idp_his_store']);
     Route::get('/idp-history', [IdpController::class, 'idp_his_get']); 
-    Route::post('/domicile/update', [DomicileController::class, 'update']);
+    
+    
+    Route::post('/domicile/update_bluck_status', [DomicileController::class, 'update_bluck_status']);
+    Route::post('/domicile/update_status', [DomicileController::class, 'update_status']);
+    Route::get('/domicile/bycnic/{cnic}', [DomicileController::class, 'getByCnic']);
+    Route::get('/domicile/byid/{id}', [DomicileController::class, 'getById']);    
+    Route::post('/domicile-applicant/{id}/picture', [DomicileController::class, 'uploadPicture']);
+    Route::get('/domicile/approvers', [DomicileController::class, 'getApprovers']);
+    Route::get('/domicile/blacklist/{id}', [DomicileController::class, 'getblacklistedapplicant']);
+
 });
+
+

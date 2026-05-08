@@ -62,7 +62,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
                             <label class="text-sm font-medium">CNIC</label>
-                            <input type="text" name="applicants[0][CNIC]"
+                            <input type="text" name="applicants[0][CNIC]" max="13" min="13"
                                    class="mt-1 block w-full border-gray-300 rounded-md"
                                    placeholder="xxxxxxxxxxxxx">
                         </div>

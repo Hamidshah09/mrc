@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('cashrecords', function (Blueprint $table) {
-            $table->string('payment_type')->nullable()->after('service_type');
+        Schema::connection('mysql')->table('cashrecords', function (Blueprint $table) {
+            $table->string('payment_type', 20)->nullable()->after('service_type');
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('cashrecords', function (Blueprint $table) {
+        Schema::connection('mysql')->table('cashrecords', function (Blueprint $table) {
             $table->dropColumn('payment_type');
         });
     }

@@ -124,7 +124,11 @@ class CashRecordController extends Controller
             });
         }
 
-        $cashRecords = $query->orderBy('date', 'desc')->get();
+        $cashRecords = $query
+    ->orderBy('date', 'desc')
+    ->get()
+    ->unique('cnic')
+    ->values();
 
         $title = 'Note Sheet for ' . $challanDate;
 
@@ -166,7 +170,7 @@ class CashRecordController extends Controller
             });
         }
 
-        $count = $query->count();
+        $count = $query->distinct('cnic')->count('cnic');
         $feePerRecord = 200;
         $amount = $count * $feePerRecord;
 
@@ -183,11 +187,6 @@ class CashRecordController extends Controller
         } else {
             $amount_words = (string) $amount;
         }
-
-        
-
-        
-
         $pdf = Pdf::loadView('cash-records.reports.challan', compact('challanDate','amount', 'amount_words'));
 
         return $pdf->stream('challan.pdf');

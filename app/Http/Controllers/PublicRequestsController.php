@@ -95,6 +95,13 @@ class PublicRequestsController extends Controller
     $domicile->permanent_tehsil_id = $validated['permanent_tehsil_id'];
     $domicile->permanent_address = strtoupper($validated['permanent_address']);
 
+    $domicile->application_type_id = 1; // assuming 1 is for public applications
+    $domicile->service_type_id = 1; // assuming 1 is for domicile service
+    $domicile->payment_type_id = 1; // assuming 1 is for cash payment
+    $domicile->request_type_id = 1; // assuming 1 is for new application
+    $domicile->status = 'Pending';
+    $domicile->priority_type = 'Normal';
+    
     // Children Checkbox
     // $domicile->has_children = $request->has('children_checkbox') ? true : false;
 

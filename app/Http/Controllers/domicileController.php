@@ -28,6 +28,10 @@ class domicileController extends Controller
     public $occupations;
     public $maritalStatuses;
     public $genders;
+    public $applications;
+    public $request_types;
+    public $service_types;
+    public $payment_types;
 
     public function __construct()
     {
@@ -75,6 +79,24 @@ class domicileController extends Controller
             (object)['id' => 2, 'name' => 'Female'],
             (object)['id' => 3, 'name' => 'Transgender'],
         ]);
+
+        $this->request_types = collect([
+            (object)['id' => 1, 'name' => 'New'],
+            (object)['id' => 2, 'name' => 'Duplicate'],
+            (object)['id' => 3, 'name' => 'Revised'],
+        ]);
+
+        $this->service_types = collect([
+            (object)['id' => 1, 'name' => 'Online'],
+            (object)['id' => 2, 'name' => 'Offline'],
+        ]);
+
+        $this->payment_types = collect([
+            (object)['id' => 1, 'name' => 'Cash'],
+            (object)['id' => 2, 'name' => 'Challan'],
+            (object)['id' => 3, 'name' => 'Esahulat'],
+            (object)['id' => 4, 'name' => '1 Link'],
+        ]);
     }
     
 
@@ -113,7 +135,12 @@ class domicileController extends Controller
         $occupations = $this->occupations;
         $maritalStatuses = $this->maritalStatuses;
         $genders= $this->genders;
-        return view('domicile.create', compact('tehsils', 'districts', 'provinces', 'maritalStatuses','qualifications','occupations','genders'));
+        $request_types = $this->request_types;
+        $service_types = $this->service_types;
+        $payment_types = $this->payment_types;
+        $approvers = DB::connection('remote_mysql')->table('approvers')->get();
+
+        return view('domicile.create', compact('tehsils', 'districts', 'provinces', 'maritalStatuses','qualifications','occupations','genders','request_types','service_types','payment_types','approvers'));
     }
     public function store(Request $request)
     {   
@@ -145,7 +172,17 @@ class domicileController extends Controller
         'permanent_tehsil_id' => 'required|integer',
         'permanent_address' => 'required|string|max:100',
 
-        'children_checkbox' => 'nullable|boolean',
+        // Service Details
+        'application_type_id' => 'nullable|integer',
+        'request_type_id' => 'nullable|integer',
+        'service_type_id' => 'nullable|integer',
+        'payment_type_id' => 'nullable|integer',
+        'purpose' => 'nullable|string|max:45',
+        'priority_type' => 'nullable|string|max:10',
+        'receipt_no' => 'nullable|string|max:100',
+        'approver_id' => 'nullable|integer',
+
+        'children_checkbox' => 'nullable|string',
     ]);
 
     $request->validate([
@@ -158,6 +195,7 @@ class domicileController extends Controller
     $domicile = new DomicileApplicants();
 
     // Personal Info
+    $domicile->status = 'Pending';
     $domicile->cnic = strtoupper($validated['cnic']);
     $domicile->first_name = strtoupper($validated['name']);
     $domicile->father_name = strtoupper($validated['father_name']);
@@ -184,6 +222,16 @@ class domicileController extends Controller
     $domicile->permanent_tehsil_id = $validated['permanent_tehsil_id'];
     $domicile->permanent_address = strtoupper($validated['permanent_address']);
 
+    $domicile->application_type_id = $validated['application_type_id'] ?? 1; // default to manual application
+    $domicile->request_type_id = $validated['request_type_id'] ?? 1; // default to new domicile request
+    $domicile->service_type_id = $validated['service_type_id'] ?? 1; // default to offline service
+    $domicile->payment_type_id = $validated['payment_type_id'] ?? 1; // default to cash payment
+    $domicile->priority_type = "Normal"; // default to normal priority
+    $domicile->purpose  = $validated['purpose'] ?? 'N/A'; // optional purpose field
+    $domicile->user_id = auth()->id(); // assuming user must be logged in to create record  
+    $domicile->receipt_no = $validated['receipt_no'] ?? null; // optional receipt number
+    $domicile->approver_id = $validated['approver_id'] ?? null; // optional approver
+
     // Children Checkbox
     // $domicile->has_children = $request->has('children_checkbox') ? true : false;
 
@@ -195,7 +243,7 @@ class domicileController extends Controller
             children::create([
                 'applicant_id'=>$domicile->id,
                 'cnic' => $child['cnic'],
-                'child_name' => $child['name'],
+                'name' => $child['name'],
                 'date_of_birth' => $child['dob'],
                 'gender_id' => $child['gender_id'],
                 // Add any foreign keys, like user_id, etc.
@@ -216,11 +264,15 @@ class domicileController extends Controller
         $occupations = $this->occupations;
         $maritalStatuses = $this->maritalStatuses;
         $genders= $this->genders;
+        $request_types = $this->request_types;
+        $service_types = $this->service_types;
+        $payment_types = $this->payment_types;
+        $approvers = DB::connection('remote_mysql')->table('approvers')->get();
 
         
         $applicant = DomicileApplicants::with('children')->findOrFail($id);
         
-            return view('domicile.edit',  compact('genders','tehsils', 'districts', 'provinces', 'maritalStatuses','qualifications','occupations','applicant'));
+            return view('domicile.edit',  compact('genders','tehsils', 'districts', 'provinces', 'maritalStatuses','qualifications','occupations','applicant','request_types','service_types','payment_types','approvers'));
         }
     
 
@@ -256,10 +308,20 @@ class domicileController extends Controller
         'permanent_tehsil_id' => 'required|integer',
         'permanent_address' => 'required|string|max:100',
 
-        'children_checkbox' => 'nullable|boolean',
+        // Service Details
+        'application_type_id' => 'nullable|integer',
+        'request_type_id' => 'nullable|integer',
+        'service_type_id' => 'nullable|integer',
+        'payment_type_id' => 'nullable|integer',
+        'purpose' => 'nullable|string|max:45',
+        'priority_type' => 'nullable|string|max:10',
+        'receipt_no' => 'nullable|string|max:100',
+        'approver_id' => 'nullable|integer',
+
+        'children_checkbox' => 'nullable|string',
 
         // Children (optional)
-        'children.*.id' => 'nullable|integer|exists:childrens,id',
+        'children.*.id' => 'nullable|integer',
         'children.*.cnic' => 'required|string',
         'children.*.name' => 'required|string',
         'children.*.dob' => 'required|date',
@@ -277,10 +339,20 @@ class domicileController extends Controller
         'place_of_birth' => $validated['place_of_birth'],
         'marital_status_id' => $validated['marital_status_id'],
         'religion' => strtoupper($validated['religion']),
-        'qualification_id' => $request->input('qualification_id'),
-        'occupation_id' => $request->input('occupation_id'),
-        'contact' => $request->input('contact'),
-        'arrival_date' => $request->input('arrival_date'),
+        'qualification_id' => $validated['qualification_id'],
+        'occupation_id' => $validated['occupation_id'],
+        'contact' => $validated['contact'],
+        'arrival_date' => $validated['arrival_date'],
+
+         // Service Details
+        'application_type_id' => $validated['application_type_id'] ?? $domicile->application_type_id,
+        'request_type_id' => $validated['request_type_id'] ?? $domicile->request_type_id,
+        'service_type_id' => $validated['service_type_id'] ?? $domicile->service_type_id,
+        'payment_type_id' => $validated['payment_type_id'] ?? $domicile->payment_type_id, 
+        'receipt_no' => $validated['receipt_no'] ?? $domicile->receipt_no,
+        'purpose' => $validated['purpose'] ?? $domicile->purpose,
+        'priority_type' => $validated['priority_type'] ?? $domicile->priority_type,
+        'approver_id' => $validated['approver_id'] ?? $domicile->approver_id,
 
         'present_province_id' => $validated['present_province_id'],
         'present_district_id' => $validated['present_district_id'],
@@ -296,37 +368,54 @@ class domicileController extends Controller
     // 🔹 Sync children
     $submittedChildren = $request->input('children', []);
 
-    // 1️⃣ Collect current child IDs from DB
+    // Existing child IDs in DB
     $existingIds = $domicile->children()->pluck('id')->toArray();
 
-    // 2️⃣ Collect IDs submitted from form
-    $submittedIds = collect($submittedChildren)->pluck('id')->filter()->toArray();
+    // Submitted child IDs
+    $submittedIds = collect($submittedChildren)
+        ->pluck('id')
+        ->filter()
+        ->toArray();
 
-    // 3️⃣ Delete children that were removed
+    // Delete removed children
     $toDelete = array_diff($existingIds, $submittedIds);
+
     if (!empty($toDelete)) {
         children::whereIn('id', $toDelete)->delete();
     }
 
-    // 4️⃣ Loop through submitted children (update or create)
+    // Update or Create children
     foreach ($submittedChildren as $childData) {
+
+        // Skip empty rows
+        if (
+            empty($childData['name']) &&
+            empty($childData['cnic'])
+        ) {
+            continue;
+        }
+
         if (!empty($childData['id'])) {
+
             // Update existing child
             $child = children::find($childData['id']);
+
             if ($child) {
                 $child->update([
                     'cnic' => $childData['cnic'],
-                    'child_name' => $childData['name'],
+                    'name' => $childData['name'],
                     'date_of_birth' => $childData['dob'],
                     'gender_id' => $childData['gender_id'],
                 ]);
             }
+
         } else {
+
             // Create new child
             children::create([
                 'applicant_id' => $domicile->id,
                 'cnic' => $childData['cnic'],
-                'child_name' => $childData['name'],
+                'name' => $childData['name'],
                 'date_of_birth' => $childData['dob'],
                 'gender_id' => $childData['gender_id'],
             ]);

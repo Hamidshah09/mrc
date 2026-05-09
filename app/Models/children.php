@@ -10,6 +10,7 @@ class children extends Model
     protected $connection = 'remote_mysql';
     protected $table = 'children';
     protected $guarded = [];
+    public $timestamps = false;
     // protected $casts = ['date_of_birth'=>'date'];
 
     public function domicileApplicants(){

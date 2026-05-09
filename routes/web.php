@@ -87,7 +87,7 @@ Route::controller(PublicRequestsController::class)->middleware('daily.limit')->g
         Route::post('/public/domicile/noc-other-district/store', 'store_noc')->name('noc-other-district.public.store');
         Route::get('/public/domicile/noc-ict/create', 'create_noc_ict')->name('noc-ict.public.create');
         Route::post('/public/domicile/noc-ict/store', 'store_noc_ict')->name('noc-ict.public.store');
-        Route::get('/public/domicile/index', 'index')->name('public.index');
+        Route::get('/public/domicile', 'index')->name('public.index');
         
         Route::get('/domicile/tehsils', 'dom_tehsils')->name('domicile.tehsils');
         Route::get('/domicile/districts', 'dom_districts')->name('domicile.districts');
@@ -136,7 +136,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/postalservice/export/pdf-receiving', [PostalServiceExportController::class, 'exportPdfWithReceiving'])->name('postalservice.export.pdf_receiving');
     Route::post('/postalservice/export/pdf-envelope-labels', [PostalServiceExportController::class, 'exportEnvelopeLabels'])->name('postalservice.export.envelope_labels');
     
-    Route::get('/domicile/index', [domicileController::class, 'index'])->name('domicile.index');
+    Route::get('/domicile', [domicileController::class, 'index'])->name('domicile.index');
     Route::get('/domicile/create', [domicileController::class, 'create'])->name('domicile.create');
     Route::post('/domicile/store', [domicileController::class, 'store'])->name('domicile.store');
     Route::get('/domicile/edit/{id}', [domicileController::class, 'edit'])->name('domicile.edit');
@@ -181,14 +181,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/downloads', [AdminController::class, 'downloads'])->name('downloads');
 
     Route::controller(CashRecordController::class)->group(function(){
-        Route::get('/cash-records', 'index')->name('cash-records.index');
-        Route::get('/cash-records/report/note-sheet', 'noteSheet')->name('cash-records.note_sheet');
-        Route::get('/cash-records/report/challan', 'challan')->name('cash-records.challan');
-        Route::get('/cash-records/create', 'create')->name('cash-records.create');
-        Route::post('/cash-records/store', 'store')->name('cash-records.store');
-        Route::get('/cash-records/edit/{id}', 'edit')->name('cash-records.edit');
-        Route::put('/cash-records/update/{id}', 'update')->name('cash-records.update');
-        Route::post('/cash-records/upload', 'upload')->name('cash-records.upload');
+        Route::get('/domicile/cash-records', 'index')->name('cash-records.index');
+        Route::get('/domicile/cash-records/report/note-sheet', 'noteSheet')->name('cash-records.note_sheet');
+        Route::get('/domicile/cash-records/report/challan', 'challan')->name('cash-records.challan');
+        Route::get('/domicile/cash-records/create', 'create')->name('cash-records.create');
+        Route::post('/domicile/cash-records/store', 'store')->name('cash-records.store');
+        Route::get('/domicile/cash-records/edit/{id}', 'edit')->name('cash-records.edit');
+        Route::put('/domicile/cash-records/update/{id}', 'update')->name('cash-records.update');
+        Route::post('/domicile/cash-records/upload', 'upload')->name('cash-records.upload');
     });
     Route::middleware('role:arms,admin')->group(function(){
         Route::get('/arms', [ArmsController::class, 'index'])->name('arms.index');

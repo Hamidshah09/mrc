@@ -8,8 +8,7 @@
     <div class="py-6">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-4 text-gray-900 d">
-                    <h2 class="text-2xl font-bold text-gray-800 text-center w-full">New Domicile</h2>
+                <div class="p-4 text-gray-900">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -22,6 +21,9 @@
                     <form action="{{route('domicile.store')}}" method="Post" enctype="multipart/form-data">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="col-span-4">
+                                <h3 class="text-lg font-semibold mb-2">Personal Information</h3>
+                            </div>
                             
                             <div class="form-control">
                                 <x-input-label for="cnic" :value="__('CNIC')" />
@@ -106,6 +108,8 @@
                                 </select>
                                 <x-input-error :messages="$errors->get('qualification_id')" class="mt-2" />
                             </div>
+                            
+                            
                             <div class="form-control">
                                 <x-input-label for="occupation_id" :value="__('Ocupation')" />
                                 <select name="occupation_id" id="occupation_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('occupation_id')" autofocus autocomplete="occupation_id">
@@ -129,6 +133,9 @@
                                 <x-input-label for="arrival_date" :value="__('Date of arrival in Islamabad')" />
                                 <x-text-input id="arrival_date" class="block mt-1 w-full p-2" type="date" name="arrival_date" :value="old('arrival_date')" autofocus autocomplete="arrival_date" />
                                 <x-input-error :messages="$errors->get('arrival_date')" class="mt-2" />
+                            </div>
+                            <div class="col-span-4">
+                                <h3 class="text-lg font-semibold mb-2">Address Information</h3>
                             </div>
                             <div class="form-control">
                                 <x-input-label for="present_province_id" :value="__('Present Province')" />
@@ -224,11 +231,38 @@
                                 <x-text-input id="permanent_address" class="block mt-1 w-full p-2" type="text" name="permanent_address" :value="old('permanent_address')" required autofocus autocomplete="permanent_address" />
                                 <x-input-error :messages="$errors->get('permanent_address')" class="mt-2" />
                             </div>
-                            <div class="my-2 mx-3 hidden" id="children_div">
-                                <label class="">
-                                    <input name="children_checkbox" value="1" id="children_checkbox" type="checkbox" class="rounded">
-                                    <span class="input-span"></span>Have Children
-                                </label>
+                            <div class="col-span-4">
+                                <h3 class="text-lg font-semibold mb-2">Service Information</h3>
+                            </div>
+                            <div class="form-control">
+                                <x-input-label for="request_type_id" :value="__('Request Type')" />
+                                <select name="request_type_id" id="request_type_id" class="w-full border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('request_type_id')" autofocus autocomplete="request_type_id">
+                                    <option value="">Select Request Type</option>
+                                    @foreach($request_types as $rt)
+                                        <option value="{{ $rt->id }}" {{ old('request_type_id') == $rt->id ? 'selected' : '' }}>{{ $rt->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('request_type_id')" class="mt-2" />
+                            </div>
+                            <div class="form-control">
+                                <x-input-label for="service_type_id" :value="__('Service Type')" />
+                                <select name="service_type_id" id="service_type_id" class="w-full border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('service_type_id')" autofocus autocomplete="service_type_id">
+                                    <option value="">Select Service Type</option>
+                                    @foreach($service_types as $st)
+                                        <option value="{{ $st->id }}" {{ old('service_type_id') == $st->id ? 'selected' : '' }}>{{ $st->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('service_type_id')" class="mt-2" />
+                            </div>
+                            <div class="form-control">
+                                <x-input-label for="payment_type_id" :value="__('Payment Type')" />
+                                <select name="payment_type_id" id="payment_type_id" class="w-full border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('payment_type_id')" autofocus autocomplete="payment_type_id">
+                                    <option value="">Select Payment Type</option>
+                                    @foreach($payment_types as $pt)
+                                        <option value="{{ $pt->id }}" {{ old('payment_type_id') == $pt->id ? 'selected' : '' }}>{{ $pt->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('payment_type_id')" class="mt-2" />
                             </div>
                             <div class="form-control">
                                 <x-input-label for="purpose" :value="__('Purpose')" />
@@ -240,6 +274,31 @@
                                     </select>
                                 <x-input-error :messages="$errors->get('purpose')" class="mt-2" />
                             </div>
+                            <div class="form-control">
+                                <x-input-label for="approver_id" :value="__('Approver')" />
+                                <select name="approver_id" id="approver_id" class="w-full border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('approver_id')" autofocus autocomplete="approver_id">
+                                    <option value="">Select Approver</option>
+                                    @foreach($approvers as $approver)
+                                        <option value="{{ $approver->id }}" {{ old('approver_id') == $approver->id ? 'selected' : '' }}>{{ $approver->name ?? $approver->approver ?? 'Approver' }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('approver_id')" class="mt-2" />
+                            </div>
+                            <div class="form-control">
+                                <x-input-label for="receipt_no" :value="__('Receipt No')" />
+                                <x-text-input id="receipt_no" class="block mt-1 w-full p-2" type="text" required name="receipt_no" :value="old('receipt_no')" min="11" max=11 autofocus autocomplete="receipt_no" />
+                                <x-input-error :messages="$errors->get('receipt_no')" class="mt-2" />
+                            </div>
+                            <div class="col-span-4">
+                                <h3 class="text-lg font-semibold mb-2">Family Information</h3>
+                            </div>
+                            <div class="my-2 mx-3 hidden" id="children_div">
+                                <label class="">
+                                    <input name="children_checkbox" value="1" id="children_checkbox" type="checkbox" class="rounded">
+                                    <span class="input-span"></span>Have Children
+                                </label>
+                            </div>
+                            
                         </div>
                         
                         <div class="mt-2">
@@ -317,10 +376,10 @@
             }
         }
         document.getElementById('same_as_above').addEventListener('click', function() { 
-            document.getElementById('permanent_province_id').selectedIndex = document.getElementById('temp_province_id').selectedIndex;
-            document.getElementById('permanent_tehsil_id').selectedIndex = document.getElementById('temp_tehsil_id').selectedIndex;
-            document.getElementById('permanent_district_id').selectedIndex = document.getElementById('temp_district_id').selectedIndex;
-            document.getElementById('permanent_address').value = document.getElementById('temp_address').value;
+            document.getElementById('permanent_province_id').selectedIndex = document.getElementById('present_province_id').selectedIndex;
+            document.getElementById('permanent_tehsil_id').selectedIndex = document.getElementById('present_tehsil_id').selectedIndex;
+            document.getElementById('permanent_district_id').selectedIndex = document.getElementById('present_district_id').selectedIndex;
+            document.getElementById('permanent_address').value = document.getElementById('present_address').value;
         });
         
         var maritalStatusSelect = document.getElementById('marital_status_id'); 
@@ -330,7 +389,7 @@
             if (maritalStatusSelect.value != "1") { 
                 childrenDiv.classList.remove('hidden');
                 var child_input = document.getElementById('children_checkbox');
-                if (child_input.checkbox){
+                if (child_input.checked){
                     document.getElementById('table-responsive').classList.remove('hidden');    
                 } 
             } else { 

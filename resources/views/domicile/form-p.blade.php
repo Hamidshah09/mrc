@@ -125,7 +125,7 @@
               <tbody>
                 @foreach ($applicant->children as $child)
                   <tr>  
-                    <td class="child-attrib">{{$child->child_name}}</td><td class="child-attrib">{{ \Carbon\Carbon::parse($child->date_of_birth)->format('d-m-Y') }}</td>
+                    <td class="child-attrib">{{$child->name}}</td><td class="child-attrib">{{ \Carbon\Carbon::parse($child->date_of_birth)->format('d-m-Y') }}</td>
                   </tr>
                 @endforeach
               </tbody>

@@ -24,10 +24,6 @@
                     <input type="text" name="search" value="{{ request('search') }}" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Name, CNIC or ID">
                 </div>
                 <div>
-                    <label class="text-sm text-gray-600">Passcode</label>
-                    <input type="text" name="passcode" value="{{ request('passcode') }}" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Passcode">
-                </div>
-                <div>
                     <label class="text-sm text-gray-600">From Date</label>
                     <input type="date" name="from_date" value="{{ request('from_date') }}" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                 </div>

@@ -22,6 +22,9 @@
                     <form action="{{route('domicile.update', $applicant->id)}}" method="Post">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="col-span-4">
+                                <h3 class="text-lg font-semibold mb-2">Personal Information</h3>
+                            </div>
                             
                             <div class="form-control">
                                 <x-input-label for="cnic" :value="__('CNIC')" />
@@ -104,9 +107,10 @@
                                 </select>
                                 <x-input-error :messages="$errors->get('qualification_id')" class="mt-2" />
                             </div>
+                            
                             <div class="form-control">
                                 <x-input-label for="occupation_id" :value="__('Ocupation')" />
-                                <select name="occupation_id" id="occupation_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('occupation_id', , $applicant->occupation_id)" autofocus autocomplete="occupation_id">
+                                <select name="occupation_id" id="occupation_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('occupation_id', $applicant->occupation_id)" autofocus autocomplete="occupation_id">
                                     <option value="">Select Occupation</option>
                                     @foreach ($occupations as $occupation)
                                         <option value="{{ $occupation->id }}"
@@ -126,6 +130,9 @@
                                 <x-input-label for="arrival_date" :value="__('Date of arrival in Islamabad')" />
                                 <x-text-input id="arrival_date" class="block mt-1 w-full p-2" type="date" name="arrival_date" :value="old('arrival_date', $applicant->arrival_date)" autofocus autocomplete="arrival_date" />
                                 <x-input-error :messages="$errors->get('arrival_date')" class="mt-2" />
+                            </div>
+                            <div class="col-span-4">
+                                <h3 class="text-lg font-semibold mb-2">Address Information</h3>
                             </div>
                             <div class="form-control">
                                 <x-input-label for="present_province_id" :value="__('Present Province')" />
@@ -173,13 +180,14 @@
                                 <x-text-input id="present_address" class="block mt-1 w-full p-2" type="text" name="present_address" :value="old('present_address', $applicant->present_address)" required autofocus autocomplete="present_address" />
                                 <x-input-error :messages="$errors->get('present_address')" class="mt-2" />
                             </div>
-                            <div class="form-control">
-                                <label class="float-start">
-                                    <input type="checkbox" id="same_as_above" class="rounded">
-                                    <span>Same as above</span>
-                                </label>
+                            <div class="col-span-4">
+                                <div class="form-control">
+                                    <label class="float-start">
+                                        <input type="checkbox" id="same_as_above" class="rounded">
+                                        <span>Same as above</span>
+                                    </label>
+                                </div>
                             </div>
-                        
                             <div class="form-control">
                                 <x-input-label for="permanent_province_id" :value="__('Permanent Province')" />
                                 <select name="permanent_province_id" id="permanent_province_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('permanent_province_id', $applicant->permanent_province_id)" required autofocus autocomplete="permanent_province_id">
@@ -227,15 +235,57 @@
                                 <x-text-input id="permanent_address" class="block mt-1 w-full p-2" type="text" name="permanent_address" :value="old('permanent_address', $applicant->permanent_address)" required autofocus autocomplete="permanent_address" />
                                 <x-input-error :messages="$errors->get('permanent_address')" class="mt-2" />
                             </div>
-                            <div class="my-2 mx-3 hidden" id="children_div">
-                                <label class="">
-                                    <input name="children_checkbox" value="1" id="children_checkbox" type="checkbox" class="rounded">
-                                    <span class="input-span"></span>Have Children
-                                </label>
+                            <div class="col-span-4">
+                                <h3 class="text-lg font-semibold mb-2">Service Information</h3>
+                            </div>
+                            <div class="form-control">
+                                <x-input-label for="request_type_id" :value="__('Request Type')" />
+                                <select name="request_type_id" id="request_type_id" class="w-full border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('request_type_id', $applicant->request_type_id ?? '')" autofocus autocomplete="request_type_id">
+                                    <option value="">Select Request Type</option>
+                                    @foreach($request_types as $rt)
+                                        <option value="{{ $rt->id }}" {{ old('request_type_id', $applicant->request_type_id ?? '') == $rt->id ? 'selected' : '' }}>{{ $rt->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('request_type_id')" class="mt-2" />
+                            </div>
+                            <div class="form-control">
+                                <x-input-label for="service_type_id" :value="__('Service Type')" />
+                                <select name="service_type_id" id="service_type_id" class="w-full border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('service_type_id', $applicant->service_type_id ?? '')" autofocus autocomplete="service_type_id">
+                                    <option value="">Select Service Type</option>
+                                    @foreach($service_types as $st)
+                                        <option value="{{ $st->id }}" {{ old('service_type_id', $applicant->service_type_id ?? '') == $st->id ? 'selected' : '' }}>{{ $st->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('service_type_id')" class="mt-2" />
+                            </div>
+                            <div class="form-control">
+                                <x-input-label for="payment_type_id" :value="__('Payment Type')" />
+                                <select name="payment_type_id" id="payment_type_id" class="w-full border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('payment_type_id', $applicant->payment_type_id ?? '')" autofocus autocomplete="payment_type_id">
+                                    <option value="">Select Payment Type</option>
+                                    @foreach($payment_types as $pt)
+                                        <option value="{{ $pt->id }}" {{ old('payment_type_id', $applicant->payment_type_id ?? '') == $pt->id ? 'selected' : '' }}>{{ $pt->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('payment_type_id')" class="mt-2" />
+                            </div>
+                            <div class="form-control">
+                                <x-input-label for="approver_id" :value="__('Approver')" />
+                                <select name="approver_id" id="approver_id" class="w-full border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('approver_id', $applicant->approver_id ?? '')" autofocus autocomplete="approver_id">
+                                    <option value="">Select Approver</option>
+                                    @foreach($approvers as $approver)
+                                        <option value="{{ $approver->id }}" {{ old('approver_id', $applicant->approver_id ?? '') == $approver->id ? 'selected' : '' }}>{{ $approver->name ?? $approver->approver ?? 'Approver' }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('approver_id')" class="mt-2" />
+                            </div>
+                            <div class="form-control">
+                                <x-input-label for="receipt_no" :value="__('Receipt No')" />
+                                <x-text-input id="receipt_no" class="block mt-1 w-full p-2" type="text" required name="receipt_no" :value="old('receipt_no', $applicant->receipt_no ?? '')" min="11" max=11 autofocus autocomplete="receipt_no" />
+                                <x-input-error :messages="$errors->get('receipt_no')" class="mt-2" />
                             </div>
                             <div class="form-control">
                                 <x-input-label for="purpose" :value="__('Purpose')" />
-                                    <select name="purpose" id="purpose" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('purpose')" required autofocus autocomplete="purpose">
+                                    <select name="purpose" id="purpose" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('purpose', $applicant->purpose ?? '')" required autofocus autocomplete="purpose">
                                         <option value="" selected disabled="">Select Purpose</option>
                                         @if ($applicant->purpose=='study')
                                             <option selected value="study"> Study</option>
@@ -247,6 +297,15 @@
                                         @endif    
                                     </select>
                                 <x-input-error :messages="$errors->get('purpose')" class="mt-2" />
+                            </div>
+                            <div class="col-span-4">
+                                <h3 class="text-lg font-semibold mb-2">Family Information</h3>
+                            </div>
+                            <div class="my-2 mx-3 hidden" id="children_div">
+                                <label class="">
+                                    <input name="children_checkbox" value="1" id="children_checkbox" type="checkbox" class="rounded">
+                                    <span class="input-span"></span>Have Children
+                                </label>
                             </div>
                         </div>
                         
@@ -272,7 +331,7 @@
                                                     <label class="font-semibold text-gray-700">Child Name</label>
                                                     <input type="text" class="w-full border-2 border-gray-200 rounded-lg p-3"
                                                         name="children[{{ $index }}][name]"
-                                                        value="{{ old('children.'.$index.'.name', $child->child_name) }}" />
+                                                        value="{{ old('children.'.$index.'.name', $child->name) }}" />
                                                 </div>
                                                 <div class="flex flex-col">
                                                     <label class="font-semibold text-gray-700">Date of Birth</label>
@@ -368,10 +427,10 @@
         }
 
         document.getElementById('same_as_above').addEventListener('click', function() { 
-            document.getElementById('permanent_province_id').selectedIndex = document.getElementById('temp_province_id').selectedIndex;
-            document.getElementById('permanent_tehsil_id').selectedIndex = document.getElementById('temp_tehsil_id').selectedIndex;
-            document.getElementById('permanent_district_id').selectedIndex = document.getElementById('temp_district_id').selectedIndex;
-            document.getElementById('permanent_address').value = document.getElementById('temp_address').value;
+            document.getElementById('permanent_province_id').selectedIndex = document.getElementById('present_province_id').selectedIndex;
+            document.getElementById('permanent_tehsil_id').selectedIndex = document.getElementById('present_tehsil_id').selectedIndex;
+            document.getElementById('permanent_district_id').selectedIndex = document.getElementById('present_district_id').selectedIndex;
+            document.getElementById('permanent_address').value = document.getElementById('present_address').value;
         });
         
         var maritalStatusSelect = document.getElementById('marital_status_id'); 

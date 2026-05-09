@@ -10,6 +10,7 @@ class DomicileApplicants extends Model
     protected $primaryKey = 'id';
     protected $table = 'domicile';
     protected $fillable = [
+        'status',
         'cnic',
         'first_name',
         'father_name',
@@ -32,7 +33,18 @@ class DomicileApplicants extends Model
         'permanent_district_id',
         'permanent_tehsil_id',
         'permanent_address',
+        'application_type_id',
+        'service_type_id',
+        'payment_type_id',
+        'request_type_id',
+        'user_id',
+        'remarks',
+        'priority_type',
+        'purpose',
+        'approver_id',
+        'receipt_no',
         'picture_path',
+        'noc_letter_id',
     ];
     // protected $casts = ['date_of_arrival' => 'date', 'date_of_birth'=>'date'];
     

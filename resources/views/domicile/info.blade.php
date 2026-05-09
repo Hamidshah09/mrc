@@ -26,7 +26,7 @@
                         <li class="text-justify">At least one address of Islamabad should be written on CNIC. (if applicant don't have cnic (minor) then his/her parents cnic will be checked).</li>
                         <li class="text-justify">Date of issue of CNIC should be one year old (first cnic on age of 18 is exempted from this clause)</li>
                         <li class="text-justify">valid residence proof i.e allotment letter, fard/registry, rent agreement. (either on applicants name or his/her father, mother, uncle, grandfather, grandmother's name.)</li>
-                        <li class="text-justify">if applicant has two diffent addresses mentioned on his/her cnic then an NOC/Verification from concerned district will be required. (This can be obtained by issuance of letter from CFC (<a class="underline text-blue-800 font-semibold" href="{{route('noc.create')}}">Apply</a>) to concern district or applicant may apply to concerned district. )</li>
+                        <li class="text-justify">if applicant has two diffent addresses mentioned on his/her cnic then an NOC/Verification from concerned district will be required. (This can be obtained by issuance of letter from CFC (<a class="underline text-blue-800 font-semibold" href="{{route('noc-other-district.create')}}">Apply</a>) to concern district or applicant may apply to concerned district. )</li>
                         <li class="text-justify"><a class="underline text-blue-800 font-semibold" href="{{asset('documents/sop_urdu.pdf')}}">Checkout SOP in Urdu</a></li>
                     </ul>
                     <h3 class="font-semibold text-lg text-gray-900 mt-2">Step Two:-</h3>
@@ -42,7 +42,7 @@
                     <p class="ml-5">Visit CFC (first visit)</p>
                     <ul class="ml-5 list-disc pl-5 text-gray-700">    
                         <li class="text-justify">Get a token from que machine and wait for your turn</li>
-                        <li class="text-justify">Fill up a From P digitaly <a class="underline text-blue-800 font-semibold" href="{{route('domicile.create')}}">click here</a> as well as in hard form.</li>
+                        <li class="text-justify">Fill up a From P digitaly <a class="underline text-blue-800 font-semibold" href="{{route('domicile.public.create')}}">click here</a> as well as in hard form.</li>
                         <li class="text-justify">Upon your turn submit documents on counter and get a receipt.</li>
                         <li class="text-justify">Your documents will be sent to Competent Authority for Approval.</li>
                         <li class="text-justify">You will be advised to revisit CFC after 3 working days.</li>
@@ -65,7 +65,7 @@
         <div id="search" class="col-span-1 mt-3">
             <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow ">
                 <h2 class="text-xl font-bold text-gray-900 mb-4">Check Your Application Status</h2>
-                <form action="{{route('domicile.check')}}" method="POST">
+                <form action="" method="POST">
                     @csrf
                     <div class="mb-4">
                         <label class="block text-gray-700 mb-1">Phone Number</label>

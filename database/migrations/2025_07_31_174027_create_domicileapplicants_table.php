@@ -15,8 +15,8 @@ return new class extends Migration
              $table->id();
             $table->string('cnic', 13);
             $table->string('name', 45);
-            $table->string('fathername', 45);
-            $table->string('spousename', 45);
+            $table->string('father_name', 45);
+            $table->string('spouse_name', 45);
             $table->date('date_of_birth');
             $table->unsignedTinyInteger('gender_id'); // Assuming 1-3 range
             $table->string('place_of_birth', 45);
@@ -39,6 +39,18 @@ return new class extends Migration
 
             $table->date('date_of_arrival');
             $table->string('contact', 11);
+            $table->unsignedBigInteger('application_type_id')->nullable();
+            $table->unsignedBigInteger('service_id')->nullable();
+            $table->unsignedBigInteger('request_id')->nullable();
+            $table->unsignedBigInteger('payment_type_id')->nullable();
+            $table->string('remarks', 100)->nullable();
+            $table->string('status', 20)->default('Pending');
+            $table->string('receipt_no', 20)->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('approver_id')->nullable();
+            
+
+            
 
             $table->timestamps();
 

@@ -15,7 +15,7 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('domicile.blacklist.create') }}">
+        <form method="POST" action="{{ route('domicile.blacklist.store') }}">
             @csrf
 
             {{-- LETTER INFORMATION --}}

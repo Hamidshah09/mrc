@@ -8,6 +8,7 @@ class VerificationLetter extends Model
 {
     protected $connection = 'remote_mysql';
     protected $table = 'verification_letters';
+    protected $primaryKey = 'Letter_ID';
     protected $fillable = [
         'Letter_ID',
         'Letter_Date',

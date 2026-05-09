@@ -75,7 +75,7 @@
         <tr>
             <td style="" colspan="2">
                 <p class="text-paragraph">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Following applicants have applied for issuance of domicile certificate from District Islamabad:-
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The record of following domicile certificates has been checked and found genuine:-
                 </p>
             </td>
         </tr>
@@ -100,15 +100,6 @@
             </tr>
             @endforeach
         </tbody>
-    </table>
-    <table style="width:100%; border:none;">
-        <tr>
-            <td style="" colspan="2">
-                <p class="text-paragraph">
-                        3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It is requested that this office may be intimated whether the domicile certificate in respect of the applicant(s) mentioned above has been issued from your office or not.
-                </p>
-            </td>
-        </tr>
     </table>
     <table style="width:100%; border:none; margin-top:40px;">
         <tr>

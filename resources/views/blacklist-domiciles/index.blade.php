@@ -27,8 +27,8 @@
                         
                     </select>
                     <select name="status" id="status" class= "w-48 mt-1 border-gray-600 focus:ring-indigo-500  rounded-md shadow-sm mx-2" autofocus autocomplete="gender">
-                        <option value="Blocked" {{ old('status') == 'Blocked' ? 'selected' : '' }}>Blocked</option>
-                        <option value="Unblocked" {{ old('status') == 'Unblocked' ? 'selected' : '' }}>Unblocked</option>
+                        <option value="blocked" {{ old('status') == 'blocked' ? 'selected' : '' }}>Blocked</option>
+                        <option value="unblocked" {{ old('status') == 'unblocked' ? 'selected' : '' }}>Unblocked</option>
                     </select>
                     <label for="from_date" class="mt-1 p-2">From</label>
                     <x-text-input id="from_date" class="mt-1 w-48 p-2 mx-2" type="date" name="from_date" value="{{ old('from_date') }}" autofocus autocomplete="from_date" />
@@ -58,7 +58,7 @@
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->black_list_id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->cnic }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $letter->status }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ ucfirst($letter->status) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->reason }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->user->name ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">

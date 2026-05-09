@@ -1,9 +1,7 @@
-<?php
-// ...existing code...
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Domicile Cancellation Letter') }}
+            {{ __('Domicile Blacklist') }}
         </h2>
     </x-slot>
 
@@ -17,7 +15,7 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('domicile.cancellation.update', $blacklist->black_list_ID) }}">
+        <form method="POST" action="{{ route('domicile.blacklist.update', $blacklist->black_list_id) }}">
             @csrf
             @method('PUT')
 

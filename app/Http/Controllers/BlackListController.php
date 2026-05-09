@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BlackListDomicileApplications;
+use App\Models\BlackListHistory;
 class BlackListController extends Controller
 {
     public function create(){
@@ -18,7 +19,12 @@ class BlackListController extends Controller
         ]);
 
         BlackListDomicileApplications::create($request->all());
-        return redirect()->back()->with('success', 'Applicant added to blacklist successfully.');
+        BlackListHistory::create([
+            'black_list_id' => $letter->black_list_id,
+            'remarks' => $request->input('status'),
+            'user_id' => auth()->id(),
+        ]);
+        return redirect()->route('domicile.blacklist.index')->with('success', 'Applicant added to blacklist successfully.');
 
     }
     public function index(Request $request){
@@ -56,8 +62,8 @@ class BlackListController extends Controller
 
     public function edit($id)
     {
-        $letter = BlackListDomicileApplications::findOrFail($id);
-        return view('blacklist-domiciles.edit', compact('letter'));
+        $blacklist = BlackListDomicileApplications::findOrFail($id);
+        return view('blacklist-domiciles.edit', compact('blacklist'));
      }
 
     public function update(Request $request, $id)
@@ -68,9 +74,28 @@ class BlackListController extends Controller
             'status' => 'required|in:blocked,unblocked',
             'clearance_reason' => 'nullable|string|max:100',
         ]);
-
+        
         $letter = BlackListDomicileApplications::findOrFail($id);
+        $history_remarks = '';
+        if ($letter->status !== $request->input('status')) {
+            
+            if ($request->input('status') === 'unblocked') {
+                $history_remarks = $request->input('clearance_reason');
+            } else {
+                $history_remarks = $request->input('reason');
+            }
+            
+            $letter->save();
+        }
+
         $letter->update($request->all());
+        
+        
+        BlackListHistory::create([
+            'black_list_id' => $letter->black_list_id,
+            'remarks' => $request->input('status') . ' - ' . $history_remarks ?? '',
+            'user_id' => auth()->id(),
+        ]);
 
         if ($letter->status === 'unblocked') {
             return redirect()->route('domicile.blacklist.index')->with('success', 'Applicant unblocked successfully.');

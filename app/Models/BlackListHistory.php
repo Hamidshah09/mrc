@@ -4,22 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BlackListDomicileApplications extends Model
+class BlackListHistory extends Model
 {
     protected $connection = 'remote_mysql';
-    protected $table = 'black_list';
-    protected $primaryKey = 'black_list_id';
+    protected $table = 'black_list_history';
+    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [
-        'cnic',
-        'status',
-        'reason',
-        'clearance_reason',
+        'black_list_id',
+        'remarks',
         'user_id',
     ];
 
     public function user(){
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    
 }

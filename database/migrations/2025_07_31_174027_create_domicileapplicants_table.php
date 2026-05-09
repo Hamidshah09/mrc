@@ -48,7 +48,8 @@ return new class extends Migration
             $table->string('receipt_no', 20)->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('approver_id')->nullable();
-            
+            $table->enum('priority_type', ['Normal', 'Urgent'])->default('Normal');
+
 
             
 

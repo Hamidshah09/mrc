@@ -36,8 +36,8 @@
                     <label class="text-sm font-medium">Status</label>
                     <select name="status" id="" class="mt-1 block w-full border-gray-300 rounded-md">
                         <option value="">Select Status</option>
-                        <option value="Blocked">Blocked</option>
-                        <option value="Unblocked">Unblocked</option>
+                        <option value="blocked">Blocked</option>
+                        <option value="unblocked">Unblocked</option>
                     </select>
                 </div>
 

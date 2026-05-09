@@ -39,8 +39,8 @@
                     <label class="text-sm font-medium">Status</label>
                     <select name="status" id="" class="mt-1 block w-full border-gray-300 rounded-md">
                         <option value="">Select Status</option>
-                        <option value="Blocked" {{ old('status', $blacklist->status) == 'Blocked' ? 'selected' : '' }}>Blocked</option>
-                        <option value="Unblocked" {{ old('status', $blacklist->status) == 'Unblocked' ? 'selected' : '' }}>Unblocked</option>
+                        <option value="blocked" {{ old('status', $blacklist->status) == 'blocked' ? 'selected' : '' }}>Blocked</option>
+                        <option value="unblocked" {{ old('status', $blacklist->status) == 'unblocked' ? 'selected' : '' }}>Unblocked</option>
                     </select>
                 </div>
 

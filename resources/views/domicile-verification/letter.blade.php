@@ -87,6 +87,8 @@
                 <th>CNIC</th>
                 <th>Name of Applicant</th>
                 <th>Father/Husband Name</th>
+                <th>Domicile No</th>
+                <th>Domicile Date</th>
     
             </tr>
         </thead>
@@ -97,6 +99,8 @@
                 <td>{{ $applicant->CNIC }}</td>
                 <td>{{ $applicant->Applicant_Name }}</td>
                 <td>{{ $applicant->Applicant_FName }}</td>
+                <td>{{ $applicant->Domicile_No }}</td>
+                <td>{{ $applicant->Domicile_Date }}</td>
             </tr>
             @endforeach
         </tbody>

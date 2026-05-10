@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    <h1>Subject: Domicile Applications for {{ $title }}</h1>
+    <h1>Challan Sheet for {{ $title }}</h1>
 
     <table>
         <thead>
@@ -36,10 +36,5 @@
             @endforelse
         </tbody>
     </table>
-    <div style="margin-top: 30px;">
-        <p style="text-align: right;width:100%;margin-right:20px;font-size:12px;font-weight:bold;">Domicile Clerk</p>
-
-        <p style="text-decoration: underline;font-weight:bold;font-size:12px;">Assistant Commissioner (Saddar)</p>
-    </div>
 </body>
 </html>

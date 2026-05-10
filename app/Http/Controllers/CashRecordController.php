@@ -26,6 +26,10 @@ class CashRecordController extends Controller
             $query->where('service_type', request('service_type'));
         }
 
+        if(request('payment_type')){
+            $query->where('payment_type', request('payment_type'));
+        }
+
         if(request('q')){
             $q = request('q');
             $query->where(function($qbuilder) use ($q){
@@ -130,11 +134,57 @@ class CashRecordController extends Controller
     ->unique('cnic')
     ->values();
 
-        $title = 'Note Sheet for ' . $challanDate;
+        $title = $challanDate;
 
         $pdf = Pdf::loadView('cash-records.reports.note-sheet', compact('cashRecords', 'title'));
 
         return $pdf->stream('note-sheet.pdf');
+    }
+
+    public function challanSheet(Request $request)
+    {
+        $query = CashRecord::query();
+
+        // support single date or from/to range
+        if ($request->filled('date')) {
+            $query->whereDate('date', $request->input('date'));
+            $challanDate = $request->input('date');
+        } else {
+            if ($request->filled('from')) {
+                $query->whereDate('date', '>=', $request->input('from'));
+            }
+            if ($request->filled('to')) {
+                $query->whereDate('date', '<=', $request->input('to'));
+            }
+            $challanDate = $request->input('from') && $request->input('to')
+                ? $request->input('from') . ' to ' . $request->input('to')
+                : ($request->input('from') ?? ($request->input('to') ?? date('Y-m-d')));
+        }
+
+        if ($request->filled('service_type')) {
+            $query->where('service_type', $request->input('service_type'));
+        }
+
+        if ($request->filled('q')) {
+            $q = $request->input('q');
+            $query->where(function ($qb) use ($q) {
+                $qb->where('name', 'like', "%{$q}%")
+                    ->orWhere('cnic', 'like', "%{$q}%")
+                    ->orWhere('mobile', 'like', "%{$q}%");
+            });
+        }
+
+        $cashRecords = $query
+                    ->orderBy('date', 'desc')
+                    ->get()
+                    ->unique('cnic')
+                    ->values();
+
+        $title = $challanDate;
+
+        $pdf = Pdf::loadView('cash-records.reports.challan-sheet', compact('cashRecords', 'title'));
+
+        return $pdf->stream('challan-sheet.pdf');
     }
 
     public function challan(Request $request)
@@ -207,6 +257,23 @@ class CashRecordController extends Controller
         // Remove header row
         unset($data[0]);
 
+        //Check weather data is present or not for a specific date
+        if (!empty($data[1][0])) {
+            try {
+                $reportdate = Carbon::createFromFormat('d/m/Y', trim($data[1][0]))
+                    ->format('Y-m-d');
+            } catch (\Exception $e) {
+                $reportdate = null;
+            }
+        }
+
+        if (isset($reportdate)) {
+            $existingRecords = CashRecord::whereDate('date', $reportdate)->count();
+            if ($existingRecords > 0) {
+                return back()->with('error', "Records for date {$reportdate} already exist. Please remove existing records before uploading new data for the same date.");
+            }
+        }
+
         foreach ($data as $row) {
 
             // Skip completely empty rows
@@ -242,6 +309,7 @@ class CashRecordController extends Controller
                 'service_type' => isset($row[4])
                     ? trim(str_replace('(Physical Visit)', '', $row[4]))
                     : null,
+                'payment_type' => $row[5] ?? null,
 
                 'request_type' => $row[6] ?? null,
 

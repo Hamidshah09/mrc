@@ -17,15 +17,17 @@ class VerificationLetterController extends Controller
     {
         $request->validate([
             'Letter_Date' => 'required|date',
-            'Letter_Sent_by' => 'required|string|max:255',
-            'Designation' => 'nullable|string|max:255',
-            'Sender_Address' => 'nullable|string|max:255',
+            'Letter_No' => 'required|string|max:70',
+            'Letter_Sent_by' => 'required|string|max:50',
+            'Designation' => 'nullable|string|max:70',
+            'Sender_Address' => 'nullable|string|max:150',
             'Letter_Issuance_Date' => 'nullable|date',
-            'Remarks' => 'nullable|string|max:255',
+            'Remarks' => 'nullable|string|max:45',
         ]);
 
         $verificationLetter = VerificationLetter::create([
             'Letter_Date' => $request->input('Letter_Date'),
+            'Letter_No' => $request->input('Letter_No'),
             'Letter_Sent_by' => $request->input('Letter_Sent_by'),
             'Designation' => $request->input('Designation'),
             'Sender_Address' => $request->input('Sender_Address'),
@@ -68,6 +70,7 @@ class VerificationLetterController extends Controller
                     'Applicant_FName' => $app['Applicant_FName'] ?? null,
                     'Domicile_No' => $app['Domicile_No'] ?? null,
                     'Domicile_Date' => $app['Domicile_Date'] ?? null,
+                    'address' => $app['address'] ?? null,
 
                 ]);
             }
@@ -90,16 +93,18 @@ class VerificationLetterController extends Controller
     {
         $request->validate([
             'Letter_Date' => 'required|date',
-            'Letter_Sent_by' => 'required|string|max:255',
-            'Designation' => 'nullable|string|max:255',
-            'Sender_Address' => 'nullable|string|max:255',
+            'Letter_No' => 'required|string|max:70',
+            'Letter_Sent_by' => 'required|string|max:50',
+            'Designation' => 'nullable|string|max:70',
+            'Sender_Address' => 'nullable|string|max:150',
             'Letter_Issuance_Date' => 'nullable|date',
-            'Remarks' => 'nullable|string|max:255',
+            'Remarks' => 'nullable|string|max:45',
         ]);
 
         $letter = VerificationLetter::findOrFail($id);
         $letter->update([
             'Letter_Date' => $request->input('Letter_Date'),
+            'Letter_No' => $request->input('Letter_No'),
             'Letter_Sent_by' => $request->input('Letter_Sent_by'),
             'Designation' => $request->input('Designation'),
             'Sender_Address' => $request->input('Sender_Address'),
@@ -141,6 +146,7 @@ class VerificationLetterController extends Controller
                     'CNIC' => $app['CNIC'] ?? null,
                     'Relation' => $app['Relation'] ?? null,
                     'Applicant_FName' => $app['Applicant_FName'] ?? null,
+                    'address' => $app['address'] ?? null,
                     'Domicile_No' => $app['Domicile_No'] ?? null,
                     'Domicile_Date' => $app['Domicile_Date'] ?? null,
                 ];
@@ -152,6 +158,7 @@ class VerificationLetterController extends Controller
                 }
             }
         }
+        return redirect()->route('domicile.verification_letter.index')->with('success', 'Verification Letter updated successfully.');
     }
     public function issueletter($id){
         $letter = VerificationLetter::with('applicants', 'dispatchDiary')->find($id);

@@ -26,13 +26,20 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700">
+                        Letter No.
+                    </label>
+                    <input type="text" name="Letter_No"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">
                         Letter Date
                     </label>
                     <input type="date" name="Letter_Date"
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                            value="{{ date('Y-m-d') }}">
                 </div>
-
+                
                 <div>
                     <label class="block text-sm font-medium text-gray-700">
                         Letter Sent By
@@ -41,6 +48,7 @@
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                 </div>
 
+                
                 <div>
                     <label class="block text-sm font-medium text-gray-700">
                         Designation

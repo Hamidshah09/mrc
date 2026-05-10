@@ -12,10 +12,10 @@
         </div>
 
         @if(session('success'))
-            <div class="mb-4 text-green-700">{{ session('success') }}</div>
+            <div class="mb-4 p-2 bg-green-100 text-green-700 rounded">{{ session('success') }}</div>
         @endif
         @if(session('error'))
-            <div class="mb-4 text-red-700">{{ session('error') }}</div>
+            <div class="mb-4 p-2 bg-red-100 text-red-700 rounded">{{ session('error') }}</div>
         @endif
         <div class="flex justify-between items-center space-x-4 m-2 mb-4">
             <form action="{{route('domicile.verification_letter.index')}}" method="GET" class="mt-3">

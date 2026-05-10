@@ -75,7 +75,7 @@
         <tr>
             <td style="" colspan="2">
                 <p class="text-paragraph">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kindly refer to you office letter No. {{$letter->Letter_No}}, dated {{ $letter->Letter_Date }}, on the subject cited above.:-
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kindly refer to your office letter No. {{$letter->Letter_No}}, dated {{ $letter->Letter_Date }}, on the subject cited above.
                 </p>
             </td>
         </tr>
@@ -84,7 +84,7 @@
         <tr>
             <td style="" colspan="2">
                 <p class="text-paragraph">
-                        2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The record reveals that the following domicile certificate has been issued by this office:-
+                        2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The record reveals that following domicile certificate(s) has/have been issued by this office:
                 </p>
             </td>
         </tr>
@@ -121,7 +121,7 @@
             </td>
             <td style="width: 40%; text-align:center;">
                 <div>Incharge Domicile</div>
-                <div class="">Islamabad</div>
+                <div class="">ICT, Islamabad</div>
 
             </td>
     </table>

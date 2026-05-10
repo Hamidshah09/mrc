@@ -8,6 +8,8 @@ class VerificationLetterApplicants extends Model
 {
     protected $connection = 'remote_mysql';
     protected $table = 'verification_applicants';
+    public $timestamps = false;
+    protected $primaryKey = 'App_ID';
     protected $fillable = [
         'Letter_ID',
         'App_ID',

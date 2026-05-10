@@ -15,7 +15,7 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('domicile-verification.update', $letter->Letter_ID) }}">
+        <form method="POST" action="{{ route('domicile.verification_letter.update', $letter->Letter_ID) }}">
             @csrf
             @method('PUT')
 
@@ -25,6 +25,14 @@
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">
+                        Letter No
+                    </label>
+                    <input type="text" name="Letter_No"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                           value="{{ old('Letter_No', $letter->Letter_No) }}">
+                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">
                         Letter Date

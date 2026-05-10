@@ -24,6 +24,6 @@ class DomicileCancellation extends Model
     ];
 
     function dispatchDiary(){
-        return $this->hasOne(DispatchDiary::class, 'Letter_ID', 'Letter_ID')->where('Letter_Type', 'Cancellation');
+        return $this->hasOne(DispatchDiary::class, 'Letter_ID', 'Letter_ID')->where('Letter_Type', 'Cancellation Letter');
     }
 }

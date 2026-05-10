@@ -61,8 +61,8 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->CNIC ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->Applicant_Name ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('noc-ict.edit', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                            <a href="{{ route('noc-ict.letter', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Letter</a>
+                            <a href="{{ route('noc-ict.edit', $letter->Letter_ID) }}" class="bg-indigo-100 text-gray-500 hover:bg-indigo-300 mr-3 p-2 rounded">Edit</a>
+                            <a href="{{ route('noc-ict.letter', $letter->Letter_ID) }}" class="bg-indigo-100 text-gray-500 hover:bg-indigo-300 mr-3 p-2 rounded">Letter</a>
                         </td>
                     </tr>
                 @empty

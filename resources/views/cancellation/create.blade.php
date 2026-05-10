@@ -15,7 +15,7 @@
                 </ul>
             </div>
         @endif
-        <form method="POST" action="{{ route('domicile.cancellation.create') }}">
+        <form method="POST" action="{{ route('domicile.cancellation.store') }}">
             @csrf
 
             {{-- LETTER INFORMATION --}}
@@ -70,7 +70,7 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium">Remarks</label>
-                    <input type="text" name="remarks"
+                    <input type="text" name="Remarks"
                             class="mt-1 block w-full border-gray-300 rounded-md">
                 </div>
 

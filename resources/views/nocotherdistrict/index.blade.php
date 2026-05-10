@@ -1,13 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('NOC – ICT Letters') }}
+            {{ __('NOC to other District Letters') }}
         </h2>
     </x-slot>
 
     <div class="max-w-6xl mx-auto p-6 bg-white shadow-md rounded mt-10">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold">Letters</h3>
             <a href="{{ route('noc-other-district.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded">New Letter</a>
         </div>
 
@@ -66,8 +65,8 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->NOC_Issued_To }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->Applicant_Name ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('noc-other-district.edit', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                            <a href="{{ route('noc-other-district.letter', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Letter</a>
+                            <a href="{{ route('noc-other-district.edit', $letter->Letter_ID) }}" class="bg-indigo-100 text-gray-600 hover:bg-indigo-300 mr-3 p-2 rounded">Edit</a>
+                            <a href="{{ route('noc-other-district.letter', $letter->Letter_ID) }}" class="bg-indigo-100 text-gray-600 hover:bg-indigo-300 mr-3 p-2 rounded">Letter</a>
                         </td>
                     </tr>
                 @empty

@@ -12,7 +12,7 @@ class BlackListController extends Controller
     }
     public function store(Request $request){
         $request->validate([
-            'cnic' => 'required|max:13|min:13',
+            'cnic' => 'required|max:13|min:13|unique:black_list,cnic,black_list_id',
             'reason' => 'required|string|max:100',
             'status' => 'required|in:blocked,unblocked',
             'clearance_reason' => 'nullable|string|max:100',

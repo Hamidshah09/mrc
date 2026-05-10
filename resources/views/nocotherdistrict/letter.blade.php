@@ -92,7 +92,7 @@
             <td colspan="2" class="">
                 
                 <p class="text-paragraph">
-                    2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It is stated that it is not possible to check the manual record. However, Computerized record has been inspected. As per computerized record, No domicile issued in favour of following persons from this office:-
+                    2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It is stated that computerized record has been examined. According to the computerized record, no domicile certificate has been issued from this office, in respect of following applicant(s):
                 </p>
             </td>
         </tr>
@@ -117,6 +117,16 @@
             </tr>
             @endforeach
         </tbody>
+    </table>
+    <table>
+        <tr style="padding: 0px 15px;">
+            <td colspan="2" class="">
+                
+                <p class="text-paragraph">
+                    3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;However, it is not feasible to verify the record of manual domicile certificates.
+                </p>
+            </td>
+        </tr>
     </table>
     <table style="width:100%; margin-top:50px; border:none;">
         <tr>

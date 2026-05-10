@@ -75,7 +75,7 @@
         <tr>
             <td style="" colspan="2">
                 <p class="text-paragraph">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reference to our application, on the subject cited above.
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reference to your application, on the subject cited above.
                 </p>
             </td>
         </tr>
@@ -84,7 +84,7 @@
         <tr>
             <td style="" colspan="2">
                 <p class="text-paragraph">
-                        2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Your domiicle certificate issued  from this office vide Domicile No. {{ $letter->Domicile_No }}, Dated {{ date('d-m-Y', strtotime($letter->Domicile_Date)) }} is hereby cancelled  on your own request and this office has no objection if the applicant applies for Domicile Certificate from any District.
+                        2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it is stated that your domiicle certificate, issued from this office vide Domicile No: {{ $letter->Domicile_No }}, Dated: {{ date('d-m-Y', strtotime($letter->Domicile_Date)) }}, is hereby cancelled at your own request. This office has no objection if you apply for a Domicile Certificate from any other district.
                 </p>
             </td>
         </tr>

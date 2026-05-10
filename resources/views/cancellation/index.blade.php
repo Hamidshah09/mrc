@@ -11,10 +11,10 @@
         </div>
 
         @if(session('success'))
-            <div class="mb-4 text-green-700">{{ session('success') }}</div>
+            <div class="mb-4 p-2 bg-green-100 text-green-700 rounded">{{ session('success') }}</div>
         @endif
         @if(session('error'))
-            <div class="mb-4 text-red-700">{{ session('error') }}</div>
+            <div class="mb-4 p-2 bg-red-100 text-red-700">{{ session('error') }}</div>
         @endif
         <div class="flex justify-between items-center space-x-4 m-2 mb-4">
             <form action="{{route('domicile.cancellation.index')}}" method="GET" class="mt-3">
@@ -62,8 +62,8 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Domicile_No ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Domicile_Date ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('domicile.cancellation.edit', $letter->Letter_ID) }}" class="bg-yellow-300 text-gray-700 hover:bg-yellow-500 mr-3 p-2 rounded">Edit</a>
-                            <a href="{{ route('domicile.cancellation.letter', $letter->Letter_ID) }}" class="bg-yellow-300 text-gray-700 hover:bg-yellow-500 mr-3 p-2 rounded">Letter</a>
+                            <a href="{{ route('domicile.cancellation.edit', $letter->Letter_ID) }}" class="bg-indigo-100 text-gray-700 hover:bg-indigo-300 mr-3 p-2 rounded">Edit</a>
+                            <a href="{{ route('domicile.cancellation.letter', $letter->Letter_ID) }}" class="bg-indigo-100 text-gray-700 hover:bg-indigo-300 mr-3 p-2 rounded">Letter</a>
                         </td>
                     </tr>
                 @empty

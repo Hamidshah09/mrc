@@ -17,7 +17,7 @@ class DomicileCancellationController extends Controller
             'CNIC' => 'required|string|max:13',
             'Applicant_Name' => 'required|string|max:70',
             'Relation' => 'required|string|max:5',
-            'Applicant_FName' => 'required|string|max:70',
+            'Father_Name' => 'required|string|max:70',
             'Address' => 'required|string|max:200',
             'Domicile_No' => 'required|string|max:20',
             'Domicile_Date' => 'required|date',
@@ -90,7 +90,7 @@ class DomicileCancellationController extends Controller
             'CNIC' => 'required|string|max:13',
             'Applicant_Name' => 'required|string|max:70',
             'Relation' => 'required|string|max:5',
-            'Applicant_FName' => 'required|string|max:70',
+            'Father_Name' => 'required|string|max:70',
             'Address' => 'required|string|max:200',
             'Domicile_No' => 'required|string|max:20',
             'Domicile_Date' => 'required|date',
@@ -99,7 +99,6 @@ class DomicileCancellationController extends Controller
 
         $cancellation = DomicileCancellation::findOrFail($id);
         $cancellation->update($validated);
-
         return redirect()->route('domicile.cancellation.index')->with('success', 'Domicile cancellation record updated successfully.');
     }
     public function issueletter($id){

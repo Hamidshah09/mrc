@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    <h1>Challan Sheet for {{ $title }}</h1>
+    <h1>Domicile Cash Report  of {{ $title }}</h1>
 
     <table>
         <thead>
@@ -20,6 +20,8 @@
                 <th style="width:10%;">#</th>
                 <th style="width:30%">CNIC</th>
                 <th>Name</th>
+                <th>Payment Type</th>
+                <th>Govt Fee</th>
             </tr>
         </thead>
         <tbody>
@@ -28,13 +30,20 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $r->cnic }}</td>
                     <td>{{ $r->name }}</td>
+                    <td>{{ $r->payment_type }}</td>
+                    <td>200</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="3" style="text-align:center">No records found for selected filters.</td>
+                    <td colspan="5" style="text-align:center">No records found for selected filters.</td>
                 </tr>
             @endforelse
+                <tr>
+                    <td colspan="4" style="text-align:right; font-weight:bold;">Total Amount:</td>
+                    <td style="font-weight:bold;">{{ $amount }}</td>
+                </tr>
         </tbody>
     </table>
+
 </body>
 </html>

@@ -64,7 +64,7 @@
         </tr>
         <tr style="margin-top: 10px;">
         </tr>
-        <tr>
+        <tr style="margin-top: 20px;">
             <td style="width:20%; padding-right:5px; vertical-align:top; border:none; text-align:center; text-weight:bold;">
                 <h2 class="subject-heading">Subject</h2>
             </td>
@@ -75,7 +75,16 @@
         <tr>
             <td style="" colspan="2">
                 <p class="text-paragraph">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The record of following domicile certificates has been checked and found genuine:-
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kindly refer to you office letter No. {{$letter->Letter_No}}, dated {{ $letter->Letter_Date }}, on the subject cited above.:-
+                </p>
+            </td>
+        </tr>
+    </table>
+    <table style="width:100%; border:none;">
+        <tr>
+            <td style="" colspan="2">
+                <p class="text-paragraph">
+                        2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The record reveals that the following domicile certificate has been issued by this office:-
                 </p>
             </td>
         </tr>
@@ -105,7 +114,8 @@
             @endforeach
         </tbody>
     </table>
-    <table style="width:100%; border:none; margin-top:40px;">
+    
+    <table style="width:100%; border:none; margin-top:60px;">
         <tr>
             <td style="width:60%" >
             </td>

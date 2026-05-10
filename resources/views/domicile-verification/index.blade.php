@@ -56,11 +56,11 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Letter_ID }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Letter_Date }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->dispatchDiary->Dispatch_No ?? 'N/A' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Letter_Sent_to }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Letter_Sent_by }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->Applicant_Name ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('domicile.verification_letter.edit', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                            <a href="{{ route('domicile.verification_letter.letter', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Letter</a>
+                            <a href="{{ route('domicile.verification_letter.edit', $letter->Letter_ID) }}" class="bg-indigo-200 text-gray-800 hover:bg-indigo-400 mr-3 p-2 rounded">Edit</a>
+                            <a href="{{ route('domicile.verification_letter.letter', $letter->Letter_ID) }}" class="bg-indigo-200 text-gray-800 hover:bg-indigo-400 mr-3 p-2 rounded">Letter</a>
                         </td>
                     </tr>
                 @empty

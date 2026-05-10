@@ -75,7 +75,7 @@
         <tr>
             <td style="" colspan="2">
                 <p class="text-paragraph">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Following applicants have applied for issuance of domicile certificate from District Islamabad:-
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Following applicant(s) has/have applied for the issuance of domicile certificate from district Islamabad:-
                 </p>
             </td>
         </tr>
@@ -105,7 +105,7 @@
         <tr>
             <td style="" colspan="2">
                 <p class="text-paragraph">
-                        3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It is requested that this office may be intimated whether the domicile certificate in respect of the applicant(s) mentioned above has been issued from your office or not.
+                        3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It is requested that this office may be intimated whether the domicile certificate(s) in respect of the applicant(s) mentioned above has been issued from your office or not.
                 </p>
             </td>
         </tr>
@@ -115,7 +115,7 @@
             <td style="width:60%" >
             </td>
             <td style="width: 40%; text-align:center;">
-                <div>Incharge Domicile</div>
+                <div>Incharge Domicile Branch</div>
                 <div class="">Islamabad</div>
 
             </td>

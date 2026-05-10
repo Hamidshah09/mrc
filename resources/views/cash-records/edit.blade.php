@@ -52,6 +52,11 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium text-gray-700">Payment Type</label>
+                    <input type="text" name="payment_type" value="{{ old('payment_type', $record->payment_type) }}" class="mt-1 block w-full border-gray-300 rounded-md">
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium text-gray-700">Operator Name</label>
                     <input type="text" name="operator_name" value="{{ old('operator_name', $record->operator_name) }}" class="mt-1 block w-full border-gray-300 rounded-md">
                 </div>

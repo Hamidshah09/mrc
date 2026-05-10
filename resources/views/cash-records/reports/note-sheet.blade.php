@@ -20,6 +20,7 @@
                 <th style="width:10%;">#</th>
                 <th style="width:30%">CNIC</th>
                 <th>Name</th>
+                <th>Request Type</th>
             </tr>
         </thead>
         <tbody>
@@ -28,10 +29,11 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $r->cnic }}</td>
                     <td>{{ $r->name }}</td>
+                    <td>{{ $r->request_type }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="3" style="text-align:center">No records found for selected filters.</td>
+                    <td colspan="4" style="text-align:center">No records found for selected filters.</td>
                 </tr>
             @endforelse
         </tbody>

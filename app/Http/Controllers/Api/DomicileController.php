@@ -180,7 +180,7 @@ class DomicileController extends Controller
     public function getblacklistedapplicant($id)
     {
         try {
-            $applicant = BlackListDomicileApplications::where('status', 'Blocked')->findOrFail($id);
+            $applicant = BlackListDomicileApplications::where('status', 'blocked')->findOrFail($id);
             if ($applicant) {
                 $isBlacklisted = true;
             } else {

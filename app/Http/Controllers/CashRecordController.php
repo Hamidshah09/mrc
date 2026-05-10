@@ -109,10 +109,8 @@ class CashRecordController extends Controller
             }
             if ($request->filled('to')) {
                 $query->whereDate('date', '<=', $request->input('to'));
+                $challanDate = $request->input('from');
             }
-            $challanDate = $request->input('from') && $request->input('to')
-                ? $request->input('from') . ' to ' . $request->input('to')
-                : ($request->input('from') ?? ($request->input('to') ?? date('Y-m-d')));
         }
 
         if ($request->filled('service_type')) {
@@ -155,10 +153,8 @@ class CashRecordController extends Controller
             }
             if ($request->filled('to')) {
                 $query->whereDate('date', '<=', $request->input('to'));
+                $challanDate = $request->input('to');
             }
-            $challanDate = $request->input('from') && $request->input('to')
-                ? $request->input('from') . ' to ' . $request->input('to')
-                : ($request->input('from') ?? ($request->input('to') ?? date('Y-m-d')));
         }
 
         if ($request->filled('service_type')) {
@@ -179,10 +175,16 @@ class CashRecordController extends Controller
                     ->get()
                     ->unique('cnic')
                     ->values();
-
+        $amount = $query
+                    ->orderBy('date', 'desc')
+                    ->get()
+                    ->unique('cnic')
+                    ->values()
+                    ->count() * 200;
+        
         $title = $challanDate;
 
-        $pdf = Pdf::loadView('cash-records.reports.challan-sheet', compact('cashRecords', 'title'));
+        $pdf = Pdf::loadView('cash-records.reports.challan-sheet', compact('cashRecords', 'title', 'amount'));
 
         return $pdf->stream('challan-sheet.pdf');
     }

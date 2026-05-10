@@ -84,9 +84,10 @@
       VIDE RULE 23, PAKISTAN CITIZENSHIP RULE, 1952<br />
       APPLICATION FOR CERTIFICATE OF DOMICILE PAKISTAN
     </div>
-
+    <p style="width:100%;text-align:center;margin:0px;">Record ID: <span>{{$applicant->id}}</span></p>
     <div class="letter-body">
       <div class="recipient">
+        
         <p style="margin: 0px">To,</p>
         <p style="margin: 0px">The District Magistrate,</p>
         <p style="margin: 0px">Islamabad</p>

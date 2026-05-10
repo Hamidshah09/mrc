@@ -174,8 +174,8 @@
                                 <x-input-error :messages="$errors->get('present_tehsil_id')" class="mt-2" />
                             </div>
                             <div class="form-control">
-                                <x-input-label for="temp_address" :value="__('Present Address')" />
-                                <x-text-input id="temp_address" class="block mt-1 w-full p-2" type="text" name="present_address" :value="old('present_address')" required autofocus autocomplete="present_address" />
+                                <x-input-label for="present_address" :value="__('Present Address')" />
+                                <x-text-input id="present_address" class="block mt-1 w-full p-2" type="text" name="present_address" :value="old('present_address')" required autofocus autocomplete="present_address" />
                                 <x-input-error :messages="$errors->get('present_address')" class="mt-2" />
                             </div>
                             <div class="form-control">

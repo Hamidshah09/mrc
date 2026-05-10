@@ -91,13 +91,15 @@ class VerificationLetterController extends Controller
             $query->where('Letter_Sent_by', 'like', '%'.$request->input('Letter_Sent_by').'%');
         }
 
-        if ($request->filled('q')) {
-            $search = $request->input('q');
-            $query->where(function($q) use ($search) {
-                $q->where('Letter_No', 'like', '%'.$search.'%')
-                  ->orWhere('Letter_Sent_by', 'like', '%'.$search.'%')
-                  ->orWhere('Sender_Address', 'like', '%'.$search.'%')
-                  ->orWhere('Remarks', 'like', '%'.$search.'%');
+        // unified filter: searches Letter_Sent_by, applicant name and CNIC
+        if ($request->filled('filter')) {
+            $filter = $request->input('filter');
+            $query->where(function($q) use ($filter) {
+                $q->where('Letter_Sent_by', 'like', '%'.$filter.'%')
+                  ->orWhereHas('applicants', function($qa) use ($filter) {
+                      $qa->where('Applicant_Name', 'like', '%'.$filter.'%')
+                         ->orWhere('CNIC', 'like', '%'.$filter.'%');
+                  });
             });
         }
 
@@ -108,21 +110,7 @@ class VerificationLetterController extends Controller
             $query->whereDate('Letter_Date', '<=', $request->input('to_date'));
         }
 
-        // filter by applicant name (search in related applicants)
-        if ($request->filled('applicant_name')) {
-            $name = $request->input('applicant_name');
-            $query->whereHas('applicants', function($q) use ($name) {
-                $q->where('Applicant_Name', 'like', '%'.$name.'%');
-            });
-        }
-
-        // filter by applicant CNIC
-        if ($request->filled('cnic')) {
-            $cnic = $request->input('cnic');
-            $query->whereHas('applicants', function($q) use ($cnic) {
-                $q->where('CNIC', 'like', '%'.$cnic.'%');
-            });
-        }
+        // legacy individual filters removed in favor of unified `filter` input
 
         $letters = $query->paginate(10)->appends($request->except('page'));
         return view('domicile-verification.index', compact('letters'));

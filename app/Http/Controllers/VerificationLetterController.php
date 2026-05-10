@@ -156,7 +156,7 @@ class VerificationLetterController extends Controller
     public function issueletter($id){
         $letter = VerificationLetter::with('applicants', 'dispatchDiary')->find($id);
         if (!$letter){
-            return redirect()->route('domicile-verification.index')->withErrors(['notfound' => 'Letter not found']);
+            return redirect()->route('domicile.verification_letter.index')->withErrors(['notfound' => 'Letter not found']);
         }
         $pdf = \PDF::loadView('domicile-verification.letter', compact('letter'));
         return $pdf->stream('Verification_Letter_'.$letter->Letter_ID.'.pdf');

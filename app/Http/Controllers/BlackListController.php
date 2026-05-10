@@ -18,7 +18,7 @@ class BlackListController extends Controller
             'clearance_reason' => 'nullable|string|max:100',
         ]);
 
-        BlackListDomicileApplications::create($request->all());
+        $letter = BlackListDomicileApplications::create($request->all());
         BlackListHistory::create([
             'black_list_id' => $letter->black_list_id,
             'remarks' => $request->input('status'),

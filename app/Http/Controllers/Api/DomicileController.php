@@ -177,17 +177,12 @@ class DomicileController extends Controller
         }
     }
 
-    public function getblacklistedapplicant($id)
+    public function getblacklistedapplicant($cnic)
     {
         try {
-            $applicant = BlackListDomicileApplications::where('black_list_id', $id)
+            $isBlacklisted = BlackListDomicileApplications::where('cnic', $cnic)
             ->where('status', 'blocked')
-            ->first();
-            if ($applicant) {
-                $isBlacklisted = true;
-            } else {
-                $isBlacklisted = false;
-            }
+            ->exists();
 
             return response()->json([
                 'success' => true,

@@ -28,27 +28,30 @@
                 <div>
                     <label class="text-sm font-medium">CNIC</label>
                     <input type="text" name="cnic"
-                            class="mt-1 block w-full border-gray-300 rounded-md"
-                            placeholder="xxxxxxxxxxxxx">
+                        value="{{ old('cnic') }}"
+                        class="mt-1 block w-full border-gray-300 rounded-md"
+                        placeholder="xxxxxxxxxxxxx">
                 </div>
 
                 <div>
                     <label class="text-sm font-medium">Status</label>
                     <select name="status" id="" class="mt-1 block w-full border-gray-300 rounded-md">
                         <option value="">Select Status</option>
-                        <option value="blocked">Blocked</option>
-                        <option value="unblocked">Unblocked</option>
+                        <option value="blocked" {{ old('status') == 'blocked' ? 'selected' : '' }}>Blocked</option>
+                        <option value="unblocked" {{ old('status') == 'unblocked' ? 'selected' : '' }}>Unblocked</option>
                     </select>
                 </div>
 
                 <div>
                     <label class="text-sm font-medium">Reason</label>
                     <input type="text" name="reason"
+                            value="{{ old('reason') }}"
                             class="mt-1 block w-full border-gray-300 rounded-md">
                 </div>
                 <div>
                     <label class="text-sm font-medium">Clearance Reason</label>
                     <input type="text" name="clearance_reason"
+                            value="{{ old('clearance_reason') }}"
                             class="mt-1 block w-full border-gray-300 rounded-md">
                 </div>
 

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\BlackListDomicileApplications;
 use App\Models\BlackListHistory;
@@ -12,7 +12,13 @@ class BlackListController extends Controller
     }
     public function store(Request $request){
         $request->validate([
-            'cnic' => 'required|max:13|min:13|unique:black_list,cnic,black_list_id',
+                    'cnic' => [
+                'required',
+                'min:13',
+                'max:13',
+
+                Rule::unique(BlackListDomicileApplications::class, 'cnic')
+            ],
             'reason' => 'required|string|max:100',
             'status' => 'required|in:blocked,unblocked',
             'clearance_reason' => 'nullable|string|max:100',

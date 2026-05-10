@@ -51,7 +51,7 @@ class VerificationLetterController extends Controller
 
         DispatchDiary::create([
             'Dispatch_No' => $dispatchNo,
-            'Letter_Type' => 'NOC ICT Letter',
+            'Letter_Type' => 'Verification Letter',
             'Letter_ID' => $letterId,
         ]);
         $applicants = $request->input('applicants', []);
@@ -81,7 +81,50 @@ class VerificationLetterController extends Controller
 
     public function index(Request $request)
     {
-        $letters = VerificationLetter::with('applicants', 'dispatchDiary')->orderBy('Letter_ID', 'desc')->paginate(10);
+        $query = VerificationLetter::with('applicants', 'dispatchDiary')->orderBy('Letter_ID', 'desc');
+
+        if ($request->filled('Letter_No')) {
+            $query->where('Letter_No', 'like', '%'.$request->input('Letter_No').'%');
+        }
+
+        if ($request->filled('Letter_Sent_by')) {
+            $query->where('Letter_Sent_by', 'like', '%'.$request->input('Letter_Sent_by').'%');
+        }
+
+        if ($request->filled('q')) {
+            $search = $request->input('q');
+            $query->where(function($q) use ($search) {
+                $q->where('Letter_No', 'like', '%'.$search.'%')
+                  ->orWhere('Letter_Sent_by', 'like', '%'.$search.'%')
+                  ->orWhere('Sender_Address', 'like', '%'.$search.'%')
+                  ->orWhere('Remarks', 'like', '%'.$search.'%');
+            });
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('Letter_Date', '>=', $request->input('from_date'));
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('Letter_Date', '<=', $request->input('to_date'));
+        }
+
+        // filter by applicant name (search in related applicants)
+        if ($request->filled('applicant_name')) {
+            $name = $request->input('applicant_name');
+            $query->whereHas('applicants', function($q) use ($name) {
+                $q->where('Applicant_Name', 'like', '%'.$name.'%');
+            });
+        }
+
+        // filter by applicant CNIC
+        if ($request->filled('cnic')) {
+            $cnic = $request->input('cnic');
+            $query->whereHas('applicants', function($q) use ($cnic) {
+                $q->where('CNIC', 'like', '%'.$cnic.'%');
+            });
+        }
+
+        $letters = $query->paginate(10)->appends($request->except('page'));
         return view('domicile-verification.index', compact('letters'));
     }
     public function edit($id)

@@ -46,6 +46,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Letter Date</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dispatch No</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sent To</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">CNIC</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Applicant Name</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                     </tr>
@@ -57,6 +58,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Letter_Date }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->dispatchDiary->Dispatch_No ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Letter_Sent_to }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->CNIC ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->Applicant_Name ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <a href="{{ route('noc-ict.edit', $letter->Letter_ID) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>

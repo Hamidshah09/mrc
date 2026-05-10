@@ -94,12 +94,58 @@ class CashRecordController extends Controller
 
         return redirect()->route('cash-records.index')->with('success', 'Cash record updated.');
     }
-
-    public function noteSheet(Request $request)
+    public function monthlyReport(Request $request)
     {
         $query = CashRecord::query();
 
+        if ($request->filled('month')) {
+            $month = Carbon::parse($request->input('month'))->format('F Y');
+            $query->whereYear('date', Carbon::parse($request->input('month'))->year)
+                ->whereMonth('date', Carbon::parse($request->input('month'))->month);
+        } else {
+            $month = 'All Time';
+        }
+
+        if ($request->filled('service_type')) {
+            $query->where('service_type', $request->input('service_type'));
+        }
+
+        if ($request->filled('payment_type')) {
+            $query->where('payment_type', $request->input('payment_type'));
+        }
+
+        if ($request->filled('q')) {
+            $q = $request->input('q');
+            $query->where(function ($qb) use ($q) {
+                $qb->where('name', 'like', "%{$q}%")
+                    ->orWhere('cnic', 'like', "%{$q}%")
+                    ->orWhere('mobile', 'like', "%{$q}%");
+            });
+        }
+
+        $cashRecords = $query->orderBy('date', 'desc')->get();
+
+        $count = $cashRecords->count();
+        $amount = $count * 200; // Assuming fixed fee of 200 per record
+        // return view('cash-records.reports.monthly-report', compact('cashRecords', 'month', 'count', 'amount'));
+        $pdf = Pdf::loadView('cash-records.reports.monthly-report', compact('cashRecords', 'month', 'count', 'amount'));
+
+        return $pdf->stream('monthly-report.pdf');
+    }
+    public function noteSheet(Request $request)
+    {
+        $request->validate([
+            'from' => 'nullable|date|required_without:date',
+            'to' => 'nullable|date|required_with:from',
+        ], [
+            'from.required_without' => 'Please select a date or date range.',
+            'to.required_with' => 'Please select the ending date.',
+        ]);
+
+        $query = CashRecord::query();
+        $challanDate = '';
         // support single date or from/to range
+        
         if ($request->filled('date')) {
             $query->whereDate('date', $request->input('date'));
             $challanDate = $request->input('date');

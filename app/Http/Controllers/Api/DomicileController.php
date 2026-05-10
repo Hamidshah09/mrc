@@ -180,7 +180,9 @@ class DomicileController extends Controller
     public function getblacklistedapplicant($id)
     {
         try {
-            $applicant = BlackListDomicileApplications::where('status', 'blocked')->findOrFail($id);
+            $applicant = BlackListDomicileApplications::where('id', $id)
+            ->where('status', 'blocked')
+            ->first();
             if ($applicant) {
                 $isBlacklisted = true;
             } else {
@@ -195,7 +197,7 @@ class DomicileController extends Controller
             Log::error('getblacklistedapplicant error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Unable to check blacklist status',
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

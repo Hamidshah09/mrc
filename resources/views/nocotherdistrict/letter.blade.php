@@ -123,7 +123,7 @@
             <td style="width:60%" >
             </td>
             <td style="width: 40%; text-align:center;">
-                <div>Incharge Domicile</div>
+                <div>Incharge Domicile Branch</div>
                 <div class="">Islamabad</div>
 
             </td>

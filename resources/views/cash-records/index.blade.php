@@ -18,6 +18,7 @@
                         <a :href="'{{ route('cash-records.note_sheet') }}' + (window.location.search ? window.location.search : '')" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Note Sheet</a>
                         <a :href="'{{ route('cash-records.challan') }}' + (window.location.search ? window.location.search : '')" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Challan</a>
                         <a :href="'{{ route('cash-records.challan_sheet') }}' + (window.location.search ? window.location.search : '')" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Challan Sheet</a>
+                        <a :href="'{{ route('cash-records.monthly_report') }}' + (window.location.search ? window.location.search : '')" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monthly Report</a>
                     </div>
                 </div>
 

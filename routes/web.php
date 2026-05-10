@@ -189,6 +189,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/domicile/cash-records', 'index')->name('cash-records.index');
         Route::get('/domicile/cash-records/report/note-sheet', 'noteSheet')->name('cash-records.note_sheet');
         Route::get('/domicile/cash-records/report/challan-sheet', 'challanSheet')->name('cash-records.challan_sheet');
+        Route::get('/domicile/cash-records/report/monthly-report', 'monthlyReport')->name('cash-records.monthly_report');
         Route::get('/domicile/cash-records/report/challan', 'challan')->name('cash-records.challan');
         Route::get('/domicile/cash-records/create', 'create')->name('cash-records.create');
         Route::post('/domicile/cash-records/store', 'store')->name('cash-records.store');

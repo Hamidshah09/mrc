@@ -7,16 +7,16 @@
 
     <div class="max-w-7xl mx-auto p-6 bg-white shadow-md rounded mt-10">
         <div class="flex justify-between items-center mb-4">
-            <a href="{{ route('domicile.blacklist.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded">New Letter</a>
+            <a href="{{ route('domicile.blacklist.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded">New Entry</a>
         </div>
 
         @if(session('success'))
-            <div class="mb-4 text-green-700">{{ session('success') }}</div>
+            <div class="mb-4 text-green-700 p-2 bg-green-100 rounded">{{ session('success') }}</div>
         @endif
         @if(session('error'))
-            <div class="mb-4 text-red-700">{{ session('error') }}</div>
+            <div class="mb-4 text-red-700 p-2 bg-red-100 rounded">{{ session('error') }}</div>
         @endif
-        <div class="flex justify-between items-center space-x-4 m-2 mb-4">
+        <div class="flex justify-end items-center space-x-4 m-2 mb-4">
             <form action="{{route('domicile.blacklist.index')}}" method="GET" class="mt-3">
                 <div class="flex flex-row flex-wrap items-center">
                     <x-text-input id="search" class="mt-1 w-48 p-2 mx-2" type="text" name="search" value="{{ old('search') }}" autofocus autocomplete="cnic" />

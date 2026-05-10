@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>NOC ICT Letter</title>
+    <title>Domicile Cancellation Letter</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; }
         .records { width: 100%; border-collapse: collapse;}
@@ -28,7 +28,7 @@
             <tr>
                 <td style="text-align: left; padding:5px;">
                     @if($letter->dispatchDiary)
-                        No. {{ $letter->dispatchDiary->Dispatch_No }}/Domicile/2026
+                        No. {{ $letter->dispatchDiary->Dispatch_No }}/Domicile/{{$year}}
                     @endif
                 </td>
                 <td style="text-align:right; padding:5px;">

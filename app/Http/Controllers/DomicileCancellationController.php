@@ -24,7 +24,23 @@ class DomicileCancellationController extends Controller
             'Remarks' => 'nullable|string|max:45',
         ]);
 
-        DomicileCancellation::create($validated);
+        $record = DomicileCancellation::create($validated);
+        //inserting dispatch diary record
+        $lastDispatch = DispatchDiary::latest('Dispatch_ID')->first();
+
+        $currentYear = now()->year;
+
+        if (!$lastDispatch || $lastDispatch->timestamp->year != $currentYear) {
+            $dispatchNo = 1;
+        } else {
+            $dispatchNo = $lastDispatch->Dispatch_No + 1;
+        }
+
+        DispatchDiary::create([
+            'Dispatch_No' => $dispatchNo,
+            'Letter_Type' => 'Cancellation Letter',
+            'Letter_ID' => $record->Letter_ID,
+        ]);
 
         return redirect()->route('domicile.cancellation.index')->with('success', 'Domicile cancellation record created successfully.');
     }
@@ -88,7 +104,9 @@ class DomicileCancellationController extends Controller
     }
     public function issueletter($id){
         $letter = DomicileCancellation::findOrFail($id);
-        $pdf = \PDF::loadView('cancellation.letter', compact('letter'));
+        // get current error
+        $year = date('Y');
+        $pdf = \PDF::loadView('cancellation.letter', compact('letter', 'year'));
         return $pdf->stream('domicile_cancellation_letter.pdf');
     }
 }

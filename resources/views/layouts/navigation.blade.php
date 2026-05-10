@@ -116,7 +116,7 @@
                                 <a href="{{route('daily.limit.index')}}" class="block px-4 py-2 hover:bg-gray-100">Daily Limit</a>
                                 <a href="{{route('domicile.index')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile Applications</a>
                                 <a href="{{route('cash-records.index')}}" class="block px-4 py-2 hover:bg-gray-100">Cash Reports</a>
-                                <a href="{{route('downloads')}}" class="block px-4 py-2 hover:bg-gray-100">Downloads</a>
+                                <a href="{{route('downloads.index')}}" class="block px-4 py-2 hover:bg-gray-100">Downloads</a>
                                 <a href="{{route('noc-ict.index')}}" class="block px-4 py-2 hover:bg-gray-100">Noc for ICT</a>
                                 <a href="{{route('noc-other-district.index')}}" class="block px-4 py-2 hover:bg-gray-100">Noc Other District</a>
                                 <a href="{{route('domicile.cancellation.index')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile Cancellation</a>
@@ -358,7 +358,7 @@
                 </x-responsive-nav-link>
             </div>
             <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('downloads')" :active="request()->routeIs('downloads')">
+                <x-responsive-nav-link :href="route('downloads.index')" :active="request()->routeIs('downloads.index')">
                     {{ __('Downloads') }}
                 </x-responsive-nav-link>
             </div>

@@ -33,6 +33,7 @@ use App\Http\Controllers\SuretyDocumentController;
 use App\Http\Controllers\PublicRequestsController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CashRecordController;
+use App\Http\Controllers\DocumentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -178,7 +179,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/domicile/verification-letters/letter/{id}', [VerificationLetterController::class, 'issueletter'])->name('domicile.verification_letter.letter');
     
     
-    Route::get('/admin/downloads', [AdminController::class, 'downloads'])->name('downloads');
+    // Document management (upload/download/delete)
+    Route::get('/admin/downloads/files', [DocumentController::class, 'index'])->name('downloads.index');
+    Route::post('/admin/downloads/upload', [DocumentController::class, 'upload'])->name('downloads.upload')->middleware('role:admin');
+    Route::get('/admin/downloads/download/{id}', [DocumentController::class, 'download'])->name('downloads.download');
+    Route::delete('/admin/downloads/{id}', [DocumentController::class, 'destroy'])->name('downloads.destroy')->middleware('role:admin');;
 
     Route::controller(CashRecordController::class)->group(function(){
         Route::get('/domicile/cash-records', 'index')->name('cash-records.index');

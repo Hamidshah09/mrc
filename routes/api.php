@@ -31,9 +31,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/domicile/byid/{id}', [DomicileController::class, 'getById']);    
     Route::post('/domicile-applicant/{id}/picture', [DomicileController::class, 'uploadPicture']);
     Route::get('/domicile/approvers', [DomicileController::class, 'getApprovers']);
-    
+    Route::get('/domicile/blacklist/{cnic}', [DomicileController::class, 'getblacklistedapplicant']);    
 
 });
-Route::get('/domicile/blacklist/{cnic}', [DomicileController::class, 'getblacklistedapplicant']);
+
 
 

@@ -322,7 +322,7 @@
                     resultBox.classList.add('text-red-600');
 
                     resultBox.innerHTML = `
-                        Domiicle Record already exists in NITB.
+                        Domicile Record already exists in NITB.
                         Total Records: ${data.records}
                     `;
 

@@ -13,6 +13,7 @@ class NocICT extends Model
     protected $fillable = [
         'letter_date',
         'letter_sent_to',
+        'other_district_status',
     ];
 
     public function applicants()

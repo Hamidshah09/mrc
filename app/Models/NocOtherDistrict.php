@@ -16,6 +16,7 @@ class NocOtherDistrict extends Model
         'referenced_letter_date', 
         'Letter_Date', 
         'NOC_Issued_To', 
+        'nitb_status',
         'Remarks'
     ];
 

@@ -63,8 +63,9 @@
                         <div>
                             <label class="text-sm font-medium">CNIC</label>
                             <input type="text" name="applicants[0][CNIC]" max="13" min="13"
-                                   class="mt-1 block w-full border-gray-300 rounded-md"
+                                   class="mt-1 block w-full border-gray-300 rounded-md cnic-input"
                                    placeholder="xxxxxxxxxxxxx">
+                            <div class="cnic-check-result mt-2 text-sm hidden"></div>
                         </div>
 
                         <div>
@@ -144,7 +145,8 @@
                     <div>
                         <label class="text-sm font-medium">CNIC</label>
                         <input type="text" name="applicants[${applicantIndex}][CNIC]"
-                               class="mt-1 block w-full border-gray-300 rounded-md">
+                               class="mt-1 block w-full border-gray-300 rounded-md cnic-input">
+                        <div class="cnic-check-result mt-2 text-sm hidden"></div>
                     </div>
 
                     <div>
@@ -176,5 +178,116 @@
             applicantIndex++;
             reindexApplicants();
         }
+
+        async function checkOtherDistrict(input) {
+
+            const cnic = input.value.replace(/\D/g, '');
+
+            const resultBox = input
+                .closest('div')
+                .querySelector('.cnic-check-result');
+
+            resultBox.classList.add('hidden');
+            resultBox.innerHTML = '';
+
+            if (cnic.length !== 13) {
+                return;
+            }
+
+            resultBox.classList.remove(
+                'hidden',
+                'text-red-600',
+                'text-green-600'
+            );
+
+            resultBox.classList.add('text-gray-500');
+
+            resultBox.innerHTML = 'Checking record...';
+
+            try {
+
+                const response = await fetch(
+                    `https://cfc-ict.com/fastapi/domicile/check-in-other-district/${cnic}`
+                );
+
+                const data = await response.json();
+
+                resultBox.classList.remove(
+                    'text-gray-500',
+                    'text-red-600',
+                    'text-green-600'
+                );
+
+                /*
+                |--------------------------------------------------------------------------
+                | Record Found
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    data.found === true
+                ) {
+
+                    resultBox.classList.add('text-red-600');
+
+                    resultBox.innerHTML = `
+                        Domicile Record found in ${data.source}
+                    `;
+
+                    input.classList.add(
+                        'border-red-500'
+                    );
+
+                } else {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | No Record Found
+                    |--------------------------------------------------------------------------
+                    */
+
+                    resultBox.classList.add('text-green-600');
+
+                    resultBox.innerHTML =
+                        'No existing record found';
+
+                    input.classList.remove(
+                        'border-red-500'
+                    );
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                resultBox.classList.remove(
+                    'text-gray-500',
+                    'text-green-600'
+                );
+
+                resultBox.classList.add('text-red-600');
+
+                resultBox.innerHTML =
+                    'Unable to verify CNIC right now  in other disctirct';
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Event Delegation
+        |--------------------------------------------------------------------------
+        */
+
+        document.addEventListener('blur', function(e) {
+
+            if (
+                e.target.classList.contains('cnic-input')
+            ) {
+
+                checkOtherDistrict(e.target);
+            }
+
+        }, true);
     </script>
 </x-app-layout>

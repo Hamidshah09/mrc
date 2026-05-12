@@ -14,6 +14,8 @@ use App\Models\NocOtherDistrictApplicants;
 use App\Models\NocICT;
 use App\Models\NocICTApplicants;
 use App\Models\DispatchDiary;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PublicRequestsController extends Controller
 {
@@ -219,7 +221,7 @@ class PublicRequestsController extends Controller
             'Remarks' => $validated['Remarks'] ?? null,
         ]);
         $letterId = $letter->Letter_ID;
-        
+        $nitbFound = 0;
         //inserting dispatch diary record
         $lastDispatch = DispatchDiary::latest('Dispatch_ID')->first();
 
@@ -244,6 +246,49 @@ class PublicRequestsController extends Controller
                     continue;
                 }
 
+                //Checking in NITB
+                 try {
+
+                    $cnic = $app['CNIC'] ?? null;
+
+                    if ($cnic) {
+
+                        $apiUrl = "https://cfc-ict.com/fastapi/domicile/check-in-nitb/{$cnic}";
+
+                        $response = Http::timeout(60)->get($apiUrl);
+
+                        if ($response->successful()) {
+
+                            $apiData = $response->json();
+
+                            Log::info('NITB API Response', [
+                                'cnic' => $cnic,
+                                'response' => $apiData
+                            ]);
+
+                            if (
+                                isset($apiData['records']) &&
+                                $apiData['records'] > 0
+                            ) {
+
+                                $nitbFound = 1;
+                            }
+                        }
+                    }
+
+                } catch (\Exception $e) {
+
+                    Log::error('NITB API Error', [
+                        'cnic' => $cnic ?? null,
+                        'message' => $e->getMessage()
+                    ]);
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Save Applicant
+                |--------------------------------------------------------------------------
+                */
                 NocOtherDistrictApplicants::create([
                     'Letter_ID' => $letterId,
                     'Applicant_Name' => $app['Applicant_Name'] ?? null,
@@ -252,13 +297,16 @@ class PublicRequestsController extends Controller
                     'Applicant_FName' => $app['Applicant_FName'] ?? null,
                 ]);
             }
+
+            $letter->update([
+                'nitb_status' => $nitbFound
+            ]);
         }
 
     return view('public.success', [
             'id'   => $letter->Letter_ID,
             'recordType' => 'NOC to Other District Application'
-        ]);
-    
+        ]);    
     }
 
     public function create_noc_ict(){
@@ -283,7 +331,7 @@ class PublicRequestsController extends Controller
             'letter_sent_to' => $letterInput['Letter_Sent_to'] ?? null,
         ]);
         $letterId = $letter->Letter_ID;
-        
+        $nitbFound = 0;
         //inserting dispatch diary record
         $lastDispatch = DispatchDiary::latest('Dispatch_ID')->first();
 
@@ -308,6 +356,44 @@ class PublicRequestsController extends Controller
                     continue;
                 }
 
+                //Checking in other districts
+                 try {
+
+                    $cnic = $app['CNIC'] ?? null;
+
+                    if ($cnic) {
+
+                        $apiUrl = "https://cfc-ict.com/fastapi/domicile/check-in-other-district/{$cnic}";
+
+                        $response = Http::timeout(60)->get($apiUrl);
+
+                        if ($response->successful()) {
+
+                            $apiData = $response->json();
+
+                            Log::info('NITB API Response', [
+                                'cnic' => $cnic,
+                                'response' => $apiData
+                            ]);
+
+                            if (
+                                isset($apiData['found']) &&
+                                $apiData['found'] === true
+                            ) {
+
+                                $nitbFound = 1;
+                            }
+                        }
+                    }
+
+                } catch (\Exception $e) {
+
+                    Log::error('NITB API Error', [
+                        'cnic' => $cnic ?? null,
+                        'message' => $e->getMessage()
+                    ]);
+                }
+
                 NocICTApplicants::create([
                     'Letter_ID' => $letterId,
                     'Applicant_Name' => $app['Applicant_Name'] ?? null,
@@ -316,6 +402,9 @@ class PublicRequestsController extends Controller
                     'Applicant_FName' => $app['Applicant_FName'] ?? null,
                 ]);
             }
+            $letter->update([
+                'other_district_status' => $nitbFound
+            ]);
         }
 
         return view('public.success', [

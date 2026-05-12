@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\NocOtherDistrict;
 use App\Models\NocOtherDistrictApplicants;
 use App\Models\DispatchDiary;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
 class NocOtherDistrictController extends Controller
 {
     public function create(){
@@ -35,6 +38,7 @@ class NocOtherDistrictController extends Controller
             'referenced_letter_date' => $validated['referenced_letter_date'] ?? null,
             'Remarks' => $validated['Remarks'] ?? null,
         ]);
+        $nitbFound = 0;
         $letterId = $letter->Letter_ID;
         
         //inserting dispatch diary record
@@ -61,6 +65,49 @@ class NocOtherDistrictController extends Controller
                     continue;
                 }
 
+                try {
+
+                    $cnic = $app['CNIC'] ?? null;
+
+                    if ($cnic) {
+
+                        $apiUrl = "https://cfc-ict.com/fastapi/domicile/check-in-nitb/{$cnic}";
+
+                        $response = Http::timeout(60)->get($apiUrl);
+
+                        if ($response->successful()) {
+
+                            $apiData = $response->json();
+
+                            Log::info('NITB API Response', [
+                                'cnic' => $cnic,
+                                'response' => $apiData
+                            ]);
+
+                            if (
+                                isset($apiData['records']) &&
+                                $apiData['records'] > 0
+                            ) {
+
+                                $nitbFound = 1;
+                            }
+                        }
+                    }
+
+                } catch (\Exception $e) {
+
+                    Log::error('NITB API Error', [
+                        'cnic' => $cnic ?? null,
+                        'message' => $e->getMessage()
+                    ]);
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Save Applicant
+                |--------------------------------------------------------------------------
+                */
+
                 NocOtherDistrictApplicants::create([
                     'Letter_ID' => $letterId,
                     'Applicant_Name' => $app['Applicant_Name'] ?? null,
@@ -69,6 +116,9 @@ class NocOtherDistrictController extends Controller
                     'Applicant_FName' => $app['Applicant_FName'] ?? null,
                 ]);
             }
+            $letter->update([
+                'nitb_status' => $nitbFound
+            ]);
         }
 
         return redirect()->route('noc-other-district.index')->with('success', 'NOC Other District record saved successfully.');

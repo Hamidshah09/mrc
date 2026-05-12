@@ -16,7 +16,7 @@ class DomicileCancellation extends Model
         'CNIC',
         'Applicant_Name',
         'Relation',
-        'Applicant_FName',
+        'Father_Name',
         'Address',
         'Domicile_No',
         'Domicile_Date',

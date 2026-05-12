@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\NocICT;
 use App\Models\NocICTApplicants;
 use App\Models\DispatchDiary;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
 class NocIctController extends Controller
 {
     public function noc_ict_create(){
@@ -22,6 +25,14 @@ class NocIctController extends Controller
             'applicants.*.Relation' => 'nullable|string|max:50',
             'applicants.*.Applicant_FName' => 'nullable|string|max:255',
         ]);
+
+        $applicants = $request->input('applicants', []);
+        foreach ($applicants as $app) {
+            $cnic = $app['CNIC'] ?? null;
+            if ($cnic && $this->checkDomicile($cnic)) {
+                return back()->withErrors(['domicile' => 'CNIC found in domicile records. NOC Letter cannot be issued.']);
+            }
+        }
 
         $letterInput = $request->input('letter', []);
 
@@ -66,6 +77,66 @@ class NocIctController extends Controller
         }
 
         return redirect()->route('noc-ict.index')->with('success', 'NOC ICT record saved successfully.');
+    }
+    public function checkDomicile($cnic)
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | Punjab Check
+        |--------------------------------------------------------------------------
+        */
+
+        $punjabUrl = "https://domicile.punjab.gov.pk/AjaxCall.aspx?ID={$cnic}";
+
+        try {
+
+            $response = Http::timeout(15)->get($punjabUrl);
+            Log::info('Punjab Response', [
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
+            if ($response->successful()) {
+
+                $html = $response->body();
+
+                if (str_contains($html, 'lblStatus')) {
+                    return true;
+                }
+            }
+
+        } catch (\Exception $e) {
+            //
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | KPK Check
+        |--------------------------------------------------------------------------
+        */
+
+        $kpkUrl = "https://cfc.kp.gov.pk/Domicile/Domicile/GetDomicileVerificationDetail?cnicDomNo={$cnic}";
+
+        try {
+
+            $response = Http::timeout(15)->get($kpkUrl);
+            Log::info('KPK Response', [
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
+            if ($response->successful()) {
+
+                $data = $response->json();
+
+                if (!empty($data['TrackListData'])) {
+                    return true;
+                }
+            }
+
+        } catch (\Exception $e) {
+            //
+        }
+
+        return false;
     }
     public function noc_ict_index(Request $request){
         // Apply search filter based on search_type

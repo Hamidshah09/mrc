@@ -100,8 +100,8 @@
           <span>{{$applicant->present_address}}</span>, Permanent Address:
           <span>{{$applicant->permanent_address}}</span>, have arrived in Capital Islamabad,
           Tehsil Islamabad, District Islamabad, Rev/Admin Federal Area in
-          Pakistan on <span>{{ \Carbon\Carbon::parse($applicant->date_of_arrival)->format('d-m-Y') }}</span>. I have been continuously residing
-          in Pakistan since <span>{{ \Carbon\Carbon::parse($applicant->date_of_arrival)->format('d-m-Y') }}</span>, immediately preceding this declaration
+          Pakistan on <span>{{ \Carbon\Carbon::parse($applicant->arrival_date)->format('d-m-Y') }}</span>. I have been continuously residing
+          in Pakistan since <span>{{ \Carbon\Carbon::parse($applicant->arrival_date)->format('d-m-Y') }}</span>, immediately preceding this declaration
           and I hereby express my intention to abandon my domicile of origin and
           take up my placed habitation in Pakistan during the remainder of my
           life.

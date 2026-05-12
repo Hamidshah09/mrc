@@ -92,10 +92,14 @@
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div>
                                     <label class="text-sm font-medium">CNIC</label>
-                                    <input type="text" name="applicants[{{ $index }}][CNIC]"
-                                           class="mt-1 block w-full border-gray-300 rounded-md"
-                                           placeholder="xxxxxxxxxxxxx"
-                                           value="{{ $app['CNIC'] ?? '' }}">
+
+                                    <input type="text"
+                                        name="applicants[0][CNIC]"
+                                        class="mt-1 block w-full border-gray-300 rounded-md cnic-input"
+                                        placeholder="xxxxxxxxxxxxx"
+                                        value="{{ old('applicants.0.CNIC') }}">
+
+                                    <div class="cnic-check-result mt-2 text-sm hidden"></div>
                                 </div>
 
                                 <div>
@@ -130,10 +134,12 @@
                             <div>
                                 <label class="text-sm font-medium">CNIC</label>
                                 <input type="text" name="applicants[0][CNIC]"
-                                       class="mt-1 block w-full border-gray-300 rounded-md"
+                                       class="mt-1 block w-full border-gray-300 rounded-md cnic-input"
                                        placeholder="xxxxxxxxxxxxx"
                                        value="{{ old('applicants.0.CNIC') }}">
+                                <div class="cnic-check-result mt-2 text-sm hidden"></div>
                             </div>
+                            
 
                             <div>
                                 <label class="text-sm font-medium">Applicant Name</label>
@@ -214,10 +220,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label class="text-sm font-medium">CNIC</label>
-                        <input type="text" name="applicants[${applicantIndex}][CNIC]"
-                               class="mt-1 block w-full border-gray-300 rounded-md">
-                    </div>
 
+                        <input type="text"
+                            name="applicants[${applicantIndex}][CNIC]"
+                            class="mt-1 block w-full border-gray-300 rounded-md cnic-input">
+
+                        <div class="cnic-check-result mt-2 text-sm hidden"></div>
+                    </div>
                     <div>
                         <label class="text-sm font-medium">Applicant Name</label>
                         <input type="text" name="applicants[${applicantIndex}][Applicant_Name]"
@@ -259,6 +268,119 @@
                 refLetterDateSection.classList.add('hidden');
             }
         }
+
+        async function checkNitbRecord(input) {
+
+            const cnic = input.value.replace(/\D/g, '');
+
+            const resultBox = input
+                .closest('div')
+                .querySelector('.cnic-check-result');
+
+            resultBox.classList.add('hidden');
+            resultBox.innerHTML = '';
+
+            if (cnic.length !== 13) {
+                return;
+            }
+
+            resultBox.classList.remove(
+                'hidden',
+                'text-red-600',
+                'text-green-600'
+            );
+
+            resultBox.classList.add('text-gray-500');
+
+            resultBox.innerHTML = 'Checking record...';
+
+            try {
+
+                const response = await fetch(
+                    `https://cfc-ict.com/fastapi/domicile/check-in-nitb/${cnic}`
+                );
+
+                const data = await response.json();
+
+                resultBox.classList.remove(
+                    'text-gray-500',
+                    'text-red-600',
+                    'text-green-600'
+                );
+
+                /*
+                |--------------------------------------------------------------------------
+                | Record Found
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    data.status === 'success' &&
+                    data.records > 0
+                ) {
+
+                    resultBox.classList.add('text-red-600');
+
+                    resultBox.innerHTML = `
+                        Domiicle Record already exists in NITB.
+                        Total Records: ${data.records}
+                    `;
+
+                    input.classList.add(
+                        'border-red-500'
+                    );
+
+                } else {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | No Record Found
+                    |--------------------------------------------------------------------------
+                    */
+
+                    resultBox.classList.add('text-green-600');
+
+                    resultBox.innerHTML =
+                        'No existing record found';
+
+                    input.classList.remove(
+                        'border-red-500'
+                    );
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                resultBox.classList.remove(
+                    'text-gray-500',
+                    'text-green-600'
+                );
+
+                resultBox.classList.add('text-red-600');
+
+                resultBox.innerHTML =
+                    'Unable to verify CNIC right now';
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Event Delegation
+        |--------------------------------------------------------------------------
+        */
+
+        document.addEventListener('blur', function(e) {
+
+            if (
+                e.target.classList.contains('cnic-input')
+            ) {
+
+                checkNitbRecord(e.target);
+            }
+
+        }, true);
 
     </script>
 </x-app-layout>

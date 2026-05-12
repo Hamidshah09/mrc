@@ -27,6 +27,7 @@
                         
                     </select>
                     <select name="status" id="status" class= "w-48 mt-1 border-gray-600 focus:ring-indigo-500  rounded-md shadow-sm mx-2" autofocus autocomplete="gender">
+                        <option value="" {{ old('status') == '' ? 'selected' : '' }}>All</option>
                         <option value="blocked" {{ old('status') == 'blocked' ? 'selected' : '' }}>Blocked</option>
                         <option value="unblocked" {{ old('status') == 'unblocked' ? 'selected' : '' }}>Unblocked</option>
                     </select>

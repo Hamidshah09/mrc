@@ -76,7 +76,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                         class="h-6 w-6 inline"
                                         fill="currentColor"
-                                        viewBox="0 0 20 20">
+                                        viewBox="0 0 18 18">
                                         <path fill-rule="evenodd"
                                             d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zM9 5a1 1 0 012 0v4a1 1 0 11-2 0V5zm1 8a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"
                                             clip-rule="evenodd"/>

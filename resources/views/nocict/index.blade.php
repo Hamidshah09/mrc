@@ -48,6 +48,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sent To</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">CNIC</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Applicant Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Other District Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                     </tr>
                 </thead>
@@ -60,6 +61,63 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Letter_Sent_to }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->CNIC ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->Applicant_Name ?? 'N/A' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center">
+
+                            @if($letter->other_district_status === 1)
+
+                                {{-- Exists in NITB --}}
+                                <span title="Exists in NITB" class="text-red-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-6 w-6 inline"
+                                        fill="currentColor"
+                                        viewBox="0 0 18 18">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zM9 5a1 1 0 012 0v4a1 1 0 11-2 0V5zm1 8a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"
+                                            clip-rule="evenodd"/>
+                                    </svg>
+                                </span>
+
+                            @elseif($letter->other_district_status === 0)
+
+                                {{-- Clear --}}
+                                <span title="No Record Found" class="text-green-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-6 w-6 inline"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2">
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M9 12l2 2 4-4"/>
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M12 22a10 10 0 100-20 10 10 0 000 20z"/>
+                                    </svg>
+                                </span>
+
+                            @else
+
+                                {{-- Unknown --}}
+                                <span title="Not Checked" class="text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-6 w-6 inline"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2">
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M12 8v4m0 4h.01"/>
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M12 22a10 10 0 100-20 10 10 0 000 20z"/>
+                                    </svg>
+                                </span>
+
+                            @endif
+
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <a href="{{ route('noc-ict.edit', $letter->Letter_ID) }}" class="bg-indigo-100 text-gray-500 hover:bg-indigo-300 mr-3 p-2 rounded">Edit</a>
                             <a href="{{ route('noc-ict.letter', $letter->Letter_ID) }}" class="bg-indigo-100 text-gray-500 hover:bg-indigo-300 mr-3 p-2 rounded">Letter</a>

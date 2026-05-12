@@ -98,39 +98,169 @@ class CashRecordController extends Controller
     {
         $query = CashRecord::query();
 
-        if ($request->filled('month')) {
-            $month = Carbon::parse($request->input('month'))->format('F Y');
-            $query->whereYear('date', Carbon::parse($request->input('month'))->year)
-                ->whereMonth('date', Carbon::parse($request->input('month'))->month);
-        } else {
-            $month = 'All Time';
+        /*
+        |--------------------------------------------------------------------------
+        | Date Range Filter
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('from')) {
+
+            $query->whereDate(
+                'date',
+                '>=',
+                $request->from
+            );
         }
+
+        if ($request->filled('to')) {
+
+            $query->whereDate(
+                'date',
+                '<=',
+                $request->to
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Service Type Filter
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('service_type')) {
-            $query->where('service_type', $request->input('service_type'));
+
+            $query->where(
+                'service_type',
+                $request->service_type
+            );
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment Type Filter
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('payment_type')) {
-            $query->where('payment_type', $request->input('payment_type'));
+
+            $query->where(
+                'payment_type',
+                $request->payment_type
+            );
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Search Filter
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->filled('q')) {
-            $q = $request->input('q');
+
+            $q = $request->q;
+
             $query->where(function ($qb) use ($q) {
-                $qb->where('name', 'like', "%{$q}%")
-                    ->orWhere('cnic', 'like', "%{$q}%")
-                    ->orWhere('mobile', 'like', "%{$q}%");
+
+                $qb->where(
+                        'name',
+                        'like',
+                        "%{$q}%"
+                    )
+                    ->orWhere(
+                        'cnic',
+                        'like',
+                        "%{$q}%"
+                    )
+                    ->orWhere(
+                        'mobile',
+                        'like',
+                        "%{$q}%"
+                    );
             });
         }
 
-        $cashRecords = $query->orderBy('date', 'desc')->get();
+        /*
+        |--------------------------------------------------------------------------
+        | Get Records
+        |--------------------------------------------------------------------------
+        */
+
+        $cashRecords = $query
+            ->select('cashrecords.*')
+            ->distinct('cnic')
+            ->orderBy('date', 'desc')
+            ->get()
+            ->unique('cnic')
+            ->values();
+        /*
+        |--------------------------------------------------------------------------
+        | Totals
+        |--------------------------------------------------------------------------
+        */
 
         $count = $cashRecords->count();
-        $amount = $count * 200; // Assuming fixed fee of 200 per record
-        // return view('cash-records.reports.monthly-report', compact('cashRecords', 'month', 'count', 'amount'));
-        $pdf = Pdf::loadView('cash-records.reports.monthly-report', compact('cashRecords', 'month', 'count', 'amount'));
 
-        return $pdf->stream('monthly-report.pdf');
+        $amount = $count * 200;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Report Period
+        |--------------------------------------------------------------------------
+        */
+
+        $reportPeriod = 'All Time';
+
+        if (
+            $request->filled('from') &&
+            $request->filled('to')
+        ) {
+
+            $reportPeriod =
+                Carbon::parse($request->from)
+                    ->format('d M Y')
+                .
+                ' to '
+                .
+                Carbon::parse($request->to)
+                    ->format('d M Y');
+
+        } elseif ($request->filled('from')) {
+
+            $reportPeriod =
+                'From '
+                .
+                Carbon::parse($request->from)
+                    ->format('d M Y');
+
+        } elseif ($request->filled('to')) {
+
+            $reportPeriod =
+                'Up To '
+                .
+                Carbon::parse($request->to)
+                    ->format('d M Y');
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Generate PDF
+        |--------------------------------------------------------------------------
+        */
+
+        $pdf = Pdf::loadView(
+            'cash-records.reports.monthly-report',
+            compact(
+                'cashRecords',
+                'reportPeriod',
+                'count',
+                'amount'
+            )
+        );
+
+        return $pdf->stream(
+            'monthly-report.pdf'
+        );
     }
     public function noteSheet(Request $request)
     {

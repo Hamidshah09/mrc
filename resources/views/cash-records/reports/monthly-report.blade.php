@@ -16,7 +16,7 @@
     <h2>CITIZEN FACILITATION CENTER</h2>
     <h2>DEPUTY COMMISSIONER OFFICE</h2>
     <h2>ISLAMABAD CAPITAL TERRITORY</h2>
-    <h2 class="month-title">Domicile Receipt Report for {{ $month }}</h2>
+    <h2 class="month-title">Domicile Receipt Report for {{ $reportPeriod  }}</h2>
 
     <table>
         <thead>

@@ -20,7 +20,6 @@
                 <th style="width:10%;">#</th>
                 <th style="width:30%">CNIC</th>
                 <th>Name</th>
-                <th>Payment Type</th>
                 <th>Govt Fee</th>
             </tr>
         </thead>
@@ -30,8 +29,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $r->cnic }}</td>
                     <td>{{ $r->name }}</td>
-                    <td>{{ $r->payment_type }}</td>
-                    <td>200</td>
+                    <td class="text-center">200</td>
                 </tr>
             @empty
                 <tr>
@@ -39,11 +37,15 @@
                 </tr>
             @endforelse
                 <tr>
-                    <td colspan="4" style="text-align:right; font-weight:bold;">Total Amount:</td>
+                    <td colspan="3" style="text-align:right; font-weight:bold;">Total Amount:</td>
                     <td style="font-weight:bold;">{{ $amount }}</td>
                 </tr>
         </tbody>
     </table>
+    <div style="margin-top: 30px;">
+        <p style="text-align: right;width:100%;margin-right:20px;font-size:12px;font-weight:bold;">Domicile Clerk</p>
 
+        <p style="text-decoration: underline;font-weight:bold;font-size:12px;">Acccout Assistant</p>
+    </div>
 </body>
 </html>

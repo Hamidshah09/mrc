@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class paper-plane extends Component
+class ExclamationTriangle extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class paper-plane extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.icons.paper-plane');
+        return view('components.icons.exclamation-triangle');
     }
 }

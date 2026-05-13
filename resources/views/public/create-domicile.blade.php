@@ -317,10 +317,10 @@
             }
         }
         document.getElementById('same_as_above').addEventListener('click', function() { 
-            document.getElementById('permanent_province_id').selectedIndex = document.getElementById('temp_province_id').selectedIndex;
-            document.getElementById('permanent_tehsil_id').selectedIndex = document.getElementById('temp_tehsil_id').selectedIndex;
-            document.getElementById('permanent_district_id').selectedIndex = document.getElementById('temp_district_id').selectedIndex;
-            document.getElementById('permanent_address').value = document.getElementById('temp_address').value;
+            document.getElementById('permanent_province_id').selectedIndex = document.getElementById('present_province_id').selectedIndex;
+            document.getElementById('permanent_tehsil_id').selectedIndex = document.getElementById('present_tehsil_id').selectedIndex;
+            document.getElementById('permanent_district_id').selectedIndex = document.getElementById('present_district_id').selectedIndex;
+            document.getElementById('permanent_address').value = document.getElementById('present_address').value;
         });
         
         var maritalStatusSelect = document.getElementById('marital_status_id'); 

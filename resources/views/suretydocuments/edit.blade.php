@@ -46,6 +46,15 @@
                 </select>
             </div>
 
+            <div class="mb-4">
+                <label>Status</label>
+                <select name="document_type" class="w-full border rounded px-3 py-2">
+                    <option value="in" {{ $doc->document_type=='in'? 'selected' : '' }}>In</option>
+                    <option value="out" {{ $doc->document_type=='out'? 'selected' : '' }}>Out</option>
+                    
+                </select>
+            </div>
+
             <div class="flex justify-end">
                 <button class="px-4 py-2 bg-blue-600 text-white rounded">
                     Update

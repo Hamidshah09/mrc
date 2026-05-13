@@ -106,7 +106,7 @@
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ $record->status }}</td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ $record->operator_name }}</td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
-                            <a href="{{ route('cash-records.edit', $record->id) }}" class="bg-yellow-300 p-2 rounded text-gray-700 hover:bg-yellow-400">Edit</a>
+                            <a href="{{ route('cash-records.edit', $record->id) }}" class="rounded text-indigo-700 hover:bg-indigo-400"><x-ionicon-pencil-sharp class="w-6 h-6"/></a>
                         </td>
                     </tr>
                 @empty

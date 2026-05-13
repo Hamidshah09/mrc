@@ -72,7 +72,7 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-4 py-2 text-left">Document ID</th>
-                        <th class="px-4 py-2 text-left">File</th>
+                        <th class="px-4 py-2 text-left">Register Type</th>
                         <th class="px-4 py-2 text-left">Serials</th>
                         <th class="px-4 py-2 text-left">Status</th>
                         <th class="px-4 py-2 text-left">Progress</th>
@@ -87,7 +87,7 @@
                     @forelse($documents as $doc)
                         <tr class="border-t">
                             <td class="px-4 py-2">{{ $doc->id }}</td>
-                            <td class="px-4 py-2">{{ $doc->original_name }}</td>
+                            <td class="px-4 py-2">{{ strtoupper($doc->document_type) ?? 'N/A' }}</td>
                             <td class="px-4 py-2">{{ $doc->serials ?? '-' }}</td>
 
                             <td class="px-4 py-2">

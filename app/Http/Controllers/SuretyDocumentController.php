@@ -55,6 +55,7 @@ class SuretyDocumentController extends Controller
             'serials' => 'nullable|string|max:100',
             'total_amount' => 'nullable|integer|min:0',
             'status' => 'nullable|string|in:uploaded,processing,completed,audit failed,audit ok',
+            'document_type'=>'nullable|in:in,out',
         ]);
 
         $file = $request->file('document');
@@ -68,7 +69,8 @@ class SuretyDocumentController extends Controller
             'total_expected_entries' => $request->total_expected_entries,
             'total_amount' => $request->total_amount,
             'status' => $request->status ?? 'uploaded',
-            'serials' => $request->serials
+            'serials' => $request->serials,
+            'document_type'=>$request->document_type ?? null
         ]);
 
         return redirect()->route('suretydocuments.index')->with('success', 'Document uploaded successfully.');
@@ -106,8 +108,13 @@ class SuretyDocumentController extends Controller
         if (!$document) {
             return redirect()->back()->with('error', 'Document already locked by another user.');
         }
+        if ($document->document_type == 'in'){
+            return redirect()->route('surety.create', $document->id);
+        }else{
+            return redirect()->route('surety.updateview', $document->id);
+        }
 
-        return redirect()->route('surety.create', $document->id);
+        
     }
 
     public function edit($id)
@@ -130,6 +137,7 @@ class SuretyDocumentController extends Controller
             'total_amount' => 'nullable|numeric|min:0',
             'serials' => 'nullable|string|max:100',
             'status' => 'nullable|string|in:uploaded,processing,completed,audit failed,audit ok',
+            'document_type'=>'nullable|in:in,out',
         ]);
 
         // Replace file if uploaded
@@ -156,7 +164,8 @@ class SuretyDocumentController extends Controller
             'total_expected_entries' => $request->total_expected_entries,
             'total_amount' => $request->total_amount,
             'status' => $request->status,
-            'serials' => $request->serials
+            'serials' => $request->serials,
+            'document_type'=>$request->document_type,
         ]);
 
         return redirect()->route('suretydocuments.index')

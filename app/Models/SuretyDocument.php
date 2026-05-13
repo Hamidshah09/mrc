@@ -18,6 +18,7 @@ class SuretyDocument extends Model
         'entered_entries',
         'total_amount',
         'serials',
+        'document_type'
 
     ];
 

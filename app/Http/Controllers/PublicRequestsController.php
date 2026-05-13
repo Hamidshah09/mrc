@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Setting;
@@ -32,7 +33,7 @@ class PublicRequestsController extends Controller
     {   
         
     $validated = $request->validate([
-        'cnic' => 'required|regex:/^[0-9]{13}$/',
+        'cnic' => ['required', 'regex:/^[0-9]{13}$/', Rule::unique('remote_mysql.domicile','cnic')],
         'name' => 'required|string|max:45',
         'father_name' => 'required|string|max:45',
         'spouse_name' => 'nullable|string|max:45',

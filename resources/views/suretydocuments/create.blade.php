@@ -50,6 +50,15 @@
                 </select>
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Document Type</label>
+                <select name="document_type" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                    <option value="" selected>Select Type</option>
+                    <option value="in">In</option>
+                    <option value="out">Out</option>
+                </select>
+            </div>
+
             <div class="flex justify-end space-x-3">
                 <a href="{{ route('suretydocuments.index') }}"
                    class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">

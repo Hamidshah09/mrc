@@ -180,6 +180,7 @@ class domicileController extends Controller
         'purpose' => 'nullable|string|max:45',
         'priority_type' => 'nullable|string|max:10',
         'receipt_no' => 'nullable|string|max:100',
+        'remarks'=>'nullable|string|max:80',
         'approver_id' => 'nullable|integer',
 
         'children_checkbox' => 'nullable|string',
@@ -231,6 +232,7 @@ class domicileController extends Controller
     $domicile->user_id = auth()->id(); // assuming user must be logged in to create record  
     $domicile->receipt_no = $validated['receipt_no'] ?? null; // optional receipt number
     $domicile->approver_id = $validated['approver_id'] ?? null; // optional approver
+    $domicile->remarks = $validated['remarks'];
 
     // Children Checkbox
     // $domicile->has_children = $request->has('children_checkbox') ? true : false;
@@ -295,6 +297,7 @@ class domicileController extends Controller
         'occupation_id' => 'nullable|integer',
         'contact' => 'nullable|string|max:11',
         'arrival_date' => 'nullable|date',
+        'remarks'=>'nullable|string|max:80',
 
         // Present Address
         'present_province_id' => 'required|integer',
@@ -353,7 +356,7 @@ class domicileController extends Controller
         'purpose' => $validated['purpose'] ?? $domicile->purpose,
         'priority_type' => $validated['priority_type'] ?? $domicile->priority_type,
         'approver_id' => $validated['approver_id'] ?? $domicile->approver_id,
-
+        'remarks' => $validated['remarks'],
         'present_province_id' => $validated['present_province_id'],
         'present_district_id' => $validated['present_district_id'],
         'present_tehsil_id' => $validated['present_tehsil_id'],

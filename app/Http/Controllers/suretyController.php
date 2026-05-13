@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Log;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\SuretyRegister;
@@ -13,7 +13,7 @@ use App\Models\PoliceStation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
-class suretyController extends Controller
+class SuretyController extends Controller
 {
     public function index(Request $request)
     {
@@ -339,5 +339,134 @@ class suretyController extends Controller
             'found' => true,
             'data' => $record
         ]);
+    }
+    public function searchAjax(Request $request)
+    {
+        \Log::info('Surety Search Request', [
+            'search' => $request->search,
+            'document_id' => $request->document_id
+        ]);
+        $query = SuretyRegister::with([
+            'suretyStatus'
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Search Only Receipt Number
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('search')) {
+
+            $query->where(
+                'receipt_no',
+                'like',
+                '%' . trim($request->search) . '%'
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Current Document Filter
+        |--------------------------------------------------------------------------
+        */
+
+        // if ($request->filled('document_id')) {
+
+        //     $query->where(
+        //         'document_id',
+        //         $request->document_id
+        //     );
+        // }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Get Records
+        |--------------------------------------------------------------------------
+        */
+
+        $records = $query
+            ->latest()
+            ->get();
+
+        \Log::info('Surety Search', [
+            'search' => $request->search,
+            'document_id' => $request->document_id,
+            'results' => $records->count()
+        ]);
+        \Log::info('Search Results Count', [
+            'count' => $records->count(),
+            'records' => $records->pluck('receipt_no')
+        ]);
+        return response()->json([
+            'success' => true,
+            'records' => $records
+        ]);
+    }
+
+    public function release($id)
+    {
+        $record = SuretyRegister::findOrFail($id);
+
+        if ($record->surety_status_id == 2) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Already released'
+            ], 422);
+        }
+
+        $record->update([
+            'surety_status_id' => 2
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Document Progress
+        |--------------------------------------------------------------------------
+        */
+
+        $document = SuretyDocument::find(
+            $record->document_id
+        );
+
+        $entered =
+            SuretyRegister::where(
+                'document_id',
+                $record->document_id
+            )->count();
+
+        $document->update([
+            'entered_entries' => $entered
+        ]);
+
+        return response()->json([
+
+            'success' => true,
+
+            'message' =>
+                'Record released successfully',
+
+            'entered' =>
+                $document->entered_entries,
+
+            'total' =>
+                $document->total_expected_entries
+        ]);
+    }
+    public function updateview($id)
+    {
+         $doc = SuretyDocument::findOrFail($id);
+
+        // امنیت: only locker can access
+        if ($doc->locked_by !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        if ($doc->status == 'completed') {
+            return redirect()->route('suretydocuments.index')->with('error', 'This document is already completed.');
+        }   
+      
+        return view('surety.update', compact('doc'));
     }
 }

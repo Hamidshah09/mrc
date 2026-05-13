@@ -42,6 +42,7 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Application Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Applicant Name</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">CNIC</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Contact</th>
@@ -52,6 +53,7 @@
                     @foreach ($records as $record)
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $record->id }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ optional($record->created_at)->format('d-m-Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $record->first_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $record->cnic }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $record->contact }}</td>

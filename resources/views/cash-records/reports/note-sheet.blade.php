@@ -38,10 +38,6 @@
             @endforelse
         </tbody>
     </table>
-    <div style="margin-top: 30px;">
-        <p style="text-align: right;width:100%;margin-right:20px;font-size:12px;font-weight:bold;">Domicile Clerk</p>
-
-        <p style="text-decoration: underline;font-weight:bold;font-size:12px;">Assistant Commissioner (Saddar)</p>
-    </div>
+    
 </body>
 </html>

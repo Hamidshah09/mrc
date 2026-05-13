@@ -126,7 +126,7 @@
                             <td class="px-4 py-2">
                                 @if($doc->file_path)
                                     <a href="{{ asset('storage/'.$doc->file_path) }}" target="_blank" rel="noopener">
-                                        <x-icons.image class="w-5 h-5 text-blue-600 hover:text-blue-900" />
+                                        View Docs
                                     </a>
                                 @else
                                     -

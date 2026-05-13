@@ -110,15 +110,15 @@
                                 <div x-data="{ open: false }" class="relative">
                                     <div class="flex items-center space-x-2">
                                         <a href="{{ route('surety.edit', $record->id) }}" class="text-blue-600 hover:text-blue-800">
-                                            <x-icons.pencil-square />
+                                        Edit
                                         </a>
 
                                         <button @click="open = true" type="button" class="text-green-600 hover:text-green-800">
-                                            <x-icons.check-circle />
+                                            
                                         </button>
 
                                         <a href="{{route('surety.show', $record->id)}}" class="text-purple-600 hover:text-purple-800">
-                                            <x-icons.document-text />
+                                            View
                                         </a>
                                     </div>
 
@@ -208,13 +208,13 @@
                                 <div x-data="{ open: false }" class="relative">
                                     <div class="flex items-center space-x-2">
                                         <a href="{{ route('surety.edit', $record->id) }}" class="text-blue-600 hover:text-blue-800">
-                                            <x-icons.pencil-square />
+                                            Edit
                                         </a>
                                         <button @click="open = true" type="button" class="text-green-600 hover:text-green-800">
-                                            <x-icons.check-circle />
+                                            Update
                                         </button>
                                         <a href="{{route('surety.show', $record->id)}}" class="text-purple-600 hover:text-purple-800">
-                                            <x-icons.document-text />
+                                            Show
                                         </a>
                                     </div>
 

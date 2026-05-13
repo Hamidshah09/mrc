@@ -75,13 +75,13 @@
                                     <td>
                                         <div class="flex items-center space-x-2">
                                             <a href="{{ route('Employee.edit', $employee->id) }}" class="text-blue-600 hover:text-blue-800">
-                                                <x-icons.pencil-square />
+                                                Edit
                                             </a>
                                             <a href="{{route('showcard', $employee->id)}}" title="View Card">
-                                                <x-icons.image />
+                                                View
                                             </a>
                                             <a href="{{route('issueCard', $employee->id)}}" title="Issue Card">
-                                                <x-icons.check-circle class="text-green-500 hover:text-green-700" />
+                                                Issue
                                             </a>
                                         </div>
                                     </td>

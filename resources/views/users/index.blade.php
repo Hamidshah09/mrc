@@ -148,7 +148,7 @@
                             <td class="p-3 font-semibold text-gray-700">Actions:</td>
                             <td class="p-3">
                                 <a href="{{route('users.edit', $user->id)}}" >
-                                    <x-icons.pencil-square class="text-blue-500 hover:text-blue-700" />
+                                    <x-heroicon-s-pencil title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
                                 </a>
                             </td>
                         </tr>

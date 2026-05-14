@@ -3,7 +3,7 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Surety Dashboard Charts') }}</h2>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+    <div class="w-[95%] mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
 
             <div class="bg-blue-100 p-4 rounded">
@@ -27,7 +27,7 @@
             </div>
 
         </div>
-        <form method="GET" class="flex flex-col md:flex-row md:items-end md:space-x-6 mb-4">
+        <form method="GET" class="w-full flex flex-col md:flex-row md:items-end md:space-x-6 mb-4">
             <div>
                 <label class="block text-sm text-gray-600">From</label>
                 <input type="date" name="from" value="{{ $from ?? '' }}" class="border rounded px-2 py-1">
@@ -50,11 +50,7 @@
             </div>
         </form>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white p-4 rounded shadow">
-                <h3 class="font-semibold mb-2">Surety Types (Pie)</h3>
-                <canvas id="pieChart"></canvas>
-            </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div class="bg-white p-4 rounded shadow">
                 <h3 class="font-semibold mb-2">Daily Progress (Bar)</h3>
                 <canvas id="barChart"></canvas>
@@ -63,13 +59,19 @@
                 <h3 class="font-semibold mb-2">User Performance (Actions)</h3>
                 <canvas id="userChart"></canvas>
             </div>
+        
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="font-semibold mb-2">Daily Amount</h3>
+                <canvas id="amountChart"></canvas>
+            </div>
+            <div class="bg-white p-4 rounded shadow">
+                    <h3 class="font-semibold mb-2">Surety Types (Pie)</h3>
+                    <canvas id="pieChart"></canvas>
+            </div>
         </div>
-        <div class="bg-white p-4 rounded shadow">
-            <h3 class="font-semibold mb-2">Daily Amount</h3>
-            <canvas id="amountChart"></canvas>
-        </div>
-
-        <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
+            
+            
+        <div class="w-[95%] mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
             <h3 class="font-semibold mb-4">User Performance Today</h3>
             @if(!empty($userPerformance) && count($userPerformance))
                 <div class="overflow-x-auto">

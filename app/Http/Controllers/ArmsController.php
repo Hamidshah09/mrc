@@ -214,7 +214,7 @@ class ArmsController extends Controller
         $record = ArmsLicense::findOrFail($id);
 
         // Paragraph logic
-        $paragraph = "Your arms license record has been scrutinized and it has been found that ";
+        $paragraph = "Your arms license(s) record has been scrutinized and it has been found that ";
 
         // Address issue
         if ($record->address_on_cnic === 0) {

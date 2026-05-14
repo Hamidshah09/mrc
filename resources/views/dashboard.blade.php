@@ -65,7 +65,7 @@
                                                     target="_blank"
                                                     class="inline-flex items-center gap-1 hover:text-indigo-800 text-sm font-medium">
                                                         {{-- View icon --}}
-                                                        <x-icon name="file-text" class="w-5 h-5 text-yellow-600" />
+                                
                                                         Documents
                                                 </a>
                                             </div>
@@ -76,7 +76,7 @@
                                                     target="_blank"
                                                     class="inline-flex items-center gap-1 hover:text-indigo-800 text-sm font-medium">
                                                         {{-- View icon --}}
-                                                        <x-icon name="info" class="w-5 h-5 text-green-600" />
+                                
                                                         Details
                                                 </a>
                                             </div>

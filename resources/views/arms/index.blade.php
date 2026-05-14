@@ -174,13 +174,13 @@
                             <td class="px-6 py-4 text-sm">
                                 <div class="flex items-center space-x-2"> 
                                     <a href="{{ route('arms.edit', $arms->id) }}" >
-                                        <x-icons.pencil-square class="text-green-500 hover:text-green-700" />
+                                       Edit
                                     </a>
                                     <a target="_blank" href="https://admin-icta.nitb.gov.pk/arm/applicant/{{$arms->applicant_id}}/application/show/{{$arms->id}}" >
-                                        <x-icons.document-text class="text-yellow-500 hover:text-yellow-700" />
+                                        Scans
                                     </a>
                                     <a href="{{ route('arms.letter', $arms->id) }}" >
-                                        <x-icons.check-circle class="text-blue-500 hover:text-blue-700" />
+                                        Letter
                                     </a>
                                 </div>
                             </td>

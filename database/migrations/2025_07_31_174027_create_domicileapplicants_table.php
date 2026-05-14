@@ -49,7 +49,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('approver_id')->nullable();
             $table->enum('priority_type', ['Normal', 'Urgent'])->default('Normal');
-
+            $table->string('other_district_status',15);
 
             
 

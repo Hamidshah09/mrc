@@ -138,47 +138,101 @@ class NocIctController extends Controller
 
         return false;
     }
-    public function noc_ict_index(Request $request){
-        // Apply search filter based on search_type
-        $query = NocICT::with('applicants', 'dispatchDiary')->orderBy('Letter_ID','desc');
-        if ($request->filled('search') && $request->filled('search_type')) {
-            $search = $request->search;
-            $searchType = $request->search_type;
+    public function noc_ict_index(Request $request)
+    {
+        $query = NocICT::with(
+            'applicants',
+            'dispatchDiary'
+        )->orderBy('Letter_ID', 'desc');
 
-            switch ($searchType) {
-                case 'cnic':
-                    $query->whereHas('applicants', function ($q) use ($search) {
-                        $q->where('CNIC', 'like', '%' . $search . '%'); // Adjust field name if needed
-                    });
-                    break;
-                case 'name':
-                    $query->whereHas('applicants', function ($q) use ($search) {
-                        $q->where('Applicant_Name', 'like', '%' . $search . '%');
-                    });
-                    break;
-                case 'id':
-                    $query->where('Letter_ID', 'like', '%' . $search . '%');
-                    break;
-                case 'dispatch_no':
-                    $query->whereHas('dispatchDiary', function ($q) use ($search) {
-                        $q->where('Dispatch_No', 'like', '%' . $search . '%');
-                    });
-                    break;
-            }
+        /*
+        |--------------------------------------------------------------------------
+        | Universal Search
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('search')) {
+
+            $search = trim($request->search);
+
+            $query->where(function ($q) use ($search) {
+
+                // Letter ID
+                $q->where(
+                    'Letter_ID',
+                    'like',
+                    "%{$search}%"
+                )
+
+                // Applicant search
+                ->orWhereHas(
+                    'applicants',
+                    function ($sub) use ($search) {
+
+                        $sub->where(
+                            'CNIC',
+                            'like',
+                            "%{$search}%"
+                        )
+
+                        ->orWhere(
+                            'Applicant_Name',
+                            'like',
+                            "%{$search}%"
+                        );
+                    }
+                )
+
+                // Dispatch search
+                ->orWhereHas(
+                    'dispatchDiary',
+                    function ($sub) use ($search) {
+
+                        $sub->where(
+                            'Dispatch_No',
+                            'like',
+                            "%{$search}%"
+                        );
+                    }
+                );
+
+            });
         }
 
-        // Apply date range filter
+        /*
+        |--------------------------------------------------------------------------
+        | Date Range Filters
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->filled('from_date')) {
-            $query->where('Letter_Date', '>=', $request->from_date);
+
+            $query->whereDate(
+                'Letter_Date',
+                '>=',
+                $request->from_date
+            );
         }
+
         if ($request->filled('to_date')) {
-            $query->where('Letter_Date', '<=', $request->to_date);
+
+            $query->whereDate(
+                'Letter_Date',
+                '<=',
+                $request->to_date
+            );
         }
 
-        // Paginate and append query params for filter persistence
-        $letters = $query->paginate(10)->appends($request->query());
+        $letters = $query
+            ->paginate(10)
+            ->appends(
+                $request->query()
+            );
 
-        return view('nocict.index', compact('letters'));
+        return view(
+            'nocict.index',
+            compact('letters')
+        );
     }
 
     public function noc_ict_edit($id){

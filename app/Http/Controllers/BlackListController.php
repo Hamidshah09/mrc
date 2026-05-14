@@ -33,37 +33,100 @@ class BlackListController extends Controller
         return redirect()->route('domicile.blacklist.index')->with('success', 'Applicant added to blacklist successfully.');
 
     }
-    public function index(Request $request){
-        $query = BlackListDomicileApplications::orderBy('black_list_id', 'desc');
+    public function index(Request $request)
+    {
+        $query = BlackListDomicileApplications::with('user')
+            ->orderBy(
+                'black_list_id',
+                'desc'
+            );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Universal Search
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('search')) {
-            $search = $request->get('search');
-            $searchType = $request->get('search_type');
 
-            switch ($searchType) {
-                case 'cnic':
-                    $query->where('cnic', 'like', "%{$search}%");
-                    break;
-                case 'reason':
-                    $query->where('reason', 'like', "%{$search}%");
-                    break;
-                case 'id':
-                    $query->where('black_list_id', $search);
-                    break;
-            }
+            $search = trim(
+                $request->search
+            );
+
+            $query->where(function ($q) use ($search) {
+
+                // ID
+                $q->where(
+                    'black_list_id',
+                    'like',
+                    "%{$search}%"
+                )
+
+                // CNIC
+                ->orWhere(
+                    'cnic',
+                    'like',
+                    "%{$search}%"
+                )
+
+                // Reason
+                ->orWhere(
+                    'reason',
+                    'like',
+                    "%{$search}%"
+                );
+
+            });
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Status Filter
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('status')) {
-            $query->where('status', $request->get('status'));
+
+            $query->where(
+                'status',
+                $request->status
+            );
         }
-        // @dd($request->get('status'));
-        // @dd($query->toSql());
-        if ($request->filled('from_date') && $request->filled('to_date')) {
-            $query->whereBetween('created_at', [$request->get('from_date'), $request->get('to_date')]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Date Filters
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('from_date')) {
+
+            $query->whereDate(
+                'created_at',
+                '>=',
+                $request->from_date
+            );
         }
-        
-        $blacklists = $query->paginate(20);
-        return view('blacklist-domiciles.index', compact('blacklists'));
+
+        if ($request->filled('to_date')) {
+
+            $query->whereDate(
+                'created_at',
+                '<=',
+                $request->to_date
+            );
+        }
+
+        $blacklists = $query
+            ->paginate(20)
+            ->appends(
+                $request->query()
+            );
+
+        return view(
+            'blacklist-domiciles.index',
+            compact('blacklists')
+        );
     }
 
     public function edit($id)

@@ -123,10 +123,10 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-4 py-2">
+                            <td class="px-4 py-2 text-center">
                                 @if($doc->file_path)
-                                    <a href="{{ asset('storage/'.$doc->file_path) }}" target="_blank" rel="noopener">
-                                        View Docs
+                                    <a href="{{ asset('storage/'.$doc->file_path) }}" class="flex justify-center items-center"   target="_blank" rel="noopener">
+                                        <x-ionicon-image-outline title="View Image" class="w-7 h-7 text-green-400 hover:text-green-600 transition"/>
                                     </a>
                                 @else
                                     -
@@ -135,16 +135,17 @@
                             <td class="flex items-center px-4 py-2">
                                 <form method="POST" action="{{ route('suretydocuments.lock', $doc->id) }}">
                                     @csrf
-                                    <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
-                                        Open
+                                    <button class="mr-2">
+                                        <x-heroicon-o-arrow-top-right-on-square title="Open Record" class="w-7 h-7 text-orange-400 hover:text-orange-600 transition"/>
                                     </button>
+                                    
                                 </form>
 
                                  {{-- Admin only edit --}}
                                 @if(auth()->user()->isAdmin())
                                     <a href="{{ route('suretydocuments.edit', $doc->id) }}"
-                                        class="ml-2 px-3 py-1 bg-yellow-500 text-white rounded">
-                                    Edit
+                                        >
+                                        <x-heroicon-s-pencil title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
                                     </a>
                                 @endif
                             </td>

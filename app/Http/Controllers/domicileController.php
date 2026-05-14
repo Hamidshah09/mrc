@@ -101,7 +101,7 @@ class domicileController extends Controller
     
 
     public function index(Request $request){
-        $query = DomicileApplicants::select('id', 'first_name', 'cnic', 'contact')->orderBy('id', 'desc');
+        $query = DomicileApplicants::select('id', 'first_name', 'cnic', 'contact',  'other_district_status','created_at')->orderBy('id', 'desc');
 
         if ($request->filled('search')) {
             $q = $request->search;

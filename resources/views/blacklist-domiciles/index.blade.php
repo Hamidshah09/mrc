@@ -17,29 +17,158 @@
             <div class="mb-4 text-red-700 p-2 bg-red-100 rounded">{{ session('error') }}</div>
         @endif
         <div class="flex justify-end items-center space-x-4 m-2 mb-4">
-            <form action="{{route('domicile.blacklist.index')}}" method="GET" class="mt-3">
-                <div class="flex flex-row flex-wrap items-center">
-                    <x-text-input id="search" class="mt-1 w-48 p-2 mx-2" type="text" name="search" value="{{ old('search') }}" autofocus autocomplete="cnic" />
-                    <select name="search_type" id="search_type" class= "w-48 mt-1 border-gray-600 focus:ring-indigo-500  rounded-md shadow-sm" autofocus autocomplete="gender">
-                        <option value="cnic" {{ old('search_type') == 'cnic' ? 'selected' : '' }}>CNIC </option> 
-                        <option value="reason" {{ old('search_type') == 'reason' ? 'selected' : '' }}>Reason</option> 
-                        <option value="id" {{ old('search_type') == 'id' ? 'selected' : '' }}>id</option>
-                        
-                    </select>
-                    <select name="status" id="status" class= "w-48 mt-1 border-gray-600 focus:ring-indigo-500  rounded-md shadow-sm mx-2" autofocus autocomplete="gender">
-                        <option value="" {{ old('status') == '' ? 'selected' : '' }}>All</option>
-                        <option value="blocked" {{ old('status') == 'blocked' ? 'selected' : '' }}>Blocked</option>
-                        <option value="unblocked" {{ old('status') == 'unblocked' ? 'selected' : '' }}>Unblocked</option>
-                    </select>
-                    <label for="from_date" class="mt-1 p-2">From</label>
-                    <x-text-input id="from_date" class="mt-1 w-48 p-2 mx-2" type="date" name="from_date" value="{{ old('from_date') }}" autofocus autocomplete="from_date" />
-                    <label for="to_date" class="mt-1 p-2">To</label>
-                    <x-text-input id="to_date" class="mt-1 w-48 p-2 mx-2" type="date" name="to_date" value="{{ old('to_date') }}" autofocus autocomplete="to_date" />
-                    <x-primary-button class="mt-1 ms-3" type="submit">
-                        {{ __('Search') }}
-                    </x-primary-button>
-                    
+            <form action="{{ route('domicile.blacklist.index') }}"
+                method="GET"
+                class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-7 gap-4 items-end">
+
+                {{-- Search --}}
+                <div class="md:col-span-2">
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Search
+                    </label>
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="CNIC / Reason / ID"
+
+                        class="w-full rounded-xl border-gray-300
+                            shadow-sm
+                            focus:ring-2
+                            focus:ring-indigo-500
+                            focus:border-indigo-500">
+
                 </div>
+
+
+                {{-- Status --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Status
+                    </label>
+
+                    <select
+                        name="status"
+
+                        class="w-full rounded-xl border-gray-300
+                            shadow-sm
+                            focus:ring-2
+                            focus:ring-indigo-500
+                            focus:border-indigo-500">
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <option value="blocked"
+                            {{ request('status')=='blocked' ? 'selected':'' }}>
+
+                            Blocked
+
+                        </option>
+
+                        <option value="unblocked"
+                            {{ request('status')=='unblocked' ? 'selected':'' }}>
+
+                            Unblocked
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                {{-- From Date --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        From
+                    </label>
+
+                    <input
+                        type="date"
+                        name="from_date"
+                        value="{{ request('from_date') }}"
+
+                        class="w-full rounded-xl border-gray-300
+                            shadow-sm
+                            focus:ring-2
+                            focus:ring-indigo-500
+                            focus:border-indigo-500">
+
+                </div>
+
+
+                {{-- To Date --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        To
+                    </label>
+
+                    <input
+                        type="date"
+                        name="to_date"
+                        value="{{ request('to_date') }}"
+
+                        class="w-full rounded-xl border-gray-300
+                            shadow-sm
+                            focus:ring-2
+                            focus:ring-indigo-500
+                            focus:border-indigo-500">
+
+                </div>
+
+
+                {{-- Search Button --}}
+                <div>
+
+                    <button
+                        type="submit"
+
+                        class="w-full h-[42px]
+                            bg-indigo-600
+                            hover:bg-indigo-700
+                            text-white rounded-xl
+                            shadow">
+
+                        <div class="flex items-center justify-center gap-2">
+
+                            <x-heroicon-s-magnifying-glass
+                                class="w-5 h-5"/>
+
+                            Search
+
+                        </div>
+
+                    </button>
+
+                </div>
+
+
+                {{-- Clear --}}
+                <div>
+
+                    <a href="{{ route('domicile.blacklist.index') }}"
+                    class="w-full h-[42px]
+                            flex items-center justify-center gap-2
+                            bg-gray-200
+                            hover:bg-gray-300
+                            rounded-xl">
+
+                        <x-heroicon-s-x-mark
+                            class="w-5 h-5"/>
+
+                        Clear
+
+                    </a>
+
+                </div>
+
             </form>
         </div>
         <div class="overflow-x-auto">
@@ -63,7 +192,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->reason }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->user->name ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('domicile.blacklist.edit', $letter->black_list_id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                            <a href="{{ route('domicile.blacklist.edit', $letter->black_list_id) }}"><x-heroicon-s-pencil title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/></a>
                         </td>
                     </tr>
                 @empty

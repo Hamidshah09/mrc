@@ -44,42 +44,106 @@ class DomicileCancellationController extends Controller
 
         return redirect()->route('domicile.cancellation.index')->with('success', 'Domicile cancellation record created successfully.');
     }
-    public function index(Request $request){
-        $query = DomicileCancellation::with('dispatchDiary')->orderBy('Letter_ID','desc');
-        // Apply search filter based on search_type
-        if ($request->filled('search') && $request->filled('search_type')) {
-            $search = $request->search;
-            $searchType = $request->search_type;
+    public function index(Request $request)
+    {
+        $query = DomicileCancellation::with(
+            'dispatchDiary'
+        )->orderBy(
+            'Letter_ID',
+            'desc'
+        );
 
-            switch ($searchType) {
-                case 'cnic':
-                    $query->where('CNIC', 'like', '%' . $search . '%');
-                    break;
-                case 'name':
-                    $query->where('Applicant_Name', 'like', '%' . $search . '%');
-                    break;
-                case 'id':
-                    $query->where('Letter_ID', 'like', '%' . $search . '%');
-                    break;
-                case 'dispatch_no':
-                    $query->whereHas('dispatchDiary', function ($q) use ($search) {
-                        $q->where('Dispatch_No', 'like', '%' . $search . '%');
-                    });
-                    break;
-            }
+        /*
+        |--------------------------------------------------------------------------
+        | Universal Search
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('search')) {
+
+            $search = trim(
+                $request->search
+            );
+
+            $query->where(function ($q) use ($search) {
+
+                // Letter ID
+                $q->where(
+                    'Letter_ID',
+                    'like',
+                    "%{$search}%"
+                )
+
+                // CNIC
+                ->orWhere(
+                    'CNIC',
+                    'like',
+                    "%{$search}%"
+                )
+
+                // Applicant Name
+                ->orWhere(
+                    'Applicant_Name',
+                    'like',
+                    "%{$search}%"
+                )
+
+                // Domicile Number
+                ->orWhere(
+                    'Domicile_No',
+                    'like',
+                    "%{$search}%"
+                )
+
+                // Dispatch Number
+                ->orWhereHas(
+                    'dispatchDiary',
+                    function ($sub) use ($search) {
+
+                        $sub->where(
+                            'Dispatch_No',
+                            'like',
+                            "%{$search}%"
+                        );
+                    }
+                );
+            });
         }
 
-        // Apply date range filter
+        /*
+        |--------------------------------------------------------------------------
+        | Date Filters
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->filled('from_date')) {
-            $query->where('Letter_Date', '>=', $request->from_date);
-        }
-        if ($request->filled('to_date')) {
-            $query->where('Letter_Date', '<=', $request->to_date);
+
+            $query->whereDate(
+                'Letter_Date',
+                '>=',
+                $request->from_date
+            );
         }
 
-        // Paginate and append query params for filter persistence
-        $letters = $query->paginate(10)->appends($request->query());
-        return view('cancellation.index', compact('letters'));
+        if ($request->filled('to_date')) {
+
+            $query->whereDate(
+                'Letter_Date',
+                '<=',
+                $request->to_date
+            );
+        }
+
+        $letters = $query
+            ->paginate(10)
+            ->appends(
+                $request->query()
+            );
+
+        return view(
+            'cancellation.index',
+            compact('letters')
+        );
     }
     public function edit($id){
         $letter = DomicileCancellation::findOrFail($id);

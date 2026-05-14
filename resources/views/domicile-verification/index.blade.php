@@ -17,25 +17,126 @@
         @if(session('error'))
             <div class="mb-4 p-2 bg-red-100 text-red-700 rounded">{{ session('error') }}</div>
         @endif
-        <div class="flex justify-between items-center space-x-4 m-2 mb-4">
-            <form action="{{route('domicile.verification_letter.index')}}" method="GET" class="w-full mt-3">
-                <div class="flex flex-wrap items-center gap-3">
-                    <div class="flex-1 min-w-[220px]">
-                        <input type="text" name="filter" value="{{ request('filter') }}" placeholder="Search CNIC, Applicant name, or Sent To" class="w-full px-4 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-200" />
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <label for="from_date" class="text-sm">From</label>
-                        <input id="from_date" type="date" name="from_date" value="{{ request('from_date') }}" class="px-3 py-2 border rounded-md" />
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <label for="to_date" class="text-sm">To</label>
-                        <input id="to_date" type="date" name="to_date" value="{{ request('to_date') }}" class="px-3 py-2 border rounded-md" />
-                    </div>
-                    <div>
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md">Search</button>
-                    </div>
+        <div class="bg-white border rounded shadow-sm p-4 mb-6">
+
+            <form action="{{ route('domicile.verification_letter.index') }}"
+                method="GET"
+                class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 items-end">
+
+                {{-- Search --}}
+                <div class="md:col-span-2">
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Search
+                    </label>
+
+                    <input
+                        type="text"
+                        name="filter"
+                        value="{{ request('filter') }}"
+                        placeholder="CNIC / Applicant / Sent To"
+
+                        class="w-full rounded-xl border-gray-300
+                            shadow-sm
+                            focus:ring-2
+                            focus:ring-indigo-500
+                            focus:border-indigo-500">
+
                 </div>
+
+
+                {{-- From Date --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        From
+                    </label>
+
+                    <input
+                        id="from_date"
+                        type="date"
+                        name="from_date"
+                        value="{{ request('from_date') }}"
+
+                        class="w-full rounded-xl border-gray-300
+                            shadow-sm
+                            focus:ring-2
+                            focus:ring-indigo-500
+                            focus:border-indigo-500">
+
+                </div>
+
+
+                {{-- To Date --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        To
+                    </label>
+
+                    <input
+                        id="to_date"
+                        type="date"
+                        name="to_date"
+                        value="{{ request('to_date') }}"
+
+                        class="w-full rounded-xl border-gray-300
+                            shadow-sm
+                            focus:ring-2
+                            focus:ring-indigo-500
+                            focus:border-indigo-500">
+
+                </div>
+
+
+                {{-- Search Button --}}
+                <div>
+
+                    <button
+                        type="submit"
+
+                        class="w-full h-[42px]
+                            bg-indigo-600
+                            hover:bg-indigo-700
+                            text-white rounded-xl
+                            shadow transition">
+
+                        <div class="flex items-center justify-center gap-2">
+
+                            <x-heroicon-s-magnifying-glass
+                                class="w-5 h-5"/>
+
+                            Search
+
+                        </div>
+
+                    </button>
+
+                </div>
+
+
+                {{-- Clear Button --}}
+                <div>
+
+                    <a href="{{ route('domicile.verification_letter.index') }}"
+                    class="w-full h-[42px]
+                            flex items-center justify-center gap-2
+                            bg-gray-200
+                            hover:bg-gray-300
+                            rounded-xl
+                            transition">
+
+                        <x-heroicon-s-x-mark
+                            class="w-5 h-5"/>
+
+                        Clear
+
+                    </a>
+
+                </div>
+
             </form>
+
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -59,9 +160,9 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Letter_Sent_by }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->CNIC ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->Applicant_Name ?? 'N/A' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('domicile.verification_letter.edit', $letter->Letter_ID) }}" class="bg-indigo-200 text-gray-800 hover:bg-indigo-400 mr-3 p-2 rounded">Edit</a>
-                            <a href="{{ route('domicile.verification_letter.letter', $letter->Letter_ID) }}" class="bg-indigo-200 text-gray-800 hover:bg-indigo-400 mr-3 p-2 rounded">Letter</a>
+                        <td class="px-6 py-4 flex flex-row space-between">
+                            <a href="{{ route('domicile.verification_letter.edit', $letter->Letter_ID) }}" ><x-heroicon-s-pencil title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/></a>
+                            <a href="{{ route('domicile.cancellation.letter', $letter->Letter_ID) }}" ><x-heroicon-s-document-check title="Issue Letter" class="w-7 h-7 text-green-400 hover:text-green-600 transition"/></a>
                         </td>
                     </tr>
                 @empty

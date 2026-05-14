@@ -109,16 +109,16 @@
                             <td class="px-6 py-4 text-sm">
                                 <div x-data="{ open: false }" class="relative">
                                     <div class="flex items-center space-x-2">
-                                        <a href="{{ route('surety.edit', $record->id) }}" class="text-blue-600 hover:text-blue-800">
-                                        Edit
+                                        <a href="{{ route('surety.edit', $record->id) }}">
+                                            <x-heroicon-s-pencil title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
                                         </a>
 
-                                        <button @click="open = true" type="button" class="text-green-600 hover:text-green-800">
-                                            
+                                        <button @click="open = true" type="button">
+                                            <x-heroicon-m-chevron-double-up title="update status" class="w-7 h-7 text-green-400 hover:text-green-600 transition"/>
                                         </button>
 
                                         <a href="{{route('surety.show', $record->id)}}" class="text-purple-600 hover:text-purple-800">
-                                            View
+                                            <x-heroicon-o-arrow-top-right-on-square title="View Record" class="w-7 h-7 text-yellow-400 hover:text-yellow-600 transition"/>
                                         </a>
                                     </div>
 
@@ -208,13 +208,13 @@
                                 <div x-data="{ open: false }" class="relative">
                                     <div class="flex items-center space-x-2">
                                         <a href="{{ route('surety.edit', $record->id) }}" class="text-blue-600 hover:text-blue-800">
-                                            Edit
+                                            <x-heroicon-s-pencil title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
                                         </a>
                                         <button @click="open = true" type="button" class="text-green-600 hover:text-green-800">
-                                            Update
+                                            <x-heroicon-m-arrow-top-right-on-square title="Update status" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
                                         </button>
                                         <a href="{{route('surety.show', $record->id)}}" class="text-purple-600 hover:text-purple-800">
-                                            Show
+                                            <x-heroicon-o-eye title="View Record" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
                                         </a>
                                     </div>
 

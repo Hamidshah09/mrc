@@ -123,49 +123,102 @@ class NocOtherDistrictController extends Controller
 
         return redirect()->route('noc-other-district.index')->with('success', 'NOC Other District record saved successfully.');
     }
-    public function index(Request $request){
-        $query = NocOtherDistrict::with('applicants', 'dispatchDiary')->orderBy('Letter_ID','desc');
+    
+    public function index(Request $request)
+    {
+        $query = NocOtherDistrict::with(
+            'applicants',
+            'dispatchDiary'
+        )->orderBy('Letter_ID', 'desc');
 
-        // Apply search filter based on search_type
-        if ($request->filled('search') && $request->filled('search_type')) {
-            $search = $request->search;
-            $searchType = $request->search_type;
+        /*
+        |--------------------------------------------------------------------------
+        | Universal Search
+        |--------------------------------------------------------------------------
+        */
 
-            switch ($searchType) {
-                case 'cnic':
-                    $query->whereHas('applicants', function ($q) use ($search) {
-                        $q->where('CNIC', 'like', '%' . $search . '%'); // Adjust field name if needed
-                    });
-                    break;
-                case 'name':
-                    $query->whereHas('applicants', function ($q) use ($search) {
-                        $q->where('Applicant_Name', 'like', '%' . $search . '%');
-                    });
-                    break;
-                case 'id':
-                    $query->where('Letter_ID', 'like', '%' . $search . '%');
-                    break;
-                case 'dispatch_no':
-                    $query->whereHas('dispatchDiary', function ($q) use ($search) {
-                        $q->where('Dispatch_No', 'like', '%' . $search . '%');
-                    });
-                    break;
-            }
+        if ($request->filled('search')) {
+
+            $search = trim($request->search);
+
+            $query->where(function ($q) use ($search) {
+
+                // Letter ID
+                $q->where(
+                    'Letter_ID',
+                    'like',
+                    "%{$search}%"
+                )
+
+                // Applicant CNIC
+                ->orWhereHas(
+                    'applicants',
+                    function ($sub) use ($search) {
+
+                        $sub->where(
+                            'CNIC',
+                            'like',
+                            "%{$search}%"
+                        )
+
+                        ->orWhere(
+                            'Applicant_Name',
+                            'like',
+                            "%{$search}%"
+                        );
+                    }
+                )
+
+                // Dispatch Number
+                ->orWhereHas(
+                    'dispatchDiary',
+                    function ($sub) use ($search) {
+
+                        $sub->where(
+                            'Dispatch_No',
+                            'like',
+                            "%{$search}%"
+                        );
+                    }
+                );
+
+            });
         }
 
-        // Apply date range filter
+        /*
+        |--------------------------------------------------------------------------
+        | Date Filters
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->filled('from_date')) {
-            $query->where('Letter_Date', '>=', $request->from_date);
+
+            $query->whereDate(
+                'Letter_Date',
+                '>=',
+                $request->from_date
+            );
         }
+
         if ($request->filled('to_date')) {
-            $query->where('Letter_Date', '<=', $request->to_date);
+
+            $query->whereDate(
+                'Letter_Date',
+                '<=',
+                $request->to_date
+            );
         }
 
-        // Paginate and append query params for filter persistence
-        $letters = $query->paginate(10)->appends($request->query());
+        $letters = $query
+            ->paginate(10)
+            ->appends(
+                $request->query()
+            );
 
-
-        return view('nocotherdistrict.index', compact('letters'));
+        return view(
+            'nocotherdistrict.index',
+            compact('letters')
+        );
     }
 
     public function edit($id){

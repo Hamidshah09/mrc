@@ -123,7 +123,47 @@ class PublicRequestsController extends Controller
             ]);
         }
     }
-    
+
+    //Checking in other districts
+    try {
+        $other_district_found=0;
+        $cnic = $domicile->cnic;
+
+        if ($cnic) {
+
+            $apiUrl = "https://cfc-ict.com/fastapi/domicile/check-in-other-district/{$cnic}";
+
+            $response = Http::timeout(60)->get($apiUrl);
+
+            if ($response->successful()) {
+
+                $apiData = $response->json();
+
+                Log::info('NITB API Response', [
+                    'cnic' => $cnic,
+                    'response' => $apiData
+                ]);
+
+                if (
+                    isset($apiData['found']) &&
+                    $apiData['found'] === true
+                ) {
+
+                    $other_district_found = 1;
+                }
+            }
+        }
+
+    } catch (\Exception $e) {
+
+        Log::error('NITB API Error', [
+            'cnic' => $cnic ?? null,
+            'message' => $e->getMessage()
+        ]);
+    }
+    $domicile->update([
+                'other_district_status' => $other_district_found
+            ]);
     
     return view('public.success', [
             'id'   => $domicile->id,

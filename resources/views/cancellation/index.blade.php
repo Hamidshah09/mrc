@@ -17,24 +17,118 @@
             <div class="mb-4 p-2 bg-red-100 text-red-700 rounded">{{ session('error') }}</div>
         @endif
         <div class="flex justify-between items-center space-x-4 m-2 mb-4">
-            <form action="{{route('domicile.cancellation.index')}}" method="GET" class="mt-3">
-                <div class="flex flex-row flex-wrap items-center">
-                    <x-text-input id="search" class="mt-1 w-48 p-2 mx-2" type="text" name="search" value="{{ old('search') }}" autofocus autocomplete="cnic" />
-                    <select name="search_type" id="search_type" class= "w-48 mt-1 border-gray-600 focus:ring-indigo-500  rounded-md shadow-sm" autofocus autocomplete="gender">
-                        <option value="cnic" {{ old('search_type') == 'cnic' ? 'selected' : '' }}>CNIC </option> 
-                        <option value="name" {{ old('search_type') == 'name' ? 'selected' : '' }}>Name</option>
-                        <option value="id" {{ old('search_type') == 'id' ? 'selected' : '' }}>id</option>
-                        <option value="dispatch_no" {{ old('search_type') == 'dispatch_no' ? 'selected' : '' }}>Dispatch_No</option> 
-                    </select>
-                    <label for="from_date" class="mt-1 p-2">From</label>
-                    <x-text-input id="from_date" class="mt-1 w-48 p-2 mx-2" type="date" name="from_date" value="{{ old('from_date') }}" autofocus autocomplete="from_date" />
-                    <label for="to_date" class="mt-1 p-2">To</label>
-                    <x-text-input id="to_date" class="mt-1 w-48 p-2 mx-2" type="date" name="to_date" value="{{ old('to_date') }}" autofocus autocomplete="to_date" />
-                    <x-primary-button class="mt-1 ms-3" type="submit">
-                        {{ __('Search') }}
-                    </x-primary-button>
-                    
+            <form action="{{ route('domicile.cancellation.index') }}"
+                method="GET"
+                class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 items-end">
+
+                {{-- Search --}}
+                <div class="md:col-span-2">
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Search
+                    </label>
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="CNIC / Name / Letter ID / Domicile No / Dispatch"
+
+                        class="w-full rounded-xl border-gray-300
+                            shadow-sm
+                            focus:ring-2
+                            focus:ring-indigo-500
+                            focus:border-indigo-500">
+
                 </div>
+
+
+                {{-- From Date --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        From
+                    </label>
+
+                    <input
+                        type="date"
+                        name="from_date"
+                        value="{{ request('from_date') }}"
+
+                        class="w-full rounded-xl border-gray-300
+                            shadow-sm
+                            focus:ring-2
+                            focus:ring-indigo-500
+                            focus:border-indigo-500">
+
+                </div>
+
+
+                {{-- To Date --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        To
+                    </label>
+
+                    <input
+                        type="date"
+                        name="to_date"
+                        value="{{ request('to_date') }}"
+
+                        class="w-full rounded-xl border-gray-300
+                            shadow-sm
+                            focus:ring-2
+                            focus:ring-indigo-500
+                            focus:border-indigo-500">
+
+                </div>
+
+
+                {{-- Search Button --}}
+                <div>
+
+                    <button
+                        type="submit"
+                        class="w-full h-[42px]
+                            bg-indigo-600
+                            hover:bg-indigo-700
+                            text-white rounded-xl
+                            shadow transition">
+
+                        <div class="flex items-center justify-center gap-2">
+
+                            <x-heroicon-s-magnifying-glass
+                                class="w-5 h-5"/>
+
+                            Search
+
+                        </div>
+
+                    </button>
+
+                </div>
+
+
+                {{-- Clear Button --}}
+                <div>
+
+                    <a href="{{ route('domicile.cancellation.index') }}"
+                    class="w-full h-[42px]
+                            flex items-center justify-center gap-2
+                            bg-gray-200
+                            hover:bg-gray-300
+                            rounded-xl">
+
+                        <x-heroicon-s-x-mark
+                            class="w-5 h-5"/>
+
+                        Clear
+
+                    </a>
+
+                </div>
+
             </form>
         </div>
         <div class="overflow-x-auto">
@@ -61,9 +155,9 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Applicant_Name ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Domicile_No ?? 'N/A' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->Domicile_Date ?? 'N/A' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('domicile.cancellation.edit', $letter->Letter_ID) }}" class="bg-indigo-100 text-gray-700 hover:bg-indigo-300 mr-3 p-2 rounded">Edit</a>
-                            <a href="{{ route('domicile.cancellation.letter', $letter->Letter_ID) }}" class="bg-indigo-100 text-gray-700 hover:bg-indigo-300 mr-3 p-2 rounded">Letter</a>
+                        <td class="px-6 py-4 flex flex-row space-between">
+                            <a href="{{ route('domicile.cancellation.edit', $letter->Letter_ID) }}" ><x-heroicon-s-pencil title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/></a>
+                            <a href="{{ route('domicile.cancellation.letter', $letter->Letter_ID) }}" ><x-heroicon-s-document-check title="Issue Letter" class="w-7 h-7 text-green-400 hover:text-green-600 transition"/></a>
                         </td>
                     </tr>
                 @empty

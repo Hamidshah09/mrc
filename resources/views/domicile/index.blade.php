@@ -60,11 +60,11 @@
                             <td class="px-6 py-4 text-sm flex flex-row justify-center">
                                 <a href="{{route('domicile.edit', $record->id)}}" 
                                 class="text-indigo-600 hover:text-indigo-900 font-medium">
-                                    <x-icons.pencil-square />
+                                    <x-heroicon-s-pencil title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
                                 </a>
                                 <a href="{{route('domicile.form_p', $record->id)}}" 
                                 class="text-indigo-600 hover:text-indigo-900 font-medium">
-                                    <x-icons.document-text />
+                                    <x-heroicon-s-document-check title="Issue Letter" class="w-7 h-7 text-green-400 hover:text-green-600 transition"/>
                                 </a>
                             </td>
                         </tr>

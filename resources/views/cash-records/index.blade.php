@@ -4,7 +4,7 @@
             {{ __('Cash Records') }}
         </h2>
     </x-slot>
-    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="w-[95%] mx-auto p-4 sm:p-6 lg:p-8">
         
         <div class="flex items-center justify-end mb-4">
             <div class="flex items-center space-x-2">

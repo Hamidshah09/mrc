@@ -4,7 +4,7 @@
             {{ __('Marriage Records') }}
         </h2>
     </x-slot>
-    <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+    <div class="w-[95%] mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
         <div class="w-full flex justify-end">
 
                 <a href="{{route('mrc.create')}}" class="mb-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">New</a>

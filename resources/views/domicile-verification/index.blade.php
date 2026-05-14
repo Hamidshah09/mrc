@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto p-6 bg-white shadow-md rounded mt-10">
+    <div class="w-[95%] mx-auto p-6 bg-white shadow-md rounded mt-10">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-semibold">Letters</h3>
             <a href="{{ route('domicile.verification_letter.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded">New Letter</a>

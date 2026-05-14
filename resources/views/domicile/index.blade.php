@@ -6,7 +6,7 @@
     </x-slot>
     
     
-    <div class="max-w-7xl bg-white mt-3 shadow-md rounded-lg mx-auto overflow-hidden">
+    <div class="w-[95%] bg-white mt-3 shadow-md rounded-lg mx-auto overflow-hidden">
         <div class="px-4 py-3 border-b bg-white flex justify-end items-center">
             <a href="{{route('domicile.create')}}" class="inline-flex items-center px-4 py-2 bg-purple-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 focus:bg-purple-700 active:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">New Applicant</a>
         </div>

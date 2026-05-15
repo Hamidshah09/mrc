@@ -46,6 +46,11 @@ class DomicileApplicants extends Model
         'picture_path',
         'noc_letter_id',
         'other_district_status',
+        'nitb_status',
+        'noc_other_district_letter',
+        'noc_ict_letter',
+        'cancellation_letter',
+        'blacklist_status',
     ];
     // protected $casts = ['date_of_arrival' => 'date', 'date_of_birth'=>'date'];
     

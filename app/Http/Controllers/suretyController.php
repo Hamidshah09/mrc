@@ -230,9 +230,8 @@ class SuretyController extends Controller
 
         $start = Carbon::today('Asia/Karachi')->startOfDay()->utc();
         $end   = Carbon::today('Asia/Karachi')->endOfDay()->utc();
-
-        $todayCount = SuretyRegister::whereBetween('created_at', [$start, $end])
-            ->count();
+        
+        
 
         $completedCount = 0; // adjust ID
         
@@ -282,6 +281,16 @@ class SuretyController extends Controller
 
         $userNames = User::whereIn('id', $userIds)
             ->pluck('name', 'id');
+        $suretyUsers = User::where('role_id', 10)
+            ->select('id', 'name')
+            ->withCount([
+                'suretyregister as daily_count' => function ($query) use ($start, $end) {
+
+                    $query->whereBetween('created_at', [$start, $end]);
+                }
+            ])
+            ->orderByDesc('daily_count')
+            ->get();
 
         $userLabels = $userCounts->map(fn($u) =>
             $userNames[$u->user_id] ?? 'User '.$u->user_id
@@ -298,7 +307,7 @@ class SuretyController extends Controller
             ];
         })->values()->toArray();
 
-
+        $todayCount = SuretyRegister::whereBetween('created_at', [$start, $end])->count();
         $amountDaily = SuretyRegister::whereBetween('receiving_date', [$from, $to])
             ->select(DB::raw('DATE(receiving_date) as date'), DB::raw('SUM(amount) as total'))
             ->groupBy('date')
@@ -311,7 +320,7 @@ class SuretyController extends Controller
         return view('surety.dashboard', compact('totalAmount', 'pieLabels', 'pieData', 
                             'dailyLabels', 'dailyData', 'from', 'to', 'status',
                              'surityStatuses', 'userLabels', 'userData', 'userPerformance',
-                             'matchedRecords', 'totalRecords', 'firstRecord', 'amountLabels', 'amountData', 'todayCount', 'completedCount'));
+                             'matchedRecords', 'totalRecords', 'firstRecord', 'amountLabels', 'amountData', 'todayCount', 'completedCount', 'suretyUsers'));
     }
 
     public function show($id)

@@ -9,6 +9,7 @@ use App\Models\Setting;
 use App\Models\tehsils;
 use App\Models\districts;
 use App\Models\DomicileApplicants;
+use App\Models\BlackListDomicileApplications;
 use App\Models\children;
 use App\Models\NocOtherDistrict;
 use App\Models\NocOtherDistrictApplicants;
@@ -198,7 +199,6 @@ class PublicRequestsController extends Controller
     }
 
     $domicile->nitb_status = $nitb_found;
-    $domicile->save();
 
 
     //checking in other district letter
@@ -227,6 +227,13 @@ class PublicRequestsController extends Controller
         $domicile->cancellation_letter = 0;
     }
     
+    $blacklist_status= BlackListDomicileApplications::where('CNIC', $cnic)->get();
+    if ($blacklist_status){
+        $domicile->blacklist_status = 1;
+    }else{
+        $domicile->blacklist_status = 0;
+    }
+
     $domicile->save();
 
     return view('public.success', [

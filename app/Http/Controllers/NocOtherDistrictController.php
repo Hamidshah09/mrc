@@ -17,7 +17,7 @@ class NocOtherDistrictController extends Controller
     public function store(Request $request){
         
         $validated = $request->validate([
-            'referenced_letter_no' => 'nullable|string|max:255',
+            'referenced_letter_no' => 'nullable|string|max:45',
             'referenced_letter_date' => 'nullable|date',
             'letter_type' => 'required|max:10',
             'Letter_Date' => 'required|date',
@@ -198,6 +198,8 @@ class NocOtherDistrictController extends Controller
         $validated = $request->validate([
             'Letter_Date' => 'required|date',
             'letter_type' => 'required|in:self,official|max:10',
+            'referenced_letter_no' => 'nullable|string|max:45',
+            'referenced_letter_date' => 'nullable|date',
             'NOC_Issued_To' => 'required|string|max:255',
             'Remarks' => 'nullable|string|max:500',
             'applicants' => 'nullable|array',

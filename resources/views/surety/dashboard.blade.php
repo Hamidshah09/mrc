@@ -79,91 +79,172 @@
                 </h3>
 
                 <p class="text-sm text-gray-500 mt-1">
-                    Entries created by users today
+                    Daily entries created by surety users
                 </p>
             </div>
 
-            @if(!empty($userPerformance) && count($userPerformance))
+            @php
+                $grandTotal = $suretyUsers->sum('daily_count');
+                $maxEntries = $suretyUsers->max('daily_count');
+            @endphp
 
-                @php
-                    $maxEntries = collect($userPerformance)->max('total');
-                    $grandTotal = collect($userPerformance)->sum('total');
-                @endphp
+            @if($suretyUsers->count())
 
-                <div class="divide-y divide-gray-100">
+                <div class="overflow-x-auto">
 
-                    @foreach($userPerformance as $i => $u)
+                    <table class="min-w-full divide-y divide-gray-200">
 
-                        @php
-                            $percentage = $maxEntries > 0
-                                ? ($u['total'] / $maxEntries) * 100
-                                : 0;
+                        <thead class="bg-gray-50">
+                            <tr>
 
-                            $share = $grandTotal > 0
-                                ? round(($u['total'] / $grandTotal) * 100, 1)
-                                : 0;
-                        @endphp
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Rank
+                                </th>
 
-                        <div class="px-6 py-4 hover:bg-gray-50 transition">
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    User
+                                </th>
 
-                            <div class="flex items-center justify-between mb-2">
+                                <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Entries
+                                </th>
 
-                                <div class="flex items-center gap-3">
+                                <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Percentage
+                                </th>
+
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Performance
+                                </th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-white divide-y divide-gray-100">
+
+                            @foreach($suretyUsers as $i => $user)
+
+                                @php
+                                    $percentage = $grandTotal > 0
+                                        ? round(($user->daily_count / $grandTotal) * 100, 1)
+                                        : 0;
+
+                                    $barWidth = $maxEntries > 0
+                                        ? ($user->daily_count / $maxEntries) * 100
+                                        : 0;
+                                @endphp
+
+                                <tr class="hover:bg-gray-50 transition">
 
                                     {{-- Rank --}}
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center
-                                        {{ $i === 0 ? 'bg-yellow-100 text-yellow-700' : '' }}
-                                        {{ $i === 1 ? 'bg-gray-200 text-gray-700' : '' }}
-                                        {{ $i === 2 ? 'bg-orange-100 text-orange-700' : '' }}
-                                        {{ $i > 2 ? 'bg-blue-100 text-blue-700' : '' }}
-                                    ">
-                                        {{ $i + 1 }}
-                                    </div>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+
+                                        <div class="flex items-center gap-2">
+
+                                            <div class="
+                                                w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+
+                                                {{ $i === 0 ? 'bg-yellow-100 text-yellow-700' : '' }}
+                                                {{ $i === 1 ? 'bg-gray-200 text-gray-700' : '' }}
+                                                {{ $i === 2 ? 'bg-orange-100 text-orange-700' : '' }}
+                                                {{ $i > 2 ? 'bg-blue-100 text-blue-700' : '' }}
+                                            ">
+                                                {{ $i + 1 }}
+                                            </div>
+
+                                            @if($i === 0)
+                                                <span class="text-yellow-500 text-lg">🥇</span>
+                                            @elseif($i === 1)
+                                                <span class="text-gray-500 text-lg">🥈</span>
+                                            @elseif($i === 2)
+                                                <span class="text-orange-500 text-lg">🥉</span>
+                                            @endif
+
+                                        </div>
+
+                                    </td>
 
                                     {{-- User --}}
-                                    <div>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+
                                         <div class="font-medium text-gray-800">
-                                            {{ $u['name'] }}
+                                            {{ $user->name }}
                                         </div>
 
-                                        <div class="text-xs text-gray-500">
-                                            {{ $share }}% of today's entries
+                                    </td>
+
+                                    {{-- Entries --}}
+                                    <td class="px-6 py-4 text-center whitespace-nowrap">
+
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-700">
+                                            {{ $user->daily_count }}
+                                        </span>
+
+                                    </td>
+
+                                    {{-- Percentage --}}
+                                    <td class="px-6 py-4 text-center whitespace-nowrap">
+
+                                        <span class="text-sm font-semibold text-indigo-700">
+                                            {{ $percentage }}%
+                                        </span>
+
+                                    </td>
+
+                                    {{-- Progress --}}
+                                    <td class="px-6 py-4 min-w-[220px]">
+
+                                        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+
+                                            <div
+                                                class="h-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500"
+                                                style="width: {{ $barWidth }}%">
+                                            </div>
+
                                         </div>
-                                    </div>
 
-                                </div>
+                                    </td>
 
-                                {{-- Count --}}
-                                <div class="text-right">
-                                    <div class="text-xl font-bold text-gray-800">
-                                        {{ $u['total'] }}
-                                    </div>
+                                </tr>
 
-                                    <div class="text-xs text-gray-500">
-                                        entries
-                                    </div>
-                                </div>
+                            @endforeach
 
-                            </div>
+                        </tbody>
 
-                            {{-- Progress Bar --}}
-                            <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                                <div
-                                    class="h-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600"
-                                    style="width: {{ $percentage }}%">
-                                </div>
-                            </div>
+                        <tfoot class="bg-gray-50 border-t">
 
-                        </div>
+                            <tr>
 
-                    @endforeach
+                                <td colspan="2" class="px-6 py-4 text-right font-semibold text-gray-700">
+                                    Total Entries
+                                </td>
+
+                                <td class="px-6 py-4 text-center">
+
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-green-100 text-green-700">
+                                        {{ $grandTotal }}
+                                    </span>
+
+                                </td>
+
+                                <td class="px-6 py-4 text-center font-semibold text-indigo-700">
+                                    100%
+                                </td>
+
+                                <td></td>
+
+                            </tr>
+
+                        </tfoot>
+
+                    </table>
 
                 </div>
 
             @else
 
                 <div class="p-6 text-sm text-gray-500">
-                    No user activity for selected date range.
+                    No user activity found for today.
                 </div>
 
             @endif

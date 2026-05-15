@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\children;
 use App\Models\districts;
 use App\Models\DomicileApplicants;
@@ -12,9 +14,9 @@ use App\Models\NocICT;
 use App\Models\NocICTApplicants;
 use App\Models\NocOtherDistrictApplicants;
 use App\Models\OnlineApplication;
-use App\Models\Passcode;
 use App\Models\tehsils;
 use App\Models\DispatchDiary;
+use App\Models\BlackListDomicileApplications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -102,7 +104,8 @@ class domicileController extends Controller
     
 
     public function index(Request $request){
-        $query = DomicileApplicants::select('id', 'first_name', 'cnic', 'contact',  'other_district_status','created_at')->orderBy('id', 'desc');
+        $query = DomicileApplicants::select('id', 'first_name', 'cnic', 'contact',  'other_district_status','created_at',
+                                            'nitb_status', 'noc_other_district_letter', 'noc_ict_letter', 'cancellation_letter', 'blacklist_status')->orderBy('id', 'desc');
 
         if ($request->filled('search')) {
             $q = $request->search;
@@ -147,7 +150,7 @@ class domicileController extends Controller
     {   
         
     $validated = $request->validate([
-        'cnic' => 'required|regex:/^[0-9]{13}$/',
+        'cnic' => ['required', 'regex:/^[0-9]{13}$/', Rule::unique('remote_mysql.domicile','cnic')],
         'name' => 'required|string|max:45',
         'father_name' => 'required|string|max:45',
         'spouse_name' => 'nullable|string|max:45',
@@ -354,6 +357,12 @@ class domicileController extends Controller
         $domicile->cancellation_letter = 0;
     }
     
+    $blacklist_status= BlackListDomicileApplications::where('CNIC', $cnic)->get();
+    if ($blacklist_status){
+        $domicile->blacklist_status = 1;
+    }else{
+        $domicile->blacklist_status = 0;
+    }
     $domicile->save();
     return redirect()->route('domicile.index')->with('success', 'Domicile record created successfully.');
     }

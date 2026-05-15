@@ -31,17 +31,22 @@ class StatusSummary extends Component
             [
                 'label' => 'NOC OD',
                 'value' => $this->record->noc_other_district_letter,
-                'type'  => 'file',
+                'type'  => 'boolean',
             ],
             [
                 'label' => 'NOC ICT',
                 'value' => $this->record->noc_ict_letter,
-                'type'  => 'file',
+                'type'  => 'boolean',
             ],
             [
                 'label' => 'CANCEL',
                 'value' => $this->record->cancellation_letter,
-                'type'  => 'file',
+                'type'  => 'boolean',
+            ],
+            [
+                'label' => 'BLACK LIST',
+                'value' => $this->record->blacklist_status,
+                'type'  => 'boolean',
             ],
         ];
     }

@@ -58,32 +58,8 @@
                             <td class="px-4 py-4 text-sm text-gray-900">{{ $record->first_name }}</td>
                             <td class="px-4 py-4 text-sm text-gray-900">{{ $record->cnic }}</td>
                             <td class="px-4 py-4 text-sm text-gray-900">{{ $record->contact }}</td>
-                            <td class="px-2 py-4 text-center">
-
-                                <div class="flex justify-center items-center">
-
-                                    @if($record->other_district_status === 1)
-
-                                        <x-solar-danger-triangle-line-duotone
-                                            class="h-6 w-6 text-red-500"
-                                            title="Found in Other District"/>
-
-                                    @elseif($record->other_district_status === 0)
-
-                                        <x-heroicon-o-check-circle
-                                            class="h-6 w-6 text-green-500"
-                                            title="No Record Found"/>
-
-                                    @else
-
-                                        <x-solar-question-circle-linear
-                                            class="h-6 w-6 text-gray-500"
-                                            title="Not Checked"/>
-
-                                    @endif
-
-                                </div>
-
+                            <td class="px-2 py-3 align-top">
+                                <x-status-summary :record="$record"/>
                             </td>
 
                             <td class="px-4 py-4 text-sm">

@@ -45,6 +45,7 @@ class DomicileApplicants extends Model
         'receipt_no',
         'picture_path',
         'noc_letter_id',
+        'other_district_status',
     ];
     // protected $casts = ['date_of_arrival' => 'date', 'date_of_birth'=>'date'];
     

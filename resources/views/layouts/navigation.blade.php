@@ -122,6 +122,7 @@
                                 <a href="{{route('domicile.cancellation.index')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile Cancellation</a>
                                 <a href="{{route('domicile.blacklist.index')}}" class="block px-4 py-2 hover:bg-gray-100">Blacklisted CNICs</a>
                                 <a href="{{route('domicile.verification_letter.index')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile Verification</a>
+                                <a href="{{route('public.index')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile Public</a>
                             </div>
                         </div>
                     </div>

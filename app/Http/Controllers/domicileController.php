@@ -253,7 +253,107 @@ class domicileController extends Controller
         }
     }
     
+    $other_district_found=0;
+    //Checking in other districts
     
+    $cnic = $domicile->cnic;
+    try {
+        
+        if ($cnic) {
+
+            $apiUrl = "http://127.0.0.1:8000/domicile/check-in-other-district/{$cnic}";
+
+            $response = Http::timeout(60)->get($apiUrl);
+
+            if ($response->successful()) {
+
+                $apiData = $response->json();
+
+                if (
+                    isset($apiData['found']) &&
+                    $apiData['found'] === true
+                ) {
+
+                    $other_district_found = 1;
+                }
+            }
+        }
+
+    } catch (\Exception $e) {
+
+        Log::error('NITB API Error', [
+            'cnic' => $cnic ?? null,
+            'message' => $e->getMessage()
+        ]);
+    }
+    $domicile->other_district_status = $other_district_found;
+    $domicile->save();
+
+    //checking in nitb
+
+    try {
+
+        $nitb_found = null; // default = not checked
+
+        if ($cnic) {
+
+            $apiUrl = "http://127.0.0.1:8000/domicile/check-in-nitb/{$cnic}";
+
+            $response = Http::timeout(60)->get($apiUrl);
+
+            if ($response->successful()) {
+
+                $apiData = $response->json();
+
+                $nitb_found =
+                    ($apiData['status'] ?? null) === 'success'
+                    && ($apiData['records'] ?? 0) > 0
+                        ? 1
+                        : 0;
+            }
+        }
+
+    } catch (\Exception $e) {
+
+        Log::error('NITB API Error', [
+            'cnic' => $cnic ?? null,
+            'message' => $e->getMessage()
+        ]);
+
+        $nitb_found = null;
+    }
+
+    $domicile->nitb_status = $nitb_found;
+    $domicile->save();
+
+
+    //checking in other district letter
+
+    $noc_ohter_status = NocOtherDistrictApplicants::where('CNIC', $cnic)->get();
+    if ($noc_ohter_status){
+        $domicile->noc_other_district_letter = 1;
+    }else{
+        $domicile->noc_other_district_letter = 0;
+    }
+    
+    //checking in noc ict letter
+
+    $noc_ict_status = NocICTApplicants::where('CNIC', $cnic)->get();
+    if ($noc_ict_status){
+        $domicile->noc_ict_letter = 1;
+    }else{
+        $domicile->noc_ict_letter = 0;
+    }
+
+    //checking in cancellation
+    $cancellation_status= DomicileCancellation::where('CNIC', $cnic)->get();
+    if ($cancellation_status){
+        $domicile->cancellation_letter = 1;
+    }else{
+        $domicile->cancellation_letter = 0;
+    }
+    
+    $domicile->save();
     return redirect()->route('domicile.index')->with('success', 'Domicile record created successfully.');
     }
 
@@ -487,7 +587,7 @@ class domicileController extends Controller
     {
         try {
             $response = Http::timeout(60) // 60 seconds
-                        ->get($this->apiUrl.'/domicile/statistics/check');
+                        ->get('http://127.0.0.1:8000/domicile/statistics/check');
 
             if ($response->successful()) {
                 $data = $response->json();

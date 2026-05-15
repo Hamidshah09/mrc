@@ -14,6 +14,7 @@ use App\Models\NocOtherDistrict;
 use App\Models\NocOtherDistrictApplicants;
 use App\Models\NocICT;
 use App\Models\NocICTApplicants;
+use App\Models\DomicileCancellation;
 use App\Models\DispatchDiary;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -75,7 +76,7 @@ class PublicRequestsController extends Controller
     $domicile->cnic = strtoupper($validated['cnic']);
     $domicile->first_name = strtoupper($validated['name']);
     $domicile->father_name = strtoupper($validated['father_name']);
-    $domicile->spouse_name = strtoupper($validated['spouse_name']); // nullable
+    $domicile->spouse_name = $validated['spouse_name'] ? strtoupper($validated['spouse_name']) : null; // nullable
     $domicile->date_of_birth = $validated['date_of_birth'];
     $domicile->gender_id = $validated['gender_id'];
     $domicile->place_of_birth = $validated['place_of_birth'];
@@ -109,6 +110,7 @@ class PublicRequestsController extends Controller
     // $domicile->has_children = $request->has('children_checkbox') ? true : false;
 
     $domicile->save();
+    
     $children = $request->input('children');
     if ($children){
         foreach ($children as $child) {
@@ -123,26 +125,23 @@ class PublicRequestsController extends Controller
             ]);
         }
     }
-
+    
+    
+    $other_district_found=0;
     //Checking in other districts
+    
+    $cnic = $domicile->cnic;
     try {
-        $other_district_found=0;
-        $cnic = $domicile->cnic;
-
+        
         if ($cnic) {
 
-            $apiUrl = "https://cfc-ict.com/fastapi/domicile/check-in-other-district/{$cnic}";
+            $apiUrl = "http://127.0.0.1:8000/domicile/check-in-other-district/{$cnic}";
 
             $response = Http::timeout(60)->get($apiUrl);
 
             if ($response->successful()) {
 
                 $apiData = $response->json();
-
-                Log::info('NITB API Response', [
-                    'cnic' => $cnic,
-                    'response' => $apiData
-                ]);
 
                 if (
                     isset($apiData['found']) &&
@@ -161,10 +160,75 @@ class PublicRequestsController extends Controller
             'message' => $e->getMessage()
         ]);
     }
-    $domicile->update([
-                'other_district_status' => $other_district_found
-            ]);
+    $domicile->other_district_status = $other_district_found;
+    $domicile->save();
+
+    //checking in nitb
+
+    try {
+
+        $nitb_found = null; // default = not checked
+
+        if ($cnic) {
+
+            $apiUrl = "http://127.0.0.1:8000/domicile/check-in-nitb/{$cnic}";
+
+            $response = Http::timeout(60)->get($apiUrl);
+
+            if ($response->successful()) {
+
+                $apiData = $response->json();
+
+                $nitb_found =
+                    ($apiData['status'] ?? null) === 'success'
+                    && ($apiData['records'] ?? 0) > 0
+                        ? 1
+                        : 0;
+            }
+        }
+
+    } catch (\Exception $e) {
+
+        Log::error('NITB API Error', [
+            'cnic' => $cnic ?? null,
+            'message' => $e->getMessage()
+        ]);
+
+        $nitb_found = null;
+    }
+
+    $domicile->nitb_status = $nitb_found;
+    $domicile->save();
+
+
+    //checking in other district letter
+
+    $noc_ohter_status = NocOtherDistrictApplicants::where('CNIC', $cnic)->get();
+    if ($noc_ohter_status){
+        $domicile->noc_other_district_letter = 1;
+    }else{
+        $domicile->noc_other_district_letter = 0;
+    }
     
+    //checking in noc ict letter
+
+    $noc_ict_status = NocICTApplicants::where('CNIC', $cnic)->get();
+    if ($noc_ict_status){
+        $domicile->noc_ict_letter = 1;
+    }else{
+        $domicile->noc_ict_letter = 0;
+    }
+
+    //checking in cancellation
+    $cancellation_status= DomicileCancellation::where('CNIC', $cnic)->get();
+    if ($cancellation_status){
+        $domicile->cancellation_letter = 1;
+    }else{
+        $domicile->cancellation_letter = 0;
+    }
+    
+    $domicile->save();
+
     return view('public.success', [
             'id'   => $domicile->id,
             'recordType' => 'Domicile Application'
@@ -299,13 +363,7 @@ class PublicRequestsController extends Controller
                         $response = Http::timeout(60)->get($apiUrl);
 
                         if ($response->successful()) {
-
                             $apiData = $response->json();
-
-                            Log::info('NITB API Response', [
-                                'cnic' => $cnic,
-                                'response' => $apiData
-                            ]);
 
                             if (
                                 isset($apiData['records']) &&

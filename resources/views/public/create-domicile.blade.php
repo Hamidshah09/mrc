@@ -55,7 +55,7 @@
 
                             <div class="form-control">
                                 <x-input-label for="gender_id" :value="__('Gender')" />
-                                <select name="gender_id" id="gender_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('gender_id')" required autofocus autocomplete="gender">
+                                <select name="gender_id" id="gender_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('gender_id')" required autofocus autocomplete="gender_id">
                                         <option value="">Select Gender</option>
                                         <option selected value="1">Male </option>
                                         <option value="2">Female</option>
@@ -72,7 +72,7 @@
 
                             <div class="form-control">
                                 <x-input-label for="marital_status_id" :value="__('Marital Status')" />
-                                <select name="marital_status_id" id="marital_status_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('marital_status_id')" required autofocus autocomplete="marital_status">
+                                <select name="marital_status_id" id="marital_status_id" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('marital_status_id')" required autofocus autocomplete="marital_status_id">
                                     
                                     <option value="">Select Marital Status</option>
                                     <option selected value="1">Single</option>

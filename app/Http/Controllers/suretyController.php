@@ -228,10 +228,11 @@ class SuretyController extends Controller
 
         $totalAmount = (clone $query)->sum('amount');
 
-        $todayCount = SuretyRegister::whereDate(
-            'created_at',
-            Carbon::today('Asia/Karachi')
-        )->count();
+        $start = Carbon::today('Asia/Karachi')->startOfDay()->utc();
+        $end   = Carbon::today('Asia/Karachi')->endOfDay()->utc();
+
+        $todayCount = SuretyRegister::whereBetween('created_at', [$start, $end])
+            ->count();
 
         $completedCount = 0; // adjust ID
         
@@ -270,12 +271,8 @@ class SuretyController extends Controller
 
         $surityStatuses = SuretyStatus::all();
 
-        // User performance: count of history actions by user within date range (and optional status)
-      
-        $start = Carbon::today('Asia/Karachi')->startOfDay()->utc();
-        $end   = Carbon::today('Asia/Karachi')->endOfDay()->utc();
 
-        $userCounts = SuretyRegister::whereBetween('created_at', [$from, $to])
+        $userCounts = SuretyRegister::whereBetween('created_at', [$start, $end])
             ->select('user_id', DB::raw('count(*) as total'))
             ->groupBy('user_id')
             ->orderByDesc('total')

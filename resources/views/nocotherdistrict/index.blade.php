@@ -33,7 +33,7 @@
                         type="text"
                         name="search"
                         value="{{ request('search') }}"
-                        placeholder="CNIC / Name / Letter ID / Dispatch No"
+                        placeholder="first few letters of cnic"
 
                         class="w-full rounded-xl border-gray-300
                             shadow-sm focus:ring-2

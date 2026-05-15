@@ -23,7 +23,7 @@ class DomicileCancellationController extends Controller
             'Domicile_Date' => 'required|date',
             'Remarks' => 'nullable|string|max:45',
         ]);
-
+        $validated['Letter_Date'] = now()->format('Y-m-d')
         $record = DomicileCancellation::create($validated);
         //inserting dispatch diary record
         $lastDispatch = DispatchDiary::latest('Dispatch_ID')->first();

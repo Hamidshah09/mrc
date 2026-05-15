@@ -126,14 +126,14 @@ class NocOtherDistrictController extends Controller
     
     public function index(Request $request)
     {
-        $query = NocOtherDistrict::with(
+        $query = NocOtherDistrict::with([
             'applicants',
             'dispatchDiary'
-        )->orderBy('Letter_ID', 'desc');
+        ])->orderBy('Letter_ID', 'desc');
 
         /*
         |--------------------------------------------------------------------------
-        | Universal Search
+        | CNIC Search Only
         |--------------------------------------------------------------------------
         */
 
@@ -141,47 +141,13 @@ class NocOtherDistrictController extends Controller
 
             $search = trim($request->search);
 
-            $query->where(function ($q) use ($search) {
+            $query->whereHas('applicants', function ($sub) use ($search) {
 
-                // Letter ID
-                $q->where(
-                    'Letter_ID',
+                $sub->where(
+                    'CNIC',
                     'like',
-                    "%{$search}%"
-                )
-
-                // Applicant CNIC
-                ->orWhereHas(
-                    'applicants',
-                    function ($sub) use ($search) {
-
-                        $sub->where(
-                            'CNIC',
-                            'like',
-                            "%{$search}%"
-                        )
-
-                        ->orWhere(
-                            'Applicant_Name',
-                            'like',
-                            "%{$search}%"
-                        );
-                    }
-                )
-
-                // Dispatch Number
-                ->orWhereHas(
-                    'dispatchDiary',
-                    function ($sub) use ($search) {
-
-                        $sub->where(
-                            'Dispatch_No',
-                            'like',
-                            "%{$search}%"
-                        );
-                    }
+                    "{$search}%"
                 );
-
             });
         }
 
@@ -210,10 +176,8 @@ class NocOtherDistrictController extends Controller
         }
 
         $letters = $query
-            ->paginate(10)
-            ->appends(
-                $request->query()
-            );
+            ->simplePaginate(10)
+            ->appends($request->query());
 
         return view(
             'nocotherdistrict.index',

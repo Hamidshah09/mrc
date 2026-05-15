@@ -10,6 +10,7 @@ use App\Models\NocApplicants;
 use App\Models\NocLetters;
 use App\Models\NocICT;
 use App\Models\NocICTApplicants;
+use App\Models\NocOtherDistrictApplicants;
 use App\Models\OnlineApplication;
 use App\Models\Passcode;
 use App\Models\tehsils;

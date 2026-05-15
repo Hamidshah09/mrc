@@ -228,7 +228,10 @@ class SuretyController extends Controller
 
         $totalAmount = (clone $query)->sum('amount');
 
-        $todayCount = SuretyDocument::where('total_expected_entries', '>', 0)->count();
+        $todayCount = SuretyRegister::whereDate(
+            'created_at',
+            Carbon::today('Asia/Karachi')
+        )->count();
 
         $completedCount = 0; // adjust ID
         

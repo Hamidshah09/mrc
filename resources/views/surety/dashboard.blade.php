@@ -71,32 +71,103 @@
         </div>
             
             
-        <div class="w-[95%] mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
-            <h3 class="font-semibold mb-4">User Performance Today</h3>
+        <div class="w-[95%] mx-auto bg-white shadow-lg rounded-xl mt-6 overflow-hidden">
+
+            <div class="px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+                <h3 class="text-lg font-semibold text-gray-800">
+                    User Performance Today
+                </h3>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Entries created by users today
+                </p>
+            </div>
+
             @if(!empty($userPerformance) && count($userPerformance))
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-                                <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                                <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">Entries</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($userPerformance as $i => $u)
-                                <tr>
-                                    <td class="px-6 py-3 text-sm text-gray-700">{{ $i + 1 }}</td>
-                                    <td class="px-6 py-3 text-sm text-gray-700">{{ $u['name'] }}</td>
-                                    <td class="px-6 py-3 text-sm text-gray-700">{{ $u['total'] }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+
+                @php
+                    $maxEntries = collect($userPerformance)->max('total');
+                    $grandTotal = collect($userPerformance)->sum('total');
+                @endphp
+
+                <div class="divide-y divide-gray-100">
+
+                    @foreach($userPerformance as $i => $u)
+
+                        @php
+                            $percentage = $maxEntries > 0
+                                ? ($u['total'] / $maxEntries) * 100
+                                : 0;
+
+                            $share = $grandTotal > 0
+                                ? round(($u['total'] / $grandTotal) * 100, 1)
+                                : 0;
+                        @endphp
+
+                        <div class="px-6 py-4 hover:bg-gray-50 transition">
+
+                            <div class="flex items-center justify-between mb-2">
+
+                                <div class="flex items-center gap-3">
+
+                                    {{-- Rank --}}
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center
+                                        {{ $i === 0 ? 'bg-yellow-100 text-yellow-700' : '' }}
+                                        {{ $i === 1 ? 'bg-gray-200 text-gray-700' : '' }}
+                                        {{ $i === 2 ? 'bg-orange-100 text-orange-700' : '' }}
+                                        {{ $i > 2 ? 'bg-blue-100 text-blue-700' : '' }}
+                                    ">
+                                        {{ $i + 1 }}
+                                    </div>
+
+                                    {{-- User --}}
+                                    <div>
+                                        <div class="font-medium text-gray-800">
+                                            {{ $u['name'] }}
+                                        </div>
+
+                                        <div class="text-xs text-gray-500">
+                                            {{ $share }}% of today's entries
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                {{-- Count --}}
+                                <div class="text-right">
+                                    <div class="text-xl font-bold text-gray-800">
+                                        {{ $u['total'] }}
+                                    </div>
+
+                                    <div class="text-xs text-gray-500">
+                                        entries
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            {{-- Progress Bar --}}
+                            <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                <div
+                                    class="h-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600"
+                                    style="width: {{ $percentage }}%">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    @endforeach
+
                 </div>
+
             @else
-                <p class="text-sm text-gray-600">No user activity for selected date range.</p>
+
+                <div class="p-6 text-sm text-gray-500">
+                    No user activity for selected date range.
+                </div>
+
             @endif
+
         </div>
     </div>
 

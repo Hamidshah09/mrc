@@ -85,14 +85,15 @@
                         <div>
                             <label class="text-sm font-medium">CNIC</label>
                             <input type="text" name="applicants[0][CNIC]"
-                                   class="mt-1 block w-full border-gray-300 rounded-md"
+                                   class="mt-1 block w-full border-gray-300 rounded-md applicant-cnic"
                                    placeholder="xxxxxxxxxxxxx">
+                            <div class="nitb-status text-xs text-gray-500 mt-1"></div>
                         </div>
 
                         <div>
                             <label class="text-sm font-medium">Applicant Name</label>
                             <input type="text" name="applicants[0][Applicant_Name]"
-                                   class="mt-1 block w-full border-gray-300 rounded-md">
+                                   class="mt-1 block w-full border-gray-300 rounded-md applicant-name">
                         </div>
 
                         <div>
@@ -108,22 +109,22 @@
                         <div>
                             <label class="text-sm font-medium">Father / Husband Name</label>
                             <input type="text" name="applicants[0][Applicant_FName]"
-                                   class="mt-1 block w-full border-gray-300 rounded-md">
+                                   class="mt-1 block w-full border-gray-300 rounded-md applicant-fname">
                         </div>
                         <div>
                             <label class="text-sm font-medium">Address</label>
                             <input type="text" name="applicants[0][address]"
-                                   class="mt-1 block w-full border-gray-300 rounded-md">
+                                   class="mt-1 block w-full border-gray-300 rounded-md applicant-address">
                         </div>
                         <div>
                             <label class="text-sm font-medium">Domicile No</label>
                             <input type="text" name="applicants[0][Domicile_No]"
-                                   class="mt-1 block w-full border-gray-300 rounded-md">
+                                   class="mt-1 block w-full border-gray-300 rounded-md applicant-domicile-no">
                         </div>
                         <div>
                             <label class="text-sm font-medium">Domicile Date</label>
                             <input type="date" name="applicants[0][Domicile_Date]"
-                                   class="mt-1 block w-full border-gray-300 rounded-md">
+                                   class="mt-1 block w-full border-gray-300 rounded-md applicant-domicile-date">
                         </div>
                     </div>
                 </div>
@@ -181,13 +182,14 @@
                     <div>
                         <label class="text-sm font-medium">CNIC</label>
                         <input type="text" name="applicants[${applicantIndex}][CNIC]"
-                               class="mt-1 block w-full border-gray-300 rounded-md">
+                               class="mt-1 block w-full border-gray-300 rounded-md applicant-cnic">
+                        <div class="nitb-status text-xs text-gray-500 mt-1"></div>
                     </div>
 
                     <div>
                         <label class="text-sm font-medium">Applicant Name</label>
                         <input type="text" name="applicants[${applicantIndex}][Applicant_Name]"
-                               class="mt-1 block w-full border-gray-300 rounded-md">
+                               class="mt-1 block w-full border-gray-300 rounded-md applicant-name">
                     </div>
 
                     <div>
@@ -203,22 +205,22 @@
                     <div>
                         <label class="text-sm font-medium">Father / Husband Name</label>
                         <input type="text" name="applicants[${applicantIndex}][Applicant_FName]"
-                               class="mt-1 block w-full border-gray-300 rounded-md">
+                               class="mt-1 block w-full border-gray-300 rounded-md applicant-fname">
                     </div>
                     <div>
                         <label class="text-sm font-medium">Address</label>
                         <input type="text" name="applicants[${applicantIndex}][address]"
-                               class="mt-1 block w-full border-gray-300 rounded-md">
+                               class="mt-1 block w-full border-gray-300 rounded-md applicant-address">
                     </div>
                     <div>
                         <label class="text-sm font-medium">Domicile No</label>
                         <input type="text" name="applicants[${applicantIndex}][Domicile_No]"
-                               class="mt-1 block w-full border-gray-300 rounded-md">
+                               class="mt-1 block w-full border-gray-300 rounded-md applicant-domicile-no">
                     </div>
                     <div>
                         <label class="text-sm font-medium">Domicile Date</label>
                         <input type="date" name="applicants[${applicantIndex}][Domicile_Date]"
-                               class="mt-1 block w-full border-gray-300 rounded-md">
+                               class="mt-1 block w-full border-gray-300 rounded-md applicant-domicile-date">
                     </div>
 
                 </div>
@@ -229,5 +231,91 @@
             applicantIndex++;
             reindexApplicants();
         }
+
+        async function fetchApplicantData(cnicInput) {
+
+            const cnic = cnicInput.value.trim();
+
+            if (cnic.length !== 13) {
+                return;
+            }
+
+            const applicantRow = cnicInput.closest('.applicant-row');
+
+            try {
+
+                cnicInput.disabled = true;
+                applicantRow.querySelector('.nitb-status').innerHTML =
+                    '<span class="text-blue-500">Checking...</span>';
+                const response = await fetch(`http://127.0.0.1:8000/domicile/check-in-nitb/${cnic}`);
+
+                const result = await response.json();
+
+                if (
+                    result.status === 'success' &&
+                    result.records > 0 &&
+                    result.data.length > 0
+                ) {
+                    const applicant = result.data[0];
+
+                    applicantRow.querySelector('.applicant-name').value =
+                        applicant['Full Name'] ?? '';
+
+                    applicantRow.querySelector('.applicant-fname').value =
+                        applicant['Father / Husband'] ?? '';
+
+                    applicantRow.querySelector('.applicant-address').value =
+                        applicant['Permanent Address'] ?? '';
+
+                    applicantRow.querySelector('.applicant-domicile-no').value =
+                        applicant['Application Number'] ?? '';
+
+                    applicantRow.querySelector('.applicant-domicile-date').value =
+                        applicant['Submitted']
+                            ? formatDate(applicant['Submitted'])
+                            : '';
+                    applicantRow.querySelector('.nitb-status').innerHTML =
+                        '<span class="text-green-600">Record found and loaded</span>';
+                } else {
+
+                    applicantRow.querySelector('.nitb-status').innerHTML =
+                        '<span class="text-red-500">No record found</span>';
+
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                applicantRow.querySelector('.nitb-status').innerHTML =
+                        '<span class="text-red-500">Failed to Fetch data</span>';
+
+            } finally {
+
+                cnicInput.disabled = false;
+
+            }
+        }
+
+        function formatDate(dateString) {
+
+            // Converts "15 May 2026" → "2026-05-15"
+
+            const date = new Date(dateString);
+
+            if (isNaN(date)) return '';
+
+            return date.toISOString().split('T')[0];
+        }
+
+           document.addEventListener('blur', function (e) {
+
+                if (e.target.classList.contains('applicant-cnic')) {
+
+                    fetchApplicantData(e.target);
+
+                }
+
+            }, true);
     </script>
 </x-app-layout>

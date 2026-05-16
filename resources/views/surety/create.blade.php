@@ -75,15 +75,6 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Mobile No</label>
-                        <input type="tel" id="mobile_no" name="mobile_no" value="{{ old('mobile_no') }}"
-                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
-                        @error('mobile_no')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
                         <label class="block text-sm font-medium text-gray-700">Receipt No</label>
                         <input type="text" id="receipt_no" name="receipt_no" value="{{ old('receipt_no') }}"
                             class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
@@ -128,6 +119,15 @@
                         <input type="text" id="accused_name" name="accused_name" value="{{ old('accused_name') }}"
                             class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                         @error('accused_name')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Mobile No</label>
+                        <input type="tel" id="mobile_no" name="mobile_no" value="{{ old('mobile_no') }}"
+                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                        @error('mobile_no')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>

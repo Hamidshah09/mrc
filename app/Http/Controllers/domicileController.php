@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class domicileController extends Controller
 {   
@@ -584,7 +585,9 @@ class domicileController extends Controller
     {
         // Check if cached value exists
         $stats = Cache::get('counters');
-
+        if ($stats){
+            Log::info('Fetched stats from API', $stats);
+        }
         if (!$stats) {
             // If not cached, fetch fresh data
             $stats = $this->fetchAndUpdateCounters();
@@ -601,7 +604,7 @@ class domicileController extends Controller
 
             if ($response->successful()) {
                 $data = $response->json();
-
+                $data = $data['data'];
                 $marriageCertificates = 4523; // Or DB::table(...)->count();
                 $mrc_count = DB::table('mrc_status')->count();
                 $marriageCertificates = $marriageCertificates + $mrc_count;

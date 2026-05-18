@@ -84,6 +84,8 @@
             </div>
 
             @php
+                $suretyUsers = $suretyUsers ?? collect();
+
                 $grandTotal = $suretyUsers->sum('daily_count');
                 $maxEntries = $suretyUsers->max('daily_count');
             @endphp

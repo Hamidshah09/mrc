@@ -333,39 +333,23 @@ class domicileController extends Controller
     $domicile->save();
 
 
-    //checking in other district letter
+    // checking in noc other district letter
+    $domicile->noc_other_district_letter =
+        NocOtherDistrictApplicants::where('CNIC', $cnic)->exists() ? 1 : 0;
 
-    $noc_ohter_status = NocOtherDistrictApplicants::where('CNIC', $cnic)->get();
-    if ($noc_ohter_status){
-        $domicile->noc_other_district_letter = 1;
-    }else{
-        $domicile->noc_other_district_letter = 0;
-    }
-    
-    //checking in noc ict letter
+    // checking in noc ict letter
+    $domicile->noc_ict_letter =
+        NocICTApplicants::where('CNIC', $cnic)->exists() ? 1 : 0;
 
-    $noc_ict_status = NocICTApplicants::where('CNIC', $cnic)->get();
-    if ($noc_ict_status){
-        $domicile->noc_ict_letter = 1;
-    }else{
-        $domicile->noc_ict_letter = 0;
-    }
+    // checking in cancellation
+    $domicile->cancellation_letter =
+        DomicileCancellation::where('CNIC', $cnic)->exists() ? 1 : 0;
 
-    //checking in cancellation
-    $cancellation_status= DomicileCancellation::where('CNIC', $cnic)->get();
-    if ($cancellation_status){
-        $domicile->cancellation_letter = 1;
-    }else{
-        $domicile->cancellation_letter = 0;
-    }
-    
-    $blacklist_status= BlackListDomicileApplications::where('CNIC', $cnic)->get();
-    if ($blacklist_status){
-        $domicile->blacklist_status = 1;
-    }else{
-        $domicile->blacklist_status = 0;
-    }
+    // checking in blacklist
+    $domicile->blacklist_status =
+        BlackListDomicileApplications::where('CNIC', $cnic)->exists() ? 1 : 0;
     $domicile->save();
+    
     return redirect()->route('domicile.index')->with('success', 'Domicile record created successfully.');
     }
 

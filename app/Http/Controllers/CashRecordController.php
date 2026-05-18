@@ -188,6 +188,7 @@ class CashRecordController extends Controller
 
         $cashRecords = $query
             ->select('cashrecords.*')
+            ->where('request_type', 'New')
             ->distinct('cnic')
             ->orderBy('date', 'desc')
             ->get()
@@ -303,10 +304,10 @@ class CashRecordController extends Controller
         }
 
         $cashRecords = $query
-    ->orderBy('date', 'desc')
-    ->get()
-    ->unique('cnic')
-    ->values();
+            ->orderBy('date', 'desc')
+            ->get()
+            ->unique('cnic')
+            ->values();
 
         $title = $challanDate;
 
@@ -348,11 +349,13 @@ class CashRecordController extends Controller
 
         $cashRecords = $query
                     ->orderBy('date', 'desc')
+                    ->where('request_type', 'New')
                     ->get()
                     ->unique('cnic')
                     ->values();
         $amount = $query
                     ->orderBy('date', 'desc')
+                    ->where('request_type', 'New')
                     ->get()
                     ->unique('cnic')
                     ->values()
@@ -398,7 +401,7 @@ class CashRecordController extends Controller
             });
         }
 
-        $count = $query->distinct('cnic')->count('cnic');
+        $count = $query->distinct('cnic')->where('request_type',  'New')->count('cnic');
         $feePerRecord = 200;
         $amount = $count * $feePerRecord;
 

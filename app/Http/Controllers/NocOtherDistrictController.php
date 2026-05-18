@@ -8,6 +8,7 @@ use App\Models\NocOtherDistrictApplicants;
 use App\Models\DispatchDiary;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class NocOtherDistrictController extends Controller
 {
@@ -24,7 +25,11 @@ class NocOtherDistrictController extends Controller
             'NOC_Issued_To' => 'required|string|max:60',
             'Remarks' => 'nullable|string|max:500',
             'applicants' => 'nullable|array',
-            'applicants.*.CNIC' => 'required|digits:13',
+            'applicants.*.CNIC' => [
+                            'required',
+                            'regex:/^[0-9]{13}$/',
+                            Rule::unique('remote_mysql.noc_applicants', 'CNIC'),
+                        ],
             'applicants.*.Applicant_Name' => 'nullable|string|max:255',
             'applicants.*.Relation' => 'nullable|string|max:50',
             'applicants.*.Applicant_FName' => 'nullable|string|max:255',
@@ -204,7 +209,11 @@ class NocOtherDistrictController extends Controller
             'Remarks' => 'nullable|string|max:500',
             'applicants' => 'nullable|array',
             'applicants.*.App_ID' => 'nullable|integer',
-            'applicants.*.CNIC' => 'nullable|string|max:30',
+            'applicants.*.CNIC' => [
+                            'required',
+                            'regex:/^[0-9]{13}$/',
+                            Rule::unique('remote_mysql.noc_applicants', 'CNIC'),
+                        ],
             'applicants.*.Applicant_Name' => 'nullable|string|max:255',
             'applicants.*.Relation' => 'nullable|string|max:50',
             'applicants.*.Applicant_FName' => 'nullable|string|max:255',

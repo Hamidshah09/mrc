@@ -8,6 +8,7 @@ use App\Models\NocICTApplicants;
 use App\Models\DispatchDiary;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class NocIctController extends Controller
 {
@@ -20,7 +21,11 @@ class NocIctController extends Controller
             'letter.Letter_Sent_to' => 'required|string|max:255',
             'letter.Remarks' => 'nullable|string|max:500',
             'applicants' => 'nullable|array',
-            'applicants.*.CNIC' => 'required|string|max:13',
+            'applicants.*.CNIC' => [
+                            'required',
+                            'regex:/^[0-9]{13}$/',
+                            Rule::unique('remote_mysql.noc_ict_applicants', 'CNIC'),
+                        ],
             'applicants.*.Applicant_Name' => 'nullable|string|max:255',
             'applicants.*.Relation' => 'nullable|string|max:50',
             'applicants.*.Applicant_FName' => 'nullable|string|max:255',

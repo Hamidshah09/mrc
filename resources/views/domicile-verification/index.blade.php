@@ -162,7 +162,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $letter->applicants[0]->Applicant_Name ?? 'N/A' }}</td>
                         <td class="px-6 py-4 flex flex-row space-between">
                             <a href="{{ route('domicile.verification_letter.edit', $letter->Letter_ID) }}" ><x-heroicon-s-pencil title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/></a>
-                            <a href="{{ route('domicile.cancellation.letter', $letter->Letter_ID) }}" ><x-heroicon-s-document-check title="Issue Letter" class="w-7 h-7 text-green-400 hover:text-green-600 transition"/></a>
+                            <a href="{{ route('domicile.verification_letter.letter', $letter->Letter_ID) }}" ><x-heroicon-s-document-check title="Issue Letter" class="w-7 h-7 text-green-400 hover:text-green-600 transition"/></a>
                         </td>
                     </tr>
                 @empty

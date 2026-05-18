@@ -151,50 +151,25 @@ class NocIctController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if ($request->filled('search')) {
+       if ($request->filled('search')) {
 
             $search = trim($request->search);
 
             $query->where(function ($q) use ($search) {
 
-                // Letter ID
-                $q->where(
-                    'Letter_ID',
-                    'like',
-                    "%{$search}%"
-                )
+                // Letter ID (Partial Match)
+                $q->where('Letter_ID', 'like', "%{$search}%")
 
-                // Applicant search
-                ->orWhereHas(
-                    'applicants',
-                    function ($sub) use ($search) {
+                // Applicant search (CNIC and Name - Partial Match)
+                ->orWhereHas('applicants', function ($sub) use ($search) {
+                    $sub->where('CNIC', 'like', "%{$search}%")
+                        ->orWhere('Applicant_Name', 'like', "%{$search}%");
+                })
 
-                        $sub->where(
-                            'CNIC',
-                            'like',
-                            "%{$search}%"
-                        )
-
-                        ->orWhere(
-                            'Applicant_Name',
-                            'like',
-                            "%{$search}%"
-                        );
-                    }
-                )
-
-                // Dispatch search
-                ->orWhereHas(
-                    'dispatchDiary',
-                    function ($sub) use ($search) {
-
-                        $sub->where(
-                            'Dispatch_No',
-                            'like',
-                            "%{$search}%"
-                        );
-                    }
-                );
+                // Dispatch search (Dispatch No - Full Match Only)
+                ->orWhereHas('dispatchDiary', function ($sub) use ($search) {
+                    $sub->where('Dispatch_No', '=', $search);
+                });
 
             });
         }

@@ -32,7 +32,7 @@
                     @endif
                 </td>
                 <td style="text-align:right; padding:5px;">
-                    Date {{ date('d-m-Y', strtotime($letter->Letter_Date)) }}
+                    Date {{ date('d-m-Y', strtotime($letter->created_at->format('d-m-Y'))) }}
                 </td>
             </tr>
         </tbody>
@@ -75,7 +75,7 @@
         <tr>
             <td style="" colspan="2">
                 <p class="text-paragraph">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kindly refer to your office letter No. {{$letter->Letter_No}}, dated {{ $letter->Letter_Date }}, on the subject cited above.
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kindly refer to your office letter No. {{$letter->Letter_No}}, dated {{ \Carbon\Carbon::parse($letter->Letter_Date)->format('d-m-Y') }}, on the subject cited above.
                 </p>
             </td>
         </tr>

@@ -119,7 +119,7 @@ class PublicRequestsController extends Controller
             children::create([
                 'applicant_id'=>$domicile->id,
                 'cnic' => $child['cnic'],
-                'child_name' => $child['name'],
+                'name' => $child['name'],
                 'date_of_birth' => $child['dob'],
                 'gender_id' => $child['gender_id'],
                 // Add any foreign keys, like user_id, etc.

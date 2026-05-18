@@ -16,6 +16,7 @@ use App\Models\NocOtherDistrictApplicants;
 use App\Models\OnlineApplication;
 use App\Models\tehsils;
 use App\Models\DispatchDiary;
+use App\Models\DomicileCancellation;
 use App\Models\BlackListDomicileApplications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;

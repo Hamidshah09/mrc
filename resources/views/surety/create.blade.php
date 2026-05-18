@@ -212,8 +212,22 @@
             .then(data => {
                 if (data.success) {
 
+                    // Store current values before reset
+                    let currentRegisterId = parseInt(document.getElementById('register_id').value) || 0;
+                    let currentReceiptNo = parseInt(document.getElementById('receipt_no').value) || 0;
+                    let receivingDate = document.getElementById('receiving_date').value;
+
+                    // Reset form
                     form.reset();
-                    form.querySelector('input, select').focus();
+
+                    // Increment values
+                    document.getElementById('register_id').value = currentRegisterId + 1;
+                    document.getElementById('receipt_no').value = currentReceiptNo + 1;
+                    document.getElementById('receiving_date').value = receivingDate;
+
+                    // Focus first field
+                    document.getElementById('register_id').focus();
+
                     showToast("Saved successfully");
 
                     // ✅ Update progress text

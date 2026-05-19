@@ -21,11 +21,7 @@ class SuretyController extends Controller
 
         if ($request->filled('search')) {
             $q = $request->search;
-            $query->where(function ($wr) use ($q) {
-                $wr->where('register_id', 'like', "%{$q}%")
-                   ->orWhere('guarantor_name', 'like', "%{$q}%")
-                   ->orWhere('receipt_no', 'like', "%{$q}%");
-            });
+            $query->where('receipt_no', $q);
         }
 
         if ($request->filled('status')) {

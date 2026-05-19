@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Log;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\SuretyRegister;
@@ -17,27 +17,13 @@ class SuretyController extends Controller
 {
     public function index(Request $request)
     {
-        $query = SuretyRegister::with([
-            'suretyType',
-            'suretyStatus',
-            'policeStation'
-        ]);
+        $query = SuretyRegister::with(['suretyType', 'suretyStatus', 'policeStation']);
 
         if ($request->filled('search')) {
-
-            $q = trim($request->search);
-
-            $query->where(function ($subQuery) use ($q) {
-
-                $subQuery->whereRaw(
-                    'TRIM(receipt_no) LIKE ?',
-                    ["%{$q}%"]
-                )
-                ->orWhereRaw(
-                    'CAST(register_id AS CHAR) LIKE ?',
-                    ["%{$q}%"]
-                );
-
+            $q = $request->search;
+            $query->where(function ($wr) use ($q) {
+                $wr->where('register_id', 'like', "%{$q}%")
+                   ->orWhere('guarantor_name', 'like', "%{$q}%");
             });
         }
 
@@ -53,36 +39,19 @@ class SuretyController extends Controller
             $query->where('surety_type_id', $request->surety_type_id);
         }
 
-        if ($request->filled('police_station_id')) {
-            $query->where('police_station_id', $request->police_station_id);
-        }
-
         if ($request->filled('from')) {
             $query->whereDate('receiving_date', '>=', $request->from);
         }
-
         if ($request->filled('to')) {
             $query->whereDate('receiving_date', '<=', $request->to);
         }
 
-        // DEBUG HERE
-        dd($query->toSql(), $query->getBindings());
-
-        $records = $query
-            ->orderBy('register_id', 'desc')
-            ->paginate(15)
-            ->withQueryString();
+        $records = $query->orderBy('register_id', 'desc')->paginate(15)->withQueryString();
 
         $policeStations = PoliceStation::all();
         $suretyTypes = SuretyType::all();
         $surityStatuses = SuretyStatus::all();
-
-        return view('surety.index', compact(
-            'records',
-            'surityStatuses',
-            'policeStations',
-            'suretyTypes'
-        ));
+        return view('surety.index', compact('records', 'surityStatuses', 'policeStations', 'suretyTypes'));
     }
 
     public function create($id)
@@ -259,10 +228,7 @@ class SuretyController extends Controller
 
         $totalAmount = (clone $query)->sum('amount');
 
-        $start = Carbon::today('Asia/Karachi')->startOfDay()->utc();
-        $end   = Carbon::today('Asia/Karachi')->endOfDay()->utc();
-        
-        
+        $todayCount = SuretyDocument::where('total_expected_entries', '>', 0)->count();
 
         $completedCount = 0; // adjust ID
         
@@ -301,8 +267,12 @@ class SuretyController extends Controller
 
         $surityStatuses = SuretyStatus::all();
 
+        // User performance: count of history actions by user within date range (and optional status)
+      
+        $start = Carbon::today('Asia/Karachi')->startOfDay()->utc();
+        $end   = Carbon::today('Asia/Karachi')->endOfDay()->utc();
 
-        $userCounts = SuretyRegister::whereBetween('created_at', [$start, $end])
+        $userCounts = SuretyRegister::whereBetween('receiving_date', [$from, $to])
             ->select('user_id', DB::raw('count(*) as total'))
             ->groupBy('user_id')
             ->orderByDesc('total')
@@ -312,16 +282,6 @@ class SuretyController extends Controller
 
         $userNames = User::whereIn('id', $userIds)
             ->pluck('name', 'id');
-        $suretyUsers = User::where('role_id', 10)
-            ->select('id', 'name')
-            ->withCount([
-                'suretyregister as daily_count' => function ($query) use ($start, $end) {
-
-                    $query->whereBetween('created_at', [$start, $end]);
-                }
-            ])
-            ->orderByDesc('daily_count')
-            ->get();
 
         $userLabels = $userCounts->map(fn($u) =>
             $userNames[$u->user_id] ?? 'User '.$u->user_id
@@ -338,7 +298,7 @@ class SuretyController extends Controller
             ];
         })->values()->toArray();
 
-        $todayCount = SuretyRegister::whereBetween('created_at', [$start, $end])->count();
+
         $amountDaily = SuretyRegister::whereBetween('receiving_date', [$from, $to])
             ->select(DB::raw('DATE(receiving_date) as date'), DB::raw('SUM(amount) as total'))
             ->groupBy('date')
@@ -351,7 +311,7 @@ class SuretyController extends Controller
         return view('surety.dashboard', compact('totalAmount', 'pieLabels', 'pieData', 
                             'dailyLabels', 'dailyData', 'from', 'to', 'status',
                              'surityStatuses', 'userLabels', 'userData', 'userPerformance',
-                             'matchedRecords', 'totalRecords', 'firstRecord', 'amountLabels', 'amountData', 'todayCount', 'completedCount', 'suretyUsers'));
+                             'matchedRecords', 'totalRecords', 'firstRecord', 'amountLabels', 'amountData', 'todayCount', 'completedCount'));
     }
 
     public function show($id)

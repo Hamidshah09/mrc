@@ -50,6 +50,7 @@ class SuretyController extends Controller
         $policeStations = PoliceStation::all();
         $suretyTypes = SuretyType::all();
         $surityStatuses = SuretyStatus::all();
+        dd($query->toSql(), $query->getBindings());
         return view('surety.index', compact('records', 'surityStatuses', 'policeStations', 'suretyTypes'));
     }
 

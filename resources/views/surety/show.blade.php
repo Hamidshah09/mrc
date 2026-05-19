@@ -11,7 +11,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
                 <p class="text-sm text-gray-600">Guarantor</p>
-                <p class="text-lg font-medium">{{ $record->guarantaor_name }}</p>
+                <p class="text-lg font-medium">{{ $record->guarantor_name }}</p>
             </div>
             <div>
                 <p class="text-sm text-gray-600">Mobile</p>
@@ -23,7 +23,11 @@
             </div>
             <div>
                 <p class="text-sm text-gray-600">Receipt Date</p>
-                <p class="text-lg font-medium">{{ optional($record->receipt_date)->format('Y-m-d') ?? $record->receipt_date }}</p>
+                <p class="text-lg font-medium">{{ optional($record->receiving_date)->format('Y-m-d') ?? $record->receiving_date }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Release Date</p>
+                <p class="text-lg font-medium">{{ optional($record->releasing_date)->format('Y-m-d') ?? $record->releasing_date }}</p>
             </div>
             <div>
                 <p class="text-sm text-gray-600">Police Station</p>

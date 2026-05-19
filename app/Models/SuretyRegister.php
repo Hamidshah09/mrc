@@ -13,6 +13,7 @@ class SuretyRegister extends Model
         'mobile_no',
         'receipt_no',
         'receiving_date',
+        'releasing_date',
         'police_station_id',
         'section_of_law',
         'accused_name',

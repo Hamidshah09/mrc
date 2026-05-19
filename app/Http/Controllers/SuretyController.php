@@ -51,7 +51,7 @@ class SuretyController extends Controller
 
         $suretyTypes = SuretyType::all();
         $surityStatuses = SuretyStatus::all();
-        return view('surety.index', compact('records', 'surityStatuses', 'policeStations', 'suretyTypes'));
+        return view('surety.index', compact('records', 'surityStatuses', 'suretyTypes'));
     }
 
     public function create($id)

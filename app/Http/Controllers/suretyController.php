@@ -17,14 +17,29 @@ class SuretyController extends Controller
 {
     public function index(Request $request)
     {
-        $query = SuretyRegister::with(['suretyType', 'suretyStatus', 'policeStation']);
+        $query = SuretyRegister::with([
+            'suretyType',
+            'suretyStatus',
+            'policeStation'
+        ]);
 
-        $q = $request->search;
+        if ($request->filled('search')) {
 
-        $query->where(function ($subQuery) use ($q) {
-            $subQuery->where('receipt_no', $q)
-                    ->orWhere('register_id', $q);
-        });
+            $q = trim($request->search);
+
+            $query->where(function ($subQuery) use ($q) {
+
+                $subQuery->whereRaw(
+                    'TRIM(receipt_no) LIKE ?',
+                    ["%{$q}%"]
+                )
+                ->orWhereRaw(
+                    'CAST(register_id AS CHAR) LIKE ?',
+                    ["%{$q}%"]
+                );
+
+            });
+        }
 
         if ($request->filled('status')) {
             $query->where('surety_status_id', $request->status);
@@ -38,20 +53,36 @@ class SuretyController extends Controller
             $query->where('surety_type_id', $request->surety_type_id);
         }
 
+        if ($request->filled('police_station_id')) {
+            $query->where('police_station_id', $request->police_station_id);
+        }
+
         if ($request->filled('from')) {
             $query->whereDate('receiving_date', '>=', $request->from);
         }
+
         if ($request->filled('to')) {
             $query->whereDate('receiving_date', '<=', $request->to);
         }
 
-        $records = $query->orderBy('register_id', 'desc')->paginate(15)->withQueryString();
+        // DEBUG HERE
+        // dd($query->toSql(), $query->getBindings());
+
+        $records = $query
+            ->orderBy('register_id', 'desc')
+            ->paginate(15)
+            ->withQueryString();
 
         $policeStations = PoliceStation::all();
         $suretyTypes = SuretyType::all();
         $surityStatuses = SuretyStatus::all();
-        dd($query->toSql(), $query->getBindings());
-        return view('surety.index', compact('records', 'surityStatuses', 'policeStations', 'suretyTypes'));
+
+        return view('surety.index', compact(
+            'records',
+            'surityStatuses',
+            'policeStations',
+            'suretyTypes'
+        ));
     }
 
     public function create($id)

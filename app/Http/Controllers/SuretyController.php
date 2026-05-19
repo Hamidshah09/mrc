@@ -272,7 +272,7 @@ class SuretyController extends Controller
         $start = Carbon::today('Asia/Karachi')->startOfDay()->utc();
         $end   = Carbon::today('Asia/Karachi')->endOfDay()->utc();
 
-        $userCounts = SuretyRegister::whereBetween('receiving_date', [$from, $to])
+        $userCounts = SuretyRegister::whereBetween('updated_at', [$from, $to])
             ->select('user_id', DB::raw('count(*) as total'))
             ->groupBy('user_id')
             ->orderByDesc('total')

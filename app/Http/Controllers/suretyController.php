@@ -19,10 +19,12 @@ class SuretyController extends Controller
     {
         $query = SuretyRegister::with(['suretyType', 'suretyStatus', 'policeStation']);
 
-        if ($request->filled('search')) {
-            $q = $request->search;
-            $query->where('receipt_no', $q);
-        }
+        $q = $request->search;
+
+        $query->where(function ($subQuery) use ($q) {
+            $subQuery->where('receipt_no', $q)
+                    ->orWhere('register_id', $q);
+        });
 
         if ($request->filled('status')) {
             $query->where('surety_status_id', $request->status);

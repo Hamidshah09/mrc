@@ -66,7 +66,7 @@ class SuretyController extends Controller
         }
 
         // DEBUG HERE
-        // dd($query->toSql(), $query->getBindings());
+        dd($query->toSql(), $query->getBindings());
 
         $records = $query
             ->orderBy('register_id', 'desc')

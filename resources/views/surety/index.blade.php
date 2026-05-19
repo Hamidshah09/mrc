@@ -35,14 +35,24 @@
                         <option value="{{ $t->id }}" {{ request('surety_type_id') == $t->id ? 'selected' : '' }}>{{ $t->name }}</option>
                     @endforeach
                 </select>
+                <select name="status"
+                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
 
-                <select name="police_station_id"
-                        class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
-                    <option value="">All Police Stations</option>
-                    @foreach($policeStations as $ps)
-                        <option value="{{ $ps->id }}" {{ request('police_station_id') == $ps->id ? 'selected' : '' }}>{{ $ps->name }}</option>
-                    @endforeach
+                    <option value="">All Status</option>
+
+                    <option value="1"
+                        {{ request()->get('status') == '1' ? 'selected' : '' }}>
+                        Received
+                    </option>
+
+                    <option value="2"
+                        {{ request()->get('status') == '2' ? 'selected' : '' }}>
+                        Released
+                    </option>
+
                 </select>
+
+
 
                 <label for="from">From</label>
                 <input type="date" name="from"

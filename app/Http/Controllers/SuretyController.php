@@ -49,7 +49,6 @@ class SuretyController extends Controller
 
         $records = $query->orderBy('register_id', 'desc')->paginate(15)->withQueryString();
 
-        $policeStations = PoliceStation::all();
         $suretyTypes = SuretyType::all();
         $surityStatuses = SuretyStatus::all();
         return view('surety.index', compact('records', 'surityStatuses', 'policeStations', 'suretyTypes'));

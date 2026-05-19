@@ -447,6 +447,16 @@
 
                                     </select>
                                 </div>
+                                <div class="form-control">
+                                    <label class="text-sm font-medium text-gray-700 mr-3">
+                                        Is applied for Domicile?
+                                    </label>
+                                    <input
+                                        type="checkbox"
+                                        name="children[${applicantCounter - 1}][is_domicile_applicant]"
+                                        class="block mt-1 p-3 rounded border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                    />
+                                </div>
 
                             </div>
 

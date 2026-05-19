@@ -197,6 +197,7 @@ class domicileController extends Controller
     'children.*.name' => 'required|string|max:45',
     'children.*.dob' => 'required|date',
     'children.*.gender_id' => 'required|in:1,2',
+    'children.*.is_domicile_applicant' => 'nullable|in:on',
     ]);
 
     $domicile = new DomicileApplicants();
@@ -248,13 +249,15 @@ class domicileController extends Controller
     if ($children){
         foreach ($children as $child) {
             // Save each child
+            $isDomicile = (isset($child['is_domicile_applicant']) && $child['child']['is_domicile_applicant'] === 'on') ? 1 : 0;
+
             children::create([
-                'applicant_id'=>$domicile->id,
+                'applicant_id' => $domicile->id,
                 'cnic' => $child['cnic'],
                 'name' => $child['name'],
                 'date_of_birth' => $child['dob'],
                 'gender_id' => $child['gender_id'],
-                // Add any foreign keys, like user_id, etc.
+                'is_domicile_applicant' => $isDomicile, // Stores 1 or 0
             ]);
         }
     }

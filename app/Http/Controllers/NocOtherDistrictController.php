@@ -212,7 +212,6 @@ class NocOtherDistrictController extends Controller
             'applicants.*.CNIC' => [
                             'required',
                             'regex:/^[0-9]{13}$/',
-                            Rule::unique('remote_mysql.noc_applicants', 'CNIC'),
                         ],
             'applicants.*.Applicant_Name' => 'nullable|string|max:255',
             'applicants.*.Relation' => 'nullable|string|max:50',

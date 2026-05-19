@@ -19,7 +19,7 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{route('domicile.public.store')}}" method="Post" enctype="multipart/form-data">
+                    <form id="myForm" action="{{route('domicile.public.store')}}" method="Post" enctype="multipart/form-data">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             
@@ -270,6 +270,25 @@
             </div>
         </div>
     </div>
+    <!-- Loading Modal -->
+    <div id="loadingModal"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+
+        <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center">
+
+            <!-- Spinner -->
+            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"></div>
+
+            <h2 class="text-lg font-semibold text-gray-700">
+                Processing Request...
+            </h2>
+
+            <p class="text-sm text-gray-500 mt-2">
+                Please wait while data is being saved
+            </p>
+
+        </div>
+    </div>
     <script>
         var child_input = document.getElementById('children_checkbox');
         
@@ -288,7 +307,7 @@
                                     <input type="text" id="cnic" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="children[${applicantCounter - 1}][cnic]" />
                                 </div>
                                 <div class="flex flex-col">
-                                    <label class="font-semibold text-gray-700">Childd Name</label>
+                                    <label class="font-semibold text-gray-700">Child Name</label>
                                     <input type="text" id="name" required class="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" name="children[${applicantCounter - 1}][name]"  />
                                 </div>
                                 <div class="flex flex-col">
@@ -301,6 +320,16 @@
                                     <option value="1">Male</option>
                                     <option value="2">Female</option>
                                     </select>
+                                </div>
+                                <div class="form-control">
+                                    <label class="text-sm font-medium text-gray-700 mr-3">
+                                        Is applied for Domicile?
+                                    </label>
+                                    <input
+                                        type="checkbox"
+                                        name="children[${applicantCounter - 1}][is_domicile_applicant]"
+                                        class="block mt-1 p-3 rounded border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                    />
                                 </div>
                             </div>
                         </td>
@@ -345,12 +374,35 @@
         // Regular expression: exactly 13 digits
         const regex = /^\d{13}$/;
 
-        if (!regex.test(input)) {
-            alert("Please enter exactly 13 digits (numbers only).");
-            return false; // Prevent form submission
-        } else {
-            return ture;
+            if (!regex.test(input)) {
+                alert("Please enter exactly 13 digits (numbers only).");
+                return false; // Prevent form submission
+            } else {
+                return ture;
+            }
         }
-        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const form = document.getElementById('myForm');
+
+            form.addEventListener('submit', function () {
+
+                // show modal
+                document.getElementById('loadingModal')
+                    .classList.remove('hidden');
+
+                // disable submit button
+                const btn = form.querySelector('button[type="submit"]');
+
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerText = 'Processing...';
+                }
+            });
+
+        });
+
+
     </script>
 </x-guest-layout>

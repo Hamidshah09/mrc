@@ -31,6 +31,51 @@ class PublicRequestsController extends Controller
         $districts = districts::orderBy('name')->get();
         return view('public.create-domicile',  compact('tehsils', 'districts'));
     }
+    
+    public function store_child_applications($validated, $child){
+        $domicile = new DomicileApplicants();
+
+        // Personal Info
+        $domicile->cnic = $child['cnic'];
+        $domicile->first_name = strtoupper($child['name']);
+        $domicile->father_name = strtoupper($validated['name']);
+        $domicile->spouse_name = null; // nullable
+        $domicile->date_of_birth = $child['dob'];
+        $domicile->gender_id = $child['gender_id'];
+        $domicile->place_of_birth = $validated['place_of_birth'];
+        $domicile->marital_status_id = 1;
+        $domicile->religion = strtoupper($validated['religion']);
+        $domicile->qualification_id = 8; // nullable
+        $domicile->occupation_id = 4; // nullable
+        $domicile->contact = $validated['contact'];
+        $domicile->arrival_date = $validated['arrival_date'];
+
+        // Temporary Address
+        $domicile->present_province_id = $validated['present_province_id'];
+        $domicile->present_district_id = $validated['present_district_id'];
+        $domicile->present_tehsil_id = $validated['present_tehsil_id'];
+        $domicile->present_address = strtoupper($validated['present_address']);
+
+        // Permanent Address
+        $domicile->permanent_province_id = $validated['permanent_province_id'];
+        $domicile->permanent_district_id = $validated['permanent_district_id'];
+        $domicile->permanent_tehsil_id = $validated['permanent_tehsil_id'];
+        $domicile->permanent_address = strtoupper($validated['permanent_address']);
+
+        $domicile->application_type_id = 1; // assuming 1 is for public applications
+        $domicile->service_type_id = 1; // assuming 1 is for domicile service
+        $domicile->payment_type_id = 1; // assuming 1 is for cash payment
+        $domicile->request_type_id = 1; // assuming 1 is for new application
+        $domicile->status = 'Pending';
+        $domicile->priority_type = 'Normal';
+
+        $this->performApplicantChecks(
+            $domicile,
+            $domicile->cnic
+        );
+
+        $domicile->save();
+    }
     public function store_domicile(Request $request)
     {   
         
@@ -69,6 +114,7 @@ class PublicRequestsController extends Controller
     'children.*.name' => 'required|string|max:45',
     'children.*.dob' => 'required|date',
     'children.*.gender_id' => 'required|in:1,2',
+    'children.*.is_domicile_applicant' => 'nullable|in:on',
     ]);
 
     $domicile = new DomicileApplicants();
@@ -116,107 +162,27 @@ class PublicRequestsController extends Controller
     if ($children){
         foreach ($children as $child) {
             // Save each child
+            $isDomicile = (isset($child['is_domicile_applicant']) && $child['is_domicile_applicant'] === 'on') ? 1 : 0;
+
             children::create([
-                'applicant_id'=>$domicile->id,
+                'applicant_id' => $domicile->id,
                 'cnic' => $child['cnic'],
                 'name' => $child['name'],
                 'date_of_birth' => $child['dob'],
                 'gender_id' => $child['gender_id'],
-                // Add any foreign keys, like user_id, etc.
+                'is_domicile_applicant' => $isDomicile, // Stores 1 or 0
             ]);
-        }
-    }
-    
-    
-    $other_district_found=0;
-    //Checking in other districts
-    
-    $cnic = $domicile->cnic;
-    try {
-        
-        if ($cnic) {
-
-            $apiUrl = "http://127.0.0.1:8000/domicile/check-in-other-district/{$cnic}";
-
-            $response = Http::timeout(60)->get($apiUrl);
-
-            if ($response->successful()) {
-
-                $apiData = $response->json();
-
-                if (
-                    isset($apiData['found']) &&
-                    $apiData['found'] === true
-                ) {
-
-                    $other_district_found = 1;
-                }
+            if ($isDomicile===1){
+                $this->store_child_applications($validated, $child);
             }
         }
-
-    } catch (\Exception $e) {
-
-        Log::error('NITB API Error', [
-            'cnic' => $cnic ?? null,
-            'message' => $e->getMessage()
-        ]);
     }
-    $domicile->other_district_status = $other_district_found;
-    $domicile->save();
-
-    //checking in nitb
-
-    try {
-
-        $nitb_found = null; // default = not checked
-
-        if ($cnic) {
-
-            $apiUrl = "http://127.0.0.1:8000/domicile/check-in-nitb/{$cnic}";
-
-            $response = Http::timeout(60)->get($apiUrl);
-
-            if ($response->successful()) {
-
-                $apiData = $response->json();
-
-                $nitb_found =
-                    ($apiData['status'] ?? null) === 'success'
-                    && ($apiData['records'] ?? 0) > 0
-                        ? 1
-                        : 0;
-            }
-        }
-
-    } catch (\Exception $e) {
-
-        Log::error('NITB API Error', [
-            'cnic' => $cnic ?? null,
-            'message' => $e->getMessage()
-        ]);
-
-        $nitb_found = null;
-    }
-
-    $domicile->nitb_status = $nitb_found;
-
-
-    //checking in other district letter
-    // checking in noc other district letter
-    $domicile->noc_other_district_letter =
-        NocOtherDistrictApplicants::where('CNIC', $cnic)->exists() ? 1 : 0;
-
-    // checking in noc ict letter
-    $domicile->noc_ict_letter =
-        NocICTApplicants::where('CNIC', $cnic)->exists() ? 1 : 0;
-
-    // checking in cancellation
-    $domicile->cancellation_letter =
-        DomicileCancellation::where('CNIC', $cnic)->exists() ? 1 : 0;
-
-    // checking in blacklist
-    $domicile->blacklist_status =
-        BlackListDomicileApplications::where('CNIC', $cnic)->exists() ? 1 : 0;
+    
+    
+    $this->performApplicantChecks(
+        $domicile,
+        $domicile->cnic
+    );
 
     $domicile->save();
 
@@ -224,6 +190,93 @@ class PublicRequestsController extends Controller
             'id'   => $domicile->id,
             'recordType' => 'Domicile Application'
         ]);
+    }
+    private function checkOtherDistrict($cnic): ?int
+    {
+        try {
+
+            $apiUrl =
+                "http://127.0.0.1:8000/domicile/check-in-other-district/{$cnic}";
+
+            $response = Http::timeout(60)->get($apiUrl);
+
+            if ($response->successful()) {
+
+                $apiData = $response->json();
+
+                return (
+                    isset($apiData['found']) &&
+                    $apiData['found'] === true
+                ) ? 1 : 0;
+            }
+
+        } catch (\Exception $e) {
+
+            Log::error('Other District Check Error', [
+                'cnic' => $cnic,
+                'message' => $e->getMessage()
+            ]);
+        }
+
+        return null;
+    }
+    private function checkNitb($cnic): ?int
+    {
+        try {
+
+            $apiUrl =
+                "http://127.0.0.1:8000/domicile/check-in-nitb/{$cnic}";
+
+            $response = Http::timeout(60)->get($apiUrl);
+
+            if ($response->successful()) {
+
+                $apiData = $response->json();
+
+                return (
+                    ($apiData['status'] ?? null) === 'success'
+                    &&
+                    ($apiData['records'] ?? 0) > 0
+                ) ? 1 : 0;
+            }
+
+        } catch (\Exception $e) {
+
+            Log::error('NITB Check Error', [
+                'cnic' => $cnic,
+                'message' => $e->getMessage()
+            ]);
+        }
+
+        return null;
+    }
+
+    private function performSubsequentChecks($domicile, $cnic): void
+    {
+        $domicile->noc_other_district_letter =
+            NocOtherDistrictApplicants::where('CNIC', $cnic)->exists() ? 1 : 0;
+
+        $domicile->noc_ict_letter =
+            NocICTApplicants::where('CNIC', $cnic)->exists() ? 1 : 0;
+
+        $domicile->cancellation_letter =
+            DomicileCancellation::where('CNIC', $cnic)->exists() ? 1 : 0;
+
+        $domicile->blacklist_status =
+            BlackListDomicileApplications::where('CNIC', $cnic)->exists() ? 1 : 0;
+    }
+
+    private function performApplicantChecks($domicile, $cnic): void
+    {
+        $domicile->other_district_status =
+            $this->checkOtherDistrict($cnic);
+
+        $domicile->nitb_status =
+            $this->checkNitb($cnic);
+
+        $this->performSubsequentChecks($domicile, $cnic);
+
+        $domicile->save();
     }
 
     public function create_noc()

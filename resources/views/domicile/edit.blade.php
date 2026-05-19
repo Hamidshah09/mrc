@@ -380,6 +380,14 @@
                                                             <option value="2" {{ $child->gender_id == 2 ? 'selected' : '' }}>Female</option>
                                                         </select>
                                                     </div>
+                                                    <div class="flex flex-col">
+                                                        <label class="font-semibold text-gray-700">Is Domicile Applicant?</label>
+                                                        <input type="checkbox" 
+                                                            name="children[{{ $index }}][is_domicile_applicant]" 
+                                                            value="on"
+                                                            {{ old('children.'.$index.'.is_domicile_applicant', $child->is_domicile_applicant ?? false) ? 'checked' : '' }}
+                                                            class="border-2 border-gray-200 rounded p-3"/>                                                            
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -448,6 +456,16 @@
                                     <option value="1">Male</option>
                                     <option value="2">Female</option>
                                 </select>
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-sm font-medium text-gray-700 mr-3">
+                                    Is applied for Domicile?
+                                </label>
+                                <input
+                                    type="checkbox"
+                                    name="children[${applicantCounter - 1}][is_domicile_applicant]"
+                                    class="block mt-1 p-3 rounded border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                />
                             </div>
                         </div>
                     </td>

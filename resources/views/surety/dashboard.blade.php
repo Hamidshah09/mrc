@@ -7,23 +7,23 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
 
             <div class="bg-blue-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Total Records</div>
+                <div class="text-sm text-gray-600">Total In Hand</div>
                 <div class="text-xl font-bold">{{ $totalRecords }}</div>
             </div>
 
             <div class="bg-green-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Total Amount</div>
+                <div class="text-sm text-gray-600">Total In Hand Amount</div>
                 <div class="text-xl font-bold">{{ number_format($totalAmount) }}</div>
             </div>
 
             <div class="bg-yellow-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Today Entries</div>
+                <div class="text-sm text-gray-600">Today Received</div>
                 <div class="text-xl font-bold">{{ $todayCount }}</div>
             </div>
 
             <div class="bg-purple-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Completed</div>
-                <div class="text-xl font-bold">{{ $completedCount }}</div>
+                <div class="text-sm text-gray-600">Today Received Amount</div>
+                <div class="text-xl font-bold">{{ $todayAmount }}</div>
             </div>
 
         </div>

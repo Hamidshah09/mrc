@@ -217,6 +217,9 @@ class SuretyController extends Controller
         $minDate = SuretyRegister::min('receiving_date');
         $maxDate = SuretyRegister::max('receiving_date');
 
+        $start = Carbon::today('Asia/Karachi')->startOfDay()->utc();
+        $end   = Carbon::today('Asia/Karachi')->endOfDay()->utc();
+
         $from = $request->input('from') ?? ($minDate ? Carbon::parse($minDate)->format('Y-m-d') : now()->subMonth()->format('Y-m-d'));
         $to = $request->input('to') ?? ($maxDate ? Carbon::parse($maxDate)->format('Y-m-d') : now()->format('Y-m-d'));
         $status = $request->input('status');
@@ -224,13 +227,15 @@ class SuretyController extends Controller
         $query = SuretyRegister::whereDate('receiving_date', '>=', $from)
             ->whereDate('receiving_date', '<=', $to);
 
-        $totalRecords = (clone $query)->count();
+        $totalRecords = (clone $query)->where('surety_status_id', 1)->count();
 
-        $totalAmount = (clone $query)->sum('amount');
+        $totalAmount = (clone $query)->where('surety_status_id', 1)->sum('amount');
 
-        $todayCount = SuretyDocument::where('total_expected_entries', '>', 0)->count();
+        $todayCount = SuretyRegister::whereDate('updated_at', '>=', $start)
+            ->whereDate('updated_at', '<=', $end)->count();
 
-        $completedCount = 0; // adjust ID
+        $todayAmount = SuretyRegister::whereDate('updated_at', '>=', $start)
+            ->whereDate('updated_at', '<=', $end)->sum('amount');
         
         if ($status) {
             $query->where('surety_status_id', $status);
@@ -240,11 +245,6 @@ class SuretyController extends Controller
             ->select('surety_type_id', \DB::raw('count(*) as total'))
             ->groupBy('surety_type_id')
             ->get();
-
-        // For debugging: get matched records and total
-        $matchedRecords = (clone $query)->get();
-        $totalRecords = SuretyRegister::count();
-        $firstRecord = SuretyRegister::first();
 
         $typeIds = $typeCounts->pluck('surety_type_id')->toArray();
         $typeNames = SuretyType::whereIn('id', $typeIds)->pluck('name', 'id')->toArray();
@@ -269,8 +269,7 @@ class SuretyController extends Controller
 
         // User performance: count of history actions by user within date range (and optional status)
       
-        $start = Carbon::today('Asia/Karachi')->startOfDay()->utc();
-        $end   = Carbon::today('Asia/Karachi')->endOfDay()->utc();
+        
 
         $userCounts = SuretyRegister::whereBetween('updated_at', [$from, $to])
             ->select('user_id', DB::raw('count(*) as total'))
@@ -311,7 +310,7 @@ class SuretyController extends Controller
         return view('surety.dashboard', compact('totalAmount', 'pieLabels', 'pieData', 
                             'dailyLabels', 'dailyData', 'from', 'to', 'status',
                              'surityStatuses', 'userLabels', 'userData', 'userPerformance',
-                             'matchedRecords', 'totalRecords', 'firstRecord', 'amountLabels', 'amountData', 'todayCount', 'completedCount'));
+                             'totalRecords', 'amountLabels', 'amountData', 'todayCount', 'todayAmount'));
     }
 
     public function show($id)
@@ -417,7 +416,8 @@ class SuretyController extends Controller
         }
 
         $record->update([
-            'surety_status_id' => 2
+            'surety_status_id' => 2,
+            'releasing_date'=>now()->format('Y-m-d'),
         ]);
 
         /*

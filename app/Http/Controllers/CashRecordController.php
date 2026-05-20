@@ -87,7 +87,9 @@ class CashRecordController extends Controller
             'request_type' => 'nullable|string|max:255',
             'domicile_number' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:100',
-            'operator_name' => 'nullable|string|max:255',
+            'payment_type' => 'nullable|string|in:Cash,1 Link,Esahulat',
+            'priority_type'=>'int|in:1,2',
+
         ]);
 
         $record->update($data);
@@ -303,7 +305,7 @@ class CashRecordController extends Controller
             });
         }
 
-        $cashRecords = $query
+        $cashRecords = $query->where('priority_type', 1)
             ->orderBy('date', 'desc')
             ->get()
             ->unique('cnic')

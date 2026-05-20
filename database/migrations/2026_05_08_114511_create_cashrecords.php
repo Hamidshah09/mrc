@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('domicile_number', 20)->nullable();
             $table->string('status', 30)->nullable();
             $table->string('operator_name', 50)->nullable();
+            $table->tinyint('priority_type')->default(1);
             $table->timestamps();
         });
     }

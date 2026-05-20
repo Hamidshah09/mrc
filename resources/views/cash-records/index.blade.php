@@ -89,6 +89,7 @@
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">Request Type</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">Domicile #</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">Status</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">Priority</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">Operator</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">Actions</th>
                 </tr>
@@ -104,6 +105,11 @@
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ $record->request_type }}</td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ $record->domicile_number }}</td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ $record->status }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                            <span class="px-2 py-1 rounded text-xs font-semibold {{ $record->priority_type == 2 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+                                {{ $record->priority_label }}
+                            </span>
+                        </td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{{ $record->operator_name }}</td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                             <a href="{{ route('cash-records.edit', $record->id) }}" class="rounded text-indigo-700 hover:bg-indigo-400"><x-ionicon-pencil-sharp class="w-6 h-6"/></a>

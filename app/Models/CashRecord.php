@@ -15,8 +15,19 @@ class CashRecord extends Model
         'mobile',
         'service_type',
         'request_type',
+        'payment_type',
         'domicile_number',
         'status',
         'operator_name',
+        'priority_type',
     ];
+
+    public function getPriorityLabelAttribute()
+    {
+        return match ($this->priority_type) {
+            1 => 'Normal',
+            2 => 'Urgent',
+            default => 'Unknown',
+        };
+    }
 }

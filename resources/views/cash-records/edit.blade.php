@@ -52,13 +52,53 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Payment Type</label>
-                    <input type="text" name="payment_type" value="{{ old('payment_type', $record->payment_type) }}" class="mt-1 block w-full border-gray-300 rounded-md">
-                </div>
+                    <label class="block text-sm font-medium text-gray-700">
+                        Payment Type
+                    </label>
 
+                    <select name="payment_type"
+                        class="mt-1 block w-full border-gray-300 rounded-md">
+
+                        <option value="">Select</option>
+
+                        <option value="Cash"
+                            {{ old('payment_type', $record->payment_type ?? '') == 'Cash' ? 'selected' : '' }}>
+                            Cash
+                        </option>
+
+                        <option value="1 Link"
+                            {{ old('payment_type', $record->payment_type ?? '') == '1 Link' ? 'selected' : '' }}>
+                            1 Link
+                        </option>
+
+                        <option value="Esahulat"
+                            {{ old('payment_type', $record->payment_type ?? '') == 'Esahulat' ? 'selected' : '' }}>
+                            Esahulat
+                        </option>
+
+                    </select>
+                </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Operator Name</label>
-                    <input type="text" name="operator_name" value="{{ old('operator_name', $record->operator_name) }}" class="mt-1 block w-full border-gray-300 rounded-md">
+                    <label class="block text-sm font-medium text-gray-700">
+                        Priority Type
+                    </label>
+
+                    <select name="priority_type"
+                        class="mt-1 block w-full border-gray-300 rounded-md">
+
+                        <option value="">Select</option>
+
+                        <option value="1"
+                            {{ old('priority_type', $record->priority_type ?? 1) == 1 ? 'selected' : '' }}>
+                            Normal
+                        </option>
+
+                        <option value="2"
+                            {{ old('priority_type', $record->priority_type ?? '') == 2 ? 'selected' : '' }}>
+                            Urgent
+                        </option>
+
+                    </select>
                 </div>
             </div>
 

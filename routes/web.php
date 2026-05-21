@@ -313,4 +313,9 @@ Route::middleware('auth')->group(function () {
         });
     });
 });
+
+Route::middleware('auth')->get(
+    'api/domicile/noc-other-district/verify/{cnic}',
+    [DomicileController::class, 'getotherdistdapplicant']
+);
 require __DIR__.'/auth.php';

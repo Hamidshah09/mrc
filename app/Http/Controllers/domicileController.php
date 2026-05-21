@@ -614,5 +614,24 @@ class domicileController extends Controller
             return ['error' => 'Something went wrong: ' . $e->getMessage()];
         }
     }
+
+    public function getotherdistdapplicant($cnic)
+    {
+        try {
+            $isLetterIssued = NocOtherDistrictApplicants::where('CNIC', $cnic)
+            ->exists();
+            Log::error('data:'. $isLetterIssued );
+            return response()->json([
+                'success' => true,
+                'is_letter_issued' => $isLetterIssued,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('getblacklistedapplicant error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
     
 }

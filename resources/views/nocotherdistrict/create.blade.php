@@ -325,7 +325,7 @@
                     ),
 
                     fetch(
-                        `https://cfc-ict.com/api/domicile/noc-other-district/verify/${cnic}`,
+                        `https://cfc-ict.com/domicile/noc-other-district/verify/${cnic}`,
                         {
                             credentials: 'same-origin',
                             headers: {

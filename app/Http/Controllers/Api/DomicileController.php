@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DomicileStatus;
 use App\Models\DomicileApplicants;
 use App\Models\BlackListDomicileApplications;
+use App\Models\NocOtherDistrictApplicants;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -187,6 +188,25 @@ class DomicileController extends Controller
             return response()->json([
                 'success' => true,
                 'is_blacklisted' => $isBlacklisted,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('getblacklistedapplicant error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getotherdistdapplicant($cnic)
+    {
+        try {
+            $isLetterIssued = NocOtherDistrictApplicants::where('CNIC', $cnic)
+            ->exists();
+
+            return response()->json([
+                'success' => true,
+                'is_letter_issued' => $isLetterIssued,
             ]);
         } catch (\Exception $e) {
             Log::error('getblacklistedapplicant error: ' . $e->getMessage());

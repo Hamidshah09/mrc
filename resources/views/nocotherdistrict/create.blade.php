@@ -100,6 +100,7 @@
                                         value="{{ old('applicants.0.CNIC') }}">
 
                                     <div class="cnic-check-result mt-2 text-sm hidden"></div>
+                                    <div class="other-dist-result mt-2 text-sm hidden"></div>
                                 </div>
 
                                 <div>
@@ -138,6 +139,7 @@
                                        placeholder="xxxxxxxxxxxxx"
                                        value="{{ old('applicants.0.CNIC') }}">
                                 <div class="cnic-check-result mt-2 text-sm hidden"></div>
+                                <div class="other-dist-result mt-2 text-sm hidden"></div>
                             </div>
                             
 
@@ -226,6 +228,7 @@
                             class="mt-1 block w-full border-gray-300 rounded-md cnic-input">
 
                         <div class="cnic-check-result mt-2 text-sm hidden"></div>
+                        <div class="other-dist-result mt-2 text-sm hidden"></div>
                     </div>
                     <div>
                         <label class="text-sm font-medium">Applicant Name</label>
@@ -269,107 +272,160 @@
             }
         }
 
-        async function checkNitbRecord(input) {
+        async function checkApplicantRecords(input) {
 
             const cnic = input.value.replace(/\D/g, '');
-
-            const resultBox = input
-                .closest('div')
-                .querySelector('.cnic-check-result');
-
-            resultBox.classList.add('hidden');
-            resultBox.innerHTML = '';
 
             if (cnic.length !== 13) {
                 return;
             }
 
-            resultBox.classList.remove(
-                'hidden',
-                'text-red-600',
-                'text-green-600'
-            );
+            const wrapper = input.closest('div');
 
-            resultBox.classList.add('text-gray-500');
+            const nitbBox =
+                wrapper.querySelector('.cnic-check-result');
 
-            resultBox.innerHTML = 'Checking record...';
+            const otherDistBox =
+                wrapper.querySelector('.other-dist-result');
 
-            try {
+            /*
+            |--------------------------------------------------------------------------
+            | Reset UI
+            |--------------------------------------------------------------------------
+            */
 
-                const response = await fetch(
-                    `https://cfc-ict.com/fastapi/domicile/check-in-nitb/${cnic}`
-                );
+            [nitbBox, otherDistBox].forEach(box => {
 
-                const data = await response.json();
-
-                resultBox.classList.remove(
-                    'text-gray-500',
+                box.classList.remove(
+                    'hidden',
                     'text-red-600',
                     'text-green-600'
                 );
 
+                box.classList.add('text-gray-500');
+
+                box.innerHTML = 'Checking...';
+            });
+
+            try {
+
                 /*
                 |--------------------------------------------------------------------------
-                | Record Found
+                | Parallel API Calls
                 |--------------------------------------------------------------------------
                 */
 
+                const [
+                    nitbResponse,
+                    otherDistResponse
+                ] = await Promise.all([
+
+                    fetch(
+                        `https://cfc-ict.com/fastapi/domicile/check-in-nitb/${cnic}`
+                    ),
+
+                    fetch(
+                        `https://cfc-ict.com/api/domicile/noc-other-district/${cnic}`,
+                        {
+                            credentials: 'same-origin',
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        }
+                    )
+                ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Parse JSON In Parallel Too
+                |--------------------------------------------------------------------------
+                */
+
+                const [
+                    nitbData,
+                    otherDistData
+                ] = await Promise.all([
+
+                    nitbResponse.json(),
+                    otherDistResponse.json()
+                ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | NITB Result
+                |--------------------------------------------------------------------------
+                */
+
+                nitbBox.classList.remove(
+                    'text-gray-500'
+                );
+
                 if (
-                    data.status === 'success' &&
-                    data.records > 0
+                    nitbData.status === 'success' &&
+                    nitbData.records > 0
                 ) {
 
-                    resultBox.classList.add('text-red-600');
+                    nitbBox.classList.add('text-red-600');
 
-                    resultBox.innerHTML = `
+                    nitbBox.innerHTML = `
                         Domicile Record already exists in NITB.
-                        Total Records: ${data.records}
+                        Total Records: ${nitbData.records}
                     `;
-
-                    input.classList.add(
-                        'border-red-500'
-                    );
 
                 } else {
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | No Record Found
-                    |--------------------------------------------------------------------------
-                    */
+                    nitbBox.classList.add('text-green-600');
 
-                    resultBox.classList.add('text-green-600');
+                    nitbBox.innerHTML =
+                        'No existing NITB record found';
+                }
 
-                    resultBox.innerHTML =
-                        'No existing record found';
+                /*
+                |--------------------------------------------------------------------------
+                | Other District Result
+                |--------------------------------------------------------------------------
+                */
 
-                    input.classList.remove(
-                        'border-red-500'
-                    );
+                otherDistBox.classList.remove(
+                    'text-gray-500'
+                );
+
+                if (
+                    otherDistData.success &&
+                    otherDistData.is_letter_issued
+                ) {
+
+                    otherDistBox.classList.add('text-red-600');
+
+                    otherDistBox.innerHTML =
+                        'NOC to Other District already issued';
+
+                } else {
+
+                    otherDistBox.classList.add('text-green-600');
+
+                    otherDistBox.innerHTML =
+                        'No previous NOC found';
                 }
 
             } catch (error) {
 
                 console.error(error);
 
-                resultBox.classList.remove(
-                    'text-gray-500',
-                    'text-green-600'
-                );
+                [nitbBox, otherDistBox].forEach(box => {
 
-                resultBox.classList.add('text-red-600');
+                    box.classList.remove(
+                        'text-gray-500',
+                        'text-green-600'
+                    );
 
-                resultBox.innerHTML =
-                    'Unable to verify CNIC right now';
+                    box.classList.add('text-red-600');
+
+                    box.innerHTML =
+                        'Unable to verify records';
+                });
             }
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Event Delegation
-        |--------------------------------------------------------------------------
-        */
 
         document.addEventListener('blur', function(e) {
 
@@ -377,7 +433,7 @@
                 e.target.classList.contains('cnic-input')
             ) {
 
-                checkNitbRecord(e.target);
+                checkApplicantRecords(e.target);
             }
 
         }, true);

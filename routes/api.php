@@ -37,7 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth')->get(
-    '/domicile/noc-other-district/{cnic}',
+    '/domicile/noc-other-district/verify/{cnic}',
     [DomicileController::class, 'getotherdistdapplicant']
 );
 

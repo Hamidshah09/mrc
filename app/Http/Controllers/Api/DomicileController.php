@@ -203,7 +203,7 @@ class DomicileController extends Controller
         try {
             $isLetterIssued = NocOtherDistrictApplicants::where('CNIC', $cnic)
             ->exists();
-
+            Log::error('data:'. $isLetterIssued );
             return response()->json([
                 'success' => true,
                 'is_letter_issued' => $isLetterIssued,

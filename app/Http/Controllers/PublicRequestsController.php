@@ -86,7 +86,7 @@ class PublicRequestsController extends Controller
         'spouse_name' => 'nullable|string|max:45',
         'date_of_birth' => 'required|date',
         'gender_id' => 'required|integer',
-        'place_of_birth' => 'required|string|max:45',
+        'place_of_birth' => 'required|string|max:20',
         'marital_status_id' => 'required|integer',
         'religion' => 'required|string|max:45',
         'qualification_id' => 'nullable|integer',

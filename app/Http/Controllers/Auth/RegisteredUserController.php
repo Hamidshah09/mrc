@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Policestation;
+use App\Models\PoliceStation;
 use App\Models\SubDivision;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -133,7 +133,7 @@ class RegisteredUserController extends Controller
     {
         $user = User::findOrFail($id);
         $roles = Role::all();
-        $policestations = Policestation::all();
+        $policestations = PoliceStation::all();
         $subDivisions = SubDivision::all();
         return view('users.edit', compact('user', 'roles', 'policestations', 'subDivisions'));
     }

@@ -185,35 +185,96 @@
         |--------------------------------------------------------------------------
         */
 
-        navigator.geolocation.getCurrentPosition(
+        
 
-            function(position) {
+        document.addEventListener('DOMContentLoaded', function () {
 
-                let latitude = position.coords.latitude;
-                let longitude = position.coords.longitude;
+            const locationInput =
+                document.getElementById('google_map_link');
 
-                document.getElementById('latitude').value = latitude;
+            /*
+            |--------------------------------------------------------------------------
+            | Check Browser Support
+            |--------------------------------------------------------------------------
+            */
 
-                document.getElementById('longitude').value = longitude;
+            if (!navigator.geolocation) {
 
-                document.getElementById('google_map_link').value =
-                    `https://maps.google.com/?q=${latitude},${longitude}`;
+                alert('Geolocation is not supported.');
 
-                document.getElementById('gps-status').innerHTML =
-                    'GPS location detected successfully';
-
-            },
-
-            function(error) {
-
-                console.log(error);
-
-                document.getElementById('gps-status').innerHTML =
-                    'Unable to detect GPS location';
-
+                return;
             }
 
-        );
+            /*
+            |--------------------------------------------------------------------------
+            | Get Current Position
+            |--------------------------------------------------------------------------
+            */
+
+            navigator.geolocation.getCurrentPosition(
+
+                function (position) {
+
+                    const latitude = position.coords.latitude;
+
+                    const longitude = position.coords.longitude;
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Google Maps Link
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const googleMapsLink =
+                        `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+                    locationInput.value = googleMapsLink;
+
+                    console.log('Location detected');
+
+                },
+
+                function (error) {
+
+                    console.log(error);
+
+                    switch(error.code) {
+
+                        case error.PERMISSION_DENIED:
+
+                            alert('Location permission denied.');
+
+                            break;
+
+                        case error.POSITION_UNAVAILABLE:
+
+                            alert('Location unavailable.');
+
+                            break;
+
+                        case error.TIMEOUT:
+
+                            alert('Location request timed out.');
+
+                            break;
+
+                        default:
+
+                            alert('Unknown GPS error.');
+
+                            break;
+                    }
+                },
+
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
+                }
+            );
+        });
+
+
 
         /*
         |--------------------------------------------------------------------------

@@ -33,7 +33,26 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/domicile/approvers', [DomicileController::class, 'getApprovers']);
     Route::get('/domicile/blacklist/{cnic}', [DomicileController::class, 'getblacklistedapplicant']);
     
+     /*
+    |--------------------------------------------------------------------------
+    | Complaints
+    |--------------------------------------------------------------------------
+    */
 
-});
+    Route::get('/complaints', [ComplaintController::class, 'index']);
+
+    Route::post('/complaints/store', [ComplaintController::class, 'store']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dropdowns
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/sub-divisions', [ComplaintController::class, 'subDivisions']);
+
+    Route::get('/police-stations/{id}', [ComplaintController::class, 'policeStations']);
+
+}); 
 
 

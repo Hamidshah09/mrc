@@ -6,7 +6,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use App\Models\Complaint;
+use App\Models\SubDivision;
+use App\Models\PoliceStation;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -31,6 +33,8 @@ class User extends Authenticatable
         'password',
         'mobile',
         'profile_image',
+        'sub_division_id',
+        'policestation_id',
     ];
 
 
@@ -85,5 +89,42 @@ class User extends Authenticatable
 
     public function suretyregister(){
         return $this->hasMany(SuretyRegister::class, 'user_id', 'id');
+    }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Area Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    public function subDivision()
+    {
+        return $this->belongsTo(SubDivision::class);
+    }
+
+    public function policeStation()
+    {
+        return $this->belongsTo(PoliceStation::class, 'policestation_id');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Complaint Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    public function submittedComplaints()
+    {
+        return $this->hasMany(Complaint::class, 'operator_id');
+    }
+
+    public function assignedComplaints()
+    {
+        return $this->hasMany(Complaint::class, 'ac_id');
+    }
+
+    public function magistrateComplaints()
+    {
+        return $this->hasMany(Complaint::class, 'magistrate_id');
     }
 }

@@ -15,5 +15,20 @@ class PoliceStation extends Model
     {
         return $this->hasMany(SuretyRegister::class, 'police_station_id');
     }
+
+      public function subDivision()
+    {
+        return $this->belongsTo(SubDivision::class);
+    }
+
+    public function magistrates()
+    {
+        return $this->hasMany(User::class, 'policestation_id');
+    }
+
+    public function complaints()
+    {
+        return $this->hasMany(Complaint::class, 'policestation_id');
+    }
 }
 

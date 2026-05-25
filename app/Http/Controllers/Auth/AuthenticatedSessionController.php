@@ -34,7 +34,50 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $role = Auth::user()->role->role;
+
+        switch ($role) {
+
+            case 'Operator':
+
+                return redirect()->route(
+                    'operator.complaints.index'
+                );
+
+            case 'AC':
+
+                return redirect()->route(
+                    'ac.dashboard'
+                );
+
+            case 'Magistrate':
+
+                return redirect()->route(
+                    'magistrate.dashboard'
+                );
+
+            case 'ADCG':
+
+                return redirect()->route(
+                    'adcg.dashboard'
+                );
+
+            case 'admin':
+
+                return redirect()->route(
+                    'dashboard'
+                );
+            case 'domicile':
+                return redirect()->route('domicile.index');
+            case 'surety':
+                return redirect()->route('surety.index');
+
+            default:
+
+                Auth::logout();
+
+                abort(403, 'Role not configured.');
+        }
     }
 
     /**

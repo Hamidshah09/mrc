@@ -33,6 +33,10 @@ use App\Http\Controllers\PublicRequestsController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CashRecordController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\Operator\ComplaintController as OperatorComplaintController;
+use App\Http\Controllers\AC\ComplaintController as ACComplaintController;
+use App\Http\Controllers\Magistrate\ComplaintController as MagistrateComplaintController;
+use App\Http\Controllers\ADCG\DashboardController as ADCGDashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -313,7 +317,85 @@ Route::middleware('auth')->group(function () {
         });
     });
 });
+Route::middleware(['auth', 'role:Operator'])
+    ->prefix('operator')
+    ->name('operator.')
+    ->group(function () {
 
+        Route::get('/complaints', [OperatorComplaintController::class, 'index'])
+            ->name('complaints.index');
+
+        Route::get('/complaints/create', [OperatorComplaintController::class, 'create'])
+            ->name('complaints.create');
+
+        Route::post('/complaints/store', [OperatorComplaintController::class, 'store'])
+            ->name('complaints.store');
+
+        Route::get('/get-police-stations/{subDivisionId}', [OperatorComplaintController::class, 'getPoliceStations'])
+            ->name('getPoliceStations');
+
+});
+
+Route::middleware(['auth', 'role:AC'])
+    ->prefix('ac')
+    ->name('ac.')
+    ->group(function () {
+
+        Route::get('/dashboard', [ACComplaintController::class, 'dashboard'])
+            ->name('dashboard');
+
+        Route::get('/complaints', [ACComplaintController::class, 'index'])
+            ->name('complaints.index');
+
+        Route::get('/complaints/{id}', [ACComplaintController::class, 'show'])
+            ->name('complaints.show');
+
+        Route::post('/complaints/{id}/assign', [ACComplaintController::class, 'assignMagistrate'])
+            ->name('complaints.assign');
+
+        Route::post('/complaints/{id}/approve', [ACComplaintController::class, 'approveComplaint'])
+            ->name('complaints.approve');
+
+        Route::post('/complaints/{id}/reject', [ACComplaintController::class, 'rejectComplaint'])
+            ->name('complaints.reject');
+
+});
+Route::middleware(['auth', 'role:Magistrate'])
+    ->prefix('magistrate')
+    ->name('magistrate.')
+    ->group(function () {
+
+        Route::get('/dashboard', [MagistrateComplaintController::class, 'dashboard'])
+            ->name('dashboard');
+
+        Route::get('/complaints', [MagistrateComplaintController::class, 'index'])
+            ->name('complaints.index');
+
+        Route::get('/complaints/{id}', [MagistrateComplaintController::class, 'show'])
+            ->name('complaints.show');
+
+        Route::post('/complaints/{id}/resolve', [MagistrateComplaintController::class, 'resolveComplaint'])
+            ->name('complaints.resolve');
+
+});
+Route::middleware(['auth', 'role:ADCG'])
+    ->prefix('adcg')
+    ->name('adcg.')
+    ->group(function () {
+
+        Route::get('/dashboard', [ADCGDashboardController::class, 'dashboard'])
+            ->name('dashboard');
+
+        Route::get('/complaints', [ADCGDashboardController::class, 'complaints'])
+            ->name('complaints');
+
+        Route::get('/complaints/{id}', [ADCGDashboardController::class, 'show'])
+            ->name('complaints.show');
+
+        Route::post('/complaints/{id}/dispose', [ADCGDashboardController::class, 'dispose'])
+            ->name('complaints.dispose');
+
+});
 Route::middleware('auth')->get(
     '/domicile/noc-other-district/verify/{cnic}',
     [DomicileController::class, 'getotherdistdapplicant']

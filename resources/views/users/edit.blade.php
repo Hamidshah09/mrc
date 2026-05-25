@@ -241,7 +241,7 @@
                 {{-- Sub Division --}}
                 <div>
 
-                    <x-input-label for="sub_division_id" :value="__('sub_division_id')" />
+                    <x-input-label for="sub_division_id" :value="__('Sub Division')" />
 
                     <select
                         name="sub_division_id"
@@ -267,7 +267,7 @@
                 {{-- Police Station --}}
                 <div>
 
-                    <x-input-label for="policestation_id" :value="__('policestation_id')" />
+                    <x-input-label for="policestation_id" :value="__('Police Station')" />
 
                     <select
                         name="policestation_id"

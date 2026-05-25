@@ -126,13 +126,13 @@ class RegisteredUserController extends Controller
 
         // Validate the input
         $validated = $request->validate([
-            'cnic'           => 'required|string|size:13|unique:users,cnic,' . $user->id,
+            'cnic'           => 'nullable|string|size:13|unique:users,cnic,' . $user->id,
             'name'           => 'required|string|max:50',
-            'father_name'    => 'required|string|max:50',
-            'address'        => 'required|string|max:100',
-            'dob'            => 'required|date',
+            'father_name'    => 'nullable|string|max:50',
+            'address'        => 'nullable|string|max:100',
+            'dob'            => 'nullable|date',
             'email'          => 'required|email|unique:users,email,' . $user->id,
-            'mobile'         => 'required|string|size:11|unique:users,mobile,' . $user->id,
+            'mobile'         => 'nullable|string|size:11|unique:users,mobile,' . $user->id,
             'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status'       => 'string|in:Active,Not active',
             'role_id' => 'required|integer|exists:roles,id',

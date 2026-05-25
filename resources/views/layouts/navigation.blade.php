@@ -10,9 +10,135 @@
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <a href="{{route('dashboard')}}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
-                </div>
+                </div> --}}
+                @if (
+                        auth()->user()->role->role == 'Operator' ||
+                        auth()->user()->role->role == 'AC' ||
+                        auth()->user()->role->role == 'Magistrate' ||
+                        auth()->user()->role->role == 'ADCG'
+                    )
+
+                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
+                            <div class="relative" x-data="{ dropdown: false }">
+
+                                <button @click="dropdown = !dropdown"
+                                        class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
+
+                                    Cleanliness Portal
+
+                                    <svg class="ml-1 h-4 w-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24">
+
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+
+                                    </svg>
+
+                                </button>
+
+                                <div x-show="dropdown"
+                                    @click.outside="dropdown = false"
+                                    x-transition
+                                    class="absolute mt-2 w-64 bg-white shadow-lg rounded-lg z-50">
+
+                                    {{-- Operator --}}
+                                    @if(auth()->user()->role->role == 'Operator')
+
+                                        <a href="{{ route('operator.complaints.index') }}"
+                                        class="block px-4 py-2 hover:bg-gray-100">
+
+                                            My Complaints
+
+                                        </a>
+
+                                        <a href="{{ route('operator.complaints.create') }}"
+                                        class="block px-4 py-2 hover:bg-gray-100">
+
+                                            Create Complaint
+
+                                        </a>
+
+                                    @endif
+
+                                    {{-- AC --}}
+                                    @if(auth()->user()->role->role == 'AC')
+
+                                        <a href="{{ route('ac.dashboard') }}"
+                                        class="block px-4 py-2 hover:bg-gray-100">
+
+                                            AC Dashboard
+
+                                        </a>
+
+                                        <a href="{{ route('ac.complaints.index') }}"
+                                        class="block px-4 py-2 hover:bg-gray-100">
+
+                                            Complaints
+
+                                        </a>
+
+                                    @endif
+
+                                    {{-- Magistrate --}}
+                                    @if(auth()->user()->role->role == 'Magistrate')
+
+                                        <a href="{{ route('magistrate.dashboard') }}"
+                                        class="block px-4 py-2 hover:bg-gray-100">
+
+                                            Magistrate Dashboard
+
+                                        </a>
+
+                                        <a href="{{ route('magistrate.complaints.index') }}"
+                                        class="block px-4 py-2 hover:bg-gray-100">
+
+                                            Assigned Complaints
+
+                                        </a>
+
+                                    @endif
+
+                                    {{-- ADCG --}}
+                                    @if(auth()->user()->role->role == 'ADCG')
+
+                                        <a href="{{ route('adcg.dashboard') }}"
+                                        class="block px-4 py-2 hover:bg-gray-100">
+
+                                            ADCG Dashboard
+
+                                        </a>
+
+                                        <a href="{{ route('adcg.complaints') }}"
+                                        class="block px-4 py-2 hover:bg-gray-100">
+
+                                            All Complaints
+
+                                        </a>
+
+                                    @endif
+
+                                    {{-- Notifications --}}
+                                    <a href="{{ route('notifications.index') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100">
+
+                                        Notifications
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    @endif
                 @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'domicile' or auth()->user()->role->role== 'idp' or auth()->user()->role->role== 'arms')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <a href="{{route('statistics.index')}}" class="block px-4 py-2 hover:bg-gray-100">Statistics</a>
@@ -188,6 +314,54 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <div class="relative mr-4">
+
+                    @php
+
+                        $unreadCount = auth()->user()
+                            ->unreadNotifications()
+                            ->count();
+
+                    @endphp
+
+                    <a href="{{ route('notifications.index') }}"
+                    class="relative inline-flex items-center text-gray-600 hover:text-gray-900">
+
+                        {{-- Bell Icon --}}
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-7 w-7"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032
+                                    2.032 0 0118 14.158V11a6.002
+                                    6.002 0 00-4-5.659V5a2
+                                    2 0 10-4 0v.341C7.67
+                                    6.165 6 8.388 6 11v3.159c0
+                                    .538-.214 1.055-.595
+                                    1.436L4 17h5m6 0v1a3 3 0
+                                    11-6 0v-1m6 0H9" />
+
+                        </svg>
+
+                        {{-- Counter --}}
+                        @if($unreadCount > 0)
+
+                            <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-2 py-0.5">
+
+                                {{ $unreadCount }}
+
+                            </span>
+
+                        @endif
+
+                    </a>
+
+                </div>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -243,11 +417,113 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
+        {{-- <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-        </div>
+        </div> --}}
+        @if (
+                auth()->user()->role->role == 'Operator' ||
+                auth()->user()->role->role == 'AC' ||
+                auth()->user()->role->role == 'Magistrate' ||
+                auth()->user()->role->role == 'ADCG'
+            )
+
+                <div class="border-t border-gray-200 pt-2 pb-3">
+
+                    <div class="px-4 py-2 text-xs font-bold text-gray-500 uppercase">
+
+                        Cleanliness Portal
+
+                    </div>
+
+                    {{-- Operator --}}
+                    @if(auth()->user()->role->role == 'Operator')
+
+                        <x-responsive-nav-link
+                            :href="route('operator.complaints.index')">
+
+                            {{ __('My Complaints') }}
+
+                        </x-responsive-nav-link>
+
+                        <x-responsive-nav-link
+                            :href="route('operator.complaints.create')">
+
+                            {{ __('Create Complaint') }}
+
+                        </x-responsive-nav-link>
+
+                    @endif
+
+                    {{-- AC --}}
+                    @if(auth()->user()->role->role == 'AC')
+
+                        <x-responsive-nav-link
+                            :href="route('ac.dashboard')">
+
+                            {{ __('AC Dashboard') }}
+
+                        </x-responsive-nav-link>
+
+                        <x-responsive-nav-link
+                            :href="route('ac.complaints.index')">
+
+                            {{ __('Complaints') }}
+
+                        </x-responsive-nav-link>
+
+                    @endif
+
+                    {{-- Magistrate --}}
+                    @if(auth()->user()->role->role == 'Magistrate')
+
+                        <x-responsive-nav-link
+                            :href="route('magistrate.dashboard')">
+
+                            {{ __('Magistrate Dashboard') }}
+
+                        </x-responsive-nav-link>
+
+                        <x-responsive-nav-link
+                            :href="route('magistrate.complaints.index')">
+
+                            {{ __('Assigned Complaints') }}
+
+                        </x-responsive-nav-link>
+
+                    @endif
+
+                    {{-- ADCG --}}
+                    @if(auth()->user()->role->role == 'ADCG')
+
+                        <x-responsive-nav-link
+                            :href="route('adcg.dashboard')">
+
+                            {{ __('ADCG Dashboard') }}
+
+                        </x-responsive-nav-link>
+
+                        <x-responsive-nav-link
+                            :href="route('adcg.complaints')">
+
+                            {{ __('All Complaints') }}
+
+                        </x-responsive-nav-link>
+
+                    @endif
+
+                    {{-- Notifications --}}
+                    <x-responsive-nav-link
+                        :href="route('notifications.index')">
+
+                        {{ __('Notifications') }}
+
+                    </x-responsive-nav-link>
+
+                </div>
+
+            @endif
         @if (auth()->user()->role->role== 'admin' or  auth()->user()->role->role== 'domicile' or auth()->user()->role->role== 'idp')
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('statistics.index')" :active="request()->routeIs('statistics.index')">

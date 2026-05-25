@@ -37,6 +37,8 @@ use App\Http\Controllers\Operator\ComplaintController as OperatorComplaintContro
 use App\Http\Controllers\AC\ComplaintController as ACComplaintController;
 use App\Http\Controllers\Magistrate\ComplaintController as MagistrateComplaintController;
 use App\Http\Controllers\ADCG\DashboardController as ADCGDashboardController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -394,6 +396,30 @@ Route::middleware(['auth', 'role:ADCG'])
 
         Route::post('/complaints/{id}/dispose', [ADCGDashboardController::class, 'dispose'])
             ->name('complaints.dispose');
+
+});
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+
+});
+Route::middleware(['auth', 'role:admin,ADCG'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/users', [UserController::class, 'index'])
+            ->name('users.index');
+
+        Route::get('/users/create', [UserController::class, 'create'])
+            ->name('users.create');
+
+        Route::post('/users/store', [UserController::class, 'store'])
+            ->name('users.store');
 
 });
 Route::middleware('auth')->get(

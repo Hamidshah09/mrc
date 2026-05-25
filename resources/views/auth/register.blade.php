@@ -14,11 +14,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
                     <!-- CNIC -->
-                    <div>
+                    {{-- <div>
                         <x-input-label for="cnic" :value="__('CNIC')" />
                         <x-text-input id="cnic" name="cnic" type="text" maxlength="13" class="block mt-1 w-full" :value="old('cnic')" required />
                         <x-input-error :messages="$errors->get('cnic')" class="mt-2" />
-                    </div>
+                    </div> --}}
 
                     <!-- Name -->
                     <div>
@@ -28,18 +28,18 @@
                     </div>
 
                     <!-- Father Name -->
-                    <div>
+                    {{-- <div>
                         <x-input-label for="father_name" :value="__('Father Name')" />
                         <x-text-input id="father_name" name="father_name" type="text" class="block mt-1 w-full" :value="old('father_name')" required />
                         <x-input-error :messages="$errors->get('father_name')" class="mt-2" />
-                    </div>
+                    </div> --}}
 
                     <!-- Date of Birth -->
-                    <div>
+                    {{-- <div>
                         <x-input-label for="dob" :value="__('Date of Birth')" />
                         <x-text-input id="dob" name="dob" type="date" class="block mt-1 w-full" :value="old('dob')" required />
                         <x-input-error :messages="$errors->get('dob')" class="mt-2" />
-                    </div>
+                    </div> --}}
 
                     <!-- Mobile -->
                     <div>
@@ -49,11 +49,11 @@
                     </div>
 
                     <!-- Address -->
-                    <div class="sm:col-span-2 lg:col-span-2 xl:col-span-2">
+                    {{-- <div class="sm:col-span-2 lg:col-span-2 xl:col-span-2">
                         <x-input-label for="address" :value="__('Address')" />
                         <x-text-input id="address" name="address" type="text" class="block mt-1 w-full" :value="old('address')" required />
                         <x-input-error :messages="$errors->get('address')" class="mt-2" />
-                    </div>
+                    </div> --}}
 
                     <!-- Email -->
                     <div>

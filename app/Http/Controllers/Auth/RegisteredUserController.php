@@ -89,17 +89,29 @@ class RegisteredUserController extends Controller
 
     // Step 3: Create user
     $user = User::create([
-        'cnic'           => $validated['cnic'],
-        'name'           => $validated['name'],
-        'father_name'    => $validated['father_name'],
-        'address'        => $validated['address'],
-        'dob'            => $validated['dob'],
-        'email'          => $validated['email'],
-        'mobile'         => $validated['mobile'],
-        'profile_image'  => $validated['profile_image'] ?? null,
-        'password'       => Hash::make($validated['password']),
-        'role_id'       => 9,
-        'status'         => 'Not Active', // or 'Active' if auto-approved
+
+        'cnic' => $validated['cnic'] ?? null,
+
+        'name' => $validated['name'],
+
+        'father_name' => $validated['father_name'] ?? null,
+
+        'address' => $validated['address'] ?? null,
+
+        'dob' => $validated['dob'] ?? null,
+
+        'email' => $validated['email'],
+
+        'mobile' => $validated['mobile'],
+
+        'profile_image' => $validated['profile_image'] ?? null,
+
+        'password' => Hash::make($validated['password']),
+
+        'role_id' => 9,
+
+        'status' => 'Not active',
+
     ]);
 
     // Step 4: Fire Registered event and log in the user
@@ -124,34 +136,106 @@ class RegisteredUserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Validate the input
+        /*
+        |--------------------------------------------------------------------------
+        | Validate Request
+        |--------------------------------------------------------------------------
+        */
+
         $validated = $request->validate([
-            'cnic'           => 'nullable|string|size:13|unique:users,cnic,' . $user->id,
-            'name'           => 'required|string|max:50',
-            'father_name'    => 'nullable|string|max:50',
-            'address'        => 'nullable|string|max:100',
-            'dob'            => 'nullable|date',
-            'email'          => 'required|email|unique:users,email,' . $user->id,
-            'mobile'         => 'nullable|string|size:11|unique:users,mobile,' . $user->id,
-            'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'status'       => 'string|in:Active,Not active',
+
+            'cnic' => 'nullable|string|size:13|unique:users,cnic,' . $user->id,
+
+            'name' => 'required|string|max:50',
+
+            'father_name' => 'nullable|string|max:50',
+
+            'address' => 'nullable|string|max:100',
+
+            'dob' => 'nullable|date',
+
+            'email' => 'required|email|unique:users,email,' . $user->id,
+
+            'mobile' => 'nullable|string|size:11|unique:users,mobile,' . $user->id,
+
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'status' => 'required|in:Active,Not active',
+
             'role_id' => 'required|integer|exists:roles,id',
-            'password'       => 'nullable|string|min:8|confirmed', // Add this line
+
+            'sub_division_id' => 'nullable|exists:sub_divisions,id',
+
+            'policestation_id' => 'nullable|exists:policestations,id',
+
+            'password' => 'nullable|string|min:8|confirmed',
+
         ]);
 
-        // Handle profile image upload (if any)
+        /*
+        |--------------------------------------------------------------------------
+        | Upload Profile Image
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->hasFile('profile_image')) {
-            $validated['profile_image'] = $request->file('profile_image')->store('profiles', 'public');
+
+            $validated['profile_image'] = $request
+                ->file('profile_image')
+                ->store('profile-images', 'public');
         }
 
-        // Handle password (only if provided)
+        /*
+        |--------------------------------------------------------------------------
+        | Handle Password
+        |--------------------------------------------------------------------------
+        */
+
         if (!empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
+
+            $validated['password'] = Hash::make(
+                $validated['password']
+            );
+
         } else {
+
             unset($validated['password']);
         }
-        // Update user
+
+        /*
+        |--------------------------------------------------------------------------
+        | Prevent Undefined Nullable Fields
+        |--------------------------------------------------------------------------
+        */
+
+        $validated['cnic'] = $validated['cnic'] ?? null;
+
+        $validated['father_name'] = $validated['father_name'] ?? null;
+
+        $validated['address'] = $validated['address'] ?? null;
+
+        $validated['dob'] = $validated['dob'] ?? null;
+
+        $validated['mobile'] = $validated['mobile'] ?? null;
+
+        $validated['sub_division_id'] = $validated['sub_division_id'] ?? null;
+
+        $validated['policestation_id'] = $validated['policestation_id'] ?? null;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update User
+        |--------------------------------------------------------------------------
+        */
+
         $user->update($validated);
+
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'User updated successfully.'
+            );
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }

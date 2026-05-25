@@ -130,7 +130,9 @@ class RegisteredUserController extends Controller
     {
         $user = User::findOrFail($id);
         $roles = Role::all();
-        return view('users.edit', compact('user', 'roles'));
+        $policestations = Policestation::all();
+        $subDivisions = SubDivision::all();
+        return view('users.edit', compact('user', 'roles', 'policestations', 'subDivisions'));
     }
     public function update(Request $request, $id): RedirectResponse
     {

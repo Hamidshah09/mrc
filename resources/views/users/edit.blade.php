@@ -238,7 +238,60 @@
                     <x-input-error :messages="$errors->get('role_id')" class="mt-2" />
 
                 </div>
+                {{-- Sub Division --}}
+                <div>
 
+                    <x-input-label for="sub_division_id" :value="__('sub_division_id')" />
+
+                    <select
+                        name="sub_division_id"
+                        id="sub_division_id"
+                        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full mt-1">
+
+                        @foreach ($subDivisions as $subDivision)
+
+                            <option value="{{ $subDivision->id }}"
+                                {{ old('sub_division_id', $user->sub_division_id) == $subDivision->id ? 'selected' : '' }}>
+
+                                {{ ucfirst($subDivision->name) }}
+
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                    <x-input-error :messages="$errors->get('sub_division_id')" class="mt-2" />
+
+                </div>
+                {{-- Police Station --}}
+                <div>
+
+                    <x-input-label for="policestation_id" :value="__('policestation_id')" />
+
+                    <select
+                        name="policestation_id"
+                        id="policestation_id"
+                        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full mt-1">
+                        @foreach ($policestations as $policestation)
+
+                            <option value="{{ $policestation->id }}"
+                                {{ old('policestation_id', $user->policestation_id) == $policestation->id ? 'selected' : '' }}>
+
+                                {{ ucfirst($policestation->name) }}
+
+                            </option>
+                            
+                        @endforeach
+
+
+                    </select>
+
+                    <x-input-error :messages="$errors->get('policestation_id')" class="mt-2" />
+
+                </div>
+
+                        
                 {{-- Status --}}
                 <div>
 
@@ -268,6 +321,8 @@
                     <x-input-error :messages="$errors->get('status')" class="mt-2" />
 
                 </div>
+
+
 
                 {{-- Profile Image --}}
                 <div>

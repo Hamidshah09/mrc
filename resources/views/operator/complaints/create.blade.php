@@ -33,6 +33,7 @@
                         </div>
 
                     @endif
+                    {{-- Leaflet CSS --}}
 
                     <form action="{{ route('operator.complaints.store') }}"
                           method="POST"
@@ -141,14 +142,26 @@
                                id="google_map_link">
 
                         {{-- GPS Status --}}
+                        {{-- Location Picker --}}
                         <div class="mb-5">
 
-                            <div id="gps-status"
-                                 class="text-sm text-blue-600 font-medium">
+                            <label class="block mb-2 text-sm font-medium text-gray-700">
+                                Complaint Location
+                            </label>
 
-                                Detecting GPS location...
+                            <button type="button"
+                                    id="openMapBtn"
+                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
 
-                            </div>
+                                Pick Location
+
+                            </button>
+
+                            <input type="text"
+                                id="location_preview"
+                                readonly
+                                placeholder="No location selected"
+                                class="w-full mt-3 border-gray-300 rounded-lg shadow-sm">
 
                         </div>
 
@@ -165,6 +178,46 @@
                         </div>
 
                     </form>
+                    {{-- Map Modal --}}
+                    <div id="mapModal"
+                        class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+
+                        <div class="bg-white rounded-xl shadow-xl w-11/12 md:w-3/4 lg:w-1/2 p-4">
+
+                            <div class="flex justify-between items-center mb-4">
+
+                                <h2 class="text-lg font-bold">
+                                    Select Complaint Location
+                                </h2>
+
+                                <button type="button"
+                                        id="closeMapBtn"
+                                        class="text-red-600 font-bold text-xl">
+
+                                    ×
+
+                                </button>
+
+                            </div>
+
+                            <div id="map"
+                                class="w-full h-[400px] rounded-lg"></div>
+
+                            <div class="mt-4 flex justify-end">
+
+                                <button type="button"
+                                        id="confirmLocationBtn"
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
+
+                                    Confirm Location
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -175,149 +228,231 @@
     </div>
 
     {{-- jQuery CDN --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
 
-        /*
-        |--------------------------------------------------------------------------
-        | GPS Auto Capture
-        |--------------------------------------------------------------------------
-        */
+document.addEventListener('DOMContentLoaded', () => {
 
-        
+    /*
+    |--------------------------------------------------------------------------
+    | Elements
+    |--------------------------------------------------------------------------
+    */
 
-        document.addEventListener('DOMContentLoaded', function () {
+    const subDivisionSelect =
+        document.getElementById('sub_division_id');
 
-            const locationInput =
-                document.getElementById('google_map_link');
+    const policeStationSelect =
+        document.getElementById('policestation_id');
 
-            /*
-            |--------------------------------------------------------------------------
-            | Check Browser Support
-            |--------------------------------------------------------------------------
-            */
+    const openMapBtn =
+        document.getElementById('openMapBtn');
 
-            if (!navigator.geolocation) {
+    const closeMapBtn =
+        document.getElementById('closeMapBtn');
 
-                alert('Geolocation is not supported.');
+    const confirmLocationBtn =
+        document.getElementById('confirmLocationBtn');
 
-                return;
-            }
+    const mapModal =
+        document.getElementById('mapModal');
 
-            /*
-            |--------------------------------------------------------------------------
-            | Get Current Position
-            |--------------------------------------------------------------------------
-            */
+    const latitudeInput =
+        document.getElementById('latitude');
 
-            navigator.geolocation.getCurrentPosition(
+    const longitudeInput =
+        document.getElementById('longitude');
 
-                function (position) {
+    const googleMapLinkInput =
+        document.getElementById('google_map_link');
 
-                    const latitude = position.coords.latitude;
+    const locationPreview =
+        document.getElementById('location_preview');
 
-                    const longitude = position.coords.longitude;
+    /*
+    |--------------------------------------------------------------------------
+    | Dynamic Police Stations
+    |--------------------------------------------------------------------------
+    */
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Google Maps Link
-                    |--------------------------------------------------------------------------
-                    */
+    subDivisionSelect.addEventListener('change', async function () {
 
-                    const googleMapsLink =
-                        `https://www.google.com/maps?q=${latitude},${longitude}`;
+        const subDivisionId = this.value;
 
-                    locationInput.value = googleMapsLink;
+        policeStationSelect.innerHTML =
+            '<option>Loading...</option>';
 
-                    console.log('Location detected');
+        try {
 
-                },
-
-                function (error) {
-
-                    console.log(error);
-
-                    switch(error.code) {
-
-                        case error.PERMISSION_DENIED:
-
-                            alert('Location permission denied.');
-
-                            break;
-
-                        case error.POSITION_UNAVAILABLE:
-
-                            alert('Location unavailable.');
-
-                            break;
-
-                        case error.TIMEOUT:
-
-                            alert('Location request timed out.');
-
-                            break;
-
-                        default:
-
-                            alert('Unknown GPS error.');
-
-                            break;
-                    }
-                },
-
-                {
-                    enableHighAccuracy: true,
-                    timeout: 15000,
-                    maximumAge: 0
-                }
-            );
-        });
-
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Dynamic Police Station Dropdown
-        |--------------------------------------------------------------------------
-        */
-
-        $('#sub_division_id').on('change', function () {
-
-            let subDivisionId = $(this).val();
-
-            $('#policestation_id').html(
-                '<option>Loading...</option>'
+            const response = await fetch(
+                `/operator/get-police-stations/${subDivisionId}`
             );
 
-            $.ajax({
+            const stations = await response.json();
 
-                url: '/operator/get-police-stations/' + subDivisionId,
+            let options =
+                '<option value="">Select Police Station</option>';
 
-                type: 'GET',
+            stations.forEach(station => {
 
-                success: function (response) {
-
-                    let options =
-                        '<option value="">Select Police Station</option>';
-
-                    response.forEach(function (station) {
-
-                        options += `
-                            <option value="${station.id}">
-                                ${station.name}
-                            </option>
-                        `;
-                    });
-
-                    $('#policestation_id').html(options);
-
-                }
-
+                options += `
+                    <option value="${station.id}">
+                        ${station.name}
+                    </option>
+                `;
             });
 
-        });
+            policeStationSelect.innerHTML = options;
 
-    </script>
+        } catch (error) {
+
+            console.error(error);
+
+            policeStationSelect.innerHTML =
+                '<option>Error loading stations</option>';
+        }
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Leaflet Map
+    |--------------------------------------------------------------------------
+    */
+
+    let map;
+    let marker;
+    let selectedLat = null;
+    let selectedLng = null;
+
+    openMapBtn.addEventListener('click', () => {
+
+        mapModal.classList.remove('hidden');
+        mapModal.classList.add('flex');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Initialize Map Once
+        |--------------------------------------------------------------------------
+        */
+
+        if (!map) {
+
+            map = L.map('map').setView([33.6844, 73.0479], 13);
+
+            /*
+            |--------------------------------------------------------------------------
+            | OpenStreetMap Tiles
+            |--------------------------------------------------------------------------
+            */
+
+            L.tileLayer(
+                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {
+                    attribution:
+                        '&copy; OpenStreetMap contributors'
+                }
+            ).addTo(map);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Map Click Event
+            |--------------------------------------------------------------------------
+            */
+
+            map.on('click', function (e) {
+
+                selectedLat = e.latlng.lat;
+                selectedLng = e.latlng.lng;
+
+                /*
+                |--------------------------------------------------------------------------
+                | Remove Existing Marker
+                |--------------------------------------------------------------------------
+                */
+
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Add Marker
+                |--------------------------------------------------------------------------
+                */
+
+                marker = L.marker([
+                    selectedLat,
+                    selectedLng
+                ]).addTo(map);
+            });
+
+            /*
+            |--------------------------------------------------------------------------
+            | Fix Map Render in Modal
+            |--------------------------------------------------------------------------
+            */
+
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 300);
+        }
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Close Modal
+    |--------------------------------------------------------------------------
+    */
+
+    closeMapBtn.addEventListener('click', () => {
+
+        mapModal.classList.add('hidden');
+        mapModal.classList.remove('flex');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Confirm Location
+    |--------------------------------------------------------------------------
+    */
+
+    confirmLocationBtn.addEventListener('click', () => {
+
+        if (!selectedLat || !selectedLng) {
+
+            alert('Please select a location on the map.');
+
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fill Inputs
+        |--------------------------------------------------------------------------
+        */
+
+        latitudeInput.value = selectedLat;
+        longitudeInput.value = selectedLng;
+
+        const googleMapsLink =
+            `https://www.google.com/maps?q=${selectedLat},${selectedLng}`;
+
+        googleMapLinkInput.value = googleMapsLink;
+
+        locationPreview.value =
+            `Lat: ${selectedLat}, Lng: ${selectedLng}`;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Close Modal
+        |--------------------------------------------------------------------------
+        */
+
+        mapModal.classList.add('hidden');
+        mapModal.classList.remove('flex');
+    });
+
+});
+
+</script>
 
 </x-app-layout>

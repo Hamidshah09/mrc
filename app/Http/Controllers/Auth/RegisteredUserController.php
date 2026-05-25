@@ -71,13 +71,13 @@ class RegisteredUserController extends Controller
 
     //  Step 1: Validate input
     $validated = $request->validate([
-        'cnic'           => 'required|string|size:13|unique:users,cnic',
+        'cnic'           => 'nullable|string|size:13|unique:users,cnic',
         'name'           => 'required|string|max:50',
-        'father_name'    => 'required|string|max:50',
-        'address'        => 'required|string|max:100',
-        'dob'            => 'required|date',
+        'father_name'    => 'nullable|string|max:50',
+        'address'        => 'nullable|string|max:100',
+        'dob'            => 'nullable|date',
         'email'          => 'required|email|unique:users,email',
-        'mobile'         => 'required|string|size:11|unique:users,mobile',
+        'mobile'         => 'nullable|string|size:11|unique:users,mobile',
         'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'password'       => 'required|string|min:8|confirmed',
     ]);

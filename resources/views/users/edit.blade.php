@@ -15,7 +15,7 @@
                 <div>
                     <x-input-label for="cnic" :value="__('CNIC')" />
                     <x-text-input id="cnic" name="cnic" type="text" maxlength="13" class="block mt-1 w-full"
-                                :value="old('cnic', $user->cnic)" required />
+                                :value="old('cnic', $user->cnic)" />
                     <x-input-error :messages="$errors->get('cnic')" class="mt-2" />
                 </div>
 
@@ -31,7 +31,7 @@
                 <div>
                     <x-input-label for="father_name" :value="__('Father Name')" />
                     <x-text-input id="father_name" name="father_name" type="text" class="block mt-1 w-full"
-                                :value="old('father_name', $user->father_name)" required />
+                                :value="old('father_name', $user->father_name)" />
                     <x-input-error :messages="$errors->get('father_name')" class="mt-2" />
                 </div>
 
@@ -39,7 +39,7 @@
                 <div>
                     <x-input-label for="dob" :value="__('Date of Birth')" />
                     <x-text-input id="dob" name="dob" type="date" class="block mt-1 w-full"
-                                :value="old('dob', $user->dob)" required />
+                                :value="old('dob', $user->dob)" />
                     <x-input-error :messages="$errors->get('dob')" class="mt-2" />
                 </div>
 
@@ -47,7 +47,7 @@
                 <div>
                     <x-input-label for="mobile" :value="__('Mobile')" />
                     <x-text-input id="mobile" name="mobile" type="text" maxlength="11" class="block mt-1 w-full"
-                                :value="old('mobile', $user->mobile)" required />
+                                :value="old('mobile', $user->mobile)" />
                     <x-input-error :messages="$errors->get('mobile')" class="mt-2" />
                 </div>
 
@@ -55,7 +55,7 @@
                 <div class="md:col-span-2">
                     <x-input-label for="address" :value="__('Address')" />
                     <x-text-input id="address" name="address" type="text" class="block mt-1 w-full"
-                                :value="old('address', $user->address)" required />
+                                :value="old('address', $user->address)" />
                     <x-input-error :messages="$errors->get('address')" class="mt-2" />
                 </div>
 

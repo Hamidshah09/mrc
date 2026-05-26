@@ -2,10 +2,10 @@
 
     <div class="py-6">
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- Header --}}
-            <div class="mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
 
                 <h2 class="text-3xl font-bold text-gray-800">
 
@@ -183,7 +183,7 @@
                 </div>
 
                 {{-- Pagination --}}
-                <div class="p-4">
+                <div class="p-4 overflow-x-auto">
 
                     {{ $complaints->links() }}
 

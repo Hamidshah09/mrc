@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $role = Auth::user()->role->role;
-
+        
         switch ($role) {
 
             case 'Operator':

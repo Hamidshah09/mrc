@@ -2,11 +2,11 @@
 
     <div class="py-6">
 
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <div class="bg-white shadow rounded-xl">
+            <div class="bg-white shadow rounded-xl overflow-hidden">
 
-                <div class="p-6 border-b">
+                <div class="p-4 sm:p-6" border-b">
 
                     <h2 class="text-2xl font-bold text-gray-800">
                         Create Complaint
@@ -14,7 +14,7 @@
 
                 </div>
 
-                <div class="p-6">
+                <div class="p-4 sm:p-6"">
 
                     @if ($errors->any())
 

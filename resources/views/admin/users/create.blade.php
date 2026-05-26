@@ -31,7 +31,7 @@
                 @endif
 
                 <form method="POST"
-                      action="{{ route('admin.users.store') }}"
+                      action="{{ route('users.store') }}"
                       enctype="multipart/form-data">
 
                     @csrf

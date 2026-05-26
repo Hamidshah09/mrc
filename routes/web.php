@@ -396,6 +396,9 @@ Route::middleware(['auth', 'role:ADCG'])
 
         Route::post('/complaints/{id}/dispose', [ADCGDashboardController::class, 'dispose'])
             ->name('complaints.dispose');
+        
+        Route::post('/adcg/complaints/{id}/reassign', [ADCGDashboardController::class, 'reassign']
+            )->name('complaints.reassign');
 
 });
 Route::middleware(['auth'])->group(function () {
@@ -405,21 +408,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
         ->name('notifications.read');
-
-});
-Route::middleware(['auth', 'role:admin,ADCG'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-
-        Route::get('/users', [UserController::class, 'index'])
-            ->name('users.index');
-
-        Route::get('/users/create', [UserController::class, 'create'])
-            ->name('users.create');
-
-        Route::post('/users/store', [UserController::class, 'store'])
-            ->name('users.store');
 
 });
 Route::middleware('auth')->get(

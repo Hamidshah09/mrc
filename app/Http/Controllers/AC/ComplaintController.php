@@ -20,8 +20,8 @@ class ComplaintController extends Controller
     {
         $subDivisionId = Auth::user()->sub_division_id;
 
-        $pendingCount = Complaint::where('sub_division_id', $subDivisionId)
-            ->where('status', 'pending')
+        $rejectedCount = Complaint::where('sub_division_id', $subDivisionId)
+            ->where('status', 'rejected')
             ->count();
 
         $assignedCount = Complaint::where('sub_division_id', $subDivisionId)
@@ -37,7 +37,7 @@ class ComplaintController extends Controller
             ->count();
 
         return view('ac.dashboard', compact(
-            'pendingCount',
+            'rejectedCount',
             'assignedCount',
             'resolvedCount',
             'approvedCount'
@@ -93,7 +93,7 @@ class ComplaintController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $magistrates = User::where('policestation_id', $complaint->policestation_id)
+        $magistrates = User::where('sub_division_id', $complaint->sub_division_id)
             ->whereHas('role', function ($q) {
                 $q->where('role', 'Magistrate');
             })

@@ -12,15 +12,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
 
-                <div class="bg-yellow-100 p-6 rounded-xl shadow">
-                    <h3 class="text-lg font-semibold text-yellow-700">
-                        Pending
-                    </h3>
-                    <p class="text-4xl font-bold mt-3">
-                        {{ $pendingCount }}
-                    </p>
-                </div>
-
+                
                 <div class="bg-blue-100 p-6 rounded-xl shadow">
                     <h3 class="text-lg font-semibold text-blue-700">
                         Assigned
@@ -45,6 +37,15 @@
                     </h3>
                     <p class="text-4xl font-bold mt-3">
                         {{ $approvedCount }}
+                    </p>
+                </div>
+
+                <div class="bg-red-100 p-6 rounded-xl shadow">
+                    <h3 class="text-lg font-semibold text-red-700">
+                        Rejected
+                    </h3>
+                    <p class="text-4xl font-bold mt-3">
+                        {{ $rejectedCount }}
                     </p>
                 </div>
 

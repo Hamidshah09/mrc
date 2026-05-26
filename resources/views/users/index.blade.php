@@ -11,7 +11,7 @@
 
             </h2>
 
-            <a href="{{ route('admin.users.create') }}"
+            <a href="{{ route('users.create') }}"
                class="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">
 
                 Create User
@@ -19,7 +19,118 @@
             </a>
 
         </div>
+        {{-- Filters --}}
+        <form method="GET"
+            action="{{ route('users.index') }}"
+            class="mb-6 bg-gray-50 border rounded-xl p-4">
 
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+                {{-- Search --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+
+                        Search User
+
+                    </label>
+
+                    <input type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Name, Email, Mobile or CNIC"
+                        class="w-full border-gray-300 rounded-lg shadow-sm">
+
+                </div>
+
+                {{-- From --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+
+                        From
+
+                    </label>
+
+                    <input type="date"
+                        name="From"
+                        value="{{ request('From') }}"
+                        class="w-full border-gray-300 rounded-lg shadow-sm">
+
+                </div>
+
+                {{-- To --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+
+                        To
+
+                    </label>
+
+                    <input type="date"
+                        name="To"
+                        value="{{ request('To') }}"
+                        class="w-full border-gray-300 rounded-lg shadow-sm">
+
+                </div>
+
+                {{-- Status --}}
+                <div>
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+
+                        Status
+
+                    </label>
+
+                    <select name="status"
+                            class="w-full border-gray-300 rounded-lg shadow-sm">
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <option value="active"
+                            {{ request('status') == 'active' ? 'selected' : '' }}>
+
+                            Active
+
+                        </option>
+
+                        <option value="not active"
+                            {{ request('status') == 'not active' ? 'selected' : '' }}>
+
+                            Not Active
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            {{-- Buttons --}}
+            <div class="flex flex-col sm:flex-row sm:justify-end gap-3 mt-5">
+
+                <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
+
+                    Apply Filters
+
+                </button>
+
+                <a href="{{ route('users.index') }}"
+                class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-lg text-center">
+
+                    Reset
+
+                </a>
+
+            </div>
+
+        </form>
         {{-- Success Message --}}
         @if (session('success'))
 
@@ -51,6 +162,7 @@
         @endif
 
         {{-- Desktop Table --}}
+
         <div class="hidden md:block overflow-x-auto rounded-lg shadow-sm">
 
             <table class="min-w-full divide-y divide-gray-200">

@@ -99,7 +99,7 @@
 
                                     <td class="px-4 py-4">
 
-                                        {{ $complaint->policeStation->name ?? '-' }}
+                                        {{ $complaint->magistrate->name ?? '-' }}
 
                                     </td>
 

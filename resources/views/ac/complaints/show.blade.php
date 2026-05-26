@@ -177,7 +177,7 @@
             @endif
 
             {{-- Assign Magistrate --}}
-            @if($complaint->status == 'pending')
+            @if(in_array($complaint->status, ['pending', 'assigned', 'rejected']))
 
                 <div class="bg-white shadow rounded-xl p-6 mt-6">
 
@@ -193,6 +193,23 @@
                         @csrf
 
                         {{-- Magistrate --}}
+                        @if($complaint->magistrate)
+
+                            <div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+
+                                <p class="text-sm text-blue-700">
+
+                                    <span class="font-semibold">
+                                        Currently Assigned To:
+                                    </span>
+
+                                    {{ $complaint->magistrate->name }}
+
+                                </p>
+
+                            </div>
+
+                        @endif
                         <div class="mb-5">
 
                             <label class="block mb-2 font-medium text-gray-700">

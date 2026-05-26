@@ -19,7 +19,7 @@ class ComplaintController extends Controller
      */
     public function index()
     {
-        $complaints = Complaint::where('operator_id', Auth::id())
+        $complaints = Complaint::with('magistrate')->where('operator_id', Auth::id())
             ->latest()
             ->paginate(20);
 
@@ -89,7 +89,17 @@ class ComplaintController extends Controller
                 $q->where('role', 'AC');
             })
             ->first();
+        $magistrate = \App\Models\User::where('policestation_id', $request->policestation_id)
 
+            ->where('status', 'Active')
+
+            ->whereHas('role', function ($q) {
+
+                $q->where('role', 'Magistrate');
+
+            })
+
+            ->first();
         /*
         |--------------------------------------------------------------------------
         | Create Complaint
@@ -101,6 +111,8 @@ class ComplaintController extends Controller
             'operator_id' => Auth::id(),
 
             'ac_id' => $ac?->id,
+            
+            'magistrate_id' => $magistrate?->id,
 
             'sub_division_id' => $request->sub_division_id,
 
@@ -116,7 +128,7 @@ class ComplaintController extends Controller
 
             'operator_remarks' => $request->operator_remarks,
 
-            'status' => 'pending',
+            'status' => 'assigned',
         ]);
 
         return redirect()

@@ -22,42 +22,93 @@ class RegisteredUserController extends Controller
      * Display the registration view.
      */
     public function index(Request $request)
-{
-    $query = User::query()->with('role');
+    {
+        $query = User::query()->with([
+            'role',
+            'subDivision',
+            'policeStation'
+        ]);
 
-    // Apply search by type
-    if ($request->filled('search') && $request->filled('search_type')) {
-        $searchType = $request->input('search_type');
-        $searchValue = $request->input('search');
+        /*
+        |--------------------------------------------------------------------------
+        | Universal Search
+        |--------------------------------------------------------------------------
+        */
 
-        if (in_array($searchType, ['cnic', 'name', 'license_number', 'email'])) {
-            $query->where($searchType, 'LIKE', '%' . $searchValue . '%');
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('name', 'LIKE', "%{$search}%")
+
+                ->orWhere('email', 'LIKE', "%{$search}%")
+
+                ->orWhere('mobile', 'LIKE', "%{$search}%")
+
+                ->orWhere('cnic', 'LIKE', "%{$search}%");
+            });
         }
-    }
 
-    // Apply date range filters
-    if ($request->filled('From')) {
-        $query->whereDate('created_at', '>=', $request->input('From'));
-    }
+        /*
+        |--------------------------------------------------------------------------
+        | Date Filters
+        |--------------------------------------------------------------------------
+        */
 
-    if ($request->filled('To')) {
-        $query->whereDate('created_at', '<=', $request->input('To'));
-    }
+        if ($request->filled('From')) {
 
-    // Apply status filter
-    if ($request->filled('status')) {
-        if ($request->input('status') === 'active') {
-            $query->where('status', 'Active');
-        } elseif ($request->input('status') === 'not active') {
-            $query->where('status', 'Not active');
+            $query->whereDate(
+                'created_at',
+                '>=',
+                $request->From
+            );
         }
+
+        if ($request->filled('To')) {
+
+            $query->whereDate(
+                'created_at',
+                '<=',
+                $request->To
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Status Filter
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('status')) {
+
+            if ($request->status == 'active') {
+
+                $query->where('status', 'Active');
+
+            } elseif ($request->status == 'not active') {
+
+                $query->where('status', 'Not active');
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Latest First
+        |--------------------------------------------------------------------------
+        */
+
+        $users = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view(
+            'users.index',
+            compact('users')
+        );
     }
-
-    // Fetch results with pagination and keep query params
-    $users = $query->paginate(10)->withQueryString();
-
-    return view('users.index', compact('users'));
-}
 
      public function create(): View
     {   $roles = Role::all();
@@ -121,7 +172,7 @@ class RegisteredUserController extends Controller
     // event(new Registered($user));
 
     if (Auth::check()) {
-        return redirect()->route('dashboard')->with('success', 'Registration successful. Welcome!');
+        return redirect()->route('users.index')->with('success', 'Registration successful. Welcome!');
     }else{
         return redirect()->route('login');
     }

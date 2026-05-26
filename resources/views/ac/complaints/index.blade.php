@@ -25,7 +25,121 @@
                 </div>
 
             @endif
+            {{-- Filters --}}
+            <form method="GET"
+                action="{{ route('ac.complaints.index') }}"
+                class="mb-6 bg-gray-50 border rounded-xl p-4">
 
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    {{-- Status --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+
+                            Status
+
+                        </label>
+
+                        <select name="status"
+                                class="w-full border-gray-300 rounded-lg shadow-sm">
+
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            <option value="pending"
+                                {{ request('status') == 'pending' ? 'selected' : '' }}>
+
+                                Pending
+
+                            </option>
+
+                            <option value="assigned"
+                                {{ request('status') == 'assigned' ? 'selected' : '' }}>
+
+                                Assigned
+
+                            </option>
+
+                            <option value="resolved"
+                                {{ request('status') == 'resolved' ? 'selected' : '' }}>
+
+                                Resolved
+
+                            </option>
+
+                            <option value="approved"
+                                {{ request('status') == 'approved' ? 'selected' : '' }}>
+
+                                Approved
+
+                            </option>
+
+                            <option value="rejected"
+                                {{ request('status') == 'rejected' ? 'selected' : '' }}>
+
+                                Rejected
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    {{-- Magistrate --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+
+                            Magistrate
+
+                        </label>
+
+                        <select name="magistrate_id"
+                                class="w-full border-gray-300 rounded-lg shadow-sm">
+
+                            <option value="">
+                                All Magistrates
+                            </option>
+
+                            @foreach($magistrates as $magistrate)
+
+                                <option value="{{ $magistrate->id }}"
+                                    {{ request('magistrate_id') == $magistrate->id ? 'selected' : '' }}>
+
+                                    {{ $magistrate->name }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                {{-- Buttons --}}
+                <div class="flex flex-col sm:flex-row gap-3 mt-5">
+
+                    <button type="submit"
+                            class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
+
+                        Apply Filters
+
+                    </button>
+
+                    <a href="{{ route('ac.complaints.index') }}"
+                    class="w-full sm:w-auto bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-lg text-center">
+
+                        Reset
+
+                    </a>
+
+                </div>
+
+            </form>
             {{-- Complaints Table --}}
             <div class="bg-white shadow rounded-xl overflow-hidden">
 

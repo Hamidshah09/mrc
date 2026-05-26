@@ -44,18 +44,78 @@ class ComplaintController extends Controller
     /**
      * Complaint Listing
      */
-    public function index()
+    public function index(Request $request)
     {
-        $complaints = Complaint::with([
+        $query = Complaint::with([
                 'operator',
                 'subDivision',
                 'policeStation'
             ])
-            ->where('magistrate_id', Auth::id())
-            ->latest()
-            ->paginate(20);
+            ->where('magistrate_id', Auth::id());
 
-        return view('magistrate.complaints.index', compact('complaints'));
+        /*
+        |--------------------------------------------------------------------------
+        | Status Filter
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('status')) {
+
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Police Station Filter
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('policestation_id')) {
+
+            $query->where(
+                'policestation_id',
+                $request->policestation_id
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Latest First
+        |--------------------------------------------------------------------------
+        */
+
+        $complaints = $query
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Police Stations Dropdown
+        |--------------------------------------------------------------------------
+        */
+
+        $policeStations = Complaint::where(
+                'magistrate_id',
+                Auth::id()
+            )
+            ->with('policeStation')
+            ->get()
+            ->pluck('policeStation')
+            ->unique('id')
+            ->filter()
+            ->sortBy('name');
+
+        return view(
+            'magistrate.complaints.index',
+            compact(
+                'complaints',
+                'policeStations'
+            )
+        );
     }
 
     /**
@@ -93,7 +153,7 @@ class ComplaintController extends Controller
     {
         $request->validate([
 
-            'after_image' => 'required|image|mimes:jpg,jpeg,png|max:4096',
+            'after_image' => 'required|image|mimes:jpg,jpeg,png|max:8096',
 
             'magistrate_remarks' => 'nullable|max:1000',
 

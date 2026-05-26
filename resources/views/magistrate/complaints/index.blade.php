@@ -19,6 +19,121 @@
                 </div>
 
             @endif
+            {{-- Filters --}}
+            <form method="GET"
+                action="{{ route('magistrate.complaints.index') }}"
+                class="mb-6 bg-gray-50 border rounded-xl p-4">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    {{-- Status --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+
+                            Status
+
+                        </label>
+
+                        <select name="status"
+                                class="w-full border-gray-300 rounded-lg shadow-sm">
+
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            <option value="pending"
+                                {{ request('status') == 'pending' ? 'selected' : '' }}>
+
+                                Pending
+
+                            </option>
+
+                            <option value="assigned"
+                                {{ request('status') == 'assigned' ? 'selected' : '' }}>
+
+                                Assigned
+
+                            </option>
+
+                            <option value="resolved"
+                                {{ request('status') == 'resolved' ? 'selected' : '' }}>
+
+                                Resolved
+
+                            </option>
+
+                            <option value="approved"
+                                {{ request('status') == 'approved' ? 'selected' : '' }}>
+
+                                Approved
+
+                            </option>
+
+                            <option value="rejected"
+                                {{ request('status') == 'rejected' ? 'selected' : '' }}>
+
+                                Rejected
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    {{-- Police Station --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+
+                            Police Station
+
+                        </label>
+
+                        <select name="policestation_id"
+                                class="w-full border-gray-300 rounded-lg shadow-sm">
+
+                            <option value="">
+                                All Police Stations
+                            </option>
+
+                            @foreach($policeStations as $station)
+
+                                <option value="{{ $station->id }}"
+                                    {{ request('policestation_id') == $station->id ? 'selected' : '' }}>
+
+                                    {{ $station->name }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                {{-- Buttons --}}
+                <div class="flex flex-col sm:flex-row gap-3 mt-5">
+
+                    <button type="submit"
+                            class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
+
+                        Apply Filters
+
+                    </button>
+
+                    <a href="{{ route('magistrate.complaints.index') }}"
+                    class="w-full sm:w-auto bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-lg text-center">
+
+                        Reset
+
+                    </a>
+
+                </div>
+
+            </form>
 
             <div class="bg-white shadow rounded-xl overflow-hidden">
 

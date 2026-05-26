@@ -47,19 +47,76 @@ class ComplaintController extends Controller
     /**
      * Complaint Listing
      */
-    public function index()
+    public function index(Request $request)
     {
-        $complaints = Complaint::with([
-                'operator',
-                'subDivision',
-                'policeStation',
-                'magistrate'
-            ])
-            ->where('sub_division_id', Auth::user()->sub_division_id)
-            ->latest()
-            ->paginate(20);
+        $query = Complaint::with([
+            'operator',
+            'policeStation',
+            'magistrate'
+        ])
+        ->where('sub_division_id', Auth::user()->sub_division_id);
 
-        return view('ac.complaints.index', compact('complaints'));
+        /*
+        |--------------------------------------------------------------------------
+        | Status Filter
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('status')) {
+
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Magistrate Filter
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('magistrate_id')) {
+
+            $query->where(
+                'magistrate_id',
+                $request->magistrate_id
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Latest First
+        |--------------------------------------------------------------------------
+        */
+
+        $complaints = $query
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Magistrates Dropdown
+        |--------------------------------------------------------------------------
+        */
+
+        $magistrates = User::whereHas('role', function ($q) {
+
+                $q->where('role', 'Magistrate');
+
+            })
+            ->where('sub_division_id', Auth::user()->sub_division_id)
+            ->orderBy('name')
+            ->get();
+
+        return view(
+            'ac.complaints.index',
+            compact(
+                'complaints',
+                'magistrates'
+            )
+        );
     }
 
     /**

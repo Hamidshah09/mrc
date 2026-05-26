@@ -13,7 +13,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
                 {{-- Assigned --}}
-                <div class="bg-blue-100 p-6 rounded-xl shadow">
+                <a href="{{ route('ac.complaints.index', ['status' => 'assigned']) }}"
+                        class="bg-blue-100 p-6 rounded-xl shadow">
 
                     <h3 class="text-lg font-semibold text-blue-700">
                         Assigned
@@ -23,10 +24,11 @@
                         {{ $assignedCount }}
                     </p>
 
-                </div>
+                </a>
 
                 {{-- Resolved --}}
-                <div class="bg-purple-100 p-6 rounded-xl shadow">
+                <a href="{{ route('ac.complaints.index', ['status' => 'resolved']) }}" 
+                        class="bg-purple-100 p-6 rounded-xl shadow">
 
                     <h3 class="text-lg font-semibold text-purple-700">
                         Resolved
@@ -36,10 +38,11 @@
                         {{ $resolvedCount }}
                     </p>
 
-                </div>
+                </a>
 
                 {{-- Approved --}}
-                <div class="bg-green-100 p-6 rounded-xl shadow">
+                <a href="{{ route('ac.complaints.index', ['status' => 'approved']) }}" 
+                    class="bg-green-100 p-6 rounded-xl shadow">
 
                     <h3 class="text-lg font-semibold text-green-700">
                         Approved
@@ -49,10 +52,11 @@
                         {{ $approvedCount }}
                     </p>
 
-                </div>
+                </a>
 
                 {{-- Rejected --}}
-                <div class="bg-red-100 p-6 rounded-xl shadow">
+                <a href="{{ route('ac.complaints.index', ['status' => 'rejected']) }}" 
+                    class="bg-red-100 p-6 rounded-xl shadow">
 
                     <h3 class="text-lg font-semibold text-red-600">
                         Rejected
@@ -62,7 +66,7 @@
                         {{ $rejectedCount }}
                     </p>
 
-                </div>
+                </a>
 
             </div>
 

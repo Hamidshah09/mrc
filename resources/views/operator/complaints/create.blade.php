@@ -348,8 +348,34 @@
             */
 
             if (!map) {
+                /*
+                |--------------------------------------------------------------------------
+                | Load Previous Location
+                |--------------------------------------------------------------------------
+                */
 
-                map = L.map('map').setView([33.6844, 73.0479], 13);
+                let initialLat = 33.6844;
+                let initialLng = 73.0479;
+                let initialZoom = 13;
+
+                const savedLocation =
+                    localStorage.getItem(
+                        'lastComplaintLocation'
+                    );
+
+                if (savedLocation) {
+
+                    const parsed =
+                        JSON.parse(savedLocation);
+
+                    initialLat = parsed.lat;
+                    initialLng = parsed.lng;
+                    initialZoom = 17;
+                }
+                map = L.map('map').setView(
+                    [initialLat, initialLng],
+                    initialZoom
+                );
 
                 /*
                 |--------------------------------------------------------------------------
@@ -364,6 +390,24 @@
                             '&copy; OpenStreetMap contributors'
                     }
                 ).addTo(map);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Restore Previous Marker
+                |--------------------------------------------------------------------------
+                */
+
+                if (savedLocation) {
+
+                    marker = L.marker([
+                        initialLat,
+                        initialLng
+                    ]).addTo(map);
+
+                    selectedLat = initialLat;
+                    selectedLng = initialLng;
+                }
+
                 /*
                 |--------------------------------------------------------------------------
                 | Detect Current Location
@@ -451,9 +495,9 @@
 
                             console.error(error);
 
-                            alert(
-                                'Unable to detect current location. Please select manually.'
-                            );
+                            // alert(
+                            //     'Unable to detect current location. Please select manually.'
+                            // );
                         },
 
                         {
@@ -560,7 +604,19 @@
             | Close Modal
             |--------------------------------------------------------------------------
             */
+            /*
+            |--------------------------------------------------------------------------
+            | Save Last Location
+            |--------------------------------------------------------------------------
+            */
 
+            localStorage.setItem(
+                'lastComplaintLocation',
+                JSON.stringify({
+                    lat: selectedLat,
+                    lng: selectedLng
+                })
+            );
             mapModal.classList.add('hidden');
             mapModal.classList.remove('flex');
         });

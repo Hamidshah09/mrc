@@ -364,6 +364,107 @@
                             '&copy; OpenStreetMap contributors'
                     }
                 ).addTo(map);
+                /*
+                |--------------------------------------------------------------------------
+                | Detect Current Location
+                |--------------------------------------------------------------------------
+                */
+
+                if (navigator.geolocation) {
+
+                    navigator.geolocation.getCurrentPosition(
+
+                        function (position) {
+
+                            const currentLat =
+                                position.coords.latitude;
+
+                            const currentLng =
+                                position.coords.longitude;
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | Move Map To Current Location
+                            |--------------------------------------------------------------------------
+                            */
+
+                            map.setView(
+                                [currentLat, currentLng],
+                                17
+                            );
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | Remove Existing Marker
+                            |--------------------------------------------------------------------------
+                            */
+
+                            if (marker) {
+
+                                map.removeLayer(marker);
+                            }
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | Add Current Location Marker
+                            |--------------------------------------------------------------------------
+                            */
+
+                            marker = L.marker([
+                                currentLat,
+                                currentLng
+                            ]).addTo(map);
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | Store Selected Coordinates
+                            |--------------------------------------------------------------------------
+                            */
+
+                            selectedLat = currentLat;
+
+                            selectedLng = currentLng;
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | Accuracy Circle
+                            |--------------------------------------------------------------------------
+                            */
+
+                            L.circle(
+                                [currentLat, currentLng],
+                                {
+                                    radius:
+                                        position.coords.accuracy,
+
+                                    color: 'blue',
+
+                                    fillColor: '#3b82f6',
+
+                                    fillOpacity: 0.15
+                                }
+                            ).addTo(map);
+
+                        },
+
+                        function (error) {
+
+                            console.error(error);
+
+                            alert(
+                                'Unable to detect current location. Please select manually.'
+                            );
+                        },
+
+                        {
+                            enableHighAccuracy: true,
+
+                            timeout: 15000,
+
+                            maximumAge: 0
+                        }
+                    );
+                }
 
                 /*
                 |--------------------------------------------------------------------------

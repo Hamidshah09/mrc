@@ -21,7 +21,9 @@ class SuretyRegister extends Model
         'surety_type_id',
         'surety_status_id',
         'user_id',
-        'document_id'
+        'document_id',
+        'payment_mode',
+
     ];
 
     public function suretyType()

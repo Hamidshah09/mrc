@@ -62,6 +62,12 @@ class AuthenticatedSessionController extends Controller
                     'adcg.dashboard'
                 );
 
+            case 'ea':
+
+                return redirect()->route(
+                    'Employee.create'
+                );
+
             case 'admin':
 
                 return redirect()->route(

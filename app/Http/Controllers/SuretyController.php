@@ -224,19 +224,23 @@ class SuretyController extends Controller
         $to = $request->input('to') ?? ($maxDate ? Carbon::parse($maxDate)->format('Y-m-d') : now()->format('Y-m-d'));
         $status = $request->input('status');
 
+        // Ensure view variables are always defined to avoid "undefined variable" in blade
+        $totalRecords_payorder = 0;
+        $totalAmount_payorder = 0;
+        $totalRecords_deposited = 0;
+        $totalAmount_deposited = 0;
+
         $query = SuretyRegister::whereDate('receiving_date', '>=', $from)
             ->whereDate('receiving_date', '<=', $to);
 
-        $totalRecords = (clone $query)->where('surety_status_id', 1)->count();
+        $totalRecords_payorder = (clone $query)->where('surety_status_id', 1)->where('payment_mode', 'pay order')->count();
 
-        $totalAmount = (clone $query)->where('surety_status_id', 1)->sum('amount');
+        $totalAmount_payorder = (clone $query)->where('surety_status_id', 1)->where('payment_mode', 'pay order')->sum('amount');
 
-        $todayCount = SuretyRegister::whereDate('updated_at', '>=', $start)
-            ->whereDate('updated_at', '<=', $end)->count();
+        $totalRecords_deposited = (clone $query)->where('surety_status_id', 1)->where('payment_mode', 'deposited in bank')->count();
 
-        $todayAmount = SuretyRegister::whereDate('updated_at', '>=', $start)
-            ->whereDate('updated_at', '<=', $end)->sum('amount');
-        
+        $totalAmount_deposited = (clone $query)->where('surety_status_id', 1)->where('payment_mode', 'deposited in bank')->sum('amount');
+
         if ($status) {
             $query->where('surety_status_id', $status);
         }
@@ -267,35 +271,7 @@ class SuretyController extends Controller
 
         $surityStatuses = SuretyStatus::all();
 
-        // User performance: count of history actions by user within date range (and optional status)
-      
-        
-
-        $userCounts = SuretyRegister::whereBetween('updated_at', [$from, $to])
-            ->select('user_id', DB::raw('count(*) as total'))
-            ->groupBy('user_id')
-            ->orderByDesc('total')
-            ->get();
-
-        $userIds = $userCounts->pluck('user_id');
-
-        $userNames = User::whereIn('id', $userIds)
-            ->pluck('name', 'id');
-
-        $userLabels = $userCounts->map(fn($u) =>
-            $userNames[$u->user_id] ?? 'User '.$u->user_id
-        );
-
-        $userData = $userCounts->pluck('total');
-
-        // Build a simple array of users with their totals for table display
-        $userPerformance = $userCounts->map(function ($u) use ($userNames) {
-            return [
-                'user_id' => $u->user_id,
-                'name' => $userNames[$u->user_id] ?? 'User '.$u->user_id,
-                'total' => $u->total,
-            ];
-        })->values()->toArray();
+        // Removed user-performance calculations (user chart and table) per UI simplification
 
 
         $amountDaily = SuretyRegister::whereBetween('receiving_date', [$from, $to])
@@ -307,10 +283,22 @@ class SuretyController extends Controller
         $amountLabels = $amountDaily->pluck('date');
         $amountData = $amountDaily->pluck('total');
 
-        return view('surety.dashboard', compact('totalAmount', 'pieLabels', 'pieData', 
-                            'dailyLabels', 'dailyData', 'from', 'to', 'status',
-                             'surityStatuses', 'userLabels', 'userData', 'userPerformance',
-                             'totalRecords', 'amountLabels', 'amountData', 'todayCount', 'todayAmount'));
+        return view('surety.dashboard', compact(
+            'totalAmount_payorder',
+            'totalAmount_deposited',
+            'pieLabels',
+            'pieData',
+            'dailyLabels',
+            'dailyData',
+            'from',
+            'to',
+            'status',
+            'surityStatuses',
+            'totalRecords_payorder',
+            'totalRecords_deposited',
+            'amountLabels',
+            'amountData'
+        ));
     }
 
     public function show($id)

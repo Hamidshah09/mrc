@@ -301,7 +301,6 @@
                             <input type="file"
                                    name="after_image"
                                    accept="image/*"
-                                   capture="environment"
                                    required
                                    class="w-full border border-gray-300 rounded-lg p-2">
 

@@ -7,23 +7,23 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
 
             <div class="bg-blue-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Total In Hand</div>
-                <div class="text-xl font-bold">{{ $totalRecords }}</div>
+                <div class="text-sm text-gray-600">Total Pay Order</div>
+                <div class="text-xl font-bold">{{ $totalRecords_payorder }}</div>
             </div>
 
             <div class="bg-green-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Total In Hand Amount</div>
-                <div class="text-xl font-bold">{{ number_format($totalAmount) }}</div>
+                <div class="text-sm text-gray-600">Total Pay Order Amount</div>
+                <div class="text-xl font-bold">{{ number_format($totalAmount_payorder) }}</div>
             </div>
 
             <div class="bg-yellow-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Today Received</div>
-                <div class="text-xl font-bold">{{ $todayCount }}</div>
+                <div class="text-sm text-gray-600">Total Deposited in Bank</div>
+                <div class="text-xl font-bold">{{ $totalRecords_deposited }}</div>
             </div>
 
             <div class="bg-purple-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Today Received Amount</div>
-                <div class="text-xl font-bold">{{ $todayAmount }}</div>
+                <div class="text-sm text-gray-600">Total Deposited in Bank Amount</div>
+                <div class="text-xl font-bold">{{ number_format($totalAmount_deposited) }}</div>
             </div>
 
         </div>

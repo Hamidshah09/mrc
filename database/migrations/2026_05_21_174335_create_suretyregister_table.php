@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('section_of_law', 50);
             $table->string('accused_name', 80);
             $table->unsignedInteger('amount');
+            $table->enum('payment_mode', ['pay order', 'deposited in bank']);
             $table->unsignedInteger('surety_type_id');
             $table->unsignedInteger('surety_status_id');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();

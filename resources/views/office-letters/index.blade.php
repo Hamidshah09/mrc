@@ -116,7 +116,7 @@
                                     {{-- Image --}}
                                     <td class="px-4 py-4">
 
-                                        {{ \Carbon\Carbon::parse($letter->letter_date)->format('d-m-Y') }}
+                                        {{ $letter->letter_date ? \Carbon\Carbon::parse($letter->letter_date)->format('d-m-Y') : '' }}
 
                                     </td>
 
@@ -144,7 +144,7 @@
                                     {{-- Magistrate --}}
                                     <td class="px-4 py-4">
 
-                                        {{ $letter->created_at->format('d-m-Y H:i') }}
+                                        {{ optional($letter->created_at)->format('d-m-Y H:i') ?? '' }}
 
                                     </td>
 

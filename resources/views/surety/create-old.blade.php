@@ -6,12 +6,52 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
+        <div class="bg-white p-4 rounded-lg shadow-lg">
+            <h3 class="font-semibold mb-2">Document Preview</h3>
+
+            <div class="flex justify-between mb-2">
+                <button onclick="zoomIn()" class="px-2 py-1 bg-gray-200 rounded">+</button>
+                <button onclick="zoomOut()" class="px-2 py-1 bg-gray-200 rounded">-</button>
+            </div>
+
+            <div class="border overflow-auto" style="height: 200px;">
+                @php
+                    $ext = pathinfo($doc->file_path, PATHINFO_EXTENSION);
+                @endphp
+
+                @if(in_array($ext, ['jpg','jpeg','png']))
+                    <img id="docImage"
+                         src="{{ asset('storage/'.$doc->file_path) }}"
+                         class="mx-auto block" style="width: 100%; max-width: none;">
+                @else
+                    <iframe src="{{ asset('storage/'.$doc->file_path) }}"
+                            class="w-full"
+                            style="height: 200px;"></iframe>
+                @endif
+            </div>
+        </div>
         
         <div class="bg-white p-6 rounded-lg shadow-lg">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-gray-700">
                     Data Entry
                 </h2>
+
+                <div class="text-right">
+                    <div class="text-sm text-gray-600">
+                        Progress:
+                        <span id="progressText">
+                            {{ $doc->entered_entries }} / {{ $doc->total_expected_entries ?? '?' }}
+                        </span>
+                    </div>
+
+                    <div class="w-48 bg-gray-200 rounded h-2 mt-1">
+                        <div id="progressBar"
+                            class="bg-blue-600 h-2 rounded"
+                            style="width: {{ $doc->total_expected_entries ? ($doc->entered_entries / $doc->total_expected_entries) * 100 : 0 }}%">
+                        </div>
+                    </div>
+                </div>
             </div>
             <form id="entryForm" action="{{ route('surety.store') }}" method="POST" class="space-y-3">
                 @csrf

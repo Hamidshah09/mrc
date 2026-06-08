@@ -39,6 +39,7 @@ use App\Http\Controllers\Magistrate\ComplaintController as MagistrateComplaintCo
 use App\Http\Controllers\ADCG\DashboardController as ADCGDashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\OfficeLetterController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -182,8 +183,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/domicile/verification-letters/edit/{id}', [VerificationLetterController::class, 'edit'])->name('domicile.verification_letter.edit');
     Route::put('/domicile/verification-letters/update/{id}', [VerificationLetterController::class, 'update'])->name('domicile.verification_letter.update');
     Route::get('/domicile/verification-letters/letter/{id}', [VerificationLetterController::class, 'issueletter'])->name('domicile.verification_letter.letter');
-    
-    
+
+    Route::get('/domicile/office-letters', [OfficeLetterController::class, 'index'])->name('domicile.office_letters.index');
+    Route::get('/domicile/office-letters/create', [OfficeLetterController::class, 'create'])->name('domicile.office_letters.create');
+    Route::post('/domicile/office-letters/store', [OfficeLetterController::class, 'store'])->name('domicile.office_letters.store');
+    Route::get('/domicile/office-letters/edit/{id}', [OfficeLetterController::class, 'edit'])->name('domicile.office_letters.edit');
+    Route::put('/domicile/office-letters/update/{id}', [OfficeLetterController::class, 'update'])->name('domicile.office_letters.update');
+
     // Document management (upload/download/delete)
     Route::get('/admin/downloads/files', [DocumentController::class, 'index'])->name('downloads.index');
     Route::post('/admin/downloads/upload', [DocumentController::class, 'upload'])->name('downloads.upload')->middleware('role:admin');

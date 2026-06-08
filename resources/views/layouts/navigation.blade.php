@@ -249,6 +249,7 @@
                                 <a href="{{route('domicile.blacklist.index')}}" class="block px-4 py-2 hover:bg-gray-100">Blacklisted CNICs</a>
                                 <a href="{{route('domicile.verification_letter.index')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile Verification</a>
                                 <a href="{{route('public.index')}}" class="block px-4 py-2 hover:bg-gray-100">Domicile Public</a>
+                                <a href="{{route('domicile.office_letters.index')}}" class="block px-4 py-2 hover:bg-gray-100">Office Letters</a>
                             </div>
                         </div>
                     </div>
@@ -632,6 +633,11 @@
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('daily.limit.index')" :active="request()->routeIs('daily.limit.index')">
                     {{ __('Daily Limit') }}
+                </x-responsive-nav-link>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('domicile.office_letters.index')" :active="request()->routeIs('domicile.office_letters.index')">
+                    {{ __('Office Letters') }}
                 </x-responsive-nav-link>
             </div>
             <div class="pt-2 pb-3 space-y-1">

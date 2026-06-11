@@ -117,6 +117,42 @@ class SuretyController extends Controller
         $data['user_id'] = auth()->id();
         $data['releasing_date'] = null;
 
+        // Sanitize date fields to prevent invalid MySQL DATE values (e.g. malformed years)
+        $dateKeys = ['receiving_date', 'releasing_date'];
+        foreach ($dateKeys as $key) {
+            if (!array_key_exists($key, $data)) {
+                continue;
+            }
+
+            // preserve explicit nulls for releasing_date
+            if ($key === 'releasing_date' && $data[$key] === null) {
+                continue;
+            }
+
+            if (empty($data[$key])) {
+                // default receiving_date to today if empty
+                if ($key === 'receiving_date') {
+                    $data[$key] = now()->format('Y-m-d');
+                }
+                continue;
+            }
+
+            try {
+                $dt = Carbon::parse($data[$key]);
+                $year = (int) $dt->format('Y');
+
+                // MySQL DATE supports years up to 9999 — clamp to today if out of range
+                if ($year < 1000 || $year > 9999) {
+                    $data[$key] = now()->format('Y-m-d');
+                } else {
+                    $data[$key] = $dt->format('Y-m-d');
+                }
+            } catch (\Throwable $e) {
+                // on parse error, fallback to today's date for receiving_date, otherwise null
+                $data[$key] = $key === 'receiving_date' ? now()->format('Y-m-d') : null;
+            }
+        }
+
         // Handle optional uploaded payorder image/pdf
         if ($request->hasFile('docs')) {
             $path = $request->file('docs')->store('surety_docs', 'public');
@@ -347,7 +383,7 @@ class SuretyController extends Controller
     public function report(Request $request, $id)
     {
         $record = SuretyRegister::with(['suretyType', 'suretyStatus', 'policeStation', 'user', 'subDivision', 'bank'])->findOrFail($id);
-
+        return $record;
         // If PDF requested and dompdf is available, stream PDF
         if ($request->query('pdf')) {
             try {

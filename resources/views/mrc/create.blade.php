@@ -114,7 +114,7 @@
 
                 <div>
                     <label class="block text-sm font-medium">Upload Nikkahnama (page 1)</label>
-                    <input type="file" required name="image"
+                    <input type="file" name="image"
                            class="w-full border-gray-300 rounded shadow-sm">
                 </div>
             </div>

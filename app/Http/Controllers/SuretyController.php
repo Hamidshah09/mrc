@@ -383,7 +383,7 @@ class SuretyController extends Controller
     public function report(Request $request, $id)
     {
         $record = SuretyRegister::with(['suretyType', 'suretyStatus', 'policeStation', 'user', 'subDivision', 'bank'])->findOrFail($id);
-        return $record;
+        
         // If PDF requested and dompdf is available, stream PDF
         if ($request->query('pdf')) {
             try {

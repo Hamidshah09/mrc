@@ -55,7 +55,7 @@ class SuretyRegister extends Model
 
     public function subdivision()
     {
-        return $this->belongsTo(Subdivision::class, 'court_id');
+        return $this->belongsTo(SubDivision::class, 'court_id');
     }
 
     public function bank()

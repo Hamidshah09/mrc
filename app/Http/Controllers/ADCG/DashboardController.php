@@ -19,7 +19,7 @@ class DashboardController extends Controller
     {
         $rejectedCount = Complaint::where('status', 'rejected')->count();
 
-        $assignedCount = Complaint::where('status', 'assigned')->count();
+        $assignedCount = Complaint::where('status', 'pending')->count();
 
         $resolvedCount = Complaint::where('status', 'resolved')->count();
 
@@ -159,7 +159,7 @@ class DashboardController extends Controller
 
             'admin_remarks' => $request->admin_remarks,
 
-            'status' => 'assigned',
+            'status' => 'pending',
         ]);
 
         return back()->with(

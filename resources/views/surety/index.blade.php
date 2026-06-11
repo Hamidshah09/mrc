@@ -11,6 +11,9 @@
             <a href="{{ route('surety.dashboard') }}" class="mb-2 px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 mr-3">
                 Dashboard
             </a>
+            <a href="{{ route('surety.create') }}" class="mb-2 px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                Add New
+            </a>
         </div>
 
         <!-- Filters -->
@@ -86,11 +89,9 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Register ID</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">ID</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Guarantor</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Receipt No</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Receiving Date</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Document ID</th>
                         <th class="px-6 py-3 text-right text-sm font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Type</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Status</th>
@@ -101,11 +102,9 @@
                 <tbody class="bg-white divide-y divide-gray-100">
                     @foreach ($records as $record)
                         <tr class="hover:bg-gray-50 transition-colors duration-200">
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->register_id }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->id }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $record->guarantor_name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->receipt_no }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ optional($record->receiving_date)->format('Y-m-d') ?? $record->receiving_date }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $record->document_id }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800 text-right">{{ number_format($record->amount, 0) }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ optional($record->suretyType)->name ?? $record->surety_type_id }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ optional($record->suretyStatus)->status_name ?? optional($record->suretyStatus)->name ?? $record->surety_status_id }}</td>
@@ -123,6 +122,9 @@
 
                                         <a href="{{route('surety.show', $record->id)}}" class="text-purple-600 hover:text-purple-800">
                                             <x-heroicon-o-arrow-top-right-on-square title="View Record" class="w-7 h-7 text-yellow-400 hover:text-yellow-600 transition"/>
+                                        </a>
+                                        <a href="{{ route('surety.report', $record->id) }}" target="_blank" class="text-gray-600 hover:text-gray-800" title="Print Receipt">
+                                            <x-heroicon-o-printer class="w-7 h-7 text-gray-400 hover:text-gray-600 transition" />
                                         </a>
                                     </div>
 
@@ -219,6 +221,9 @@
                                         </button>
                                         <a href="{{route('surety.show', $record->id)}}" class="text-purple-600 hover:text-purple-800">
                                             <x-heroicon-o-eye title="View Record" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
+                                        </a>
+                                        <a href="{{ route('surety.report', $record->id) }}" target="_blank" class="text-gray-600 hover:text-gray-800" title="Print Receipt">
+                                            <x-heroicon-o-printer class="w-7 h-7 text-gray-400 hover:text-gray-600 transition" />
                                         </a>
                                     </div>
 

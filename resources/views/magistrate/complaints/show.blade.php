@@ -154,7 +154,6 @@
 
                                     $statusColors = [
                                         'pending' => 'bg-yellow-100 text-yellow-700',
-                                        'assigned' => 'bg-blue-100 text-blue-700',
                                         'resolved' => 'bg-purple-100 text-purple-700',
                                         'approved' => 'bg-green-100 text-green-700',
                                         'rejected' => 'bg-red-100 text-red-700',
@@ -255,7 +254,7 @@
             @endif
 
             {{-- Resolve Form --}}
-            @if(in_array($complaint->status, ['assigned', 'rejected']))
+            @if(in_array($complaint->status, ['pending', 'rejected']))
 
                 <div class="bg-white shadow rounded-xl p-6 mt-6">
 

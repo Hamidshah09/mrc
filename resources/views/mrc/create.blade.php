@@ -93,6 +93,13 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium">Registrar Name</label>
+                    <input type="text" name="registrar_name"
+                           class="w-full border-gray-300 rounded shadow-sm"
+                           value="{{ old('registrar_name') }}">
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium">Register No</label>
                     <input type="text" name="register_no"
                            class="w-full border-gray-300 rounded shadow-sm"

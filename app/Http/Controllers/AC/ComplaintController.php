@@ -25,7 +25,7 @@ class ComplaintController extends Controller
             ->count();
 
         $assignedCount = Complaint::where('sub_division_id', $subDivisionId)
-            ->where('status', 'assigned')
+            ->where('status', 'pending')
             ->count();
 
         $resolvedCount = Complaint::where('sub_division_id', $subDivisionId)
@@ -198,7 +198,7 @@ class ComplaintController extends Controller
 
             'ac_remarks' => $request->ac_remarks,
 
-            'status' => 'assigned',
+            'status' => 'pending',
 
             'assigned_at' => now(),
 

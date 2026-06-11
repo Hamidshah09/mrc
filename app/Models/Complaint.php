@@ -92,7 +92,7 @@ class Complaint extends Model
 
     public function isAssigned()
     {
-        return $this->status == 'assigned';
+        return $this->status == self::STATUS_PENDING;
     }
 
     public function isResolved()

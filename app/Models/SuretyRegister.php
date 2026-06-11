@@ -9,7 +9,9 @@ class SuretyRegister extends Model
     protected $table = 'suretyregister';
     protected $fillable = [
         'register_id',
+        'guarantor_cnic',
         'guarantor_name',
+        'guarantor_father_name',
         'mobile_no',
         'receipt_no',
         'receiving_date',
@@ -23,7 +25,12 @@ class SuretyRegister extends Model
         'user_id',
         'document_id',
         'payment_mode',
-
+        'po_no',
+        'bank_id',
+        'branch_name',
+        'checque_no',
+        'court_id',
+        'docs',
     ];
 
     public function suretyType()
@@ -44,5 +51,15 @@ class SuretyRegister extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function subdivision()
+    {
+        return $this->belongsTo(Subdivision::class, 'court_id');
+    }
+
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class, 'bank_id');
     }
 }

@@ -74,6 +74,7 @@ class MrcController extends Controller
             'verification_date'  => 'nullable|date',
             'remarks'            => 'nullable|string|max:100',
             'register_no'        => 'nullable|string|max:20',
+            'registrar_name'     => 'nullable|string|max:80',
             'image'              => 'required|image|mimes:jpg,jpeg,png|max:4048',
 
         ]);
@@ -120,6 +121,7 @@ class MrcController extends Controller
             'registration_date'  => 'required|date',
             'remarks'            => 'nullable|string|max:100',
             'register_no'        => 'nullable|string|max:20',
+            'registrar_name'     => 'nullable|string|max:80',
             'image'              => 'nullable|image|mimes:jpg,jpeg,png|max:4048',
             
         ]);

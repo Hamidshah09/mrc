@@ -10,8 +10,10 @@ use App\Models\SuretyType;
 use App\Models\SuretyStatus;
 use App\Models\SuretyDocument;
 use App\Models\PoliceStation;
+use App\Models\Subdivision;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class SuretyController extends Controller
 {
@@ -22,18 +24,13 @@ class SuretyController extends Controller
         if ($request->filled('search')) {
             $q = $request->search;
             $query->where(function ($wr) use ($q) {
-                $wr->where('register_id', 'like', "%{$q}%")
-                    ->orWhere('receipt_no', 'like', "%{$q}%")
+                $wr->where('id', 'like', "%{$q}%")
                     ->orWhere('guarantor_name', 'like', "%{$q}%");
             });
         }
 
         if ($request->filled('status')) {
             $query->where('surety_status_id', $request->status);
-        }
-
-        if ($request->filled('document_id')) {
-            $query->where('document_id', $request->document_id);
         }
 
         if ($request->filled('surety_type_id')) {
@@ -47,115 +44,97 @@ class SuretyController extends Controller
             $query->whereDate('receiving_date', '<=', $request->to);
         }
 
-        $records = $query->orderBy('register_id', 'desc')->paginate(15)->withQueryString();
+        $records = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
         $suretyTypes = SuretyType::all();
         $surityStatuses = SuretyStatus::all();
         return view('surety.index', compact('records', 'surityStatuses', 'suretyTypes'));
     }
 
-    public function create($id)
+    public function create()
     {
-         $doc = SuretyDocument::findOrFail($id);
-
-        // امنیت: only locker can access
-        if ($doc->locked_by !== auth()->id()) {
-            abort(403, 'Unauthorized');
-        }
-
-        if ($doc->status == 'completed') {
-            return redirect()->route('suretydocuments.index')->with('error', 'This document is already completed.');
-        }   
+ 
         $suretyTypes = SuretyType::all();
         $policeStations = PoliceStation::all();
-        return view('surety.create', compact('suretyTypes', 'policeStations', 'doc'));
+        $courts = Subdivision::all();
+        $banks = DB::table('banks')->get();
+
+        return view('surety.create', compact(
+            'suretyTypes',
+            'policeStations',
+            'courts',
+            'banks',
+        ));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'register_id' => 'required|integer|unique:suretyregister,register_id',
             'guarantor_name' => 'required|string|max:80',
-            'mobile_no' => 'required|string|max:15',
-            'receipt_no' => 'required|string|max:50',
-            'receiving_date' => 'required|date',
+            'mobile_no' => 'required|string|max:13',
+            'receiving_date' => 'nullable|date',
             'police_station_id' => 'required|integer',
             'section_of_law' => 'required|string|max:50',
             'accused_name' => 'required|string|max:80',
             'amount' => 'required|integer',
             'surety_type_id' => 'required|integer',
-            'document_id' => 'required|exists:suretydocuments,id',
+            'guarantor_cnic' => 'nullable|string|max:13',
+            'guarantor_father_name' => 'nullable|string|max:80',
+            'court_id' => 'nullable|integer',
+            'payment_mode' => 'nullable|in:pay order,deposited in bank',
+            'po_no' => 'nullable|string|max:50',
+            'bank_id' => 'nullable|integer',
+            'branch_name' => 'nullable|string|max:100',
+            'checque_no' => 'nullable|string|max:50',
+            'docs' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
-        // 🔒 Ensure document is locked by current user
-        $doc = SuretyDocument::findOrFail($request->document_id);
-
-        if ($doc->locked_by !== auth()->id()) {
-            abort(403, 'Unauthorized access');
-        }
 
         // ✅ Create record
-        $surety = SuretyRegister::create([
-            'register_id' => $request->register_id,
-            'guarantor_name' => $request->guarantor_name,
-            'mobile_no' => $request->mobile_no,
-            'receipt_no' => $request->receipt_no,
-            'receiving_date' => $request->receiving_date,
-            'releasing_date' => null, // hidden field
-            'police_station_id' => $request->police_station_id,
-            'section_of_law' => $request->section_of_law,
-            'accused_name' => $request->accused_name,
-            'amount' => $request->amount,
-            'surety_type_id' => $request->surety_type_id,
-            'surety_status_id' => 1, // default "Received"
-            'user_id' => auth()->id(),
-            'document_id' => $request->document_id,
+        $data = $request->only([
+            'guarantor_name',
+            'mobile_no',
+            'receiving_date',
+            'releasing_date',
+            'police_station_id',
+            'section_of_law',
+            'accused_name',
+            'amount',
+            'surety_type_id',
+            'surety_status_id',
+            'document_id',
+            'guarantor_cnic',
+            'guarantor_father_name',
+            'court_id',
+            'payment_mode',
+            'po_no',
+            'bank_id',
+            'branch_name',
+            'checque_no'
         ]);
+        $data['receiving_date'] = $data['receiving_date'] ?? now()->format('Y-m-d');
+        $data['surety_status_id'] = 1; // default Received
+        $data['user_id'] = auth()->id();
+        $data['releasing_date'] = null;
+
+        // Handle optional uploaded payorder image/pdf
+        if ($request->hasFile('docs')) {
+            $path = $request->file('docs')->store('surety_docs', 'public');
+            $data['docs'] = $path;
+        }
+
+        $surety = SuretyRegister::create($data);
         SuretyHistory::create([
             'surety_id' => $surety->id,
             'status_id' => 1, // "Received"
             'updated_by' => auth()->id(),
         ]);
 
-        // 📊 Update progress
-        $doc->increment('entered_entries');
+        
 
-        // ✅ Auto-complete document (smart behavior)
-        if ($doc->total_expected_entries &&
-            $doc->entered_entries >= $doc->total_expected_entries) {
-
-            $totalAmount = SuretyRegister::where('document_id', $doc->id)
-            ->sum('amount');
-
-        if ($doc->total_amount != $totalAmount) {
-
-            $doc->update([
-                'status' => 'audit failed'
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'entered' => $doc->entered_entries,
-                'total' => $doc->total_expected_entries,
-                'audit' => 'failed',
-                'message' => 'Amount mismatch detected'
-            ]);
-        }
-
-        // ✅ If correct
-        $doc->update([
-            'status' => 'completed',
-        ]);
-
-
-        }
-
-        return response()->json([
-            'success' => true,
-            'entered' => $doc->entered_entries,
-            'total' => $doc->total_expected_entries
-        ]);
+            return redirect()->route('surety.index')->with('success', 'Surety record created successfully.');
     }
+
 
     public function edit($id)
     {
@@ -163,31 +142,79 @@ class SuretyController extends Controller
         $surityStatuses = SuretyStatus::all();
         $suretyTypes = SuretyType::all();
         $policeStations = PoliceStation::all();
-        return view('surety.edit', compact('record', 'surityStatuses', 'suretyTypes', 'policeStations'));
+        $courts = Subdivision::all();
+        $banks = DB::table('banks')->get();
+        return view('surety.edit', compact('record', 'surityStatuses', 'suretyTypes', 'policeStations', 'courts', 'banks'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'register_id' => 'required|integer',
+            'register_id' => 'nullable|integer',
             'guarantor_name' => 'required|string|max:80',
-            'mobile_no' => 'required|string|max:15',
-            'receipt_no' => 'required|string|max:50',
-            'receiving_date' => 'required|date',
+            'mobile_no' => 'required|string|max:13',
+            'receipt_no' => 'nullable|string|max:50',
             'police_station_id' => 'required|integer',
             'section_of_law' => 'required|string|max:50',
             'accused_name' => 'required|string|max:80',
             'amount' => 'required|integer',
             'surety_type_id' => 'required|integer',
             'surety_status_id' => 'required|integer',
+            'guarantor_cnic' => 'nullable|string|max:13',
+            'guarantor_father_name' => 'nullable|string|max:80',
+            'court_id' => 'nullable|integer',
+            'payment_mode' => 'nullable|in:pay order,deposited in bank',
+            'po_no' => 'nullable|string|max:50',
+            'bank_id' => 'nullable|integer',
+            'branch_name' => 'nullable|string|max:100',
+            'checque_no' => 'nullable|string|max:50',
+            'docs' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
+
         $record = SuretyRegister::findOrFail($id);
-        $record->update($request->all());
+
+        $data = $request->only([
+            'register_id',
+            'guarantor_name',
+            'mobile_no',
+            'receipt_no',
+            'releasing_date',
+            'police_station_id',
+            'section_of_law',
+            'accused_name',
+            'amount',
+            'surety_type_id',
+            'surety_status_id',
+            'user_id',
+            'document_id',
+            'guarantor_cnic',
+            'guarantor_father_name',
+            'court_id',
+            'payment_mode',
+            'po_no',
+            'bank_id',
+            'branch_name',
+            'checque_no'
+        ]);
+
+        // Handle docs replacement
+        if ($request->hasFile('docs')) {
+            // delete existing
+            if ($record->docs) {
+                Storage::disk('public')->delete($record->docs);
+            }
+            $path = $request->file('docs')->store('surety_docs', 'public');
+            $data['docs'] = $path;
+        }
+
+        $record->update($data);
+
         SuretyHistory::create([
             'surety_id' => $record->id,
             'status_id' => $request->surety_status_id,
             'updated_by' => auth()->id(),
         ]);
+
         return redirect()->route('surety.index')->with('success', 'Surety record updated successfully.');
     }
 
@@ -313,6 +340,26 @@ class SuretyController extends Controller
         $statuses = SuretyStatus::pluck('status_name', 'id');
 
         return view('surety.show', compact('record', 'history', 'statuses'));
+    }
+    /**
+     * Render a printable report for a surety record. Add `?pdf=1` to stream as PDF when dompdf is available.
+     */
+    public function report(Request $request, $id)
+    {
+        $record = SuretyRegister::with(['suretyType', 'suretyStatus', 'policeStation', 'user', 'subdivision', 'bank'])->findOrFail($id);
+
+        // If PDF requested and dompdf is available, stream PDF
+        if ($request->query('pdf')) {
+            try {
+                $pdf = \PDF::loadView('surety.report', compact('record'))
+                    ->setPaper('A4', 'portrait');
+                return $pdf->stream('receipt_'.$record->id.'.pdf');
+            } catch (\Throwable $e) {
+                // fall back to HTML view if PDF generation fails
+            }
+        }
+
+        return view('surety.report', compact('record'));
     }
     public function fetchByRegisterId($register_id)
     {

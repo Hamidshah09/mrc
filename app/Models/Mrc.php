@@ -24,6 +24,7 @@ class Mrc extends Model
         'verification_date',
         'remarks',
         'register_no',
+        'registrar_name',
         'status',
         'image',
     ];

@@ -12,12 +12,12 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                {{-- Assigned --}}
-                <a href="{{ route('ac.complaints.index', ['status' => 'assigned']) }}"
+                {{-- Pending --}}
+                <a href="{{ route('ac.complaints.index', ['status' => 'pending']) }}"
                         class="bg-blue-100 p-6 rounded-xl shadow">
 
                     <h3 class="text-lg font-semibold text-blue-700">
-                        Assigned
+                    Pending
                     </h3>
 
                     <p class="text-4xl font-bold mt-3">

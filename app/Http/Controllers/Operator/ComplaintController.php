@@ -128,7 +128,7 @@ class ComplaintController extends Controller
 
             'operator_remarks' => $request->operator_remarks,
 
-            'status' => 'assigned',
+            'status' => 'pending',
         ]);
 
         return redirect()

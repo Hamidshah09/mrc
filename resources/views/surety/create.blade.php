@@ -13,14 +13,23 @@
                     Data Entry
                 </h2>
             </div>
-            <form id="entryForm" action="{{ route('surety.store') }}" method="POST" class="space-y-3">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li style="color:red;">{{$error}}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <form id="entryForm" action="{{ route('surety.store') }}" method="POST" enctype="multipart/form-data" class="space-y-3">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Register ID</label>
-                        <input type="number" id="register_id" name="register_id" value="{{ old('register_id') }}" autofocus
+                        <label class="block text-sm font-medium text-gray-700">Guarantor CNIC</label>
+                        <input type="text" id="guarantor_cnic" name="guarantor_cnic" value="{{ old('guarantor_cnic') }}"
                             class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
-                        @error('register_id')
+                        @error('guarantor_cnic')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -35,25 +44,16 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Receipt No</label>
-                        <input type="text" id="receipt_no" name="receipt_no" value="{{ old('receipt_no') }}"
+                        <label class="block text-sm font-medium text-gray-700">Guarantor Father's Name</label>
+                        <input type="text" id="guarantor_father_name" name="guarantor_father_name" value="{{ old('guarantor_father_name') }}"
                             class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
-                        @error('receipt_no')
+                        @error('guarantor_father_name')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Receipt Date</label>
-                        <input type="date" id="receiving_date" name="receiving_date" value="{{ old('receiving_date') }}"
-                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
-                        @error('receiving_date')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Police Station ID</label>
+                        <label class="block text-sm font-medium text-gray-700">Police Station</label>
                         <select id="police_station_id" name="police_station_id" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                             <option value="">Select Police Station</option>
                             @foreach($policeStations as $station)
@@ -105,18 +105,87 @@
                         <label class="block text-sm font-medium text-gray-700">Surety Type</label>
                         <select id="surety_type_id" name="surety_type_id" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                             <option value="">Select Type</option>
-                            
                             @foreach($suretyTypes as $t)
-                                <option value="{{ $t->id }}" {{ old('surety_type_id') == $t->id ? 'selected' : '' }}>{{ $t->name }}</option>
+                                <option value="{{ $t->id }}" {{ old('surety_type_id') == $t->id ? 'selected' : '' }}>{{ ucwords($t->name) }}</option>
                             @endforeach
                         </select>
                         @error('surety_type_id')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    <input type="hidden" name="document_id" value="{{ $doc->id }}">
 
-                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Court</label>
+                        <select id="court_id" name="court_id" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                            <option value="">Select Court</option>
+                            @foreach($courts as $court)
+                                <option value="{{ $court->id }}" {{ old('court_id') == $court->id ? 'selected' : '' }}>{{ $court->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('court_id')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Payment Mode</label>
+                        <select id="payment_mode" name="payment_mode" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                            <option value="pay order" {{ old('payment_mode') == 'pay order' ? 'selected' : '' }}>Pay Order</option>
+                            <option value="deposited in bank" {{ old('payment_mode') == 'deposited in bank' ? 'selected' : '' }}>Deposited in Bank</option>
+                        </select>
+                        @error('payment_mode')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">PO No</label>
+                        <input type="text" id="po_no" name="po_no" value="{{ old('po_no') }}"
+                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                        @error('po_no')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Bank</label>
+                        <select id="bank_id" name="bank_id" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                            <option value="">Select Bank</option>
+                            @foreach($banks as $bank)
+                                <option value="{{ $bank->id }}" {{ old('bank_id') == $bank->id ? 'selected' : '' }}>{{ $bank->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('bank_id')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Branch Name</label>
+                        <input type="text" id="branch_name" name="branch_name" value="{{ old('branch_name') }}"
+                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                        @error('branch_name')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Receiving Date</label>
+                        <input type="date" id="receiving_date" name="receiving_date" value="{{ old('receiving_date', now()->format('Y-m-d')) }}"
+                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                        @error('receiving_date')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Payorder / Document (image or PDF)</label>
+                        <input type="file" id="docs" name="docs" accept="image/*,.pdf"
+                            class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                        @error('docs')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
                 <div class="flex justify-end space-x-3">
                     <a href="{{ route('surety.index') }}" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</a>
@@ -127,159 +196,6 @@
         
     </div>
     <script>
-        let scale = 1;
-
-        function zoomIn() {
-            let img = document.getElementById('docImage');
-            if (!img) return;
-
-            scale += 0.2;
-            img.style.width = (scale * 100) + '%';
-        }
-
-        function zoomOut() {
-            let img = document.getElementById('docImage');
-            if (!img) return;
-
-            scale = Math.max(0.5, scale - 0.2);
-            img.style.width = (scale * 100) + '%';
-        }
-        document.getElementById('entryForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            let form = this;
-            let formData = new FormData(form);
-            form.querySelector('button[type="submit"]').disabled = true;
-            fetch(form.action, {
-                method: "POST",
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                    'Accept': 'application/json' // IMPORTANT
-                }
-            })
-            .then(async res => {
-
-                // Handle validation error
-                if (res.status === 422) {
-                    let data = await res.json();
-                    showValidationErrors(data.errors);
-                    throw new Error("Validation failed");
-                }
-
-                return res.json();
-            })
-            .then(data => {
-                if (data.success) {
-
-                    // Store current values before reset
-                    let currentRegisterId = parseInt(document.getElementById('register_id').value) || 0;
-                    let currentReceiptNo = parseInt(document.getElementById('receipt_no').value) || 0;
-                    let receivingDate = document.getElementById('receiving_date').value;
-
-                    // Reset form
-                    form.reset();
-
-                    // Increment values
-                    document.getElementById('register_id').value = currentRegisterId + 1;
-                    document.getElementById('receipt_no').value = currentReceiptNo + 1;
-                    document.getElementById('receiving_date').value = receivingDate;
-
-                    // Focus first field
-                    document.getElementById('register_id').focus();
-
-                    showToast("Saved successfully");
-
-                    // ✅ Update progress text
-                    document.getElementById('progressText').innerText =
-                        `${data.entered} / ${data.total ?? '?'}`;
-
-                    // ✅ Update progress bar
-                    if (data.total) {
-                        let percent = (data.entered / data.total) * 100;
-                        document.getElementById('progressBar').style.width = percent + '%';
-                    }
-                if (data.total && data.entered >= data.total) {
-                    showToast("Document completed 🎉");
-
-                    // Optional: redirect after completion
-                    setTimeout(() => {
-                        window.location.href = "{{ route('suretydocuments.index') }}";
-                    }, 1500);
-                }
-
-                } else {
-                    alert("Something went wrong");
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Error saving data");
-            })
-            .finally(() => {
-                form.querySelector('button[type="submit"]').disabled = false;
-            });
-        });
-        function showValidationErrors(errors) {
-
-            // remove old errors
-            document.querySelectorAll('.error-text').forEach(el => el.remove());
-
-            Object.keys(errors).forEach(field => {
-
-                let input = document.querySelector(`[name="${field}"]`);
-
-                if (input) {
-                    let error = document.createElement('p');
-                    error.className = "text-sm text-red-600 mt-1 error-text";
-                    error.innerText = errors[field][0];
-
-                    input.parentNode.appendChild(error);
-                }
-            });
-
-            showToast("Please fix the errors");
-        }
-        function showToast(msg) {
-            let toast = document.createElement('div');
-            toast.innerText = msg;
-            toast.className = "fixed top-5 right-5 bg-green-600 text-white px-4 py-2 rounded shadow";
-            document.body.appendChild(toast);
-
-            setTimeout(() => toast.remove(), 2000);
-        }
-        document.getElementById('register_id').addEventListener('blur', function() {
-
-            let registerId = this.value;
-
-            if (!registerId) return;
-
-            fetch(`/surety/fetch/${registerId}`)
-                .then(res => res.json())
-                .then(res => {
-
-                    if (!res.found) {
-                        console.log("No previous record");
-                        return;
-                    }
-
-                    let data = res.data;
-
-                    // ✅ Fill fields
-                    document.getElementById('guarantor_name').value = data.guarantaor_name ?? '';
-                    document.getElementById('mobile_no').value = data.mobile_no ?? '';
-                    document.getElementById('receipt_no').value = data.receipt_no ?? '';
-                    document.getElementById('receiving_date').value = data.receipt_date ?? '';
-                    document.getElementById('police_station_id').value = data.police_station_id ?? '';
-                    document.getElementById('section_of_law').value = data.section_of_law ?? '';
-                    document.getElementById('accused_name').value = data.accused_name ?? '';
-                    document.getElementById('amount').value = data.amount ?? '';
-                    document.getElementById('surety_type_id').value = data.surety_type_id ?? '';
-                    showToast("Previous record loaded");
-
-                })
-                .catch(err => console.error(err));
-        });
-
+        
     </script>
 </x-app-layout>

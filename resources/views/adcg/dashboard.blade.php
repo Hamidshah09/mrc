@@ -15,7 +15,7 @@
                 
                 <div class="bg-blue-100 p-6 rounded-xl shadow">
                     <h3 class="text-lg font-semibold text-blue-700">
-                        Assigned
+                        Pending
                     </h3>
                     <p class="text-4xl font-bold mt-3">
                         {{ $assignedCount }}

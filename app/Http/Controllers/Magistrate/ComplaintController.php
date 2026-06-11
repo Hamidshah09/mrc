@@ -18,7 +18,7 @@ class ComplaintController extends Controller
     public function dashboard()
     {
         $pendingCount = Complaint::where('magistrate_id', Auth::id())
-            ->where('status', 'assigned')
+            ->where('status', 'pending')
             ->count();
 
         $resolvedCount = Complaint::where('magistrate_id', Auth::id())

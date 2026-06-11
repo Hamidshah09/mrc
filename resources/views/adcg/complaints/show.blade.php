@@ -210,7 +210,7 @@
 
             </div>
             {{-- Reassign Complaint --}}
-            @if(in_array($complaint->status, ['pending', 'assigned', 'rejected']))
+            @if(in_array($complaint->status, ['pending', 'rejected']))
 
                 <div class="bg-white shadow rounded-xl p-6 mt-6">
 

@@ -86,18 +86,18 @@
                                 <div class="flex items-center space-x-2">
                                     @if ($user->id=== $mrc->registrar_id)
                                         <a href="{{ route('mrc.edit', $mrc->id) }}" class="text-blue-600 hover:text-blue-800">
-                                            <x-icons.pencil-square />
+                                            <x-heroicon-m-arrow-top-right-on-square title="Update status" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
                                         </a>
                                     @endif
                                     @if ($user->role->role === 'admin' && $mrc->status === 'Pending' or $user->role->role === 'verifier' && $mrc->status === 'Pending')
                                         <a href="#" onclick="openVerifyModal({{ $mrc->id }})">
-                                            <x-icons.check-circle class="text-green-500 hover:text-green-700" />
+                                            Verify
                                         </a>
                                     @endif
                                     @if ($user->role->role === 'admin' or $user->role->role === 'mrc')
                                         @if($mrc->image)
                                             <a href="{{ asset('storage/' . $mrc->image) }}">
-                                                <x-icons.document-text class="text-yellow-500 hover:text-yellow-700" />
+                                                document
                                             </a>
                                         @endif
                                     @endif
@@ -160,18 +160,18 @@
                                 <div class="flex items-center space-x-2">
                                     @if ($user->id=== $mrc->registrar_id)
                                         <a href="{{ route('mrc.edit', $mrc->id) }}" class="text-blue-600 hover:text-blue-800">
-                                            <x-icons.pencil-square />
+                                            <x-heroicon-m-arrow-top-right-on-square title="Update status" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
                                         </a>
                                     @endif
                                     @if ($user->role->role === 'admin' && $mrc->status === 'Pending' or $user->role->role === 'verifier' && $mrc->status === 'Pending')
                                         <a href="#" onclick="openVerifyModal({{ $mrc->id }})">
-                                            <x-icons.check-circle class="text-green-500 hover:text-green-700" />
+                                            <x-heroicon-m-check-circle title="Verify Record" class="w-7 h-7 text-green-500 hover:text-green-700" />
                                         </a>
                                     @endif
                                     @if ($user->role->role === 'admin' or $user->role->role === 'mrc')
                                         @if($mrc->image)
                                             <a href="{{ asset('storage/' . $mrc->image) }}">
-                                                <x-icons.document-text class="text-yellow-500 hover:text-yellow-700" />
+                                                <x-heroicon-m-document-text class="text-yellow-500 hover:text-yellow-700" />
                                             </a>
                                         @endif
                                     @endif

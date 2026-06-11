@@ -258,8 +258,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/surety/documents/{id}/update', [SuretyController::class, 'updateview'])
             ->name('surety.updateview');
 
-        Route::get('/surety/documents/{id}/entry', [SuretyController::class, 'create'])
+        Route::get('/surety/create', [SuretyController::class, 'create'])
             ->name('surety.create');
+        Route::get('/surety/{id}/report', [SuretyController::class, 'report'])->name('surety.report');
         Route::get('/surety/documents', [SuretyDocumentController::class, 'index'])->name('suretydocuments.index');
         Route::get('/surety/documents/create', [SuretyDocumentController::class, 'create'])->name('suretydocuments.create');
         Route::post('/surety/documents/store', [SuretyDocumentController::class, 'store'])->name('suretydocuments.store');

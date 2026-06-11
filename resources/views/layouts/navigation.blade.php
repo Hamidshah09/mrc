@@ -99,7 +99,7 @@
                                         <a href="{{ route('magistrate.complaints.index') }}"
                                         class="block px-4 py-2 hover:bg-gray-100">
 
-                                            Assigned Complaints
+                                            Pending Complaints
 
                                         </a>
 
@@ -489,7 +489,7 @@
                         <x-responsive-nav-link
                             :href="route('magistrate.complaints.index')">
 
-                            {{ __('Assigned Complaints') }}
+                            {{ __('Pending Complaints') }}
 
                         </x-responsive-nav-link>
 

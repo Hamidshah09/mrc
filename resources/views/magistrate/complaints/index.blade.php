@@ -6,7 +6,7 @@
 
             <h2 class="text-3xl font-bold text-gray-800 mb-6">
 
-                Assigned Complaints
+                Pending Complaints
 
             </h2>
 
@@ -49,10 +49,10 @@
 
                             </option>
 
-                            <option value="assigned"
-                                {{ request('status') == 'assigned' ? 'selected' : '' }}>
+                            <option value="pending"
+                                {{ request('status') == 'pending' ? 'selected' : '' }}>
 
-                                Assigned
+                                Pending
 
                             </option>
 
@@ -200,7 +200,6 @@
 
                                             $statusColors = [
                                                 'pending' => 'bg-yellow-100 text-yellow-700',
-                                                'assigned' => 'bg-blue-100 text-blue-700',
                                                 'resolved' => 'bg-purple-100 text-purple-700',
                                                 'approved' => 'bg-green-100 text-green-700',
                                                 'rejected' => 'bg-red-100 text-red-700',
@@ -284,7 +283,6 @@
 
                                             $statusColors = [
                                                 'pending' => 'bg-yellow-100 text-yellow-700',
-                                                'assigned' => 'bg-blue-100 text-blue-700',
                                                 'resolved' => 'bg-purple-100 text-purple-700',
                                                 'approved' => 'bg-green-100 text-green-700',
                                                 'rejected' => 'bg-red-100 text-red-700',

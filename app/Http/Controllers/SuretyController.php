@@ -10,7 +10,7 @@ use App\Models\SuretyType;
 use App\Models\SuretyStatus;
 use App\Models\SuretyDocument;
 use App\Models\PoliceStation;
-use App\Models\Subdivision;
+use App\Models\SubDivision;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -56,7 +56,7 @@ class SuretyController extends Controller
  
         $suretyTypes = SuretyType::all();
         $policeStations = PoliceStation::all();
-        $courts = Subdivision::all();
+        $courts = SubDivision::all();
         $banks = DB::table('banks')->get();
 
         return view('surety.create', compact(
@@ -142,7 +142,7 @@ class SuretyController extends Controller
         $surityStatuses = SuretyStatus::all();
         $suretyTypes = SuretyType::all();
         $policeStations = PoliceStation::all();
-        $courts = Subdivision::all();
+        $courts = SubDivision::all();
         $banks = DB::table('banks')->get();
         return view('surety.edit', compact('record', 'surityStatuses', 'suretyTypes', 'policeStations', 'courts', 'banks'));
     }
@@ -346,7 +346,7 @@ class SuretyController extends Controller
      */
     public function report(Request $request, $id)
     {
-        $record = SuretyRegister::with(['suretyType', 'suretyStatus', 'policeStation', 'user', 'subdivision', 'bank'])->findOrFail($id);
+        $record = SuretyRegister::with(['suretyType', 'suretyStatus', 'policeStation', 'user', 'subDivision', 'bank'])->findOrFail($id);
 
         // If PDF requested and dompdf is available, stream PDF
         if ($request->query('pdf')) {

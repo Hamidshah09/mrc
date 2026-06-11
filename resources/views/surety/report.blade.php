@@ -115,7 +115,7 @@
         </div>
 
     </div>
-    <div>
+    <div style="width:800px; margin:20px auto; font-size:12px; color:#555;">
         Note: Please Keep it safe. The Surety will not be return unless the original receipt is produced.
     </div>
 </body>

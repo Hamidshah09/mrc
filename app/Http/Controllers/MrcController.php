@@ -75,7 +75,7 @@ class MrcController extends Controller
             'remarks'            => 'nullable|string|max:100',
             'register_no'        => 'nullable|string|max:20',
             'registrar_name'     => 'nullable|string|max:80',
-            'image'              => 'required|image|mimes:jpg,jpeg,png|max:4048',
+            'image'              => 'nullable|image|mimes:jpg,jpeg,png|max:4048',
 
         ]);
         $exist = Mrc::where('groom_cnic', $request->groom_cnic)->Where('bride_cnic', $request->bride_cnic)->first();

@@ -187,6 +187,26 @@
                         </div>
                     </div>
                 @endif
+                @if (auth()->user()->role->role== 'drc' or auth()->user()->role->role== 'admin')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <div class="relative" x-data="{ dropdown: false }">
+                            <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
+                                DRC
+                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="dropdown" @click.outside="dropdown = false"
+                                x-transition
+                                class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
+                                <a href="{{route('drc.index')}}" class="block px-4 py-2 hover:bg-gray-100">Divorce Cases</a>
+                                <a href="{{route('drc.live.create')}}" class="block px-4 py-2 hover:bg-gray-100">New Live Case</a>
+                                <a href="{{route('drc.old.create')}}" class="block px-4 py-2 hover:bg-gray-100">Old Completed Case</a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 {{-- @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'mrc' or auth()->user()->role->role== 'domicile')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <div class="relative" x-data="{ dropdown: false }">
@@ -557,6 +577,13 @@
                     </x-responsive-nav-link>
                 </div>
             @endif        
+        @endif
+        @if (auth()->user()->role->role== 'drc' or auth()->user()->role->role== 'admin')
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('drc.index')" :active="request()->routeIs('drc.*')">
+                    {{ __('Divorce Cases') }}
+                </x-responsive-nav-link>
+            </div>
         @endif
         @if (auth()->user()->role->role== 'admin' or  auth()->user()->role->role== 'auqaf')
             <div class="pt-2 pb-3 space-y-1">

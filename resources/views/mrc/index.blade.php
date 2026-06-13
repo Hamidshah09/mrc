@@ -57,9 +57,9 @@
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Groom Name</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Bride CNIC</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Bride Name</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Marriage Date</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registration Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registrar</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Verifier</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
@@ -70,9 +70,10 @@
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->groom_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->bride_cnic }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->bride_name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registrar->name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->verifier ? $mrc->verifier->name : 'N/A' }}</td>
-                            <td class="px-6 py-4 text-sm">
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->marriage_date }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registration_date }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registrar_name }}</td>
+                            {{-- <td class="px-6 py-4 text-sm">
                                 <span class="inline-block px-2 py-1 rounded-full text-xs font-medium
                                     {{
                                         $mrc->status === 'Verified' ? 'bg-green-100 text-green-800' :
@@ -81,19 +82,19 @@
                                     }}">
                                     {{ ucfirst($mrc->status) }}
                                 </span>
-                            </td>
+                            </td> --}}
                             <td class="px-6 py-4 text-sm">
                                 <div class="flex items-center space-x-2">
-                                    @if ($user->id=== $mrc->registrar_id)
-                                        <a href="{{ route('mrc.edit', $mrc->id) }}" class="text-blue-600 hover:text-blue-800">
-                                            <x-heroicon-m-arrow-top-right-on-square title="Update status" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
-                                        </a>
-                                    @endif
-                                    @if ($user->role->role === 'admin' && $mrc->status === 'Pending' or $user->role->role === 'verifier' && $mrc->status === 'Pending')
+                                    
+                                    <a href="{{ route('mrc.edit', $mrc->id) }}" class="text-blue-600 hover:text-blue-800">
+                                        <x-heroicon-c-pencil-square title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
+                                    </a>
+                                
+                                    {{-- @if ($user->role->role === 'admin' && $mrc->status === 'Pending' or $user->role->role === 'verifier' && $mrc->status === 'Pending')
                                         <a href="#" onclick="openVerifyModal({{ $mrc->id }})">
                                             Verify
                                         </a>
-                                    @endif
+                                    @endif --}}
                                     @if ($user->role->role === 'admin' or $user->role->role === 'mrc')
                                         @if($mrc->image)
                                             <a href="{{ asset('storage/' . $mrc->image) }}">

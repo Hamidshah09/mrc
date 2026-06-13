@@ -8,6 +8,7 @@ use App\Http\Controllers\PostalServiceExportController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\domicileController;
+use App\Http\Controllers\DivorceCaseController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\MrcController;
@@ -284,6 +285,23 @@ Route::middleware('auth')->group(function () {
     Route::put('/mrc/verify/{id}', [MrcController::class, 'verify'])->name('mrc.verify')->middleware('role:verifier,admin');;
     Route::get('/mrc/file/upload', [MrcController::class, 'upload_'])->name('mrc.upload')->middleware('role:mrc,admin,registrar,verifier');
     Route::post('/mrc/import', [MrcController::class, 'import'])->name('mrc.import')->middleware('role:mrc,admin,registrar,verifier');
+
+    Route::middleware('role:drc,admin')->group(function () {
+        Route::get('/drc', [DivorceCaseController::class, 'index'])->name('drc.index');
+        Route::get('/drc/create', [DivorceCaseController::class, 'create'])->name('drc.create');
+        Route::get('/drc/create/live', [DivorceCaseController::class, 'createLive'])->name('drc.live.create');
+        Route::post('/drc/live', [DivorceCaseController::class, 'storeLive'])->name('drc.live.store');
+        Route::get('/drc/create/old', [DivorceCaseController::class, 'createOld'])->name('drc.old.create');
+        Route::post('/drc/old', [DivorceCaseController::class, 'storeOld'])->name('drc.old.store');
+        Route::get('/drc/{divorceCase}', [DivorceCaseController::class, 'show'])->name('drc.show');
+        Route::get('/drc/{divorceCase}/edit', [DivorceCaseController::class, 'edit'])->name('drc.edit');
+        Route::put('/drc/{divorceCase}', [DivorceCaseController::class, 'update'])->name('drc.update');
+        Route::put('/drc/{divorceCase}/hearings/{hearing}', [DivorceCaseController::class, 'updateHearing'])->name('drc.hearings.update');
+        Route::put('/drc/{divorceCase}/hearings/{hearing}/complete', [DivorceCaseController::class, 'completeHearing'])->name('drc.hearings.complete');
+        Route::put('/drc/{divorceCase}/hearings/{hearing}/postpone', [DivorceCaseController::class, 'postponeHearing'])->name('drc.hearings.postpone');
+        Route::get('/drc/{divorceCase}/hearings/{hearing}/notice', [DivorceCaseController::class, 'notice'])->name('drc.notice');
+        Route::get('/drc/{divorceCase}/certificate', [DivorceCaseController::class, 'certificate'])->name('drc.certificate');
+    });
     
     Route::middleware('role:admin,mrc')->group(function(){
         Route::resource('mrc_status', MrcStatusController::class);

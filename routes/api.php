@@ -3,7 +3,9 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DomicileController;
 use App\Http\Controllers\Api\IdpController;
+use App\Http\Controllers\Api\ComplaintController;
 use Illuminate\Support\Facades\Route;
+
 
 
 Route::post('/login', [AuthController::class, 'login']);

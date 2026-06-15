@@ -50,7 +50,7 @@
                         <td>{{ $record->guarantor_cnic ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <th>Father's Name</th>
+                        <th>Father's/Husband's Name</th>
                         <td>{{ $record->guarantor_father_name ?? '-' }}</td>
                         <th>Mobile No</th>
                         <td>{{ $record->mobile_no ?? '-' }}</td>

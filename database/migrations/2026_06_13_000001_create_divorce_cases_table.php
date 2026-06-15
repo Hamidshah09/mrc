@@ -12,6 +12,7 @@ return new class extends Migration
         Schema::create('divorce_cases', function (Blueprint $table) {
             $table->id();
             $table->enum('entry_type', ['live', 'old'])->default('live');
+            $table->date('application_date')->nullable();
             $table->string('case_no', 50)->unique();
             $table->enum('divorce_type', ['Talaq', 'Khula', 'Talaq Tafveez']);
             $table->enum('applicant_side', ['groom', 'bride']);

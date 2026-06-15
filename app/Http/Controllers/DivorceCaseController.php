@@ -278,6 +278,7 @@ class DivorceCaseController extends Controller
     private function validatedOldCaseData(Request $request, ?DivorceCase $divorceCase = null): array
     {
         $validated = array_merge($this->validatedCommonCaseData($request, $divorceCase), $request->validate([
+            'application_date' => ['required', 'date'],
             'decision_date' => ['required', 'date'],
             'issue_date' => ['required', 'date', 'after_or_equal:decision_date'],
         ]));

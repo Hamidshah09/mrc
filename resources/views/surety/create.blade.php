@@ -106,7 +106,7 @@
                         <select id="surety_type_id" name="surety_type_id" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                             <option value="">Select Type</option>
                             @foreach($suretyTypes as $t)
-                                <option value="{{ $t->id }}" {{ old('surety_type_id') == $t->id ? 'selected' : '' }}>{{ ucwords($t->name) }}</option>
+                                <option value="{{ $t->id }}" {{ old('surety_type_id', 4) == $t->id ? 'selected' : '' }}>{{ ucwords($t->name) }}</option>
                             @endforeach
                         </select>
                         @error('surety_type_id')

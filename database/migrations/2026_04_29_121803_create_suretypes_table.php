@@ -23,6 +23,11 @@ return new class extends Migration
             ['name' => 'Fuel Station', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Desealing of Shops/Resturants', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Court Cases', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Fuel Stations', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Marriage Halls', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Snooker Club', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Secretary ITA', 'created_at' => now(), 'updated_at' => now()],
+
         ]);
     }
 

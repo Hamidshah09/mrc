@@ -79,7 +79,11 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route(
                     'mrc.index'
                 );
+            case 'drc':
 
+                return redirect()->route(
+                    'drc.index'
+                );
             case 'domicile':
                 return redirect()->route('domicile.index');
             case 'surety':

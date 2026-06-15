@@ -266,36 +266,36 @@ class domicileController extends Controller
     //Checking in other districts
     
     $cnic = $domicile->cnic;
-    try {
+    // try {
         
-        if ($cnic) {
+    //     if ($cnic) {
 
-            $apiUrl = "http://127.0.0.1:8000/domicile/check-in-other-district/{$cnic}";
+    //         $apiUrl = "http://127.0.0.1:8000/domicile/check-in-other-district/{$cnic}";
 
-            $response = Http::timeout(60)->get($apiUrl);
+    //         $response = Http::timeout(60)->get($apiUrl);
 
-            if ($response->successful()) {
+    //         if ($response->successful()) {
 
-                $apiData = $response->json();
+    //             $apiData = $response->json();
 
-                if (
-                    isset($apiData['found']) &&
-                    $apiData['found'] === true
-                ) {
+    //             if (
+    //                 isset($apiData['found']) &&
+    //                 $apiData['found'] === true
+    //             ) {
 
-                    $other_district_found = 1;
-                }
-            }
-        }
+    //                 $other_district_found = 1;
+    //             }
+    //         }
+    //     }
 
-    } catch (\Exception $e) {
+    // } catch (\Exception $e) {
 
-        Log::error('NITB API Error', [
-            'cnic' => $cnic ?? null,
-            'message' => $e->getMessage()
-        ]);
-    }
-    $domicile->other_district_status = $other_district_found;
+    //     Log::error('NITB API Error', [
+    //         'cnic' => $cnic ?? null,
+    //         'message' => $e->getMessage()
+    //     ]);
+    // }
+    $domicile->other_district_status = $other_district_found ?? 0;
     $domicile->save();
 
     //checking in nitb
@@ -332,7 +332,7 @@ class domicileController extends Controller
         $nitb_found = null;
     }
 
-    $domicile->nitb_status = $nitb_found;
+    $domicile->nitb_status = $nitb_found ?? 0;
     $domicile->save();
 
 

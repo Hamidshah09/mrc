@@ -84,8 +84,12 @@
                             </td>
                             <td class="px-4 py-3 text-sm">
                                 <div class="flex items-center gap-2">
-                                    <a href="{{ route('drc.show', $case) }}" class="text-blue-600 hover:text-blue-800">Open</a>
-                                    <a href="{{ route('drc.edit', $case) }}" class="text-indigo-600 hover:text-indigo-800">Edit</a>
+                                    <a href="{{ route('drc.show', $case) }}" class="text-blue-600 hover:text-blue-800" title="View Details">
+                                        <x-heroicon-m-eye class="w-6 h-6" />
+                                    </a>
+                                    <a href="{{ route('drc.edit', $case) }}" class="text-indigo-600 hover:text-indigo-800" title="Edit Case">
+                                        <x-heroicon-m-pencil-square class="w-6 h-6" />
+                                    </a>
                                 </div>
                             </td>
                         </tr>

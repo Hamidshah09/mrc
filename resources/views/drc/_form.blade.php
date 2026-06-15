@@ -13,7 +13,7 @@
     <div>
         <label class="block text-sm font-medium text-gray-700">Type of Divorce</label>
         <select name="divorce_type" class="w-full border-gray-300 rounded shadow-sm">
-            @foreach (['Talaq', 'Khula', 'Talaq Tafveez'] as $type)
+            @foreach (['Talaq', 'Khula', 'Talaq Tafveez', 'Mubarat Deed'] as $type)
                 <option value="{{ $type }}" @selected(old('divorce_type', $divorceCase->divorce_type) === $type)>{{ $type }}</option>
             @endforeach
         </select>

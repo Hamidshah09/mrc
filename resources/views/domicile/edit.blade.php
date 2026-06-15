@@ -19,7 +19,7 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{route('domicile.update', $applicant->id)}}" method="Post">
+                    <form action="{{route('domicile.update', $applicant->id)}}" method="Post" enctype="multipart/form-data">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             <div class="col-span-4 mt-2">
@@ -146,6 +146,17 @@
                                     placeholder="Additional remarks or notes">{{ old('remarks') }}</textarea>
 
                                 <x-input-error :messages="$errors->get('remarks')" class="mt-2" />
+                            </div>
+                            <div class="form-control col-span-4">
+                                <x-input-label for="picture" :value="__('Applicant Picture (optional)')" />
+                                @if(!empty($applicant->picture_path))
+                                    <div class="mb-2">
+                                        <img src="{{ $applicant->picture_path }}" alt="Applicant picture" class="w-24 h-24 object-cover rounded-md border" />
+                                    </div>
+                                @endif
+                                <input type="file" name="picture" id="picture" accept="image/*" class="block w-full p-2 rounded-md border border-gray-300" />
+                                <p class="text-sm text-gray-500 mt-1">Optional: upload JPG/PNG up to 5MB. Uploading replaces existing picture.</p>
+                                <x-input-error :messages="$errors->get('picture')" class="mt-2" />
                             </div>
                             <div class="col-span-4">
                                 <div class="bg-gradient-to-r from-indigo-500 to-blue-400 text-white px-5 py-3 rounded-xl shadow mb-2">

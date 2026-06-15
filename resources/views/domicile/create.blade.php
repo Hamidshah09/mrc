@@ -258,6 +258,12 @@
 
                                 <x-input-error :messages="$errors->get('remarks')" class="mt-2" />
                             </div>
+                            <div class="form-control col-span-4">
+                                <x-input-label for="picture" :value="__('Applicant Picture (optional)')" />
+                                <input type="file" name="picture" id="picture" accept="image/*" class="block w-full p-2 rounded-md border border-gray-300" />
+                                <p class="text-sm text-gray-500 mt-1">Optional: upload JPG/PNG up to 5MB.</p>
+                                <x-input-error :messages="$errors->get('picture')" class="mt-2" />
+                            </div>
                             <div class="col-span-4">
                                 <div class="bg-gradient-to-r from-indigo-500 to-blue-400 text-white px-5 py-3 rounded-xl shadow mb-2">
                                     <h3 class="text-lg font-semibold tracking-wide">

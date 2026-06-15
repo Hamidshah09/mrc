@@ -261,6 +261,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/surety/create', [SuretyController::class, 'create'])
             ->name('surety.create');
+        Route::get('/surety/export/pdf', [SuretyController::class, 'exportPdf'])->name('surety.export.pdf');
         Route::get('/surety/{id}/report', [SuretyController::class, 'report'])->name('surety.report');
         Route::get('/surety/documents', [SuretyDocumentController::class, 'index'])->name('suretydocuments.index');
         Route::get('/surety/documents/create', [SuretyDocumentController::class, 'create'])->name('suretydocuments.create');

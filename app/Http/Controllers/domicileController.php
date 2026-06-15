@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class domicileController extends Controller
@@ -190,6 +191,8 @@ class domicileController extends Controller
         'approver_id' => 'nullable|integer',
 
         'children_checkbox' => 'nullable|string',
+        'picture' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+        'picture_path' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
     ]);
 
     $request->validate([
@@ -245,6 +248,14 @@ class domicileController extends Controller
     // $domicile->has_children = $request->has('children_checkbox') ? true : false;
 
     $domicile->save();
+
+    // Handle optional picture upload from form (accept either 'picture' or 'picture_path')
+    if ($request->hasFile('picture') || $request->hasFile('picture_path')) {
+        $file = $request->file('picture') ?? $request->file('picture_path');
+        $path = $file->store('domicile_pictures', 'public');
+        $domicile->picture_path = Storage::url($path);
+        $domicile->save();
+    }
     $children = $request->input('children');
     if ($children){
         foreach ($children as $child) {
@@ -428,6 +439,8 @@ class domicileController extends Controller
         'children.*.name' => 'required|string',
         'children.*.dob' => 'required|date',
         'children.*.gender_id' => 'required|in:1,2',
+        'picture' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+        'picture_path' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
     ]);
 
     // 🔹 Update applicant info
@@ -522,6 +535,24 @@ class domicileController extends Controller
                 'gender_id' => $childData['gender_id'],
             ]);
         }
+    }
+
+    // Handle picture replacement (accept either 'picture' or 'picture_path')
+    if ($request->hasFile('picture') || $request->hasFile('picture_path')) {
+        // delete existing file if present
+        if ($domicile->picture_path) {
+            $existing = parse_url($domicile->picture_path, PHP_URL_PATH);
+            // strip leading /storage/ if present to map to public disk path
+            $existing = preg_replace('#^/storage/#', '', $existing);
+            if ($existing) {
+                Storage::disk('public')->delete($existing);
+            }
+        }
+
+        $file = $request->file('picture') ?? $request->file('picture_path');
+        $path = $file->store('domicile_pictures', 'public');
+        $domicile->picture_path = Storage::url($path);
+        $domicile->save();
     }
 
         return redirect()->route('domicile.index')->with('success', 'Domicile record updated successfully.');

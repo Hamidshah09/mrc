@@ -14,6 +14,9 @@
             <a href="{{ route('surety.create') }}" class="mb-2 px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
                 Add New
             </a>
+            <a href="{{ route('surety.export.pdf', request()->query()) }}" target="_blank" class="mb-2 px-4 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150 ml-3">
+                Download PDF
+            </a>
         </div>
 
         <!-- Filters -->

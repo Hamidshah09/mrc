@@ -362,6 +362,50 @@ class SuretyController extends Controller
 
         return view('surety.report', compact('record'));
     }
+    /**
+     * Export filtered list as PDF report.
+     */
+    public function exportPdf(Request $request)
+    {
+        $query = SuretyRegister::with(['suretyType', 'subDivision']);
+
+        if ($request->filled('search')) {
+            $q = $request->search;
+            $query->where(function ($wr) use ($q) {
+                $wr->where('id', 'like', "%{$q}%")
+                    ->orWhere('guarantor_name', 'like', "%{$q}%")
+                    ->orWhere('guarantor_cnic', 'like', "%{$q}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('surety_status_id', $request->status);
+        }
+
+        if ($request->filled('surety_type_id')) {
+            $query->where('surety_type_id', $request->surety_type_id);
+        }
+
+        if ($request->filled('from')) {
+            $query->whereDate('receiving_date', '>=', $request->from);
+        }
+        if ($request->filled('to')) {
+            $query->whereDate('receiving_date', '<=', $request->to);
+        }
+
+        $records = $query->orderBy('id', 'desc')->get();
+
+        $from = $request->input('from');
+        $to = $request->input('to');
+
+        $printedBy = auth()->user() ? auth()->user()->name : 'System';
+        $printDate = Carbon::now()->format('d-m-Y H:i:s');
+
+        $data = compact('records', 'from', 'to', 'printedBy', 'printDate');
+
+        $pdf = \PDF::loadView('surety.pdf_report', $data)->setPaper('A4', 'landscape');
+        return $pdf->stream('Surties_Report_'.now()->format('Ymd_His').'.pdf');
+    }
     public function fetchByRegisterId($register_id)
     {
         $record = DB::table('suretyregisterold')->where('register_id', $register_id)->first();

@@ -301,6 +301,7 @@ class DivorceCaseController extends Controller
                 'max:50',
                 Rule::unique('divorce_cases', 'case_no')->ignore($divorceCase?->id),
             ],
+            'application_date' => ['required', 'date'],
             'divorce_type' => ['required', Rule::in(['Talaq', 'Khula', 'Talaq Tafveez'])],
             'applicant_side' => ['required', Rule::in(['groom', 'bride'])],
             'groom_cnic' => ['required', 'digits:13'],
@@ -357,8 +358,18 @@ class DivorceCaseController extends Controller
 
     private function syncCompletedOldNoticeSchedule(DivorceCase $divorceCase): void
     {
+        if (!$divorceCase->decision_date) {
+            return;
+        }
+
+        $decision = \Illuminate\Support\Carbon::parse($divorceCase->decision_date);
+
         foreach ([1 => -60, 2 => -30, 3 => 0] as $noticeNumber => $days) {
-            $hearingDate = $divorceCase->decision_date->copy()->addDays($days);
+            if ($days < 0) {
+                $hearingDate = $decision->copy()->subDays(abs($days));
+            } else {
+                $hearingDate = $decision->copy()->addDays($days);
+            }
 
             $divorceCase->hearings()->updateOrCreate([
                 'notice_number' => $noticeNumber,

@@ -10,9 +10,9 @@
         .certificate { border: 2px solid #111827; padding: 36px; min-height: 900px; }
         .center { text-align: center; }
         table { width: 100%; border-collapse: collapse; margin-top: 24px; }
-        td, th { border: 1px solid #d1d5db; padding: 9px; text-align: left; vertical-align: top; }
-        .plain td { border: 0; padding: 6px 0; }
-        .label { width: 190px; font-weight: bold; }
+        td, th { border: none; padding: 6px; text-align: left; vertical-align: top; }
+        .plain td { border: 0; padding: 6px 0; text-align: left; }
+        .label { width: 150px; font-weight: bold; border:none;}
         .signature { margin-top: 90px; display: flex; justify-content: space-between; }
         @media print {
             .toolbar { display: none; }
@@ -28,68 +28,69 @@
 
     <section class="certificate">
         <div class="center">
-            <h1>Chairman Arbitration Council</h1>
-            <h3>District Islamabad</h3>
+            <h1 style="margin:0px;padding:0px">Chairman Arbitration Council</h1>
+            <h1 style="margin:0px;padding:0px">District Islamabad</h1>
+            <h3 style="margin-bottom:0px;padding-bottom:0px">Divorce Effectiveness Certificate</h3>
+            <h5 style="margin:0px;padding:0px">Under Section 6 of Muslim Faimly Ordinance 1961.</h5>
         </div>
 
         <table class="plain">
-            <tr><td class="label">Case No</td><td>{{ $divorceCase->case_no }}</td></tr>
+            <tr>
+                <td class="label">Application Date</td><td>{{ optional($divorceCase->application_date)->format('d-m-Y') }}</td>
+                <td style="width:100px;border:none;"></td>
+                <td class="label" style="text-align:right;border:none;">Case No</td><td style="text-align:right;">{{ $divorceCase->case_no }}</td>
+            </tr>
             <tr><td class="label">Type of Divorce</td><td>{{ $divorceCase->divorce_type }}</td></tr>
-            <tr><td class="label">Decision Date</td><td>{{ optional($divorceCase->decision_date)->format('d-m-Y') }}</td></tr>
-            <tr><td class="label">Date of Issue</td><td>{{ optional($divorceCase->issue_date)->format('d-m-Y') ?? 'Pending' }}</td></tr>
+            
         </table>
 
         <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Groom</th>
-                    <th>Bride</th>
-                </tr>
-            </thead>
             <tbody>
-                <tr><td>Name</td><td>{{ $divorceCase->groom_name }}</td><td>{{ $divorceCase->bride_name }}</td></tr>
-                <tr><td>Father Name</td><td>{{ $divorceCase->groom_father_name }}</td><td>{{ $divorceCase->bride_father_name }}</td></tr>
-                <tr><td>CNIC</td><td>{{ $divorceCase->groom_cnic }}</td><td>{{ $divorceCase->bride_cnic }}</td></tr>
-                <tr><td>Address</td><td>{{ $divorceCase->groom_address }}</td><td>{{ $divorceCase->bride_address }}</td></tr>
+                @if ($divorceCase->applicant_side=='groom')
+                    <tr><td class="label">First Party</td><td style="border:none;">{{ $divorceCase->groom_name }} s/d/o {{ $divorceCase->groom_father_name }} r/o {{ $divorceCase->groom_address }}</td></tr>
+                    <tr><td class="label">Second Party</td><td style="border:none;">{{ $divorceCase->bride_name }} s/d/o {{ $divorceCase->bride_father_name }} r/o {{ $divorceCase->bride_address }}</td></tr>        
+                @else 
+
+                    <tr><td class="label">First Party</td><td style="border:none;">{{ $divorceCase->bride_name }} s/d/o {{ $divorceCase->bride_father_name }} r/o {{ $divorceCase->bride_address }}</td></tr>
+                    <tr><td class="label">Second Party</td><td style="border:none;">{{ $divorceCase->groom_name }} s/d/o {{ $divorceCase->groom_father_name }} r/o {{ $divorceCase->groom_address }}</td></tr>
+                    
+                @endif
+                
             </tbody>
         </table>
-
-        <p style="margin-top: 28px; line-height: 1.7;">
-            This is certified that notices were issued and reconciliation proceedings were conducted by the Arbitration
-            Council. After completion of the statutory period and non-reconciliation of both parties, this divorce
-            registration certificate is issued according to the record maintained by this office.
-        </p>
+        @if ($divorceCase->divorce_type=='Talaq' && $divorceCase->applicant_side=='groom')
+            <p style="margin-top: 28px; line-height: 1.7;text-align: justify;">
+                First Party <span style="font-weight:bold;">{{$divorceCase->groom_name}}</span>  has given divorce to his wife, Second Party <span style="font-weight:bold;">{{$divorceCase->bride_name}}</span> with mutual consent and applied for arbitraion proceedings on {{ optional($divorceCase->application_date)->format('d-m-Y') }}. Accordingly, notices were issued and reconciliation proceedings were conducted by the Arbitration. The manditory statutory period of 90 days has been passed and both parties have not reconciled. Therefore, this divorce effectiveness registration certificate is issued. 
+            </p>
+        @elseif ($divorceCase->divorce_type=='Talaq' && $divorceCase->applicant_side=='bride')
+            <p style="margin-top: 28px; line-height: 1.7;text-align: justify;">
+                First Party <span style="font-weight:bold;">{{$divorceCase->bride_name}}</span> has stated that her husband <span style="font-weight:bold;">{{$divorceCase->groom_name}}</span>, has given divorce to her and applied for arbitraion proceedings on {{ optional($divorceCase->application_date)->format('d-m-Y') }}. Accordingly, notices were issued and reconciliation proceedings were conducted by the Arbitration. The manditory statutory period of 90 days has been passed and both parties have not reconciled. Therefore, this divorce effectiveness registration certificate is issued. 
+            </p>    
+        @elseif ($divorceCase->divorce_type=='khula')
+            <p style="margin-top: 28px; line-height: 1.7;text-align: justify;">
+                First Party <span style="font-weight:bold;">{{$divorceCase->bride_name}}</span> has obtain "Khula" from faimly court against her husband <span style="font-weight:bold;">{{$divorceCase->groom_name}}</span> and applied for arbitraion proceedings on {{ optional($divorceCase->application_date)->format('d-m-Y') }}. Accordingly, notices were issued and reconciliation proceedings were conducted by the Arbitration. The manditory statutory period of 90 days has been passed and both parties have not reconciled. Therefore, this divorce effectiveness registration certificate is issued. 
+            </p>
+        @elseif ($divorceCase->divorce_type=='mubarat')
+            <p style="margin-top: 28px; line-height: 1.7; text-align: justify;">
+                First Party <span style="font-weight:bold;">{{$divorceCase->bride_name}}</span> by using column 18 of Nikkah Nama has given divorce to her husband <span style="font-weight:bold;">{{$divorceCase->groom_name}}</span> and applied for arbitraion proceedings on {{ optional($divorceCase->application_date)->format('d-m-Y') }}. Accordingly, notices were issued and reconciliation proceedings were conducted by the Arbitration. The manditory statutory period of 90 days has been passed and both parties have not reconciled. Therefore, this divorce effectiveness registration certificate is issued. 
+            </p>
+        @endif
 
         <table>
-            <thead>
-                <tr>
-                    <th>Notice</th>
-                    <th>Notice Date</th>
-                    <th>Hearing Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($divorceCase->hearings as $hearing)
-                    <tr>
-                        <td>{{ $hearing->notice_number }}</td>
-                        <td>{{ optional($hearing->notice_date)->format('d-m-Y') }}</td>
-                        <td>{{ optional($hearing->hearing_date)->format('d-m-Y') }}</td>
-                        <td>{{ $hearing->isCompleted() ? 'Completed' : ucfirst($hearing->status) }}</td>
-                    </tr>
-                @endforeach
+            <tbody >
+                <tr ><td class="label" style="border:none;">Decision Date</td><td style="border:none;text-align:left;">{{ optional($divorceCase->decision_date)->format('d-m-Y') }}</td></tr>
+                <tr><td class="label" style="border:none;">Date of Issue:</td><td style="border:none;text-align:left;">{{ optional($divorceCase->issue_date)->format('d-m-Y') ?? 'Pending' }}</td></tr>
+
             </tbody>
         </table>
 
         <div class="signature">
             <div>
-                <div>Prepared By</div>
-                <div style="margin-top: 36px; border-top: 1px solid #111827; width: 180px;"></div>
+                
             </div>
-            <div>
-                <div>Chairman, Arbitration Council</div>
-                <div style="margin-top: 36px; border-top: 1px solid #111827; width: 220px;"></div>
+            <div style="width:50%;">
+                <div style="text-align: center;font-weight: bold;">Chairman</div>
+                <div style="text-align: center;font-weight: bold;">Arbitration Council</div>
             </div>
         </div>
     </section>

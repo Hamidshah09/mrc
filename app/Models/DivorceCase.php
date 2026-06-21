@@ -12,6 +12,7 @@ class DivorceCase extends Model
     use Userstamps;
 
     protected $fillable = [
+        'application_date',
         'entry_type',
         'case_no',
         'divorce_type',
@@ -31,6 +32,7 @@ class DivorceCase extends Model
     ];
 
     protected $casts = [
+        'application_date' => 'date',
         'decision_date' => 'date',
         'issue_date' => 'date',
     ];

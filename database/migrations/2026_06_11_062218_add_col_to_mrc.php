@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('mrc', function (Blueprint $table) {
             $table->string('registrar_name', 80)->nullable();
+            $table->unsignedBigInteger('union_council_id')->nullable();
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('mrc', function (Blueprint $table) {
             $table->dropColumn('registrar_name');
+            $table->dropColumn('union_council_id');
         });
     }
 };

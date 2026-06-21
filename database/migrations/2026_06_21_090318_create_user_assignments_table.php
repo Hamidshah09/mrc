@@ -26,7 +26,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Optional: prevent duplicate assignments
-            $table->unique(['user_id', 'assignable_type', 'assignable_id']);
+            $table->unique(['user_id']);
 
             // Optional index for faster lookups
             $table->index(['assignable_type', 'assignable_id']);

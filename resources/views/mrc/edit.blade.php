@@ -99,6 +99,16 @@
                            value="{{ old('register_no', $mrc->register_no) }}">
                 </div>
 
+                <div>
+                    <label class="block text-sm font-medium">Union Council</label>
+                    <select name="union_council_id" class="w-full border-gray-300 rounded shadow-sm">
+                        <option value="">-- Select Union Council --</option>
+                        @foreach($unionCouncils as $uc)
+                            <option value="{{ $uc->id }}" {{ (string)old('union_council_id', $mrc->union_council_id) === (string)$uc->id ? 'selected' : '' }}>{{ $uc->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium">Remarks</label>
                     <textarea name="remarks" rows="3"

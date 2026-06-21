@@ -28,28 +28,16 @@ class ImportUnionCouncils extends Command
         $mobile = 1; // Default mobile number for all secretaries
         while (($row = fgetcsv($handle)) !== false) {
 
-            $secretaryName = trim($row[0]);
-            $unionCouncilName = trim($row[1]);
+            
+            $unionCouncilName = trim($row[0]);
 
-            if (!$secretaryName || !$unionCouncilName) {
+            if (!$unionCouncilName) {
                 continue;
             }
-
-            // Create secretary user if not exists
-            $user = User::firstOrCreate(
-                ['name' => $secretaryName],
-                [
-                    'email' => strtolower(str_replace(' ', '.', $secretaryName)) . '@cfc.com',
-                    'password' => Hash::make('12345678'),
-                    'role_id' => 6,
-                    'mobile' => '000000000' . $mobile++, // Increment mobile number for each secretary
-                ]
-            );
 
             // Create or update union council
             UnionCouncil::updateOrCreate(
                 ['name' => $unionCouncilName],
-                ['user_id' => $user->id]
             );
 
             $this->info("Imported: {$unionCouncilName}");

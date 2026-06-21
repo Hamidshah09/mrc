@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Imports\MrcImport;
 use App\Models\MrcStatus;
+use App\Models\UnionCouncil;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -15,7 +16,7 @@ class MrcController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = MRC::with(['registrar', 'verifier'])->orderBy('id', 'desc');
+        $query = Mrc::with(['registrar', 'verifier', 'unionCouncil'])->orderBy('id', 'desc');
 
         // Limit to registrar's own records if applicable
     if ($user->role->role === 'registrar') {
@@ -47,14 +48,23 @@ class MrcController extends Controller
         $query->where('status', $request->input('status'));
     }
 
+    // Union council filter
+    if ($request->filled('union_council_id')) {
+        $query->where('union_council_id', $request->input('union_council_id'));
+    }
+
     // Get filtered results
     $mrcRecords = $query->paginate(10)->withQueryString(); // keep filters in pagination links
 
-    return view('mrc.index', compact('mrcRecords', 'user'));
+    $unionCouncils = UnionCouncil::orderBy('name')->get();
+
+    return view('mrc.index', compact('mrcRecords', 'user', 'unionCouncils'));
     }
     public function create()
     {
-        return view('mrc.create');
+        $unionCouncils = UnionCouncil::orderBy('name')->get();
+        $last = session('last_union_council_id');
+        return view('mrc.create', compact('unionCouncils', 'last'));
     }
     public function store(Request $request)
     {
@@ -76,6 +86,7 @@ class MrcController extends Controller
             'register_no'        => 'nullable|string|max:20',
             'registrar_name'     => 'nullable|string|max:80',
             'image'              => 'nullable|image|mimes:jpg,jpeg,png|max:4048',
+            'union_council_id'   => 'nullable|exists:union_councils,id',
 
         ]);
         $exist = Mrc::where('groom_cnic', $request->groom_cnic)->Where('bride_cnic', $request->bride_cnic)->first();
@@ -91,7 +102,12 @@ class MrcController extends Controller
             $validated['image'] = $request->file('image')->store('mrc_images', 'public');
         }
 
-        Mrc::create($validated);
+        $mrc = Mrc::create($validated);
+
+        // save last used union council in session for convenience
+        if (!empty($validated['union_council_id'])) {
+            session(['last_union_council_id' => $validated['union_council_id']]);
+        }
 
         return redirect()->route('mrc.index')->with('success', 'MRC record created successfully.');
     }
@@ -102,7 +118,8 @@ class MrcController extends Controller
     public function edit($id)
     {
         $mrc = Mrc::findOrFail($id);
-        return view('mrc.edit', compact('mrc'));
+        $unionCouncils = UnionCouncil::orderBy('name')->get();
+        return view('mrc.edit', compact('mrc', 'unionCouncils'));
     }
     public function update(Request $request, $id)
     {
@@ -123,6 +140,7 @@ class MrcController extends Controller
             'register_no'        => 'nullable|string|max:20',
             'registrar_name'     => 'nullable|string|max:80',
             'image'              => 'nullable|image|mimes:jpg,jpeg,png|max:4048',
+            'union_council_id'   => 'nullable|exists:union_councils,id',
             
         ]);
 
@@ -138,6 +156,11 @@ class MrcController extends Controller
 
 
         $mrc->update($validated);
+
+        // update last used union council in session
+        if (!empty($validated['union_council_id'])) {
+            session(['last_union_council_id' => $validated['union_council_id']]);
+        }
 
         return redirect()->route('mrc.index')->with('success', 'MRC record updated successfully.');
     }

@@ -21,6 +21,14 @@
                     <option value="bride_name">Bride Name</option>
                 </select>
 
+                <label for="union_council_id">Union Council</label>
+                <select name="union_council_id" id="union_council_id" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                    <option value="">All</option>
+                    @foreach($unionCouncils as $uc)
+                        <option value="{{ $uc->id }}" {{ (string)request('union_council_id') === (string)$uc->id ? 'selected' : '' }}>{{ $uc->name }}</option>
+                    @endforeach
+                </select>
+
                 <label for="from">From</label>
                 <input type="date" name="From" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('from') }}">
                 <label for="from">to</label>
@@ -60,6 +68,7 @@
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Marriage Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registration Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registrar</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Union Council</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
@@ -73,6 +82,7 @@
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->marriage_date }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registration_date }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registrar_name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->unionCouncil ? $mrc->unionCouncil->name : '' }}</td>
                             {{-- <td class="px-6 py-4 text-sm">
                                 <span class="inline-block px-2 py-1 rounded-full text-xs font-medium
                                     {{
@@ -137,6 +147,10 @@
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700">Registrar:</td>
                             <td class="p-3 text-gray-900">{{ $mrc->registrar->name }}</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-3 font-semibold text-gray-700">Union Council:</td>
+                            <td class="p-3 text-gray-900">{{ $mrc->unionCouncil ? $mrc->unionCouncil->name : '' }}</td>
                         </tr>
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700">Verifier:</td>

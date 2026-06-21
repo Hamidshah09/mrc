@@ -26,12 +26,18 @@ class Mrc extends Model
         'register_no',
         'registrar_name',
         'status',
+        'union_council_id',
         'image',
     ];
     protected $table = 'mrc';
     public function registrar()
     {
         return $this->belongsTo(User::class, 'registrar_id');
+    }
+
+    public function unionCouncil()
+    {
+        return $this->belongsTo(UnionCouncil::class, 'union_council_id');
     }
 
     /**

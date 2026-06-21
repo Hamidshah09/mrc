@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('union_councils', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
         });
 
         // Insert initial data
         DB::table('union_councils')->insert([
-            ['name' => 'Union Council 1'],
+            ['name' => 'Union Council 1', 'user_id' => null],
         ]);
     }
 

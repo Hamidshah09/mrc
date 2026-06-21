@@ -144,4 +144,9 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class)
             ->where('is_read', false);
     }
+
+    public function assignment()
+    {
+        return $this->hasOne(UserAssignment::class);
+    }
 }

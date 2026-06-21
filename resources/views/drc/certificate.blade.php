@@ -9,14 +9,14 @@
             font-family: 'Poppins';
             font-style: normal;
             font-weight: 400;
-            src: url('{{ storage_path('fonts/Poppins-Regular.ttf') }}') format('truetype');
+            src: url("file://{{ str_replace('\\', '/', public_path('fonts/Poppins-Regular.ttf')) }}") format('truetype');
         }
 
         @font-face {
             font-family: 'Poppins';
             font-style: normal;
             font-weight: 700;
-            src: url('{{ storage_path('fonts/Poppins-Bold.ttf') }}') format('truetype');
+            src: url("file://{{ str_replace('\\', '/', public_path('fonts/Poppins-Bold.ttf')) }}") format('truetype');
         }
 
         body {

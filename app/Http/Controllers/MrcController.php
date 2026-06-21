@@ -86,7 +86,7 @@ class MrcController extends Controller
             'register_no'        => 'nullable|string|max:20',
             'registrar_name'     => 'nullable|string|max:80',
             'image'              => 'nullable|image|mimes:jpg,jpeg,png|max:4048',
-            'union_council_id'   => 'nullable|exists:union_councils,id',
+            'union_council_id'   => 'required|exists:union_councils,id',
 
         ]);
         $exist = Mrc::where('groom_cnic', $request->groom_cnic)->Where('bride_cnic', $request->bride_cnic)->first();
@@ -140,7 +140,7 @@ class MrcController extends Controller
             'register_no'        => 'nullable|string|max:20',
             'registrar_name'     => 'nullable|string|max:80',
             'image'              => 'nullable|image|mimes:jpg,jpeg,png|max:4048',
-            'union_council_id'   => 'nullable|exists:union_councils,id',
+            'union_council_id'   => 'required|exists:union_councils,id',
             
         ]);
 

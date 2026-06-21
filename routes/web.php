@@ -289,6 +289,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/mrc/import', [MrcController::class, 'import'])->name('mrc.import')->middleware('role:mrc,admin,registrar,verifier');
 
     Route::middleware('role:drc,admin')->group(function () {
+        Route::get('/drc/dashboard', [DivorceCaseController::class, 'dashboard'])->name('drc.dashboard');
         Route::get('/drc', [DivorceCaseController::class, 'index'])->name('drc.index');
         Route::get('/drc/create', [DivorceCaseController::class, 'create'])->name('drc.create');
         Route::get('/drc/create/live', [DivorceCaseController::class, 'createLive'])->name('drc.live.create');

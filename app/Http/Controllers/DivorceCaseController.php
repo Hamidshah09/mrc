@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class DivorceCaseController extends Controller
@@ -44,6 +45,59 @@ class DivorceCaseController extends Controller
         $divorceCases = $query->paginate(10)->withQueryString();
 
         return view('drc.index', compact('divorceCases'));
+    }
+
+    public function dashboard(Request $request)
+    {
+        $pendingFirst = DB::table('divorce_hearings')
+            ->where('notice_number', 1)
+            ->where('status', '<>', 'heard')
+            ->distinct()
+            ->count('divorce_case_id');
+
+        $pendingSecond = DB::table('divorce_hearings')
+            ->where('notice_number', 2)
+            ->where('status', '<>', 'heard')
+            ->distinct()
+            ->count('divorce_case_id');
+
+        $pendingThird = DB::table('divorce_hearings')
+            ->where('notice_number', 3)
+            ->where('status', '<>', 'heard')
+            ->distinct()
+            ->count('divorce_case_id');
+
+        $certificateIssued = DivorceCase::whereNotNull('issue_date')->count();
+
+        $months = [];
+        $appCounts = [];
+        $hearingCounts = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $dt = Carbon::now()->startOfMonth()->subMonths($i);
+            $label = $dt->format('M Y');
+            $months[] = $label;
+
+            $start = $dt->copy()->startOfMonth()->toDateString();
+            $end = $dt->copy()->endOfMonth()->toDateString();
+
+            $appCounts[] = DivorceCase::whereBetween('application_date', [$start, $end])->count();
+
+            $hearingCounts[] = DB::table('divorce_hearings')
+                ->where('status', 'heard')
+                ->whereBetween('hearing_date', [$start, $end])
+                ->count();
+        }
+
+        return view('drc.dashboard', compact(
+            'pendingFirst',
+            'pendingSecond',
+            'pendingThird',
+            'certificateIssued',
+            'months',
+            'appCounts',
+            'hearingCounts'
+        ));
     }
 
     public function create()

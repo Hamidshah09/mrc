@@ -5,6 +5,7 @@ use Illuminate\Http\Log;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\SuretyRegister;
+use App\Models\SuretyImage;
 use App\Models\SuretyHistory;
 use App\Models\SuretyType;
 use App\Models\SuretyStatus;
@@ -86,7 +87,8 @@ class SuretyController extends Controller
             'bank_id' => 'nullable|integer',
             'branch_name' => 'nullable|string|max:100',
             'checque_no' => 'nullable|string|max:50',
-            'docs' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'docs' => 'nullable',
+            'docs.*' => 'file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
 
@@ -119,12 +121,19 @@ class SuretyController extends Controller
 
 
         // Handle optional uploaded payorder image/pdf
-        if ($request->hasFile('docs')) {
-            $path = $request->file('docs')->store('surety_docs', 'public');
-            $data['docs'] = $path;
-        }
-
         $surety = SuretyRegister::create($data);
+
+        // Handle multiple uploaded docs
+        if ($request->hasFile('docs')) {
+            foreach ($request->file('docs') as $file) {
+                $path = $file->store('surety_docs', 'public');
+                SuretyImage::create([
+                    'surety_register_id' => $surety->id,
+                    'path' => $path,
+                    'original_name' => $file->getClientOriginalName(),
+                ]);
+            }
+        }
         SuretyHistory::create([
             'surety_id' => $surety->id,
             'status_id' => 1, // "Received"
@@ -169,7 +178,8 @@ class SuretyController extends Controller
             'bank_id' => 'nullable|integer',
             'branch_name' => 'nullable|string|max:100',
             'checque_no' => 'nullable|string|max:50',
-            'docs' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'docs' => 'nullable',
+            'docs.*' => 'file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
         $record = SuretyRegister::findOrFail($id);
@@ -198,14 +208,16 @@ class SuretyController extends Controller
             'checque_no'
         ]);
 
-        // Handle docs replacement
+        // Handle new uploaded docs (append to existing)
         if ($request->hasFile('docs')) {
-            // delete existing
-            if ($record->docs) {
-                Storage::disk('public')->delete($record->docs);
+            foreach ($request->file('docs') as $file) {
+                $path = $file->store('surety_docs', 'public');
+                SuretyImage::create([
+                    'surety_register_id' => $record->id,
+                    'path' => $path,
+                    'original_name' => $file->getClientOriginalName(),
+                ]);
             }
-            $path = $request->file('docs')->store('surety_docs', 'public');
-            $data['docs'] = $path;
         }
 
         $record->update($data);

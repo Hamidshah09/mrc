@@ -211,11 +211,30 @@
 
                 <input type="hidden" name="user_id" value="{{ old('user_id', $record->user_id) }}">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Payorder / Document (image or PDF)</label>
+                    <label class="block text-sm font-medium text-gray-700">Documents</label>
                     @if($record->docs)
                         <div class="mb-2"><a href="{{ asset('storage/'.$record->docs) }}" target="_blank" class="text-blue-600">View existing document</a></div>
                     @endif
-                    <input type="file" name="docs" accept="image/*,.pdf" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
+                    @if($record->images && $record->images->count())
+                        <h4 class="text-md font-medium mb-2">Uploaded Documents</h4>
+                        <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                            @foreach($record->images as $img)
+                                <div class="border rounded shadow-sm overflow-hidden bg-white">
+                                    <div class="w-full h-40 overflow-hidden bg-gray-100">
+                                        @if(\Illuminate\Support\Str::endsWith($img->path, ['.jpg', '.jpeg', '.png']))
+                                            <a href="{{ asset('storage/'.$img->path) }}" target="_blank"><img src="{{ asset('storage/'.$img->path) }}" alt="" class="w-full h-full object-cover" /></a>
+                                        @else
+                                            <div class="p-4">
+                                                <a href="{{ asset('storage/'.$img->path) }}" target="_blank" class="text-blue-600">{{ $img->original_name ?? 'Document' }}</a>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="p-2 text-sm text-gray-700">{{ $img->original_name ?? basename($img->path) }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                    <input type="file" name="docs[]" accept="image/*,.pdf" multiple class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
                     @error('docs')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror

@@ -47,6 +47,21 @@
             </div>
         </div>
 
+        @if($record->images && $record->images->count())
+            <h3 class="text-xl font-semibold mb-3">Documents</h3>
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                @foreach($record->images as $img)
+                    <div class="border p-2">
+                        @if(\Illuminate\Support\Str::endsWith($img->path, ['.jpg', '.jpeg', '.png']))
+                            <a href="{{ asset('storage/'.$img->path) }}" target="_blank"><img src="{{ asset('storage/'.$img->path) }}" class="w-full h-40 object-cover" alt=""/></a>
+                        @else
+                            <a href="{{ asset('storage/'.$img->path) }}" target="_blank" class="text-blue-600">{{ $img->original_name ?? 'Document' }}</a>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
         <div class="flex justify-end mb-6">
             <a href="{{ route('surety.edit', $record->id) }}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Edit</a>
             <a href="{{ route('surety.index') }}" class="ml-3 px-4 py-2 bg-gray-300 rounded">Back</a>

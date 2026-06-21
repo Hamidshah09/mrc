@@ -30,7 +30,6 @@ class SuretyRegister extends Model
         'branch_name',
         'checque_no',
         'court_id',
-        'docs',
     ];
 
     public function suretyType()
@@ -61,5 +60,10 @@ class SuretyRegister extends Model
     public function bank()
     {
         return $this->belongsTo(Bank::class, 'bank_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(SuretyImage::class, 'surety_register_id');
     }
 }

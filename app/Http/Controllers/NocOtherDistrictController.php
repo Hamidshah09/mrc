@@ -286,8 +286,36 @@ class NocOtherDistrictController extends Controller
         if (!$letter){
             return redirect()->route('noc-other-district.index')->withErrors(['notfound' => 'Letter not found']);
         }
-        $pdf = \PDF::loadView('nocotherdistrict.letter', compact('letter'));
+        $email = Auth()->user()->email;
+        $signature = null;
+        $stamp = null;
+
+        if ($email == 'safeer@cfc.com') {
+            $signaturePath = public_path('images/domicile_signature.png');
+            $stampPath = public_path('images/domicile_stamp.png');
+
+            $signature = 'data:image/png;base64,' . base64_encode(file_get_contents($signaturePath));
+            $stamp = 'data:image/png;base64,' . base64_encode(file_get_contents($stampPath));
+        }
+
+        $pdf = \PDF::loadView(
+            'nocotherdistrict.letter',
+            compact('letter', 'email', 'signature', 'stamp')
+        );
         // return view('nocotherdistrict.letter', compact('letter'));
         return $pdf->stream('NOC_Other_District_Letter_'.$letter->Letter_ID.'.pdf');
+    }
+
+    public function affidavit($id){
+        $letter = NocOtherDistrict::with('applicants', 'dispatchDiary')->find($id);
+        if (!$letter){
+            return redirect()->route('noc-other-district.index')->withErrors(['notfound' => 'Letter not found']);
+        }
+
+        $pdf = \PDF::setOptions([
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+        ])->loadView('nocotherdistrict.affidavit', compact('letter'));
+        return $pdf->stream('Affidavit_'.$letter->Letter_ID.'.pdf');
     }
 }

@@ -164,6 +164,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/domicile/noc-other-district/edit/{id}', [NocOtherDistrictController::class, 'edit'])->name('noc-other-district.edit');
     Route::put('/domicile/noc-other-district/update/{id}', [NocOtherDistrictController::class, 'update'])->name('noc-other-district.update');
     Route::get('/domicile/noc-other-district/letter/{id}', [NocOtherDistrictController::class, 'issueletter'])->name('noc-other-district.letter');
+    Route::get('/domicile/noc-other-district/affidavit/{id}', [NocOtherDistrictController::class, 'affidavit'])->name('noc-other-district.affidavit');
 
     Route::get('/domicile/cancellation/create', [DomicileCancellationController::class, 'create'])->name('domicile.cancellation.create');
     Route::post('/domicile/cancellation/store', [DomicileCancellationController::class, 'store'])->name('domicile.cancellation.store');
@@ -440,4 +441,11 @@ Route::middleware('auth')->get(
     '/domicile/noc-other-district/verify/{cnic}',
     [DomicileController::class, 'getotherdistdapplicant']
 );
+// Tablet feedback view (big controls for public screen)
+use App\Http\Controllers\FeedbackController;
+Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('feedback.create');
+Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+Route::get('/feedback/thank-you', [FeedbackController::class, 'thankyou'])->name('feedback.thankyou');
+
 require __DIR__.'/auth.php';

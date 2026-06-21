@@ -128,13 +128,21 @@
             </td>
         </tr>
     </table>
-    <table style="width:100%; margin-top:50px; border:none;">
+    <table style="width:100%; margin-top:10px; border:none;">
         <tr>
             <td style="width:60%" >
             </td>
             <td style="width: 40%; text-align:center;">
+                @if($signature)
+                    <img src="{{ $signature }}" style="height:130px;margin: 0px;">
+                @endif
+
                 <div>Incharge Domicile Branch</div>
-                <div class="">Islamabad</div>
+                <div>Islamabad</div>
+
+                @if($stamp)
+                    <img src="{{ $stamp }}" style="height:150px;margin: 0px;">
+                @endif
 
             </td>
     </table>

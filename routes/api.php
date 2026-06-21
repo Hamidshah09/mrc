@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\DomicileController;
 use App\Http\Controllers\Api\IdpController;
 use App\Http\Controllers\Api\ComplaintController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\FeedbackApiController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -55,6 +55,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/police-stations/{id}', [ComplaintController::class, 'policeStations']);
 
+    
+
+
+
 }); 
 
-
+Route::get('/services', [FeedbackApiController::class, 'services']);
+Route::post('/feedback', [FeedbackApiController::class, 'store']);

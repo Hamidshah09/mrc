@@ -28,8 +28,8 @@
 
     <section class="certificate">
         <div class="center">
-            <h1>Divorce Registration Certificate</h1>
-            <h3>Arbitration Council</h3>
+            <h1>Chairman Arbitration Council</h1>
+            <h3>District Islamabad</h3>
         </div>
 
         <table class="plain">

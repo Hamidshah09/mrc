@@ -177,6 +177,7 @@
                         <td class="px-6 py-4 flex flex-row space-between">
                             <a href="{{ route('noc-other-district.edit', $letter->Letter_ID) }}" ><x-heroicon-s-pencil title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/></a>
                             <a href="{{ route('noc-other-district.letter', $letter->Letter_ID) }}" ><x-heroicon-s-document-check title="Issue Letter" class="w-7 h-7 text-green-400 hover:text-green-600 transition"/></a>
+                            <a href="{{ route('noc-other-district.affidavit', $letter->Letter_ID) }}" class="ml-2" title="Affidavit"><x-heroicon-s-document-text class="w-7 h-7 text-blue-400 hover:text-blue-600 transition"/></a>
                         </td>
                     </tr>
                 @empty

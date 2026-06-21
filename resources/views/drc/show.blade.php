@@ -164,7 +164,7 @@
             <div class="space-y-4">
                 @foreach ($divorceCase->hearings as $hearing)
                     <div x-data="{ openPostpone: false }" @keydown.window.escape="openPostpone = false" class="rounded-lg overflow-hidden border shadow-sm p-4" style="background: rgba(255,255,255,0.18); backdrop-filter: blur(6px); border:1px solid rgba(255,255,255,0.25);">
-                        <div class="px-4 py-3 text-white flex items-center justify-between rounded-t-lg" style="background: linear-gradient(90deg,#1e63d6 0%,#154fb2 100%);">
+                        <div class="px-4 py-3 text-white flex items-center justify-between rounded-t-lg" style="background: linear-gradient(90deg,#1a63e0 0%,#3d6dc0 100%);">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 bg-white/20 rounded flex items-center justify-center">
                                     @if (!$hearing->isCompleted())

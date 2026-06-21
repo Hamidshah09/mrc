@@ -5,7 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Divorce Certificate - {{ $divorceCase->case_no }}</title>
     <style>
-        body { font-family: Arial, sans-serif; color: #111827; margin: 32px; }
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 400;
+            src: url('{{ storage_path('fonts/Poppins-Regular.ttf') }}') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 700;
+            src: url('{{ storage_path('fonts/Poppins-Bold.ttf') }}') format('truetype');
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #111827;
+            margin: 32px;
+        }
+        body {color: #111827; margin: 32px; }
         .toolbar { margin-bottom: 20px; }
         .certificate { border: 2px solid #111827; padding: 36px; min-height: 900px; }
         .center { text-align: center; }

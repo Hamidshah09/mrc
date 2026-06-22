@@ -5,14 +5,24 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     
-    @if($formMode==='old')
-
+    @if($formMode === 'old')
         <div>
             <label class="block text-sm font-medium text-gray-700">Application Date</label>
-            <input type="date" name="application_date" class="w-full border-gray-300 rounded shadow-sm"
-                value="{{ old('application_date', optional($divorceCase->application_date)->format('Y-m-d')) }}" required>
+            <input type="date"
+                name="application_date"
+                class="w-full border-gray-300 rounded shadow-sm"
+                value="{{ old('application_date', optional($divorceCase->application_date)->format('Y-m-d') ?? now()->format('Y-m-d')) }}"
+                required>
         </div>
-
+    @else
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Application Date</label>
+            <input type="date"
+                hidden
+                name="application_date"
+                value="{{ old('application_date', optional($divorceCase->application_date)->format('Y-m-d') ?? now()->format('Y-m-d')) }}"
+                required>
+        </div>
     @endif
     <div>
         <label class="block text-sm font-medium text-gray-700">Case No</label>

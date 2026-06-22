@@ -165,7 +165,7 @@
                         </div>
                     </div>
                 @endif
-                @if (auth()->user()->role->role== 'registrar' or auth()->user()->role->role== 'mrc' or auth()->user()->role->role== 'verifier' or auth()->user()->role->role== 'admin')
+                @if (auth()->user()->role->role== 'registrar' or auth()->user()->role->role== 'mrc' or auth()->user()->role->role== 'verifier' or auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'drc')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <div class="relative" x-data="{ dropdown: false }">
                             <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
@@ -187,7 +187,7 @@
                         </div>
                     </div>
                 @endif
-                @if (auth()->user()->role->role== 'drc' or auth()->user()->role->role== 'admin')
+                @if (auth()->user()->role->role== 'drc' or auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'mrc')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <div class="relative" x-data="{ dropdown: false }">
                             <button @click="dropdown = !dropdown" class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none">
@@ -609,18 +609,18 @@
                 </x-responsive-nav-link>
             </div>
         @endif
-        @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'mrc' or auth()->user()->role->role== 'domicile')
+        {{-- @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'mrc' or auth()->user()->role->role== 'domicile')
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('postalservice.index')" :active="request()->routeIs('postalservice.index')">
                     {{ __('Postal Services') }}
                 </x-responsive-nav-link>
             </div>
             <div class="pt-2 pb-3 space-y-1">
-                {{-- <x-responsive-nav-link :href="route('postal-status.index')" :active="request()->routeIs('postal-status.index')">
+                <x-responsive-nav-link :href="route('postal-status.index')" :active="request()->routeIs('postal-status.index')">
                     {{ __('Postal Status') }}
-                </x-responsive-nav-link> --}}
+                </x-responsive-nav-link>
             </div>
-        @endif
+        @endif --}}
         @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'domicile')
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('domicile.index')" :active="request()->routeIs('domicile.index')">

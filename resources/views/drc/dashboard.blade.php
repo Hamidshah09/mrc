@@ -6,25 +6,33 @@
     <div class="w-[95%] mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
 
-            <div class="bg-yellow-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Pending - First Notice</div>
-                <div class="text-xl font-bold">{{ $pendingFirst }}</div>
-            </div>
+            <a href="{{ route('drc.index', ['notice_number' => 1, 'hearing_status' => 'pending']) }}" class="block">
+                <div class="bg-yellow-100 p-4 rounded hover:shadow-inner">
+                    <div class="text-sm text-gray-600">Pending - First Notice</div>
+                    <div class="text-xl font-bold">{{ $pendingFirst }}</div>
+                </div>
+            </a>
 
-            <div class="bg-orange-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Pending - Second Notice</div>
-                <div class="text-xl font-bold">{{ $pendingSecond }}</div>
-            </div>
+            <a href="{{ route('drc.index', ['notice_number' => 2, 'hearing_status' => 'pending']) }}" class="block">
+                <div class="bg-orange-100 p-4 rounded hover:shadow-inner">
+                    <div class="text-sm text-gray-600">Pending - Second Notice</div>
+                    <div class="text-xl font-bold">{{ $pendingSecond }}</div>
+                </div>
+            </a>
 
-            <div class="bg-red-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Pending - Third Notice</div>
-                <div class="text-xl font-bold">{{ $pendingThird }}</div>
-            </div>
+            <a href="{{ route('drc.index', ['notice_number' => 3, 'hearing_status' => 'pending']) }}" class="block">
+                <div class="bg-red-100 p-4 rounded hover:shadow-inner">
+                    <div class="text-sm text-gray-600">Pending - Third Notice</div>
+                    <div class="text-xl font-bold">{{ $pendingThird }}</div>
+                </div>
+            </a>
 
-            <div class="bg-green-100 p-4 rounded">
-                <div class="text-sm text-gray-600">Certificate Issued</div>
-                <div class="text-xl font-bold">{{ $certificateIssued }}</div>
-            </div>
+            <a href="{{ route('drc.index', ['status' => 'certificate issued']) }}" class="block">
+                <div class="bg-green-100 p-4 rounded hover:shadow-inner">
+                    <div class="text-sm text-gray-600">Certificate Issued</div>
+                    <div class="text-xl font-bold">{{ $certificateIssued }}</div>
+                </div>
+            </a>
 
         </div>
 

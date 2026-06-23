@@ -13,6 +13,9 @@
         @endif
 
         <div class="flex flex-wrap justify-end gap-2 mb-4">
+            <a href="{{ route('drc.dashboard') }}" class="px-4 py-2 bg-indigo-700 rounded-md text-xs font-semibold text-white uppercase tracking-widest hover:bg-indigo-600">
+                Dashboard
+            </a>
             <a href="{{ route('drc.live.create') }}" class="px-4 py-2 bg-gray-800 rounded-md text-xs font-semibold text-white uppercase tracking-widest hover:bg-gray-700">
                 New Live Case
             </a>
@@ -22,7 +25,7 @@
         </div>
 
         <form action="{{ route('drc.index') }}" class="grid grid-cols-1 md:grid-cols-6 gap-3 mb-5">
-            <input type="text" name="search" placeholder="Search" class="border border-gray-300 rounded-md px-3 py-2 md:col-span-2" value="{{ request('search') }}">
+            <input type="text" name="search" placeholder="Search" class="border border-gray-300 rounded-md px-3 py-2" value="{{ request('search') }}">
             <select name="search_type" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5">
                 <option value="">Search By</option>
                 <option value="case_no" @selected(request('search_type') === 'case_no')>Case No</option>
@@ -30,6 +33,11 @@
                 <option value="groom_name" @selected(request('search_type') === 'groom_name')>Groom Name</option>
                 <option value="bride_cnic" @selected(request('search_type') === 'bride_cnic')>Bride CNIC</option>
                 <option value="bride_name" @selected(request('search_type') === 'bride_name')>Bride Name</option>
+            </select>
+            <select name="status" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5">
+                <option value="">Status</option>
+                <option value="under arbitration" @selected(request('status') === 'under arbitration')>Under Arbitration</option>
+                <option value="certificate issued" @selected(request('status') === 'certificate issued')>Certificate Issued</option>
             </select>
             <select name="divorce_type" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5">
                 <option value="">All Types</option>

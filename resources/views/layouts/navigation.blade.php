@@ -239,7 +239,6 @@
                             <div x-show="dropdown" @click.outside="dropdown = false"
                                 x-transition
                                 class="absolute mt-2 w-56 bg-white shadow-lg rounded-lg z-50">
-                                <a href="{{route('suretydocuments.index')}}" class="block px-4 py-2 hover:bg-gray-100">Surety Register</a>
                                 <a href="{{route('surety.index')}}" class="block px-4 py-2 hover:bg-gray-100">Surety Records</a>
                                 {{-- <a href="{{route('postal-status.index')}}" class="block px-4 py-2 hover:bg-gray-100">Postal Status</a> --}}
                             </div>
@@ -565,7 +564,7 @@
                     {{ __('Marriage Records') }}
                 </x-responsive-nav-link>
             </div>
-            @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'mrc')
+            @if (auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'mrc' or auth()->user()->role->role== 'drc')
                 <div class="pt-2 pb-3 space-y-1">
                     <x-responsive-nav-link :href="route('mrc_status.index')" :active="request()->routeIs('mrc_status.index')">
                         {{ __('MRC Status') }}
@@ -578,7 +577,7 @@
                 </div>
             @endif        
         @endif
-        @if (auth()->user()->role->role== 'drc' or auth()->user()->role->role== 'admin')
+        @if (auth()->user()->role->role== 'drc' or auth()->user()->role->role== 'admin' or auth()->user()->role->role== 'mrc')
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('drc.index')" :active="request()->routeIs('drc.*')">
                     {{ __('Divorce Cases') }}

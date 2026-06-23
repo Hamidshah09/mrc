@@ -26,6 +26,33 @@ class DivorceCaseController extends Controller
             }
         }
 
+        if ($request->filled('status')) {
+            if ($request->input('status') === 'under arbitration') {
+                $query->whereNull('issue_date');
+            } else if ($request->input('status') === 'certificate issued') {
+                $query->whereNotNull('issue_date');
+            }
+        }
+
+        // Filter by hearing notice number + hearing status (e.g. pending/heard)
+        if ($request->filled('notice_number')) {
+            $noticeNumber = (int) $request->input('notice_number');
+            $hearingStatus = $request->input('hearing_status', 'pending');
+
+            if ($hearingStatus === 'pending') {
+                $query->whereHas('hearings', function ($q) use ($noticeNumber) {
+                    $q->where('notice_number', $noticeNumber)
+                        ->where('status', '<>', 'heard');
+                });
+            } else {
+                // allow filtering for explicit hearing statuses like 'heard'
+                $query->whereHas('hearings', function ($q) use ($noticeNumber, $hearingStatus) {
+                    $q->where('notice_number', $noticeNumber)
+                        ->where('status', $hearingStatus);
+                });
+            }
+        }
+
         if ($request->filled('divorce_type')) {
             $query->where('divorce_type', $request->input('divorce_type'));
         }

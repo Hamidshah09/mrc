@@ -35,26 +35,14 @@
                         <li class="text-justify">Copy of CNIC</li>
                         <li class="text-justify">Residence Proof</li>
                         <li class="text-justify">Copy of Utility Bill</li>
-                        <li class="text-justify">One Passport Size Picture</li>
-                        <li class="text-justify">Affidavit for domicile. Check speciment for <a class="underline text-blue-800 font-semibold" href="{{asset('documents/MINOR AFFIDAVIT.pdf')}}" target="_blank">Minor</a> and <a class="underline text-blue-800 font-semibold" href="{{asset('documents/MAJOR AFFIDAVIT.pdf')}}" target="_blank">Major</a></li>
+                        <li class="text-justify">Affidavit for domicile on plain paper. Check speciment for <a class="underline text-blue-800 font-semibold" href="{{asset('documents/MINOR AFFIDAVIT.pdf')}}" target="_blank">Minor</a> and <a class="underline text-blue-800 font-semibold" href="{{asset('documents/MAJOR AFFIDAVIT.pdf')}}" target="_blank">Major</a></li>
                     </ul>
                     <h3 class="font-semibold text-lg text-gray-900 mt-2">Step Three:-</h3>
-                    <p class="ml-5">Visit CFC (first visit)</p>
+                    <p class="ml-5">Visit CFC</p>
                     <ul class="ml-5 list-disc pl-5 text-gray-700">    
                         <li class="text-justify">Get a token from que machine and wait for your turn</li>
                         <li class="text-justify">Fill up a From P digitaly <a class="underline text-blue-800 font-semibold" href="{{route('domicile.public.create')}}">click here</a> as well as in hard form.</li>
-                        <li class="text-justify">Upon your turn submit documents on counter and get a receipt.</li>
-                        <li class="text-justify">Your documents will be sent to Competent Authority for Approval.</li>
-                        <li class="text-justify">You will be advised to revisit CFC after 3 working days.</li>
-                        <li class="text-justify">Note:-Any athorized person can submit documents. (applicant's presence is not required on first visit)</li>
-                    </ul>
-                    <h3 class="font-semibold text-lg text-gray-900 mt-2">Step Four:-</h3>
-                    <p class="ml-5">Re-visit CFC (second visit)</p>
-                    <ul class="ml-5 list-disc pl-5 text-gray-700">    
-                        <li class="text-justify">Before arrival you may confirm your file status <a class="underline text-blue-800 font-semibold" href="#search">from here</a></li>
-                        <li class="text-justify">on this visit applicant is required in person for biomatric and live picture.</li>
-                        <li class="text-justify">Get a token from que machine and wait for your turn</li>
-                        <li class="text-justify">Upon your turn submit domicile fee Rs. 200 and NADRA biomatric fee 120 and verifiy your particulars</li>
+                        <li class="text-justify">Upon your turn submit documents on counter and get a prof reading document.</li>
                         <li class="text-justify">Your Domicile Certificate will be handed over to you.</li>
                     </ul>
                 </div>
@@ -64,17 +52,28 @@
         <!-- Right: Apply Section -->
         <div id="search" class="col-span-1 mt-3">
             <div class="bg-white/50 backdrop-blur-md border border-white/30 rounded-xl sm:mx-5 p-6 shadow ">
-                <h2 class="text-xl font-bold text-gray-900 mb-4">Check Your Application Status</h2>
-                <form action="" method="POST">
-                    @csrf
+                <h2 class="text-xl font-bold text-gray-900 mb-4">Verify Your Domicile</h2>
+                <form id="domicileVerifyForm">
                     <div class="mb-4">
-                        <label class="block text-gray-700 mb-1">Phone Number</label>
-                        <input placeholder="03xxxxxxxxx" type="text" name="phone_number" class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                        <label class="block text-gray-700 mb-1">CNIC</label>
+                        <input
+                            id="cnic"
+                            placeholder="6110112345678"
+                            type="text"
+                            class="w-full rounded-lg border-gray-300"
+                        >
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">
-                        Submit
+
+                    <button
+                        type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg"
+                    >
+                        Verify
                     </button>
                 </form>
+
+                <div id="domicileResult" class="hidden mt-4 p-4 rounded-lg border"              >
+                </div>
                 @if ($errors->any())
                     <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-300 mt-3">
                         <ul class="list-disc pl-5 space-y-1">
@@ -181,6 +180,69 @@
             } catch (error) {
                 console.error("❌ Fetch error:", error);
                 responseEl.innerText = "Error: " + error.message;
+            }
+        });
+
+        document.getElementById("domicileVerifyForm")
+        .addEventListener("submit", async function(e) {
+
+            e.preventDefault();
+
+            const cnic = document
+                .getElementById("cnic")
+                .value
+                .replace(/\D/g, "");
+
+            const resultBox =
+                document.getElementById("domicileResult");
+
+            resultBox.classList.remove("hidden");
+            resultBox.innerHTML = "Checking...";
+
+            try {
+
+                const response = await fetch(
+                    "https://cfc-ict.com/fastapi/domicile/check/" + cnic
+                );
+
+                const data = await response.json();
+
+                if (!data.verified) {
+
+                    resultBox.className =
+                        "mt-4 p-4 rounded-lg border bg-red-100 border-red-400 text-red-700";
+
+                    resultBox.innerHTML =
+                        "<strong>Not Verified</strong><br>" +
+                        data.message;
+
+                    return;
+                }
+
+                const record = data.data[0];
+
+                resultBox.className =
+                    "mt-4 p-4 rounded-lg border bg-green-100 border-green-400 text-green-700";
+
+                resultBox.innerHTML = `
+                    <h3 class="font-bold text-lg mb-2">
+                        Domicile Verified
+                    </h3>
+
+                    <p><strong>Name:</strong> ${record.name}</p>
+                    <p><strong>CNIC:</strong> ${record.cnic}</p>
+                    <p><strong>Token No:</strong> ${record.token_no}</p>
+                    <p><strong>Status:</strong> ${record.status}</p>
+                    <p><strong>Date:</strong> ${record.date}</p>
+                `;
+
+            } catch (error) {
+
+                resultBox.className =
+                    "mt-4 p-4 rounded-lg border bg-red-100 border-red-400 text-red-700";
+
+                resultBox.innerHTML =
+                    "Unable to verify domicile.";
             }
         });
     </script>

@@ -329,7 +329,7 @@ class DivorceCaseController extends Controller
                 Rule::unique('divorce_cases', 'case_no')->ignore($divorceCase?->id),
             ],
             'application_date' => ['required', 'date'],
-            'divorce_type' => ['required', Rule::in(['Talaq', 'Khula', 'Talaq Tafveez'])],
+            'divorce_type' => ['required', Rule::in(['Talaq', 'Khula', 'Talaq Tafveez', 'Mubarat Deed'])],
             'applicant_side' => ['required', Rule::in(['groom', 'bride'])],
             'groom_cnic' => ['required', 'digits:13'],
             'groom_name' => ['required', 'string', 'max:100'],

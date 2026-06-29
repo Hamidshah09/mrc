@@ -279,22 +279,22 @@ Route::middleware('auth')->group(function () {
         Route::post('/statistics/store', [StatisticsController::class, 'store'])->name('statistics.store');
     });
     
-    Route::get('/mrc', [MrcController::class, 'index'])->name('mrc.index')->middleware('role:mrc,admin,registrar,verifier');
-    Route::post('/mrc/store', [MrcController::class, 'store'])->name('mrc.store')->middleware('role:mrc,admin,registrar,verifier');
-    Route::get('/mrc/create', [MrcController::class, 'create'])->name('mrc.create')->middleware('role:mrc,admin,registrar,verifier');
+    Route::get('/mrc', [MrcController::class, 'index'])->name('mrc.index')->middleware('role:mrc,admin,registrar,verifier,drc');
+    Route::post('/mrc/store', [MrcController::class, 'store'])->name('mrc.store')->middleware('role:mrc,admin,registrar,verifier,drc');
+    Route::get('/mrc/create', [MrcController::class, 'create'])->name('mrc.create')->middleware('role:mrc,admin,registrar,verifier,drc');
     Route::get('/mrc/edit/{id}', [MrcController::class, 'edit'])->name('mrc.edit')->middleware('owner');
-    Route::put('/mrc/{id}', [MrcController::class, 'update'])->name('mrc.update')->middleware('role:mrc,admin,registrar,verifier');
+    Route::put('/mrc/{id}', [MrcController::class, 'update'])->name('mrc.update')->middleware('role:mrc,admin,registrar,verifier,drc');
     Route::put('/mrc/verify/{id}', [MrcController::class, 'verify'])->name('mrc.verify')->middleware('role:verifier,admin');;
-    Route::get('/mrc/file/upload', [MrcController::class, 'upload_'])->name('mrc.upload')->middleware('role:mrc,admin,registrar,verifier');
-    Route::post('/mrc/import', [MrcController::class, 'import'])->name('mrc.import')->middleware('role:mrc,admin,registrar,verifier');
+    Route::get('/mrc/file/upload', [MrcController::class, 'upload_'])->name('mrc.upload')->middleware('role:mrc,admin,registrar,verifier,drc');
+    Route::post('/mrc/import', [MrcController::class, 'import'])->name('mrc.import')->middleware('role:mrc,admin,registrar,verifier,drc');
 
-    Route::middleware('role:drc,admin')->group(function () {
+    Route::middleware('role:drc,admin,mrc')->group(function () {
         Route::get('/drc/dashboard', [DivorceCaseController::class, 'dashboard'])->name('drc.dashboard');
         Route::get('/drc', [DivorceCaseController::class, 'index'])->name('drc.index');
         Route::get('/drc/create', [DivorceCaseController::class, 'create'])->name('drc.create');
-        Route::get('/drc/create/live', [DivorceCaseController::class, 'createLive'])->name('drc.live.create');
+        Route::get('/drc/create-live', [DivorceCaseController::class, 'createLive'])->name('drc.live.create');
         Route::post('/drc/live', [DivorceCaseController::class, 'storeLive'])->name('drc.live.store');
-        Route::get('/drc/create/old', [DivorceCaseController::class, 'createOld'])->name('drc.old.create');
+        Route::get('/drc/create-old', [DivorceCaseController::class, 'createOld'])->name('drc.old.create');
         Route::post('/drc/old', [DivorceCaseController::class, 'storeOld'])->name('drc.old.store');
         Route::get('/drc/{divorceCase}', [DivorceCaseController::class, 'show'])->name('drc.show');
         Route::get('/drc/{divorceCase}/edit', [DivorceCaseController::class, 'edit'])->name('drc.edit');

@@ -73,7 +73,7 @@
                     @forelse ($divorceCases as $case)
                         <tr class="hover:bg-gray-50">
                             <td class="px-4 py-3 text-sm text-gray-800">{{ $case->case_no }}</td>
-                            <td class="px-4 py-3 text-sm text-gray-800">{{ $case->divorce_type }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-800">{{ $case->arbitrationType->type }}</td>
                             <td class="px-4 py-3 text-sm text-gray-800">
                                 <div>{{ $case->groom_name }}</div>
                                 <div class="text-xs text-gray-500">{{ $case->groom_cnic }}</div>
@@ -84,10 +84,27 @@
                             </td>
                             <td class="px-4 py-3 text-sm text-gray-800">{{ optional($case->decision_date)->format('d-m-Y') ?? 'Pending' }}</td>
                             <td class="px-4 py-3 text-sm text-gray-800">{{ optional($case->issue_date)->format('d-m-Y') ?? 'Pending' }}</td>
+                            @php
+                                $status = $case->status?->status;
+                                $badgeClass = match($status) {
+                                    'certificate issued' => 'bg-green-100 text-green-800',
+                                    'reconciled' => 'bg-green-100 text-green-800',
+
+                                    'pending' => 'bg-yellow-100 text-yellow-800',
+                                    'pending for presence' => 'bg-yellow-100 text-yellow-800',
+
+                                    'referred to adcr',
+                                    'referred to magistrate' => 'bg-blue-100 text-blue-800',
+
+                                    'out of jurisdiction' => 'bg-red-100 text-red-800',
+
+                                    default => 'bg-gray-100 text-gray-800',
+                                };
+                            @endphp
+
                             <td class="px-4 py-3 text-sm">
-                                <span class="inline-block px-2 py-1 rounded-full text-xs font-medium
-                                    {{ $case->status === 'Certificate Issued' ? 'bg-green-100 text-green-800' : ($case->status === 'Ready for Certificate' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800') }}">
-                                    {{ $case->status }}
+                                <span class="inline-block px-2 py-1 rounded-full text-xs font-medium {{ $badgeClass }}">
+                                    {{ \Illuminate\Support\Str::title($status ?? 'Unknown') }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-sm">

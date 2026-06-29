@@ -23,6 +23,10 @@ return new class extends Migration
             $table->string('bride_cnic', 13);
             $table->string('bride_name', 100);
             $table->string('bride_father_name', 100);
+            $table->unsignedBigInteger('status_id')->default(1);
+            $table->foreign('status_id')->references('id')->on('divorce_statuses')->nullOnDelete();
+            $table->unsignedBigInterger('arbitration_id')->default(1);
+            $table->foreign('arbitration_id')->references('id')->on('arbitration_types')->nullOnDelete();
             $table->text('bride_address');
             $table->date('decision_date')->nullable();
             $table->date('issue_date')->nullable();

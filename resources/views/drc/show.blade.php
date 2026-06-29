@@ -1,6 +1,13 @@
 <x-app-layout>
     @php
-        $canIssueCertificate = $divorceCase->allHearingsCompleted();
+        if ($divorceCase->arbitrationType->id > 0 and $divorceCase->arbitrationType->id < 5){
+            $canIssueCertificate = $divorceCase->allHearingsCompleted();    
+        }else{
+            $canIssueCertificate = false;
+        }
+
+        
+        
         $completedNoticesCount = $divorceCase->hearings->filter(function($h){ return method_exists($h,'isCompleted') ? $h->isCompleted() : false; })->count();
 
         // Decision Date classes
@@ -31,7 +38,7 @@
                     <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" />
                 </svg>
                 <div>
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Divorce Case Detail') }}</h2>
+                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Arbitraion Details') }}</h2>
                     <p class="text-sm text-gray-500">Case overview and recent proceedings</p>
                 </div>
             </div>
@@ -46,9 +53,6 @@
         </div>
     </x-slot>
 
-    @php
-        $canIssueCertificate = $divorceCase->allHearingsCompleted();
-    @endphp
 
     <div class="w-[95%] mx-auto space-y-6 mt-10" style="background:#f0fbf6;">
         @if (session('success'))
@@ -75,11 +79,11 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-bold text-gray-900">Case No: {{ $divorceCase->case_no }}</h3>
-                        <p class="text-sm text-gray-500">{{ $divorceCase->divorce_type }} • {{ ucfirst($divorceCase->entry_type) }} entry • Applicant: {{ ucfirst($divorceCase->applicant_side) }}</p>
+                        <p class="text-sm text-gray-500">{{ $divorceCase->divorce_type }} • {{ ucfirst($divorceCase->entry_type) }} entry • Arbitraion Type: {{$divorceCase->arbitrationType->type}} • Applicant: {{ ucfirst($divorceCase->applicant_side) }}</p>
                         <div class="mt-2 flex items-center gap-2">
                             <span class="inline-flex items-center gap-2 text-sm px-2.5 py-1 rounded-full {{ $statusBadgeClass }}">
                                 
-                                {{ $divorceCase->status }}
+                                {{ \Illuminate\Support\Str::title($divorceCase->status->status) }}
                             </span>
                             <span class="text-sm text-gray-400">Decision: {{ optional($divorceCase->decision_date)->format('d-m-Y') ?? 'Pending' }}</span>
                         </div>
@@ -125,7 +129,7 @@
                     </div>
                     <div>
                         <div class="text-xs text-gray-500">Status</div>
-                        <div class="font-medium text-gray-800">{{ $divorceCase->status }}</div>
+                        <div class="font-medium text-gray-800">{{ \Illuminate\Support\Str::title($divorceCase->status->status) }}</div>
                     </div>
                 </div>
             </div>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\DivorceCase;
 use App\Models\DivorceHearing;
+use App\Models\ArbitrationType;
+use App\Models\ArbitrationStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +17,7 @@ class DivorceCaseController extends Controller
 {
     public function index(Request $request)
     {
-        $query = DivorceCase::with('hearings')->latest();
+        $query = DivorceCase::with(['hearings', 'arbitrationType', 'status'])->latest();
 
         if ($request->filled('search') && $request->filled('search_type')) {
             $searchType = $request->input('search_type');
@@ -26,13 +28,13 @@ class DivorceCaseController extends Controller
             }
         }
 
-        if ($request->filled('status')) {
-            if ($request->input('status') === 'under arbitration') {
-                $query->whereNull('issue_date');
-            } else if ($request->input('status') === 'certificate issued') {
-                $query->whereNotNull('issue_date');
-            }
-        }
+        // if ($request->filled('status')) {
+        //     if ($request->input('status') === 'under arbitration') {
+        //         $query->whereNull('issue_date');
+        //     } else if ($request->input('status') === 'certificate issued') {
+        //         $query->whereNotNull('issue_date');
+        //     }
+        // }
 
         // Filter by hearing notice number + hearing status (e.g. pending/heard)
         if ($request->filled('notice_number')) {
@@ -53,9 +55,6 @@ class DivorceCaseController extends Controller
             }
         }
 
-        if ($request->filled('divorce_type')) {
-            $query->where('divorce_type', $request->input('divorce_type'));
-        }
 
         if ($request->filled('entry_type')) {
             $query->where('entry_type', $request->input('entry_type'));
@@ -134,27 +133,42 @@ class DivorceCaseController extends Controller
 
     public function createLive()
     {
-        $divorceCase = new DivorceCase([
-            'entry_type' => 'live',
-            'applicant_side' => 'groom',
-        ]);
+        $arbitrationTypes = ArbitrationType::all();
+        $arbitrationStatuses = ArbitrationStatus::all();
 
-        return view('drc.create-live', compact('divorceCase'));
+        return view('drc.create-live', compact('arbitrationTypes', 'arbitrationStatuses'));
     }
 
     public function createOld()
     {
-        $divorceCase = new DivorceCase([
-            'entry_type' => 'old',
-            'applicant_side' => 'groom',
-        ]);
+        $arbitrationTypes = ArbitrationType::all();
+        $arbitrationStatuses = ArbitrationStatus::all();
 
-        return view('drc.create-old', compact('divorceCase'));
+        return view('drc.create-old', compact('arbitrationTypes', 'arbitrationStatuses'));
     }
 
     public function storeLive(Request $request)
     {
-        $validated = $this->validatedLiveCaseData($request);
+        $validated = $request->validate([
+            'case_no' => 'required|string|max:50|unique:divorce_cases,case_no',
+            'application_date' => 'required|date',
+            'arbitration_type_id' => 'required|integer|exists:arbitration_types,id',
+            'applicant_side' => 'required|in:groom,bride',
+
+            'groom_cnic' => 'required|digits:13',
+            'groom_name' => 'required|string|max:100',
+            'groom_father_name' => 'required|string|max:100',
+            'groom_address' => 'required|string|max:255',
+
+            'bride_cnic' => 'required|digits:13',
+            'bride_name' => 'required|string|max:100',
+            'bride_father_name' => 'required|string|max:100',
+            'bride_address' => 'required|string|max:255',
+
+            'status_id' => 'required|integer|exists:arbitration_statuses,id',
+            'remarks' => 'nullable|string|max:1000',
+        ]);
+
         $validated['created_by'] = Auth::id();
         $validated['entry_type'] = 'live';
 
@@ -168,12 +182,71 @@ class DivorceCaseController extends Controller
 
     public function storeOld(Request $request)
     {
-        $validated = $this->validatedOldCaseData($request);
+        $validated = $request->validate([
+            'case_no' => 'required|string|max:50|unique:divorce_cases,case_no',
+            'application_date' => 'required|date',
+            'arbitration_type_id' => 'required|integer|exists:arbitration_types,id',
+            'applicant_side' => 'required|in:groom,bride',
+
+            'groom_cnic' => 'required|digits:13',
+            'groom_name' => 'required|string|max:100',
+            'groom_father_name' => 'required|string|max:100',
+            'groom_address' => 'required|string|max:255',
+
+            'bride_cnic' => 'required|digits:13',
+            'bride_name' => 'required|string|max:100',
+            'bride_father_name' => 'required|string|max:100',
+            'bride_address' => 'required|string|max:255',
+
+            'status_id' => 'required|integer|exists:arbitration_statuses,id',
+
+            'decision_date' => 'nullable|date',
+            'issue_date' => 'nullable|date',
+            'remarks' => 'nullable|string|max:1000',
+
+            'notice' => 'nullable|array|max:3',
+            'notice.*.notice_number' => 'required|integer|between:1,3',
+            'notice.*.notice_date' => 'required|date',
+            'notice.*.hearing_date' => 'required|date',
+            'notice.*.remarks' => 'nullable|string|max:1000',
+            'notice.*.proceeding_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+        ]);
+
         $validated['created_by'] = Auth::id();
         $validated['entry_type'] = 'old';
 
-        $divorceCase = DivorceCase::create($validated);
-        $this->createCompletedOldNoticeSchedule($divorceCase);
+        $divorceCase = DB::transaction(function () use ($validated, $request) {
+
+            $divorceCase = DivorceCase::create($validated);
+
+            foreach ($request->input('notice', []) as $index => $noticeData) {
+
+                // Optional: Ensure hearing date is not before notice date
+                if ($noticeData['hearing_date'] < $noticeData['notice_date']) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        "notice.$index.hearing_date" => 'The hearing date must be on or after the notice date.',
+                    ]);
+                }
+
+                $hearing = $divorceCase->hearings()->create([
+                    'notice_number' => $noticeData['notice_number'],
+                    'notice_date' => $noticeData['notice_date'],
+                    'hearing_date' => $noticeData['hearing_date'],
+                    'status' => $noticeData['status'] ?? 'scheduled',
+                    'remarks' => $noticeData['remarks'] ?? null,
+                ]);
+
+                if ($request->hasFile("notice.$index.proceeding_document")) {
+                    $hearing->update([
+                        'proceeding_path' => $request
+                            ->file("notice.$index.proceeding_document")
+                            ->store('drc_proceedings', 'public'),
+                    ]);
+                }
+            }
+
+            return $divorceCase;
+        });
 
         return redirect()
             ->route('drc.show', $divorceCase)
@@ -189,20 +262,41 @@ class DivorceCaseController extends Controller
 
     public function edit(DivorceCase $divorceCase)
     {
-        return view('drc.edit', compact('divorceCase'));
+        $arbitrationTypes = ArbitrationType::all();
+        $arbitrationStatuses = ArbitrationStatus::all();
+        return view('drc.edit', compact('divorceCase', 'arbitrationTypes', 'arbitrationStatuses'));
     }
 
     public function update(Request $request, DivorceCase $divorceCase)
     {
-        $validated = $divorceCase->entry_type === 'old'
-            ? $this->validatedOldCaseData($request, $divorceCase)
-            : $this->validatedLiveCaseData($request, $divorceCase);
+        $validated = $request->validate([
+            'case_no' => 'required|string|max:50|unique:divorce_cases,case_no' . $divorceCase->id,
+            'application_date' => 'required|date',
+            'arbitration_type_id' => 'required|integer|exists:arbitration_types,id',
+            'applicant_side' => 'required|in:groom,bride',
+
+            'groom_cnic' => 'required|digits:13',
+            'groom_name' => 'required|string|max:100',
+            'groom_father_name' => 'required|string|max:100',
+            'groom_address' => 'required|string|max:255',
+
+            'bride_cnic' => 'required|digits:13',
+            'bride_name' => 'required|string|max:100',
+            'bride_father_name' => 'required|string|max:100',
+            'bride_address' => 'required|string|max:255',
+
+            'status_id' => 'required|integer|exists:arbitration_statuses,id',
+
+            'decision_date' => 'nullable|date',
+            'issue_date' => 'nullable|date',
+            'remarks' => 'nullable|string|max:1000',
+
+        ]);
+
+        $validated['updated_by'] = Auth::id();
+
 
         $divorceCase->update($validated);
-
-        if ($divorceCase->entry_type === 'old') {
-            $this->syncCompletedOldNoticeSchedule($divorceCase);
-        }
 
         return redirect()
             ->route('drc.show', $divorceCase)
@@ -341,6 +435,8 @@ class DivorceCaseController extends Controller
             'bride_address' => ['required', 'string', 'max:500'],
             'remarks' => ['nullable', 'string', 'max:1000'],
         ]);
+
+
     }
 
     private function validatedLiveCaseData(Request $request, ?DivorceCase $divorceCase = null): array

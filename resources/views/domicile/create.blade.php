@@ -321,11 +321,6 @@
                                 </select>
                                 <x-input-error :messages="$errors->get('approver_id')" class="mt-2" />
                             </div>
-                            <div class="form-control">
-                                <x-input-label for="receipt_no" :value="__('Receipt No')" />
-                                <x-text-input id="receipt_no" class="block w-full p-3 rounded-xl border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" type="text" required name="receipt_no" :value="old('receipt_no')" min="11" max=11 autofocus autocomplete="receipt_no" />
-                                <x-input-error :messages="$errors->get('receipt_no')" class="mt-2" />
-                            </div>
                             <div class="col-span-4">
                                 <div class="bg-gradient-to-r from-indigo-500 to-blue-400 text-white px-5 py-3 rounded-xl shadow mb-2">
                                     <h3 class="text-lg font-semibold tracking-wide">

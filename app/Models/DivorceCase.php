@@ -13,9 +13,9 @@ class DivorceCase extends Model
 
     protected $fillable = [
         'application_date',
+        'arbitration_type_id',
         'entry_type',
         'case_no',
-        'divorce_type',
         'applicant_side',
         'groom_cnic',
         'groom_name',
@@ -27,6 +27,7 @@ class DivorceCase extends Model
         'bride_address',
         'decision_date',
         'issue_date',
+        'status_id',
         'remarks',
         'created_by',
     ];
@@ -47,18 +48,7 @@ class DivorceCase extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function getStatusAttribute(): string
-    {
-        if ($this->issue_date) {
-            return 'Certificate Issued';
-        }
-
-        if ($this->allHearingsCompleted()) {
-            return 'Ready for Certificate';
-        }
-
-        return 'Under Arbitration';
-    }
+    
 
     public function allHearingsCompleted(): bool
     {
@@ -66,4 +56,13 @@ class DivorceCase extends Model
 
         return $hearings->count() === 3 && $hearings->every(fn (DivorceHearing $hearing) => $hearing->isCompleted());
     }
+
+    public function status(){
+        return $this->belongsTo(ArbitrationStatus::class, 'status_id', 'id');
+    }
+    
+    public function arbitrationType(){
+        return $this->belongsTo(ArbitrationType::class, 'arbitration_type_id', 'id');
+    }
 }
+

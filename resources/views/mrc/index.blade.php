@@ -6,8 +6,8 @@
     </x-slot>
     <div class="w-[95%] mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
         <div class="w-full flex justify-end">
-
-                <a href="{{route('mrc.create')}}" class="mb-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">New</a>
+                <a href="{{route('mrc.dashboard')}}" class="mb-2 mx-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Dashboard</a>
+                <a href="{{route('mrc.create')}}" class="mb-2 mx-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">New</a>
 
         </div>
         <div class="w-full">
@@ -68,6 +68,7 @@
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Marriage Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registration Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registrar</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">User</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Union Council</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -81,6 +82,7 @@
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->bride_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->marriage_date }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registration_date }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->user->name ?? '' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registrar_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->unionCouncil ? $mrc->unionCouncil->name : '' }}</td>
                             {{-- <td class="px-6 py-4 text-sm">
@@ -146,7 +148,11 @@
                         </tr>
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700">Registrar:</td>
-                            <td class="p-3 text-gray-900">{{ $mrc->registrar->name }}</td>
+                            <td class="p-3 text-gray-900">{{ $mrc->registrar_name }}</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-3 font-semibold text-gray-700">User:</td>
+                            <td class="p-3 text-gray-900">{{ $mrc->user->name }}</td>
                         </tr>
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700">Union Council:</td>

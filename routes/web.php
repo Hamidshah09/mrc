@@ -280,6 +280,7 @@ Route::middleware('auth')->group(function () {
     });
     
     Route::get('/mrc', [MrcController::class, 'index'])->name('mrc.index')->middleware('role:mrc,admin,registrar,verifier,drc');
+    Route::get('/mrc/dashboard', [MrcController::class, 'dashboard'])->name('mrc.dashboard')->middleware('role:mrc,admin,registrar,verifier,drc');
     Route::post('/mrc/store', [MrcController::class, 'store'])->name('mrc.store')->middleware('role:mrc,admin,registrar,verifier,drc');
     Route::get('/mrc/create', [MrcController::class, 'create'])->name('mrc.create')->middleware('role:mrc,admin,registrar,verifier,drc');
     Route::get('/mrc/edit/{id}', [MrcController::class, 'edit'])->name('mrc.edit')->middleware('owner');
@@ -291,7 +292,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:drc,admin,mrc')->group(function () {
         Route::get('/drc/dashboard', [DivorceCaseController::class, 'dashboard'])->name('drc.dashboard');
         Route::get('/drc', [DivorceCaseController::class, 'index'])->name('drc.index');
-        Route::get('/drc/create', [DivorceCaseController::class, 'create'])->name('drc.create');
         Route::get('/drc/create-live', [DivorceCaseController::class, 'createLive'])->name('drc.live.create');
         Route::post('/drc/live', [DivorceCaseController::class, 'storeLive'])->name('drc.live.store');
         Route::get('/drc/create-old', [DivorceCaseController::class, 'createOld'])->name('drc.old.create');

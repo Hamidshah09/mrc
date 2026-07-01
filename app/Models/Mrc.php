@@ -30,7 +30,7 @@ class Mrc extends Model
         'image',
     ];
     protected $table = 'mrc';
-    public function registrar()
+    public function user()
     {
         return $this->belongsTo(User::class, 'registrar_id');
     }

@@ -10,18 +10,17 @@ use App\Models\MrcStatus;
 use App\Models\UnionCouncil;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\User;
+use Carbon\Carbon;
 
 class MrcController extends Controller
 {
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = Mrc::with(['registrar', 'verifier', 'unionCouncil'])->orderBy('id', 'desc');
+        $query = Mrc::with(['user', 'verifier', 'unionCouncil'])->orderBy('id', 'desc');
 
         // Limit to registrar's own records if applicable
-    if ($user->role->role === 'registrar') {
-        $query->where('registrar_id', $user->id);
-    }
 
     // Apply search filters
     if ($request->filled('search') && $request->filled('search_type')) {
@@ -59,6 +58,66 @@ class MrcController extends Controller
     $unionCouncils = UnionCouncil::orderBy('name')->get();
 
     return view('mrc.index', compact('mrcRecords', 'user', 'unionCouncils'));
+    }
+    /**
+     * Display MRC dashboard with charts and daily-per-user table.
+     */
+    public function dashboard(Request $request)
+    {
+        $from = $request->input('from', Carbon::now()->subDays(29)->toDateString());
+        $to = $request->input('to', Carbon::now()->toDateString());
+
+        $records = Mrc::whereDate('created_at', '>=', $from)
+            ->whereDate('created_at', '<=', $to)
+            ->selectRaw('DATE(created_at) as date, registrar_id, count(*) as cnt')
+            ->groupBy('date', 'registrar_id')
+            ->orderBy('date')
+            ->get();
+
+        $period = [];
+        $start = Carbon::parse($from);
+        $end = Carbon::parse($to);
+        for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
+            $period[] = $d->toDateString();
+        }
+
+        $registrarIds = $records->pluck('registrar_id')->unique()->filter()->values()->all();
+        $users = User::whereIn('id', $registrarIds)->get()->keyBy('id');
+
+        $totals = array_fill_keys($period, 0);
+        $perUser = [];
+        $userTotals = [];
+        foreach ($records as $r) {
+            $date = $r->date;
+            $uid = $r->registrar_id ?: 0;
+            $userName = $users->has($uid) ? $users[$uid]->name : 'System';
+
+            $totals[$date] = ($totals[$date] ?? 0) + $r->cnt;
+            $perUser[$uid][$date] = ($perUser[$uid][$date] ?? 0) + $r->cnt;
+            $userTotals[$userName] = ($userTotals[$userName] ?? 0) + $r->cnt;
+        }
+
+        $tableRows = [];
+        foreach ($userTotals as $userName => $count) {
+            $tableRows[] = [
+                'user' => $userName,
+                'count' => $count,
+            ];
+        }
+
+        $series = [];
+        foreach ($perUser as $uid => $map) {
+            $label = $users->has($uid) ? $users[$uid]->name : 'System';
+            $data = [];
+            foreach ($period as $d) {
+                $data[] = $map[$d] ?? 0;
+            }
+            $series[] = ['label' => $label, 'data' => $data];
+        }
+
+        $totalValues = array_values($totals);
+
+        return view('mrc.dashboard', compact('period', 'totalValues', 'series', 'tableRows', 'from', 'to'));
     }
     public function create()
     {

@@ -115,6 +115,7 @@ class MrcController extends Controller
         }
 
         $tableRows = array_values($userTotals);
+        $totalCount = array_sum(array_column($tableRows, 'count'));
 
         $unionCouncils = UnionCouncil::orderBy('name')->get();
 
@@ -130,7 +131,7 @@ class MrcController extends Controller
 
         $totalValues = array_values($totals);
 
-        return view('mrc.dashboard', compact('period', 'totalValues', 'series', 'tableRows', 'from', 'to', 'unionCouncils', 'selectedUnionCouncil'));
+        return view('mrc.dashboard', compact('period', 'totalValues', 'series', 'tableRows', 'from', 'to', 'unionCouncils', 'selectedUnionCouncil', 'totalCount'));
     }
     public function create()
     {

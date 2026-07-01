@@ -31,11 +31,11 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="p-4 bg-white rounded shadow">
-                <h3 class="font-semibold mb-2">Daily Total Registrations</h3>
+                <h3 class="font-semibold mb-2">Daily Total Entries</h3>
                 <canvas id="totalChart"></canvas>
             </div>
             <div class="p-4 bg-white rounded shadow">
-                <h3 class="font-semibold mb-2">Daily Registrations Per Registrar</h3>
+                <h3 class="font-semibold mb-2">Daily Entries Per User</h3>
                 <canvas id="perUserChart"></canvas>
             </div>
         </div>
@@ -60,6 +60,13 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    <tfoot class="bg-gray-100 font-semibold">
+                        <tr>
+                            <td class="px-4 py-3">Total</td>
+                            <td class="px-4 py-3"></td>
+                            <td class="px-4 py-3">{{ $totalCount ?? 0 }}</td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

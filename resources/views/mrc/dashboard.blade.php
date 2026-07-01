@@ -6,17 +6,17 @@
     </x-slot>
 
     <div class="w-[95%] mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
-        <form class="grid gap-3 grid-cols-1 sm:grid-cols-[auto_auto_auto_auto] items-end mb-4" method="GET" action="{{ route('mrc.dashboard') }}">
+        <form class="grid gap-4 grid-cols-1 md:grid-cols-4 items-end mb-4" method="GET" action="{{ route('mrc.dashboard') }}">
             <div class="flex flex-col">
                 <label for="from" class="text-sm font-medium text-gray-700">From</label>
-                <input type="date" name="from" value="{{ $from }}" class="border rounded px-2 py-1 w-full">
+                <input type="date" name="from" value="{{ $from }}" class="border rounded px-2 py-2 w-full">
             </div>
             <div class="flex flex-col">
                 <label for="to" class="text-sm font-medium text-gray-700">To</label>
-                <input type="date" name="to" value="{{ $to }}" class="border rounded px-2 py-1 w-full">
+                <input type="date" name="to" value="{{ $to }}" class="border rounded px-2 py-2 w-full">
             </div>
-            <div class="sm:col-span-2 sm:flex sm:justify-end">
-                <button class="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded">Filter</button>
+            <div class="md:col-span-2 md:flex md:justify-end">
+                <button class="w-full md:w-auto px-4 py-2 bg-blue-600 text-white rounded">Filter</button>
             </div>
         </form>
 
@@ -38,6 +38,7 @@
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="px-4 py-2 text-left">User</th>
+                            <th class="px-4 py-2 text-left">Union Council</th>
                             <th class="px-4 py-2 text-left">Count</th>
                         </tr>
                     </thead>
@@ -45,6 +46,7 @@
                         @foreach($tableRows as $row)
                             <tr>
                                 <td class="px-4 py-2">{{ $row['user'] }}</td>
+                                <td class="px-4 py-2">{{ $row['union_council'] }}</td>
                                 <td class="px-4 py-2">{{ $row['count'] }}</td>
                             </tr>
                         @endforeach

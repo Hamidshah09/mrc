@@ -64,13 +64,14 @@ class MrcController extends Controller
      */
     public function dashboard(Request $request)
     {
-        $from = $request->input('from', Carbon::now()->subDays(29)->toDateString());
-        $to = $request->input('to', Carbon::now()->toDateString());
+        $today = Carbon::today()->toDateString();
+        $from = $request->input('from', $today);
+        $to = $request->input('to', $today);
 
         $records = Mrc::whereDate('created_at', '>=', $from)
             ->whereDate('created_at', '<=', $to)
-            ->selectRaw('DATE(created_at) as date, registrar_id, count(*) as cnt')
-            ->groupBy('date', 'registrar_id')
+            ->selectRaw('DATE(created_at) as date, registrar_id, union_council_id, count(*) as cnt')
+            ->groupBy('date', 'registrar_id', 'union_council_id')
             ->orderBy('date')
             ->get();
 
@@ -82,7 +83,9 @@ class MrcController extends Controller
         }
 
         $registrarIds = $records->pluck('registrar_id')->unique()->filter()->values()->all();
+        $unionCouncilIds = $records->pluck('union_council_id')->unique()->filter()->values()->all();
         $users = User::whereIn('id', $registrarIds)->get()->keyBy('id');
+        $unionCouncils = UnionCouncil::whereIn('id', $unionCouncilIds)->get()->keyBy('id');
 
         $totals = array_fill_keys($period, 0);
         $perUser = [];
@@ -90,20 +93,21 @@ class MrcController extends Controller
         foreach ($records as $r) {
             $date = $r->date;
             $uid = $r->registrar_id ?: 0;
+            $unionCouncilId = $r->union_council_id ?: 0;
             $userName = $users->has($uid) ? $users[$uid]->name : 'System';
+            $unionCouncilName = $unionCouncils->has($unionCouncilId) ? $unionCouncils[$unionCouncilId]->name : 'N/A';
+            $rowKey = $uid . '_' . $unionCouncilId;
 
             $totals[$date] = ($totals[$date] ?? 0) + $r->cnt;
             $perUser[$uid][$date] = ($perUser[$uid][$date] ?? 0) + $r->cnt;
-            $userTotals[$userName] = ($userTotals[$userName] ?? 0) + $r->cnt;
-        }
-
-        $tableRows = [];
-        foreach ($userTotals as $userName => $count) {
-            $tableRows[] = [
+            $userTotals[$rowKey] = [
                 'user' => $userName,
-                'count' => $count,
+                'union_council' => $unionCouncilName,
+                'count' => ($userTotals[$rowKey]['count'] ?? 0) + $r->cnt,
             ];
         }
+
+        $tableRows = array_values($userTotals);
 
         $series = [];
         foreach ($perUser as $uid => $map) {

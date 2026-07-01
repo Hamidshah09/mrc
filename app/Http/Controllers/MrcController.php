@@ -67,9 +67,16 @@ class MrcController extends Controller
         $today = Carbon::today()->toDateString();
         $from = $request->input('from', $today);
         $to = $request->input('to', $today);
+        $selectedUnionCouncil = $request->input('union_council_id', 'all');
 
-        $records = Mrc::whereDate('created_at', '>=', $from)
-            ->whereDate('created_at', '<=', $to)
+        $query = Mrc::whereDate('created_at', '>=', $from)
+            ->whereDate('created_at', '<=', $to);
+
+        if ($selectedUnionCouncil !== 'all' && is_numeric($selectedUnionCouncil)) {
+            $query->where('union_council_id', $selectedUnionCouncil);
+        }
+
+        $records = $query
             ->selectRaw('DATE(created_at) as date, registrar_id, union_council_id, count(*) as cnt')
             ->groupBy('date', 'registrar_id', 'union_council_id')
             ->orderBy('date')
@@ -109,6 +116,8 @@ class MrcController extends Controller
 
         $tableRows = array_values($userTotals);
 
+        $unionCouncils = UnionCouncil::orderBy('name')->get();
+
         $series = [];
         foreach ($perUser as $uid => $map) {
             $label = $users->has($uid) ? $users[$uid]->name : 'System';
@@ -121,7 +130,7 @@ class MrcController extends Controller
 
         $totalValues = array_values($totals);
 
-        return view('mrc.dashboard', compact('period', 'totalValues', 'series', 'tableRows', 'from', 'to'));
+        return view('mrc.dashboard', compact('period', 'totalValues', 'series', 'tableRows', 'from', 'to', 'unionCouncils', 'selectedUnionCouncil'));
     }
     public function create()
     {

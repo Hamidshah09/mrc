@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="w-[95%] mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
-        <form class="grid gap-4 grid-cols-1 md:grid-cols-4 items-end mb-4" method="GET" action="{{ route('mrc.dashboard') }}">
+        <form class="grid gap-4 grid-cols-1 md:grid-cols-6 items-end mb-4" method="GET" action="{{ route('mrc.dashboard') }}">
             <div class="flex flex-col">
                 <label for="from" class="text-sm font-medium text-gray-700">From</label>
                 <input type="date" name="from" value="{{ $from }}" class="border rounded px-2 py-2 w-full">
@@ -15,7 +15,16 @@
                 <label for="to" class="text-sm font-medium text-gray-700">To</label>
                 <input type="date" name="to" value="{{ $to }}" class="border rounded px-2 py-2 w-full">
             </div>
-            <div class="md:col-span-2 md:flex md:justify-end">
+            <div class="flex flex-col md:col-span-2">
+                <label for="union_council_id" class="text-sm font-medium text-gray-700">Union Council</label>
+                <select name="union_council_id" id="union_council_id" class="border rounded px-2 py-2 w-full">
+                    <option value="all" {{ $selectedUnionCouncil === 'all' ? 'selected' : '' }}>All</option>
+                    @foreach($unionCouncils as $council)
+                        <option value="{{ $council->id }}" {{ (string) $selectedUnionCouncil === (string) $council->id ? 'selected' : '' }}>{{ $council->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="md:col-span-1 md:flex md:justify-end">
                 <button class="w-full md:w-auto px-4 py-2 bg-blue-600 text-white rounded">Filter</button>
             </div>
         </form>
@@ -56,7 +65,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ asset('js/chart.js') }}"></script>
     <script>
         const labels = @json($period);
         const totalData = @json($totalValues);

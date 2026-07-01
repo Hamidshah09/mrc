@@ -18,7 +18,7 @@ class MrcController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = Mrc::with(['user', 'verifier', 'unionCouncil'])->orderBy('id', 'desc');
+        $query = Mrc::with(['user', 'unionCouncil'])->orderBy('id', 'desc');
 
         // Limit to registrar's own records if applicable
 
@@ -28,7 +28,7 @@ class MrcController extends Controller
         $searchValue = $request->input('search');
 
         // Sanitize and apply search type filter
-        if (in_array($searchType, ['groom_cnic', 'groom_name', 'bride_cnic', 'bride_name'])) {
+        if (in_array($searchType, ['groom_cnic', 'groom_name', 'bride_cnic', 'bride_name','registrar_name'])) {
             $query->where($searchType, 'LIKE', '%' . $searchValue . '%');
         }
     }

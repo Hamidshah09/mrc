@@ -19,6 +19,7 @@
                     <option value="groom_name">Groom Name</option>
                     <option value="bride_cnic">Bride CNIC</option>
                     <option value="bride_name">Bride Name</option>
+                    <option value="registrar_name">Registrar Name</option>
                 </select>
 
                 <label for="union_council_id">Union Council</label>
@@ -34,11 +35,11 @@
                 <label for="from">to</label>
                 <input type="date" name="To" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('to') }}">
                 <label for="status">Status</label>
-                <select name="status" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                {{-- <select name="status" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
                     <option selected>Choose an option</option>>
                     <option value="verified">Verified</option>
                     <option value="not verified">Not Verified</option>
-                </select>
+                </select> --}}
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">Search</button>
             </form>
 
@@ -67,8 +68,8 @@
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Bride Name</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Marriage Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registration Date</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registrar</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">User</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registrar</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Union Council</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -107,13 +108,13 @@
                                             Verify
                                         </a>
                                     @endif --}}
-                                    @if ($user->role->role === 'admin' or $user->role->role === 'mrc')
-                                        @if($mrc->image)
-                                            <a href="{{ asset('storage/' . $mrc->image) }}">
-                                                document
-                                            </a>
-                                        @endif
+                                    
+                                    @if($mrc->image)
+                                        <a href="{{ asset('storage/' . $mrc->image) }}">
+                                            document
+                                        </a>
                                     @endif
+                                
                                 </div>
                             </td>
                         </tr>
@@ -158,23 +159,6 @@
                             <td class="p-3 font-semibold text-gray-700">Union Council:</td>
                             <td class="p-3 text-gray-900">{{ $mrc->unionCouncil ? $mrc->unionCouncil->name : '' }}</td>
                         </tr>
-                        <tr class="border-b">
-                            <td class="p-3 font-semibold text-gray-700">Verifier:</td>
-                            <td class="p-3 text-gray-900">{{ $mrc->verifier ? $mrc->verifier->name : 'N/A' }}</td>
-                        </tr>
-                        <tr class="border-b">
-                            <td class="p-3 font-semibold text-gray-700">Status:</td>
-                            <td class="p-3">
-                                <span class="inline-block px-2 py-1 rounded-full text-xs font-medium
-                                    {{
-                                        $mrc->status === 'Verified' ? 'bg-green-100 text-green-800' :
-                                        ($mrc->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                                        'bg-red-100 text-red-800')
-                                    }}">
-                                    {{ ucfirst($mrc->status) }}
-                                </span>
-                            </td>
-                        </tr>
                         <tr>
                             <td class="p-3 font-semibold text-gray-700">Actions:</td>
                             <td class="px-6 py-4 text-sm">
@@ -184,17 +168,16 @@
                                             <x-heroicon-m-arrow-top-right-on-square title="Update status" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
                                         </a>
                                     @endif
-                                    @if ($user->role->role === 'admin' && $mrc->status === 'Pending' or $user->role->role === 'verifier' && $mrc->status === 'Pending')
+                                    {{-- @if ($user->role->role === 'admin' && $mrc->status === 'Pending' or $user->role->role === 'verifier' && $mrc->status === 'Pending')
                                         <a href="#" onclick="openVerifyModal({{ $mrc->id }})">
                                             <x-heroicon-m-check-circle title="Verify Record" class="w-7 h-7 text-green-500 hover:text-green-700" />
                                         </a>
-                                    @endif
-                                    @if ($user->role->role === 'admin' or $user->role->role === 'mrc')
-                                        @if($mrc->image)
-                                            <a href="{{ asset('storage/' . $mrc->image) }}">
-                                                <x-heroicon-m-document-text class="text-yellow-500 hover:text-yellow-700" />
-                                            </a>
-                                        @endif
+                                    @endif --}}
+                                   
+                                    @if($mrc->image)
+                                        <a href="{{ asset('storage/' . $mrc->image) }}">
+                                            <x-heroicon-m-document-text class="text-yellow-500 hover:text-yellow-700" />
+                                        </a>
                                     @endif
                                 </div>
                             </td>

@@ -22,11 +22,10 @@ class OwnerMiddleware
         
         $id = $request->route('id');
         $record = Mrc::findOrFail($id);
-
         // Check if the record belongs to the registrar
-        // if ($record->registrar_id !== $user->id) {
-        //     abort(403, 'Unauthorized: You do not own this record.');
-        // }
+        if ($record->registrar_id !== $user->id) {
+            abort(403, 'Unauthorized: You do not own this record.');
+        }
         return $next($request);    
 
         

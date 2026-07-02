@@ -89,7 +89,7 @@
                     <label class="block text-sm font-medium">Registration Date</label>
                     <input type="date" name="registration_date"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('registration_date', $mrc->registraion_date) }}">
+                           value="{{ old('registration_date', $mrc->registration_date) }}">
                 </div>
 
                 <div>

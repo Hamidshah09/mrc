@@ -123,7 +123,9 @@ class PublicRequestsController extends Controller
     $domicile->cnic = strtoupper($validated['cnic']);
     $domicile->first_name = strtoupper($validated['name']);
     $domicile->father_name = strtoupper($validated['father_name']);
-    $domicile->spouse_name = $validated['spouse_name'] ? strtoupper($validated['spouse_name']) : null; // nullable
+    $domicile->spouse_name = !empty($validated['spouse_name'])
+    ? strtoupper($validated['spouse_name'])
+    : null;
     $domicile->date_of_birth = $validated['date_of_birth'];
     $domicile->gender_id = $validated['gender_id'];
     $domicile->place_of_birth = $validated['place_of_birth'];

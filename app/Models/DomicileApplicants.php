@@ -39,6 +39,7 @@ class DomicileApplicants extends Model
         'request_type_id',
         'user_id',
         'remarks',
+        'have_childern',
         'priority_type',
         'purpose',
         'approver_id',

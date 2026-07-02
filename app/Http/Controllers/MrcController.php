@@ -43,9 +43,9 @@ class MrcController extends Controller
     }
 
     // Status filter
-    if ($request->filled('status') && in_array($request->input('status'), ['verified', 'not verified'])) {
-        $query->where('status', $request->input('status'));
-    }
+    // if ($request->filled('status') && in_array($request->input('status'), ['verified', 'not verified'])) {
+    //     $query->where('status', $request->input('status'));
+    // }
 
     // Union council filter
     if ($request->filled('union_council_id')) {

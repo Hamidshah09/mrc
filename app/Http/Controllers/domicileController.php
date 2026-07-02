@@ -189,8 +189,6 @@ class domicileController extends Controller
         'receipt_no' => 'nullable|string|max:100',
         'remarks'=>'nullable|string|max:80',
         'approver_id' => 'nullable|integer',
-
-        'children_checkbox' => 'nullable|string',
         'picture' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         'picture_path' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
     ]);

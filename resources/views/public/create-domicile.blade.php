@@ -224,12 +224,6 @@
                                 <x-text-input id="permanent_address" class="block mt-1 w-full p-2" type="text" name="permanent_address" :value="old('permanent_address')" required autofocus autocomplete="permanent_address" />
                                 <x-input-error :messages="$errors->get('permanent_address')" class="mt-2" />
                             </div>
-                            <div class="my-2 mx-3 hidden" id="children_div">
-                                <label class="">
-                                    <input name="children_checkbox" value="1" id="children_checkbox" type="checkbox" class="rounded">
-                                    <span class="input-span"></span>Have Children
-                                </label>
-                            </div>
                             <div class="form-control">
                                 <x-input-label for="purpose" :value="__('Purpose')" />
                                     <select name="purpose" id="purpose" class="w-full border-gray-600  focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" :value="old('purpose')" required autofocus autocomplete="purpose">
@@ -352,21 +346,6 @@
             document.getElementById('permanent_address').value = document.getElementById('present_address').value;
         });
         
-        var maritalStatusSelect = document.getElementById('marital_status_id'); 
-        var childrenDiv = document.getElementById('children_div'); 
-        maritalStatusSelect.addEventListener('change', function() { 
-            console.log(maritalStatusSelect.value);
-            if (maritalStatusSelect.value != "1") { 
-                childrenDiv.classList.remove('hidden');
-                var child_input = document.getElementById('children_checkbox');
-                if (child_input.checkbox){
-                    document.getElementById('table-responsive').classList.remove('hidden');    
-                } 
-            } else { 
-                childrenDiv.classList.add('hidden');
-            } 
-        });
-            
         document.getElementById('cnic').addEventListener('blur', validate13DigitNumber);
         function validate13DigitNumber() {
         const input = document.getElementById('cnic').value;

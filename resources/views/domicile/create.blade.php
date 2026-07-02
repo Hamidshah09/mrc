@@ -329,9 +329,16 @@
                                 </div>
                             </div>
                             <div class="my-2 mx-3 hidden" id="children_div">
-                                <label class="">
-                                    <input name="children_checkbox" value="1" id="children_checkbox" type="checkbox" class="rounded">
-                                    <span class="input-span"></span>Have Children
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="children_checkbox"
+                                        id="children_checkbox"
+                                        value="yes"
+                                        class="rounded"
+                                    >
+                                    <span class="input-span"></span>
+                                    Have Children
                                 </label>
                             </div>
                             

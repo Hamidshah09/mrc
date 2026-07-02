@@ -42,12 +42,6 @@
                             </div>
 
                             <div class="form-control">
-                                <x-input-label for="spouse_name" :value="__('Spouse Name')" />
-                                <x-text-input id="spouse_name" placeholder="type nill if unmarried" class="block mt-1 w-full p-2" type="text" name="spouse_name" :value="old('spouse_name')" required autofocus autocomplete="spouse_name" />
-                                <x-input-error :messages="$errors->get('spouse_name')" class="mt-2" />
-                            </div>
-
-                            <div class="form-control">
                                 <x-input-label for="date_of_birth" :value="__('Date of Birth')" />
                                 <x-text-input id="date_of_birth" class="block mt-1 w-full p-2" type="date" name="date_of_birth" :value="old('date_of_birth')" required autofocus autocomplete="date_of_birth" />
                                 <x-input-error :messages="$errors->get('date_of_birth')" class="mt-2" />
@@ -84,6 +78,13 @@
                                 </select>
                                 <x-input-error :messages="$errors->get('marital_status_id')" class="mt-2" />
                             </div>
+
+                            <div id="spouse_wrapper" class="form-control hidden">
+                                <x-input-label for="spouse_name" :value="__('Spouse Name')" />
+                                <x-text-input id="spouse_name" placeholder="type nill if unmarried" class="block mt-1 w-full p-2" type="text" name="spouse_name" :value="old('spouse_name')" autofocus autocomplete="spouse_name" />
+                                <x-input-error :messages="$errors->get('spouse_name')" class="mt-2" />
+                            </div>
+                            
                             <div class="form-control">
                                 <x-input-label for="religion" :value="__('Religion')" />
                                 <x-text-input id="religion" class="block mt-1 w-full p-2" type="text" max="45" name="religion" :value="old('religion', 'Islam')" required autofocus autocomplete="religion" />
@@ -364,6 +365,25 @@
         document.addEventListener('DOMContentLoaded', function () {
 
             const form = document.getElementById('myForm');
+            const maritalStatusSelect = document.getElementById('marital_status_id');
+            const spouseWrapper = document.getElementById('spouse_wrapper');
+            const spouseField = document.getElementById('spouse_name');
+
+            function toggleSpouseField() {
+                const isMarried = maritalStatusSelect.value === '2';
+                spouseWrapper.classList.toggle('hidden', !isMarried);
+                spouseField.required = isMarried;
+                spouseField.disabled = !isMarried;
+
+                if (!isMarried) {
+                    spouseField.value = '';
+                }
+            }
+
+            if (maritalStatusSelect && spouseWrapper && spouseField) {
+                toggleSpouseField();
+                maritalStatusSelect.addEventListener('change', toggleSpouseField);
+            }
 
             form.addEventListener('submit', function () {
 

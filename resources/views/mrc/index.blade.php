@@ -11,16 +11,16 @@
 
         </div>
         <div class="w-full">
-            <form action="" class="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0 mb-4 w-full">
+            <form action="{{ route('mrc.index') }}" method="GET" class="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0 mb-4 w-full">
                 <input type="text" name="search" placeholder="Search by Groom CNIC or Name" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3 lg:w-1/2" value="{{ request('search') }}">
-                <select name="search_type" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
-                    <option selected>Choose an option</option>>
-                    <option value="groom_cnic">Groom CNIC</option>
-                    <option value="groom_name">Groom Name</option>
-                    <option value="bride_cnic">Bride CNIC</option>
-                    <option value="bride_name">Bride Name</option>
-                    <option value="registrar_name">Registrar Name</option>
-                    <option value="register_no">Register No</option>
+                <select name="search_type" id="search_type" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                    <option value="" {{ empty(request('search_type')) ? 'selected' : '' }}>Choose an option</option>
+                    <option value="groom_cnic" {{ request('search_type') === 'groom_cnic' ? 'selected' : '' }}>Groom CNIC</option>
+                    <option value="groom_name" {{ request('search_type') === 'groom_name' ? 'selected' : '' }}>Groom Name</option>
+                    <option value="bride_cnic" {{ request('search_type') === 'bride_cnic' ? 'selected' : '' }}>Bride CNIC</option>
+                    <option value="bride_name" {{ request('search_type') === 'bride_name' ? 'selected' : '' }}>Bride Name</option>
+                    <option value="registrar_name" {{ request('search_type') === 'registrar_name' ? 'selected' : '' }}>Registrar Name</option>
+                    <option value="register_no" {{ request('search_type') === 'register_no' ? 'selected' : '' }}>Register No</option>
                 </select>
 
                 <label for="union_council_id">Union Council</label>
@@ -32,9 +32,9 @@
                 </select>
 
                 <label for="from">From</label>
-                <input type="date" name="From" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('from') }}">
-                <label for="from">to</label>
-                <input type="date" name="To" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('to') }}">
+                <input type="date" name="from" id="from" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('from') }}">
+                <label for="to">to</label>
+                <input type="date" name="to" id="to" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('to') }}">
                 <label for="status">Status</label>
                 {{-- <select name="status" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
                     <option selected>Choose an option</option>>
@@ -153,6 +153,10 @@
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700">Registrar:</td>
                             <td class="p-3 text-gray-900">{{ $mrc->registrar_name }}</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-3 font-semibold text-gray-700">Register No:</td>
+                            <td class="p-3 text-gray-900">{{ $mrc->register_no }}</td>
                         </tr>
                         <tr class="border-b">
                             <td class="p-3 font-semibold text-gray-700">User:</td>

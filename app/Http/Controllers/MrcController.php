@@ -20,44 +20,44 @@ class MrcController extends Controller
         $user = Auth::user();
         $query = Mrc::with(['user', 'unionCouncil'])->orderBy('id', 'desc');
 
-        // Limit to registrar's own records if applicable
+        
 
-    // Apply search filters
-    if ($request->filled('search') && $request->filled('search_type')) {
-        $searchType = $request->input('search_type');
-        $searchValue = $request->input('search');
+        // Apply search filters
+        if ($request->filled('search') && $request->filled('search_type')) {
+            $searchType = $request->input('search_type');
+            $searchValue = $request->input('search');
 
-        // Sanitize and apply search type filter
-        if (in_array($searchType, ['groom_cnic', 'groom_name', 'bride_cnic', 'bride_name','registrar_name', 'register_no'])) {
-            $query->where($searchType, '=', $searchValue);
+            // Sanitize and apply search type filter
+            if (in_array($searchType, ['groom_cnic', 'groom_name', 'bride_cnic', 'bride_name','registrar_name', 'register_no'])) {
+                $query->where($searchType, '=', $searchValue);
+            }
         }
-    }
 
-    // Date range filter
-    if ($request->filled('From')) {
-        $query->whereDate('created_at', '>=', $request->input('From'));
-    }
+        // Date range filter
+        if ($request->filled('from')) {
+            $query->whereDate('created_at', '>=', $request->input('from'));
+        }
 
-    if ($request->filled('To')) {
-        $query->whereDate('created_at', '<=', $request->input('To'));
-    }
+        if ($request->filled('to')) {
+            $query->whereDate('created_at', '<=', $request->input('to'));
+        }
 
-    // Status filter
-    // if ($request->filled('status') && in_array($request->input('status'), ['verified', 'not verified'])) {
-    //     $query->where('status', $request->input('status'));
-    // }
+        // Status filter
+        // if ($request->filled('status') && in_array($request->input('status'), ['verified', 'not verified'])) {
+        //     $query->where('status', $request->input('status'));
+        // }
 
-    // Union council filter
-    if ($request->filled('union_council_id')) {
-        $query->where('union_council_id', $request->input('union_council_id'));
-    }
+        // Union council filter
+        if ($request->filled('union_council_id')) {
+            $query->where('union_council_id', $request->input('union_council_id'));
+        }
 
-    // Get filtered results
-    $mrcRecords = $query->paginate(10)->withQueryString(); // keep filters in pagination links
+        // Get filtered results
+        $mrcRecords = $query->paginate(10)->withQueryString(); // keep filters in pagination links
 
-    $unionCouncils = UnionCouncil::orderBy('name')->get();
+        $unionCouncils = UnionCouncil::orderBy('name')->get();
 
-    return view('mrc.index', compact('mrcRecords', 'user', 'unionCouncils'));
+        return view('mrc.index', compact('mrcRecords', 'user', 'unionCouncils'));
     }
     /**
      * Display MRC dashboard with charts and daily-per-user table.

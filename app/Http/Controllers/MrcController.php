@@ -29,7 +29,7 @@ class MrcController extends Controller
 
         // Sanitize and apply search type filter
         if (in_array($searchType, ['groom_cnic', 'groom_name', 'bride_cnic', 'bride_name','registrar_name'])) {
-            $query->where($searchType, 'LIKE', '%' . $searchValue . '%');
+            $query->where($searchType, '=', $searchValue);
         }
     }
 
@@ -77,8 +77,8 @@ class MrcController extends Controller
         }
 
         $records = $query
-            ->selectRaw('DATE(created_at) as date, registrar_id, union_council_id, count(*) as cnt')
-            ->groupBy('date', 'registrar_id', 'union_council_id')
+            ->selectRaw('DATE(created_at) as date, user_id, union_council_id, count(*) as cnt')
+            ->groupBy('date', 'user_id', 'union_council_id')
             ->orderBy('date')
             ->get();
 
@@ -89,24 +89,22 @@ class MrcController extends Controller
             $period[] = $d->toDateString();
         }
 
-        $registrarIds = $records->pluck('registrar_id')->unique()->filter()->values()->all();
+        $registrarIds = $records->pluck('user_id')->unique()->filter()->values()->all();
         $unionCouncilIds = $records->pluck('union_council_id')->unique()->filter()->values()->all();
         $users = User::whereIn('id', $registrarIds)->get()->keyBy('id');
         $unionCouncils = UnionCouncil::whereIn('id', $unionCouncilIds)->get()->keyBy('id');
 
         $totals = array_fill_keys($period, 0);
-        $perUser = [];
         $userTotals = [];
         foreach ($records as $r) {
             $date = $r->date;
-            $uid = $r->registrar_id ?: 0;
+            $uid = $r->user_id ?: 0;
             $unionCouncilId = $r->union_council_id ?: 0;
             $userName = $users->has($uid) ? $users[$uid]->name : 'System';
             $unionCouncilName = $unionCouncils->has($unionCouncilId) ? $unionCouncils[$unionCouncilId]->name : 'N/A';
             $rowKey = $uid . '_' . $unionCouncilId;
 
             $totals[$date] = ($totals[$date] ?? 0) + $r->cnt;
-            $perUser[$uid][$date] = ($perUser[$uid][$date] ?? 0) + $r->cnt;
             $userTotals[$rowKey] = [
                 'user' => $userName,
                 'union_council' => $unionCouncilName,
@@ -118,20 +116,9 @@ class MrcController extends Controller
         $totalCount = array_sum(array_column($tableRows, 'count'));
 
         $unionCouncils = UnionCouncil::orderBy('name')->get();
-
-        $series = [];
-        foreach ($perUser as $uid => $map) {
-            $label = $users->has($uid) ? $users[$uid]->name : 'System';
-            $data = [];
-            foreach ($period as $d) {
-                $data[] = $map[$d] ?? 0;
-            }
-            $series[] = ['label' => $label, 'data' => $data];
-        }
-
         $totalValues = array_values($totals);
 
-        return view('mrc.dashboard', compact('period', 'totalValues', 'series', 'tableRows', 'from', 'to', 'unionCouncils', 'selectedUnionCouncil', 'totalCount'));
+        return view('mrc.dashboard', compact('period', 'totalValues', 'tableRows', 'from', 'to', 'unionCouncils', 'selectedUnionCouncil', 'totalCount'));
     }
     public function create()
     {
@@ -168,7 +155,7 @@ class MrcController extends Controller
         ->withErrors(['duplicate' => 'This Nikkah record already exists'])
         ->withInput();
         }
-        $validated['registrar_id'] = Auth::id(); // Assuming the registrar is the currently authenticated user
+        $validated['user_id'] = Auth::id(); // Assuming the registrar is the currently authenticated user
         $validated['status'] = 'Pending';
         
         if ($request->hasFile('image')) {

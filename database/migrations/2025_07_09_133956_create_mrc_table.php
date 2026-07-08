@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('bride_cnic', length: 13)->nullable();
             $table->date('marriage_date');
             $table->date('registration_date');
-            $table->unsignedBigInteger('registrar_id');
-            $table->foreign('registrar_id')->references('id')->on('users');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->enum('status', ['Verified', 'Not Verified'])->default('Not Verified');
             $table->unsignedBigInteger('verifier_id')->nullable();
             $table->foreign('verifier_id')->references('id')->on('users')->onDelete('cascade');

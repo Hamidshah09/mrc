@@ -19,7 +19,7 @@ class Mrc extends Model
         'bride_cnic',
         'marriage_date',
         'registration_date',
-        'registrar_id',
+        'user_id',
         'verifier_id',
         'verification_date',
         'remarks',
@@ -32,7 +32,7 @@ class Mrc extends Model
     protected $table = 'mrc';
     public function user()
     {
-        return $this->belongsTo(User::class, 'registrar_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function unionCouncil()

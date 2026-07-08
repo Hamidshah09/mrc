@@ -29,14 +29,10 @@
             </div>
         </form>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 gap-6">
             <div class="p-4 bg-white rounded shadow">
                 <h3 class="font-semibold mb-2">Daily Total Entries</h3>
                 <canvas id="totalChart"></canvas>
-            </div>
-            <div class="p-4 bg-white rounded shadow">
-                <h3 class="font-semibold mb-2">Daily Entries Per User</h3>
-                <canvas id="perUserChart"></canvas>
             </div>
         </div>
 
@@ -76,7 +72,6 @@
     <script>
         const labels = @json($period);
         const totalData = @json($totalValues);
-        const series = @json($series);
 
         // Total chart
         const ctxTotal = document.getElementById('totalChart').getContext('2d');
@@ -101,29 +96,5 @@
             }
         });
 
-        // Per-user stacked bar
-        const ctxUser = document.getElementById('perUserChart').getContext('2d');
-        const userDatasets = series.map((s, idx) => ({
-            label: s.label,
-            data: s.data,
-            backgroundColor: `hsl(${(idx * 60) % 360} 70% 50% / 0.7)`,
-            borderColor: `hsl(${(idx * 60) % 360} 70% 40%)`,
-            borderWidth: 1
-        }));
-
-        new Chart(ctxUser, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: userDatasets
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: { stacked: true },
-                    y: { stacked: true, beginAtZero: true }
-                }
-            }
-        });
     </script>
 </x-app-layout>

@@ -28,7 +28,7 @@ class MrcController extends Controller
         $searchValue = $request->input('search');
 
         // Sanitize and apply search type filter
-        if (in_array($searchType, ['groom_cnic', 'groom_name', 'bride_cnic', 'bride_name','registrar_name'])) {
+        if (in_array($searchType, ['groom_cnic', 'groom_name', 'bride_cnic', 'bride_name','registrar_name', 'register_no'])) {
             $query->where($searchType, '=', $searchValue);
         }
     }

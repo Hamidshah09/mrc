@@ -20,6 +20,7 @@
                     <option value="bride_cnic">Bride CNIC</option>
                     <option value="bride_name">Bride Name</option>
                     <option value="registrar_name">Registrar Name</option>
+                    <option value="register_no">Register No</option>
                 </select>
 
                 <label for="union_council_id">Union Council</label>
@@ -70,6 +71,7 @@
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registration Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">User</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registrar</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Register No</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Union Council</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -85,6 +87,7 @@
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registration_date }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->user->name ?? '' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registrar_name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->register_no }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->unionCouncil ? $mrc->unionCouncil->name : '' }}</td>
                             {{-- <td class="px-6 py-4 text-sm">
                                 <span class="inline-block px-2 py-1 rounded-full text-xs font-medium

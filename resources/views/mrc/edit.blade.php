@@ -93,10 +93,10 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium">Register Name</label>
-                    <input type="text" name="register_name"
+                    <label class="block text-sm font-medium">Registrar Name</label>
+                    <input type="text" name="registrar_name"
                            class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('register_name', $mrc->register_name) }}">
+                           value="{{ old('registrar_name', $mrc->registrar_name) }}">
                 </div>
 
                 <div>

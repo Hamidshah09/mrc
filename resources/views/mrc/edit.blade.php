@@ -93,6 +93,13 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium">Register Name</label>
+                    <input type="text" name="register_name"
+                           class="w-full border-gray-300 rounded shadow-sm"
+                           value="{{ old('register_name', $mrc->register_name) }}">
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium">Register No</label>
                     <input type="text" name="register_no"
                            class="w-full border-gray-300 rounded shadow-sm"

@@ -17,15 +17,15 @@ class OwnerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
+        // $user = Auth::user();
 
         
-        $id = $request->route('id');
-        $record = Mrc::findOrFail($id);
+        // $id = $request->route('id');
+        // $record = Mrc::findOrFail($id);
         // Check if the record belongs to the registrar
-        if ($record->registrar_id !== $user->id and $user->role->role !== 'admin') {
-            abort(403, 'Unauthorized: You do not own this record.');
-        }
+        // if ($record->registrar_id !== $user->id and $user->role->role !== 'admin') {
+        //     abort(403, 'Unauthorized: You do not own this record.');
+        // }
         return $next($request);    
 
         

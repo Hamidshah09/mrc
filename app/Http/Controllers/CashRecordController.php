@@ -296,6 +296,10 @@ class CashRecordController extends Controller
             $query->where('service_type', $request->input('service_type'));
         }
 
+        if ($request->filled('payment_type')) {
+            $query->where('payment_type', $request->input('payment_type'));
+        }
+
         if ($request->filled('q')) {
             $q = $request->input('q');
             $query->where(function ($qb) use ($q) {
@@ -340,6 +344,10 @@ class CashRecordController extends Controller
             $query->where('service_type', $request->input('service_type'));
         }
 
+        if ($request->filled('payment_type')) {
+            $query->where('payment_type', $request->input('payment_type'));
+        }
+        
         if ($request->filled('q')) {
             $q = $request->input('q');
             $query->where(function ($qb) use ($q) {

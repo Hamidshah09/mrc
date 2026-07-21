@@ -39,7 +39,7 @@
             @if(session('error'))
                 <div class="mb-4 text-red-700 p-2 bg-red-100 rounded">{{ session('error') }}</div>
             @endif
-            <form method="GET" action="{{ route('cash-records.index') }}" class="grid grid-cols-1 md:grid-cols-5 gap-3">
+            <form method="GET" action="{{ route('cash-records.index') }}" class="grid grid-cols-1 md:grid-cols-6 gap-3">
                 <div>
                     <label class="text-sm text-gray-600">From</label>
                     <input type="date" name="from" value="{{ request('from') }}" class="mt-1 block w-full border-gray-300 rounded-md">
@@ -65,7 +65,23 @@
                         <option value="Cash" {{ request('payment_type') == 'Cash' ? 'selected' : '' }}>Cash</option>
                         <option value="Esahulat" {{ request('payment_type') == 'Esahulat' ? 'selected' : '' }}>Esahulat</option>
                         <option value="1 Link" {{ request('payment_type') == '1 Link' ? 'selected' : '' }}>1 Link</option>
-
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">Status</label>
+                    <select name="status" class="mt-1 block w-full border-gray-300 rounded-md">
+                        <option value="">All</option>
+                        @foreach($statusOptions as $statusOption)
+                            <option value="{{ $statusOption }}" {{ request('status') == $statusOption ? 'selected' : '' }}>{{ $statusOption }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">Operator</label>
+                    <select name="operator_name[]" multiple class="mt-1 block w-full border-gray-300 rounded-md min-h-[20px]">
+                        @foreach($operators as $operator)
+                            <option value="{{ $operator }}" {{ in_array($operator, (array) request('operator_name', []), true) ? 'selected' : '' }}>{{ $operator }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div>

@@ -10,38 +10,85 @@ use Carbon\Carbon;
 
 class CashRecordController extends Controller
 {
-    public function index()
+    protected function applyFilters($query, Request $request): void
     {
-        $query = CashRecord::query();
-
-        if(request('from')){
-            $query->whereDate('date', '>=', request('from'));
+        if ($request->filled('from')) {
+            $query->whereDate('date', '>=', $request->input('from'));
         }
 
-        if(request('to')){
-            $query->whereDate('date', '<=', request('to'));
+        if ($request->filled('to')) {
+            $query->whereDate('date', '<=', $request->input('to'));
         }
 
-        if(request('service_type')){
-            $query->where('service_type', request('service_type'));
+        if ($request->filled('service_type')) {
+            $query->where('service_type', $request->input('service_type'));
         }
 
-        if(request('payment_type')){
-            $query->where('payment_type', request('payment_type'));
+        if ($request->filled('payment_type')) {
+            $query->where('payment_type', $request->input('payment_type'));
         }
 
-        if(request('q')){
-            $q = request('q');
-            $query->where(function($qbuilder) use ($q){
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        $operatorNames = $request->input('operator_name', []);
+        if (is_string($operatorNames)) {
+            $operatorNames = array_values(array_filter(array_map('trim', explode(',', $operatorNames))));
+        } elseif (!is_array($operatorNames)) {
+            $operatorNames = [];
+        }
+
+        $operatorNames = array_values(array_filter($operatorNames));
+        if (!empty($operatorNames)) {
+            $query->whereIn('operator_name', $operatorNames);
+        }
+
+        if ($request->filled('q')) {
+            $q = $request->input('q');
+            $query->where(function ($qbuilder) use ($q) {
                 $qbuilder->where('name', 'like', "%{$q}%")
                     ->orWhere('cnic', 'like', "%{$q}%")
                     ->orWhere('mobile', 'like', "%{$q}%");
             });
         }
+    }
+
+    protected function getOperatorOptions(): array
+    {
+        return CashRecord::query()
+            ->whereNotNull('operator_name')
+            ->where('operator_name', '!=', '')
+            ->where('service_type', 'offline')
+            ->distinct()
+            ->pluck('operator_name')
+            ->filter()
+            ->sort()
+            ->values()
+            ->all();
+    }
+
+    protected function getStatusOptions(): array
+    {
+        return [
+            'Delivered',
+            'Pending',
+            'Approved (Payment Received)',
+            'Rejected',
+            'Approved (Certificate Ready)',
+        ];
+    }
+
+    public function index(Request $request)
+    {
+        $query = CashRecord::query();
+        $this->applyFilters($query, $request);
 
         $cashRecords = $query->orderBy('date', 'desc')->paginate(25);
+        $operators = $this->getOperatorOptions();
+        $statusOptions = $this->getStatusOptions();
 
-        return view('cash-records.index', compact('cashRecords'));
+        return view('cash-records.index', compact('cashRecords', 'operators', 'statusOptions'));
     }
 
     public function create()
@@ -99,88 +146,7 @@ class CashRecordController extends Controller
     public function monthlyReport(Request $request)
     {
         $query = CashRecord::query();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Date Range Filter
-        |--------------------------------------------------------------------------
-        */
-
-        if ($request->filled('from')) {
-
-            $query->whereDate(
-                'date',
-                '>=',
-                $request->from
-            );
-        }
-
-        if ($request->filled('to')) {
-
-            $query->whereDate(
-                'date',
-                '<=',
-                $request->to
-            );
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Service Type Filter
-        |--------------------------------------------------------------------------
-        */
-
-        if ($request->filled('service_type')) {
-
-            $query->where(
-                'service_type',
-                $request->service_type
-            );
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Payment Type Filter
-        |--------------------------------------------------------------------------
-        */
-
-        if ($request->filled('payment_type')) {
-
-            $query->where(
-                'payment_type',
-                $request->payment_type
-            );
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Search Filter
-        |--------------------------------------------------------------------------
-        */
-
-        if ($request->filled('q')) {
-
-            $q = $request->q;
-
-            $query->where(function ($qb) use ($q) {
-
-                $qb->where(
-                        'name',
-                        'like',
-                        "%{$q}%"
-                    )
-                    ->orWhere(
-                        'cnic',
-                        'like',
-                        "%{$q}%"
-                    )
-                    ->orWhere(
-                        'mobile',
-                        'like',
-                        "%{$q}%"
-                    );
-            });
-        }
+        $this->applyFilters($query, $request);
 
         /*
         |--------------------------------------------------------------------------
@@ -292,22 +258,7 @@ class CashRecordController extends Controller
             }
         }
 
-        if ($request->filled('service_type')) {
-            $query->where('service_type', $request->input('service_type'));
-        }
-
-        if ($request->filled('payment_type')) {
-            $query->where('payment_type', $request->input('payment_type'));
-        }
-
-        if ($request->filled('q')) {
-            $q = $request->input('q');
-            $query->where(function ($qb) use ($q) {
-                $qb->where('name', 'like', "%{$q}%")
-                    ->orWhere('cnic', 'like', "%{$q}%")
-                    ->orWhere('mobile', 'like', "%{$q}%");
-            });
-        }
+        $this->applyFilters($query, $request);
 
         $cashRecords = $query->where('priority_type', 1)
             ->orderBy('date', 'desc')
@@ -340,22 +291,7 @@ class CashRecordController extends Controller
             }
         }
 
-        if ($request->filled('service_type')) {
-            $query->where('service_type', $request->input('service_type'));
-        }
-
-        if ($request->filled('payment_type')) {
-            $query->where('payment_type', $request->input('payment_type'));
-        }
-        
-        if ($request->filled('q')) {
-            $q = $request->input('q');
-            $query->where(function ($qb) use ($q) {
-                $qb->where('name', 'like', "%{$q}%")
-                    ->orWhere('cnic', 'like', "%{$q}%")
-                    ->orWhere('mobile', 'like', "%{$q}%");
-            });
-        }
+        $this->applyFilters($query, $request);
 
         $cashRecords = $query
                     ->orderBy('date', 'desc')
@@ -398,22 +334,7 @@ class CashRecordController extends Controller
                 : ($request->input('from') ?? ($request->input('to') ?? date('Y-m-d')));
         }
 
-        if ($request->filled('service_type')) {
-            $query->where('service_type', $request->input('service_type'));
-        }
-
-        if ($request->filled('payment_type')) {
-            $query->where('payment_type', $request->input('payment_type'));
-        }
-        
-        if ($request->filled('q')) {
-            $q = $request->input('q');
-            $query->where(function ($qb) use ($q) {
-                $qb->where('name', 'like', "%{$q}%")
-                    ->orWhere('cnic', 'like', "%{$q}%")
-                    ->orWhere('mobile', 'like', "%{$q}%");
-            });
-        }
+        $this->applyFilters($query, $request);
 
         $count = $query->distinct('cnic')->where('request_type',  'New')->count('cnic');
         $feePerRecord = 200;

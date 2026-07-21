@@ -13,7 +13,7 @@
 </head>
 <body>
     <h1>Subject: Domicile Applications for {{ $title }}</h1>
-
+    <p style="font-size: 14px;">The following applicants have applied for the issuance of domicile certificates in this office. The cases have been examined, and all codal formalities have been duly completed.</p>
     <table>
         <thead>
             <tr>
@@ -38,6 +38,10 @@
             @endforelse
         </tbody>
     </table>
-    
+    <p style="font-size: 14px;display:inline-block;margin-top:20px;">2.</p>
+    <span style="width:120px;display:inline-block;margin-top:20px;"></span>
+    <p style="font-size: 14px;display:inline-block;margin-top:20px;">Submitted for approval</p>
+    <p style="font-size: 14px;text-align:right;margin-top:20px;">Domicile Clerk</p>
+    <p style="font-size: 14px;text-align:left;margin-top:20px;text-decoration:underline;text-weight:bold;">Assistant Commissioner (Saddar), ICT</p>
 </body>
 </html>

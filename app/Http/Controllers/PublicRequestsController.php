@@ -292,7 +292,7 @@ class PublicRequestsController extends Controller
         $cnic = $request->query('cnic');
 
     // Start building the base query
-        $query = NocLetters::with(['nocapplicants' => function ($q) use ($cnic) {
+        $query = NocOtherDistrict::with(['nocapplicants' => function ($q) use ($cnic) {
             if ($cnic) {
                 $q->where('cnic', $cnic);
             }
@@ -335,7 +335,7 @@ class PublicRequestsController extends Controller
         }
 
         // If neither ID nor CNIC is provided
-        $noc_records = NocLetters::with('nocapplicants')
+        $noc_records = NocOtherDistrict::with('nocapplicants')
         ->orderBy('id', 'desc') // or 'created_at' if you prefer timestamp
         ->take(200)
         ->get();
@@ -566,5 +566,9 @@ class PublicRequestsController extends Controller
         ]);
     }
 
-
+    public function dom_districts()
+    {
+        $districts = districts::orderBy('name')->get();
+        return response()->json($districts);
+    }
 }

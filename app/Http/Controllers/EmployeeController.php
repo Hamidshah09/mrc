@@ -159,9 +159,10 @@ class EmployeeController extends Controller
             $emp_status  = $employee->employee_types->employee_type ?? '';
             $pic        = $employee->pic;
             $dob        = Carbon::parse($employee->date_of_birth)->format('Y-m-d');
+            $useTillServiceExpiry = $this->shouldUseTillServiceExpiry($emp_status);
 
-            // Handle permanent vs non-permanent
-            if ($emp_status === 'Regular') {
+            // Handle regular employees as till-service cards
+            if ($useTillServiceExpiry) {
                 $existingCard = DB::table('employee_cards')->where('employee_id', $emp_id)->first();
 
                 if ($existingCard) {
@@ -176,28 +177,28 @@ class EmployeeController extends Controller
                         $department,
                         $dob,
                         $existingCard->issue_date,
-                        'Till Service',         
+                        'Till Service',
                     );
-                    if ($result){
-                        return redirect()->route('Employee.index')->with('status', 'Card successfully generated!');    
-                    }else{
+                    if ($result) {
+                        return redirect()->route('Employee.index')->with('status', 'Card successfully generated!');
+                    } else {
                         return redirect()->route('Employee.index')->with('error', $result);
                     }
                 } else {
                     // Generate new card
-                    $result = $this->createNewCard($emp_id, $pic, $cnic, $name, $designation, $department, $dob, false);
-                    if ($result){
-                        return redirect()->route('Employee.index')->with('status', 'Card successfully generated!');    
-                    }else{
+                    $result = $this->createNewCard($emp_id, $pic, $cnic, $name, $designation, $department, $dob, true);
+                    if ($result) {
+                        return redirect()->route('Employee.index')->with('status', 'Card successfully generated!');
+                    } else {
                         return redirect()->route('Employee.index')->with('error', $result);
                     }
                 }
             } else {
                 // Non-permanent
                 $result = $this->createNewCard($emp_id, $pic, $cnic, $name, $designation, $department, $dob, false);
-                if ($result){
-                    return redirect()->route('Employee.index')->with('status', 'Card successfully generated!');    
-                }else{
+                if ($result) {
+                    return redirect()->route('Employee.index')->with('status', 'Card successfully generated!');
+                } else {
                     return redirect()->route('Employee.index')->with('error', $result);
                 }
             }
@@ -211,6 +212,11 @@ class EmployeeController extends Controller
 /**
  * Helper to create a new card
  */
+private function shouldUseTillServiceExpiry($empStatus): bool
+{
+    return strtolower(trim((string) $empStatus)) === 'regular';
+}
+
 private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $department, $dob, $isPermanent)
 {
     
@@ -240,6 +246,7 @@ private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $depar
     public function generateImage($card_no, $pic, $emp_id, $cnic, $name, $designation, $department, $dob, $dateofissue, $dateofexpiry)
     {
         try {
+            
             // Load the template image
              $templatePath = public_path('images/temp.png');
             if (!file_exists($templatePath)) {

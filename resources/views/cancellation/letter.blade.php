@@ -69,7 +69,7 @@
                 <h2 class="subject-heading">Subject</h2>
             </td>
             <td style="width:80%; vertical-align:top; border:none; text-weight:bold; text-decoration:underline;text-align:justify;">
-                <h2 class="subject-heading">CANCELLATION OF DOMICILE CERTIFICATE</h2>
+                <h2 class="subject-heading">CANCELLATION OF DOMICILE CERTIFICATE/NOC</h2>
             </td>
         </tr>
         <tr>

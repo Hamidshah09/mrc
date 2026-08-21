@@ -159,7 +159,7 @@
                                         <td class="border px-4 py-2">{{ $card->card_no }}</td>
                                         <td class="border px-4 py-2">{{ $card->issue_date }}</td>
                                         <td class="border px-4 py-2">
-                                            {{ $card->expiry_date ?? 'Till Service' }}
+                                            {{ $card->expiry_date }}
                                         </td>
                                         <td class="border px-4 py-2">
                                             {{-- Uncomment if relationship works --}}

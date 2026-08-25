@@ -35,11 +35,11 @@ class MrcController extends Controller
 
         // Date range filter
         if ($request->filled('from')) {
-            $query->whereDate('registraion_date', '>=', $request->input('from'));
+            $query->whereDate('registration_date', '>=', $request->input('from'));
         }
 
         if ($request->filled('to')) {
-            $query->whereDate('registraion_date', '<=', $request->input('to'));
+            $query->whereDate('registration_date', '<=', $request->input('to'));
         }
 
         // Status filter

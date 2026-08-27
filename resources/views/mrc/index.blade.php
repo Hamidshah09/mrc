@@ -5,9 +5,51 @@
         </h2>
     </x-slot>
     <div class="w-[95%] mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
-        <div class="w-full flex justify-end">
-                <a href="{{route('mrc.dashboard')}}" class="mb-2 mx-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Dashboard</a>
-                <a href="{{route('mrc.create')}}" class="mb-2 mx-2 px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">New</a>
+        <div class="w-full flex justify-end flex-wrap">
+
+            {{-- Dashboard --}}
+            <a
+                href="{{ route('mrc.dashboard') }}"
+                class="mb-2 mx-2 px-4 py-2 bg-gray-800
+                    border border-transparent rounded-md
+                    font-semibold text-xs text-white uppercase
+                    tracking-widest hover:bg-gray-700
+                    focus:bg-gray-700 active:bg-gray-900
+                    focus:outline-none focus:ring-2
+                    focus:ring-indigo-500 focus:ring-offset-2
+                    transition ease-in-out duration-150"
+            >
+                Dashboard
+            </a>
+
+            {{-- Bulk Upload --}}
+            <a
+                href="{{ route('mrc.bulk-upload.create') }}"
+                class="mb-2 mx-2 px-4 py-2 bg-blue-600
+                    border border-transparent rounded-md
+                    font-semibold text-xs text-white uppercase
+                    tracking-widest hover:bg-blue-700
+                    focus:outline-none focus:ring-2
+                    focus:ring-blue-500 focus:ring-offset-2
+                    transition ease-in-out duration-150"
+            >
+                Bulk Upload
+            </a>
+
+            {{-- Existing New Record --}}
+            <a
+                href="{{ route('mrc.create') }}"
+                class="mb-2 mx-2 px-4 py-2 bg-gray-800
+                    border border-transparent rounded-md
+                    font-semibold text-xs text-white uppercase
+                    tracking-widest hover:bg-gray-700
+                    focus:bg-gray-700 active:bg-gray-900
+                    focus:outline-none focus:ring-2
+                    focus:ring-indigo-500 focus:ring-offset-2
+                    transition ease-in-out duration-150"
+            >
+                New
+            </a>
 
         </div>
         <div class="w-full">
@@ -35,12 +77,41 @@
                 <input type="date" name="from" id="from" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('from') }}">
                 <label for="to">to</label>
                 <input type="date" name="to" id="to" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('to') }}">
-                <label for="status">Status</label>
-                {{-- <select name="status" id="" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
-                    <option selected>Choose an option</option>>
-                    <option value="verified">Verified</option>
-                    <option value="not verified">Not Verified</option>
-                </select> --}}
+                <select
+                    name="status"
+                    id="status"
+                    class="bg-white border border-gray-300 text-gray-900
+                        text-sm rounded-lg focus:ring-blue-500
+                        focus:border-blue-500 p-2.5"
+                >
+                    <option
+                        value=""
+                        {{ !request()->has('status') ? 'selected' : '' }}
+                    >
+                        Pending
+                    </option>
+
+                    <option
+                        value="Completed"
+                        {{ request('status') === 'Completed' ? 'selected' : '' }}
+                    >
+                        Completed
+                    </option>
+
+                    <option
+                        value="Verified"
+                        {{ request('status') === 'Verified' ? 'selected' : '' }}
+                    >
+                        Verified
+                    </option>
+
+                    <option
+                        value="all"
+                        {{ request('status') === 'all' ? 'selected' : '' }}
+                    >
+                        All
+                    </option>
+                </select>
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">Search</button>
             </form>
 
@@ -73,6 +144,7 @@
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registrar</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Register No</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Union Council</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
@@ -89,36 +161,84 @@
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registrar_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->register_no }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->unionCouncil ? $mrc->unionCouncil->name : '' }}</td>
-                            {{-- <td class="px-6 py-4 text-sm">
-                                <span class="inline-block px-2 py-1 rounded-full text-xs font-medium
-                                    {{
-                                        $mrc->status === 'Verified' ? 'bg-green-100 text-green-800' :
-                                        ($mrc->status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                                        'bg-red-100 text-red-800')
-                                    }}">
-                                    {{ ucfirst($mrc->status) }}
-                                </span>
-                            </td> --}}
                             <td class="px-6 py-4 text-sm">
-                                <div class="flex items-center space-x-2">
-                                    
-                                    <a href="{{ route('mrc.edit', $mrc->id) }}" class="text-blue-600 hover:text-blue-800">
-                                        <x-heroicon-c-pencil-square title="Edit" class="w-7 h-7 text-indigo-400 hover:text-indigo-600 transition"/>
+
+                                @if($mrc->status === 'Pending')
+
+                                    <span class="inline-flex items-center px-2.5 py-1
+                                                rounded-full text-xs font-semibold
+                                                bg-yellow-100 text-yellow-800">
+                                        Pending
+                                    </span>
+
+                                @elseif($mrc->status === 'Completed')
+
+                                    <span class="inline-flex items-center px-2.5 py-1
+                                                rounded-full text-xs font-semibold
+                                                bg-green-100 text-green-800">
+                                        Completed
+                                    </span>
+
+                                @elseif($mrc->status === 'Verified')
+
+                                    <span class="inline-flex items-center px-2.5 py-1
+                                                rounded-full text-xs font-semibold
+                                                bg-blue-100 text-blue-800">
+                                        Verified
+                                    </span>
+
+                                @endif
+
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+
+                                <div class="flex items-center space-x-3">
+
+                                    {{-- Existing Edit --}}
+                                    <a
+                                        href="{{ route('mrc.edit', $mrc->id) }}"
+                                        title="Edit Record"
+                                        class="text-blue-600 hover:text-blue-800"
+                                    >
+                                        <x-heroicon-c-pencil-square
+                                            class="w-7 h-7 text-indigo-400
+                                                hover:text-indigo-600 transition"
+                                        />
                                     </a>
-                                
-                                    {{-- @if ($user->role->role === 'admin' && $mrc->status === 'Pending' or $user->role->role === 'verifier' && $mrc->status === 'Pending')
-                                        <a href="#" onclick="openVerifyModal({{ $mrc->id }})">
-                                            Verify
-                                        </a>
-                                    @endif --}}
-                                    
+
+
+                                    {{-- Edit With Crops --}}
+                                    <a
+                                        href="{{ route('mrc.edit-with-crops', $mrc->id) }}"
+                                        title="Edit With Document"
+                                        class="text-green-600 hover:text-green-800"
+                                    >
+                                        <x-heroicon-m-document-text
+                                            class="w-7 h-7 text-green-500
+                                                hover:text-green-700 transition"
+                                        />
+                                    </a>
+
+
+                                    {{-- Original Document --}}
                                     @if($mrc->image)
-                                        <a href="{{ asset('storage/' . $mrc->image) }}">
-                                            document
+
+                                        <a
+                                            href="{{ asset('storage/' . $mrc->image) }}"
+                                            target="_blank"
+                                            title="View Original Document"
+                                            class="text-yellow-600 hover:text-yellow-800"
+                                        >
+                                            <x-heroicon-m-photo
+                                                class="w-7 h-7 text-yellow-500
+                                                    hover:text-yellow-700 transition"
+                                            />
                                         </a>
+
                                     @endif
-                                
+
                                 </div>
+
                             </td>
                         </tr>
                     @endforeach

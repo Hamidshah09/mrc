@@ -18,7 +18,32 @@ class MrcController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = Mrc::with(['user', 'unionCouncil'])->orderBy('id', 'desc');
+        $query = Mrc::with(['user', 'unionCouncil'])
+        ->orderByRaw("
+            CASE
+                WHEN status = 'Pending' THEN 0
+                WHEN status = 'Completed' THEN 1
+                WHEN status = 'Verified' THEN 2
+                ELSE 3
+            END
+        ")->orderBy('id', 'desc');
+
+        if ($request->input('status') === 'all') {
+
+            // Show all statuses.
+
+        } elseif ($request->filled('status')) {
+
+            $query->where(
+                'status',
+                $request->input('status')
+            );
+
+        } else {
+
+            // Default page = Pending only.
+            $query->where('status', 'Pending');
+        }
 
         
 
@@ -277,6 +302,77 @@ class MrcController extends Controller
         }
 
         return redirect()->back()->with('error', 'No record found for this CNIC.');
+    }
+
+    public function editWithCrops($id)
+    {
+        $mrc = Mrc::findOrFail($id);
+
+        $unionCouncils = UnionCouncil::all();
+
+        $cropFields = [
+            'groom_name' => 'Groom Name',
+            'bride_name' => 'Bride Name',
+            'groom_father_name' => "Groom's Father Name",
+            'bride_father_name' => "Bride's Father Name",
+            'groom_passport' => 'Groom Passport',
+            'bride_passport' => 'Bride Passport',
+            'groom_cnic' => 'Groom CNIC',
+            'bride_cnic' => 'Bride CNIC',
+            'marriage_date' => 'Marriage Date',
+            'registration_date' => 'Registration Date',
+            'registrar_name' => 'Registrar Name',
+            'register_no' => 'Register No',
+        ];
+
+        $templates = \App\Models\CropTemplate::whereIn(
+            'field_name',
+            array_keys($cropFields)
+        )
+        ->get()
+        ->keyBy('field_name');
+
+        return view('mrc.edit-with-crops', compact(
+            'mrc',
+            'cropFields',
+            'templates',
+            'unionCouncils'
+        ));
+    }
+    public function updateWithCrops(Request $request, $id)
+    {
+        $mrc = Mrc::findOrFail($id);
+
+        $validated = $request->validate([
+            'groom_name' => ['nullable', 'string', 'max:50'],
+            'bride_name' => ['nullable', 'string', 'max:50'],
+            'groom_father_name' => ['nullable', 'string', 'max:50'],
+            'bride_father_name' => ['nullable', 'string', 'max:50'],
+            'groom_passport' => ['nullable', 'string', 'max:10'],
+            'bride_passport' => ['nullable', 'string', 'max:10'],
+            'groom_cnic' => ['nullable', 'digits:13'],
+            'bride_cnic' => ['nullable', 'digits:13'],
+            'marriage_date' => ['nullable', 'date'],
+            'registration_date' => ['nullable', 'date'],
+            'registrar_name' => ['nullable', 'string', 'max:80'],
+            'register_no' => ['nullable', 'string', 'max:20'],
+            'union_council_id' => ['nullable', 'integer'],
+            'remarks' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $mrc->fill($validated);
+
+        $mrc->status = 'Completed';
+        $mrc->updated_by = auth()->id();
+
+        $mrc->save();
+
+        return redirect()
+            ->route('mrc.index')
+            ->with(
+                'success',
+                'Marriage record completed successfully.'
+            );
     }
 
 }

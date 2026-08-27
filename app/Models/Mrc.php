@@ -20,14 +20,17 @@ class Mrc extends Model
         'marriage_date',
         'registration_date',
         'user_id',
+        'status',
         'verifier_id',
         'verification_date',
         'remarks',
         'register_no',
-        'registrar_name',
-        'status',
-        'union_council_id',
         'image',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'registrar_name',
+        'union_council_id',
     ];
     protected $table = 'mrc';
     public function user()

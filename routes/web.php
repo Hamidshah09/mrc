@@ -39,8 +39,9 @@ use App\Http\Controllers\AC\ComplaintController as ACComplaintController;
 use App\Http\Controllers\Magistrate\ComplaintController as MagistrateComplaintController;
 use App\Http\Controllers\ADCG\DashboardController as ADCGDashboardController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\OfficeLetterController;
+use App\Http\Controllers\CropTemplateController;
+use App\Http\Controllers\BulkUploadController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -448,5 +449,36 @@ Route::get('/feedback/create', [FeedbackController::class, 'create'])->name('fee
 Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
 Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 Route::get('/feedback/thank-you', [FeedbackController::class, 'thankyou'])->name('feedback.thankyou');
+Route::middleware(['auth'])->group(function () {
+
+    Route::get(
+        '/crop-templates',
+        [CropTemplateController::class, 'index']
+    )->name('crop-templates.index');
+
+    Route::post(
+        '/crop-templates',
+        [CropTemplateController::class, 'store']
+    )->name('crop-templates.store');
+
+    Route::get(
+        '/mrc/bulk-upload',
+        [BulkUploadController::class, 'create']
+    )->name('mrc.bulk-upload.create');
+
+    Route::post(
+        '/mrc/bulk-upload',
+        [BulkUploadController::class, 'store']
+    )->name('mrc.bulk-upload.store');
+    Route::get(
+        '/mrc/{id}/edit-with-crops',
+        [MrcController::class, 'editWithCrops']
+    )->name('mrc.edit-with-crops');
+
+    Route::post('/mrc/{id}/update-with-corps', [MrcController::class,'updateWithCrops'])->name('mrc.update-with-crops');
+
+
+
+});
 
 require __DIR__.'/auth.php';

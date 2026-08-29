@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use App\Models\department;
 use App\Models\designation;
 use App\Models\employee;
@@ -250,14 +251,17 @@ private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $depar
     public function generateImage($card_no, $pic, $emp_id, $cnic, $name, $designation, $department, $dob, $dateofissue, $dateofexpiry)
     {
         try {
-            
+            // Initialize Intervention Image v5 manager (GD driver)
+            $manager = new ImageManager(new GdDriver());
+
             // Load the template image
-             $templatePath = public_path('images/temp.png');
+            $templatePath = public_path('images/temp.png');
             if (!file_exists($templatePath)) {
                 return back()->with('error', 'Template Image Not Found');
             }
 
-            $template = Image::make($templatePath);
+            // v5 API: use decodePath() to load an image from a file path
+            $template = $manager->decodePath($templatePath);
 
             // Load employee picture (works with JPG/PNG automatically)
             $picPath = public_path('storage/' . $pic);
@@ -266,10 +270,10 @@ private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $depar
             }
 
             // Resize employee picture to fit ID card slot
-            $empPic = Image::make($picPath)->resize(215, 215);
+            $empPic = $manager->decodePath($picPath)->resize(215, 215);
 
-            // Insert employee picture onto template (x=69, y=209)
-            $template->insert($empPic, 'top-left', 69, 209);
+            // v5 API: insert(image, x, y, alignment) — positional, no 'top-left' inside the image arg
+            $template->insert($empPic, 69, 209, 'top-left');
 
             // Define font path
             $fontPath = public_path('fonts/CALISTB.TTF');
@@ -282,9 +286,9 @@ private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $depar
                 $template->text($text, $x, $y, function ($font) use ($fontPath) {
                     $font->file($fontPath);
                     $font->size(32);
-                    $font->color('#000000'); // Black
-                    $font->align('left');
-                    $font->valign('top');
+                    $font->color('#000000');
+                    // v5 API: align() takes both horizontal and vertical in one call
+                    $font->align('left', 'top');
                 });
             };
 
@@ -298,12 +302,16 @@ private function createNewCard($emp_id, $pic, $cnic, $name, $designation, $depar
             $addText($dateofissue,542, 468);
             $addText($dateofexpiry,542, 509);
 
-            // Save the generated card
+            // v5 API: encode() needs an explicit encoder instance; cast result to string for raw bytes.
+            // PngEncoder has no quality param (PNG is lossless) — only interlaced/indexed flags.
             $filename = $emp_id . '.png';
-Storage::disk('private')->put('cards/' . $filename, $template->encode('png', 100));
+            Storage::disk('private')->put(
+                'cards/' . $filename,
+                (string) $template->encode(new \Intervention\Image\Encoders\PngEncoder())
+            );
             return true;
         } catch (\Exception $e) {
-            return  $e->getMessage();
+            return $e->getMessage();
         }
     }
     public function showCard($id)

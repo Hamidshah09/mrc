@@ -7,7 +7,21 @@ return new class extends Migration
 {
     public function up(): void
     {
-        
+        /*
+         * Map any legacy status values to the new set BEFORE
+         * altering the column, otherwise MySQL will refuse
+         * with "Data truncated for column 'status'" if any row
+         * still holds a value not in the new ENUM.
+         *
+         *   'Not Verified' -> 'Pending'   (registrar hasn't finished)
+         *   'Confirmed'    -> 'Pending'   (legacy value used by store())
+         *   anything else  -> 'Pending'   (safe fallback)
+         */
+        DB::statement("
+            UPDATE mrc
+            SET status = 'Pending'
+            WHERE status NOT IN ('Pending', 'Completed', 'Verified')
+        ");
 
         /*
          * Keep only the statuses needed by the workflow:

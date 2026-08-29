@@ -27,6 +27,7 @@ class MrcController extends Controller
                 ELSE 3
             END
         ")->orderBy('id', 'desc');
+        // (Verified intentionally sorts after Completed — verified records are done.)
 
         if ($request->input('status') === 'all') {
 
@@ -181,7 +182,8 @@ class MrcController extends Controller
         ->withInput();
         }
         $validated['user_id'] = Auth::id(); // Assuming the registrar is the currently authenticated user
-        $validated['status'] = 'Pending';
+        // New record starts as 'Pending' until data entry is completed
+        $validated['status'] = 'Completed';
         
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('mrc_images', 'public');

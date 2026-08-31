@@ -37,67 +37,90 @@
 
 
         {{-- ============================= --}}
-        {{-- DOCUMENT PREVIEW               --}}
+
+        {{-- TWO COLUMN LAYOUT:            --}}
+
+        {{-- Sticky preview + scrollable   --}}
+
+        {{-- form                          --}}
+
         {{-- ============================= --}}
 
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="flex flex-col lg:flex-row lg:items-start gap-6">
 
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                Document Preview
-            </h3>
 
-            <div class="flex justify-between mb-2">
+            {{-- ============================= --}}
+            {{-- DOCUMENT PREVIEW (STICKY)     --}}
+            {{-- ============================= --}}
 
-                <button
-                    type="button"
-                    onclick="zoomIn()"
-                    class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                >+</button>
+            <div class="w-full lg:w-1/2 lg:sticky lg:top-4 lg:self-start">
 
-                <button
-                    type="button"
-                    onclick="zoomOut()"
-                    class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                >-</button>
+                <div class="bg-white shadow-md rounded-lg p-6">
+
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        Document Preview
+                    </h3>
+
+                    <div class="flex justify-between mb-2">
+
+                        <button
+                            type="button"
+                            onclick="zoomIn()"
+                            class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                        >+</button>
+
+                        <button
+                            type="button"
+                            onclick="zoomOut()"
+                            class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                        >-</button>
+
+                    </div>
+
+                    <div class="border overflow-auto" style="height: 600px;">
+
+                        @php
+                            $ext = pathinfo($mrc->image, PATHINFO_EXTENSION);
+                        @endphp
+
+                        @if(in_array($ext, ['jpg', 'jpeg', 'png']))
+
+                            <img
+                                id="docImage"
+                                src="{{ asset('storage/' . $mrc->image) }}"
+                                alt="Nikkahnama Document"
+                                class="mx-auto block"
+                                style="width: 100%; max-width: none;"
+                            >
+
+                        @else
+
+                            <iframe
+                                src="{{ asset('storage/' . $mrc->image) }}"
+                                class="w-full"
+                                style="height: 600px;"
+                            ></iframe>
+
+                        @endif
+
+                    </div>
+
+                </div>
 
             </div>
 
-            <div class="border overflow-auto" style="height: 400px;">
 
-                @php
-                    $ext = pathinfo($mrc->image, PATHINFO_EXTENSION);
-                @endphp
+            {{-- ============================= --}}
+            {{-- FORM COLUMN (SCROLLABLE)      --}}
+            {{-- ============================= --}}
 
-                @if(in_array($ext, ['jpg', 'jpeg', 'png']))
+            <div class="w-full lg:w-1/2">
 
-                    <img
-                        id="docImage"
-                        src="{{ asset('storage/' . $mrc->image) }}"
-                        alt="Nikkahnama Document"
-                        class="mx-auto block"
-                        style="width: 100%; max-width: none;"
-                    >
-
-                @else
-
-                    <iframe
-                        src="{{ asset('storage/' . $mrc->image) }}"
-                        class="w-full"
-                        style="height: 400px;"
-                    ></iframe>
-
-                @endif
-
-            </div>
-
-        </div>
-
-
-        <form
-            action="{{ route('mrc.update-with-crops', $mrc->id) }}"
-            method="POST"
-            class="space-y-6"
-        >
+                <form
+                    action="{{ route('mrc.update-with-crops', $mrc->id) }}"
+                    method="POST"
+                    class="space-y-6"
+                >
 
             @csrf
             @method('PUT')
@@ -429,6 +452,10 @@
 
 
         </form>
+
+            </div>
+
+        </div>
 
     </div>
 

@@ -130,19 +130,17 @@
         @endif
 
         <!-- Table View (hidden on small screens) -->
-        <div class="hidden md:block overflow-x-auto rounded-lg shadow-sm">
-            <table class="min-w-full divide-y divide-gray-200">
+        <div class="hidden md:block w-full overflow-x-auto rounded-lg shadow-sm">
+            <table class="min-w-full divide-y divide-gray-200 whitespace-nowrap">
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Groom CNIC</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Groom Name</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Bride CNIC</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Bride Name</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Marriage Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registration Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">User</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registrar</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Register No</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Union Council</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
@@ -155,11 +153,9 @@
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->groom_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->bride_cnic }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->bride_name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->marriage_date }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registration_date }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->user->name ?? '' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registrar_name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->register_no }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->unionCouncil ? $mrc->unionCouncil->name : '' }}</td>
                             <td class="px-6 py-4 text-sm">
 

@@ -85,8 +85,8 @@
                         focus:border-blue-500 p-2.5"
                 >
                     <option
-                        value=""
-                        {{ !request()->has('status') ? 'selected' : '' }}
+                        value="Pending"
+                        {{ request('status') === 'Pending' ? 'selected' : '' }}
                     >
                         Pending
                     </option>

@@ -77,7 +77,11 @@
 
                     </div>
 
-                    <div class="border overflow-auto" style="height: 600px;">
+                    <div
+                        id="docPreview"
+                        class="border overflow-auto"
+                        style="height: 600px;"
+                    >
 
                         @php
                             $ext = pathinfo($mrc->image, PATHINFO_EXTENSION);
@@ -464,34 +468,62 @@
 
         /*
          * Document image zoom
+         *
+         * Initial scale = 2 (zoomed in twice
+         * the normal size on page load).
          */
-        let scale = 1;
+        let scale = 2;
 
-        function zoomIn() {
+        function applyZoom() {
 
             let img = document.getElementById('docImage');
 
             if (!img) {
                 return;
             }
-
-            scale += 0.2;
 
             img.style.width = (scale * 100) + '%';
 
         }
 
-        function zoomOut() {
+        function scrollPreviewRight() {
 
-            let img = document.getElementById('docImage');
+            let container = document.getElementById('docPreview');
 
-            if (!img) {
+            if (!container) {
                 return;
             }
 
+            container.scrollLeft = container.scrollWidth;
+
+        }
+
+        /*
+         * Apply initial settings on page load:
+         * image zoomed 2x and scrolled to
+         * the right side.
+         */
+        document.addEventListener('DOMContentLoaded', function () {
+
+            applyZoom();
+
+            scrollPreviewRight();
+
+        });
+
+        function zoomIn() {
+
+            scale += 0.2;
+
+            applyZoom();
+
+        }
+
+        function zoomOut() {
+
             scale = Math.max(0.5, scale - 0.2);
 
-            img.style.width = (scale * 100) + '%';
+            applyZoom();
 
         }
 

@@ -36,6 +36,63 @@
         @endif
 
 
+        {{-- ============================= --}}
+        {{-- DOCUMENT PREVIEW               --}}
+        {{-- ============================= --}}
+
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                Document Preview
+            </h3>
+
+            <div class="flex justify-between mb-2">
+
+                <button
+                    type="button"
+                    onclick="zoomIn()"
+                    class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                >+</button>
+
+                <button
+                    type="button"
+                    onclick="zoomOut()"
+                    class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                >-</button>
+
+            </div>
+
+            <div class="border overflow-auto" style="height: 400px;">
+
+                @php
+                    $ext = pathinfo($mrc->image, PATHINFO_EXTENSION);
+                @endphp
+
+                @if(in_array($ext, ['jpg', 'jpeg', 'png']))
+
+                    <img
+                        id="docImage"
+                        src="{{ asset('storage/' . $mrc->image) }}"
+                        alt="Nikkahnama Document"
+                        class="mx-auto block"
+                        style="width: 100%; max-width: none;"
+                    >
+
+                @else
+
+                    <iframe
+                        src="{{ asset('storage/' . $mrc->image) }}"
+                        class="w-full"
+                        style="height: 400px;"
+                    ></iframe>
+
+                @endif
+
+            </div>
+
+        </div>
+
+
         <form
             action="{{ route('mrc.update-with-crops', $mrc->id) }}"
             method="POST"
@@ -60,119 +117,232 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
 
-                    @foreach($cropFields as $field => $label)
+                    {{-- Groom Name --}}
+                    <div>
 
-                        @php
-                            $template = $templates->get($field);
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Groom Name
+                        </label>
 
-                            $cropPath = $template
-                                ? 'storage/documents/' .
-                                  $mrc->id .
-                                  '/crops/' .
-                                  $field .
-                                  '.jpg'
-                                : null;
-                        @endphp
-
-
-                        <div
-                            class="{{ in_array($field, [
-                                'groom_name',
-                                'bride_name',
-                                'groom_father_name',
-                                'bride_father_name',
-                                'groom_cnic',
-                                'bride_cnic',
-                            ]) ? '' : '' }}"
+                        <input
+                            id="groom_name"
+                            type="text"
+                            name="groom_name"
+                            value="{{ old('groom_name', $mrc->groom_name) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
                         >
 
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                {{ $label }}
-                            </label>
+                    </div>
 
 
-                            {{-- Crop Image --}}
-                            @if($template && $cropPath)
+                    {{-- Bride Name --}}
+                    <div>
 
-                                <div class="mb-3 bg-gray-100 border
-                                            rounded-md p-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Bride Name
+                        </label>
 
-                                    <img
-                                        src="{{ asset($cropPath) }}"
-                                        alt="{{ $label }}"
-                                        class="w-full max-h-48 object-contain
-                                               rounded"
-                                    >
+                        <input
+                            id="bride_name"
+                            type="text"
+                            name="bride_name"
+                            value="{{ old('bride_name', $mrc->bride_name) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
 
-                                </div>
-
-                            @else
-
-                                <div class="mb-3 p-4 bg-gray-100
-                                            border rounded text-sm
-                                            text-gray-500">
-
-                                    No crop available for this field.
-
-                                </div>
-
-                            @endif
+                    </div>
 
 
-                            {{-- Input --}}
-                            @if(in_array($field, [
-                                'marriage_date',
-                                'registration_date'
-                            ]))
+                    {{-- Groom's Father Name --}}
+                    <div>
 
-                                <input
-                                    type="date"
-                                    name="{{ $field }}"
-                                    value="{{ old(
-                                        $field,
-                                        $mrc->{$field}
-                                    ) }}"
-                                    class="w-full border-gray-300
-                                           rounded-md shadow-sm"
-                                >
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Groom's Father Name
+                        </label>
 
-                            @elseif(in_array($field, [
-                                'groom_cnic',
-                                'bride_cnic'
-                            ]))
+                        <input
+                            id="groom_father_name"
+                            type="text"
+                            name="groom_father_name"
+                            value="{{ old('groom_father_name', $mrc->groom_father_name) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
 
-                                <input
-                                    id="{{ $field }}"
-                                    type="text"
-                                    name="{{ $field }}"
-                                    maxlength="13"
-                                    value="{{ old(
-                                        $field,
-                                        $mrc->{$field}
-                                    ) }}"
-                                    class="w-full border-gray-300
-                                           rounded-md shadow-sm"
-                                >
+                    </div>
 
-                            @else
 
-                                <input
-                                    id="{{ $field }}"
-                                    type="text"
-                                    name="{{ $field }}"
-                                    value="{{ old(
-                                        $field,
-                                        $mrc->{$field}
-                                    ) }}"
-                                    class="w-full border-gray-300
-                                           rounded-md shadow-sm"
-                                >
+                    {{-- Bride's Father Name --}}
+                    <div>
 
-                            @endif
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Bride's Father Name
+                        </label>
 
-                        </div>
+                        <input
+                            id="bride_father_name"
+                            type="text"
+                            name="bride_father_name"
+                            value="{{ old('bride_father_name', $mrc->bride_father_name) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
 
-                    @endforeach
+                    </div>
+
+
+                    {{-- Groom Passport --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Groom Passport
+                        </label>
+
+                        <input
+                            id="groom_passport"
+                            type="text"
+                            name="groom_passport"
+                            value="{{ old('groom_passport', $mrc->groom_passport) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
+
+                    </div>
+
+
+                    {{-- Bride Passport --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Bride Passport
+                        </label>
+
+                        <input
+                            id="bride_passport"
+                            type="text"
+                            name="bride_passport"
+                            value="{{ old('bride_passport', $mrc->bride_passport) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
+
+                    </div>
+
+
+                    {{-- Groom CNIC --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Groom CNIC
+                        </label>
+
+                        <input
+                            id="groom_cnic"
+                            type="text"
+                            name="groom_cnic"
+                            maxlength="13"
+                            value="{{ old('groom_cnic', $mrc->groom_cnic) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
+
+                    </div>
+
+
+                    {{-- Bride CNIC --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Bride CNIC
+                        </label>
+
+                        <input
+                            id="bride_cnic"
+                            type="text"
+                            name="bride_cnic"
+                            maxlength="13"
+                            value="{{ old('bride_cnic', $mrc->bride_cnic) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
+
+                    </div>
+
+
+                    {{-- Marriage Date --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Marriage Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="marriage_date"
+                            value="{{ old('marriage_date', $mrc->marriage_date) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
+
+                    </div>
+
+
+                    {{-- Registration Date --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Registration Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="registration_date"
+                            value="{{ old('registration_date', $mrc->registration_date) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
+
+                    </div>
+
+
+                    {{-- Registrar Name --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Registrar Name
+                        </label>
+
+                        <input
+                            id="registrar_name"
+                            type="text"
+                            name="registrar_name"
+                            value="{{ old('registrar_name', $mrc->registrar_name) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
+
+                    </div>
+
+
+                    {{-- Register No --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Register No
+                        </label>
+
+                        <input
+                            id="register_no"
+                            type="text"
+                            name="register_no"
+                            value="{{ old('register_no', $mrc->register_no) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
+
+                    </div>
 
 
                     {{-- Union Council --}}
@@ -264,6 +434,40 @@
 
 
     <script>
+
+        /*
+         * Document image zoom
+         */
+        let scale = 1;
+
+        function zoomIn() {
+
+            let img = document.getElementById('docImage');
+
+            if (!img) {
+                return;
+            }
+
+            scale += 0.2;
+
+            img.style.width = (scale * 100) + '%';
+
+        }
+
+        function zoomOut() {
+
+            let img = document.getElementById('docImage');
+
+            if (!img) {
+                return;
+            }
+
+            scale = Math.max(0.5, scale - 0.2);
+
+            img.style.width = (scale * 100) + '%';
+
+        }
+
 
         /*
          * CNIC validation

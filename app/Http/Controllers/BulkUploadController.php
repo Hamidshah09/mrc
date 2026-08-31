@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mrc;
-use App\Services\DocumentCropService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,10 +13,8 @@ class BulkUploadController extends Controller
         return view('mrc.bulk-upload');
     }
 
-    public function store(
-        Request $request,
-        DocumentCropService $cropService
-    ) {
+    public function store(Request $request)
+    {
         $request->validate([
             'images' => [
                 'required',
@@ -39,7 +36,6 @@ class BulkUploadController extends Controller
 
             DB::transaction(function () use (
                 $uploadedImage,
-                $cropService,
                 &$created
             ) {
 
@@ -72,11 +68,6 @@ class BulkUploadController extends Controller
                 $mrc->update([
                     'image' => $imagePath,
                 ]);
-
-                $cropService->generateCrops(
-                    $imagePath,
-                    $mrc->id
-                );
 
                 $created++;
             });

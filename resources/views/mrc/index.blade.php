@@ -93,7 +93,7 @@
 
                     <option
                         value="Completed"
-                        {{ request('status') === 'Completed' ? 'selected' : '' }}
+                        {{ request('status', 'Completed') === 'Completed' ? 'selected' : '' }}
                     >
                         Completed
                     </option>

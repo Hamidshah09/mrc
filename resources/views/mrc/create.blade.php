@@ -32,7 +32,12 @@
                         @endforeach
                     </select>
                 </div>
-
+                <div>
+                    <label class="block text-sm font-medium">Register No</label>
+                    <input type="text" name="register_no"
+                           class="w-full border-gray-300 rounded shadow-sm"
+                           value="{{ old('register_no') }}">
+                </div>
                 <div>
                     <label class="block text-sm font-medium">Groom Name</label>
                     <input type="text" name="groom_name"
@@ -117,13 +122,6 @@
                                placeholder="Enter new registrar name"
                                value="{{ old('new_registrar_name') }}">
                     </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium">Register No</label>
-                    <input type="text" name="register_no"
-                           class="w-full border-gray-300 rounded shadow-sm"
-                           value="{{ old('register_no') }}">
                 </div>
 
                 <div class="md:col-span-2">

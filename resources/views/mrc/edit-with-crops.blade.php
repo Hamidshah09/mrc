@@ -178,6 +178,23 @@
                         </select>
 
                     </div>
+                    {{-- Register No --}}
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Register No
+                        </label>
+
+                        <input
+                            id="register_no"
+                            type="text"
+                            name="register_no"
+                            value="{{ old('register_no', $mrc->register_no) }}"
+                            class="w-full border-gray-300
+                                   rounded-md shadow-sm"
+                        >
+
+                    </div>
                     {{-- Groom Name --}}
                     <div>
 
@@ -400,23 +417,7 @@
                     </div>
 
 
-                    {{-- Register No --}}
-                    <div>
-
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Register No
-                        </label>
-
-                        <input
-                            id="register_no"
-                            type="text"
-                            name="register_no"
-                            value="{{ old('register_no', $mrc->register_no) }}"
-                            class="w-full border-gray-300
-                                   rounded-md shadow-sm"
-                        >
-
-                    </div>
+                    
                     {{-- Remarks --}}
                     <div class="md:col-span-2">
 

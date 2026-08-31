@@ -52,68 +52,115 @@
             </a>
 
         </div>
-        <div class="w-full">
-            <form action="{{ route('mrc.index') }}" method="GET" class="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0 mb-4 w-full">
-                <input type="text" name="search" placeholder="Search by Groom CNIC or Name" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3 lg:w-1/2" value="{{ request('search') }}">
-                <select name="search_type" id="search_type" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
-                    <option value="" {{ empty(request('search_type')) ? 'selected' : '' }}>Choose an option</option>
-                    <option value="groom_cnic" {{ request('search_type') === 'groom_cnic' ? 'selected' : '' }}>Groom CNIC</option>
-                    <option value="id" {{ request('search_type') === 'id' ? 'selected' : '' }}>Id</option>
-                    <option value="groom_name" {{ request('search_type') === 'groom_name' ? 'selected' : '' }}>Groom Name</option>
-                    <option value="bride_cnic" {{ request('search_type') === 'bride_cnic' ? 'selected' : '' }}>Bride CNIC</option>
-                    <option value="bride_name" {{ request('search_type') === 'bride_name' ? 'selected' : '' }}>Bride Name</option>
-                    <option value="registrar_name" {{ request('search_type') === 'registrar_name' ? 'selected' : '' }}>Registrar Name</option>
-                    <option value="register_no" {{ request('search_type') === 'register_no' ? 'selected' : '' }}>Register No</option>
-                </select>
+        <div class="w-full mb-3">
+            @php
+                $filterControl =
+                    'w-full text-sm bg-white border border-gray-300 rounded-lg
+                     px-3 py-2 text-gray-900 shadow-sm transition duration-150
+                     focus:outline-none focus:ring-2 focus:ring-blue-500/30
+                     focus:border-blue-500 placeholder:text-gray-400';
+            @endphp
 
-                <label for="union_council_id">Union Council</label>
-                <select name="union_council_id" id="union_council_id" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
-                    <option value="">All</option>
-                    @foreach($unionCouncils as $uc)
-                        <option value="{{ $uc->id }}" {{ (string)request('union_council_id') === (string)$uc->id ? 'selected' : '' }}>{{ $uc->name }}</option>
-                    @endforeach
-                </select>
+            <form
+                action="{{ route('mrc.index') }}"
+                method="GET"
+                class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-8
+                    bg-gray-50 border border-gray-200 rounded-xl
+                    p-4 md:p-5 shadow-sm"
+            >
+                
+                <div class="sm:col-span-2">
+                    <label for="search" class="block mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Search</label>
+                    <input type="text" name="search" id="search" placeholder="Groom CNIC or Name" class="{{ $filterControl }}" value="{{ request('search') }}">
+                </div>
+                <div>
+                    <label for="search_type" class="block mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Search Type</label>
+                    <select name="search_type" id="search_type" class="{{ $filterControl }}">
+                        <option value="" {{ empty(request('search_type')) ? 'selected' : '' }}>Search by</option>
+                        <option value="groom_cnic" {{ request('search_type') === 'groom_cnic' ? 'selected' : '' }}>Groom CNIC</option>
+                        <option value="id" {{ request('search_type') === 'id' ? 'selected' : '' }}>Id</option>
+                        <option value="groom_name" {{ request('search_type') === 'groom_name' ? 'selected' : '' }}>Groom Name</option>
+                        <option value="bride_cnic" {{ request('search_type') === 'bride_cnic' ? 'selected' : '' }}>Bride CNIC</option>
+                        <option value="bride_name" {{ request('search_type') === 'bride_name' ? 'selected' : '' }}>Bride Name</option>
+                        <option value="registrar_name" {{ request('search_type') === 'registrar_name' ? 'selected' : '' }}>Registrar Name</option>
+                        <option value="register_no" {{ request('search_type') === 'register_no' ? 'selected' : '' }}>Register No</option>
+                    </select>
+                </div>
 
-                <label for="from">From</label>
-                <input type="date" name="from" id="from" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('from') }}">
-                <label for="to">to</label>
-                <input type="date" name="to" id="to" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/3" value="{{ request('to') }}">
-                <select
-                    name="status"
-                    id="status"
-                    class="bg-white border border-gray-300 text-gray-900
-                        text-sm rounded-lg focus:ring-blue-500
-                        focus:border-blue-500 p-2.5"
-                >
-                    <option
-                        value="Pending"
-                        {{ request('status') === 'Pending' ? 'selected' : '' }}
+                <div>
+                    <label for="union_council_id" class="block mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Union Council</label>
+                    <select name="union_council_id" id="union_council_id" class="{{ $filterControl }}">
+                        <option value="">All Union Councils</option>
+                        @foreach($unionCouncils as $uc)
+                            <option value="{{ $uc->id }}" {{ (string)request('union_council_id') === (string)$uc->id ? 'selected' : '' }}>{{ $uc->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="from" class="block mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">From</label>
+                    <input type="date" name="from" id="from" class="{{ $filterControl }}" value="{{ request('from') }}">
+                </div>
+                <div>
+                    <label for="to" class="block mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">To</label>
+                    <input type="date" name="to" id="to" class="{{ $filterControl }}" value="{{ request('to') }}">
+                </div>
+                
+                    
+                <div>
+                    <label for="status" class="block mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Status</label>
+                    <select name="status" id="status" class="{{ $filterControl }}">
+                        <option
+                            value="Pending"
+                            {{ request('status') === 'Pending' ? 'selected' : '' }}
+                        >
+                            Pending
+                        </option>
+
+                        <option
+                            value="Completed"
+                            {{ request('status', 'Completed') === 'Completed' ? 'selected' : '' }}
+                        >
+                            Completed
+                        </option>
+
+                        <option
+                            value="Verified"
+                            {{ request('status') === 'Verified' ? 'selected' : '' }}
+                        >
+                            Verified
+                        </option>
+
+                        <option
+                            value="all"
+                            {{ request('status') === 'all' ? 'selected' : '' }}
+                        >
+                            All
+                        </option>
+                    </select>
+                </div>
+                <div class="flex items-end gap-2">
+                    <button
+                        type="submit"
+                        class="flex-1 px-4 py-2 bg-blue-600 text-white text-sm
+                            font-semibold rounded-lg shadow-sm
+                            hover:bg-blue-700 focus:outline-none
+                            focus:ring-2 focus:ring-blue-500
+                            focus:ring-offset-2 transition duration-150"
                     >
-                        Pending
-                    </option>
+                        Search
+                    </button>
 
-                    <option
-                        value="Completed"
-                        {{ request('status', 'Completed') === 'Completed' ? 'selected' : '' }}
+                    <a
+                        href="{{ route('mrc.index') }}"
+                        title="Clear all filters"
+                        class="px-3 py-2 bg-white text-gray-600 text-sm
+                            font-semibold border border-gray-300 rounded-lg
+                            hover:bg-gray-100 transition duration-150"
                     >
-                        Completed
-                    </option>
-
-                    <option
-                        value="Verified"
-                        {{ request('status') === 'Verified' ? 'selected' : '' }}
-                    >
-                        Verified
-                    </option>
-
-                    <option
-                        value="all"
-                        {{ request('status') === 'all' ? 'selected' : '' }}
-                    >
-                        All
-                    </option>
-                </select>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">Search</button>
+                        Reset
+                    </a>
+                </div>
             </form>
 
 
@@ -136,10 +183,8 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Id</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Groom CNIC</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Groom Name</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Bride CNIC</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Bride Name</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Groom</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Bride</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registration Date</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">User</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Registrar</th>
@@ -152,10 +197,23 @@
                     @foreach ($mrcRecords as $mrc)
                         <tr class="hover:bg-gray-50 transition-colors duration-200">
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->id }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->groom_cnic }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->groom_name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->bride_cnic }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->bride_name }}</td>
+
+                            {{-- Groom: CNIC on top, name below --}}
+                            <td class="px-6 py-4 text-sm">
+                                <div class="flex flex-col">
+                                    <span class="text-gray-800 font-medium">{{ $mrc->groom_name }}</span>
+                                    <span class="text-gray-500 text-xs mt-0.5">{{ $mrc->groom_cnic }}</span>
+                                </div>
+                            </td>
+
+                            {{-- Bride: CNIC on top, name below --}}
+                            <td class="px-6 py-4 text-sm">
+                                <div class="flex flex-col">
+                                    <span class="text-gray-800 font-medium">{{ $mrc->bride_name }}</span>
+                                    <span class="text-gray-500 text-xs mt-0.5">{{ $mrc->bride_cnic }}</span>
+                                </div>
+                            </td>
+
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registration_date }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->user->name ?? '' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->registrar_name }}</td>

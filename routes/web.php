@@ -475,7 +475,7 @@ Route::middleware(['auth'])->group(function () {
         [MrcController::class, 'editWithCrops']
     )->name('mrc.edit-with-crops');
 
-    Route::post('/mrc/{id}/update-with-corps', [MrcController::class,'updateWithCrops'])->name('mrc.update-with-crops');
+    Route::put('/mrc/{id}/update-with-corps', [MrcController::class,'updateWithCrops'])->name('mrc.update-with-crops');
 
 
 

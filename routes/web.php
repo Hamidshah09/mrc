@@ -289,6 +289,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/mrc/verify/{id}', [MrcController::class, 'verify'])->name('mrc.verify')->middleware('role:verifier,admin');;
     Route::get('/mrc/file/upload', [MrcController::class, 'upload_'])->name('mrc.upload')->middleware('role:mrc,admin,registrar,verifier,drc');
     Route::post('/mrc/import', [MrcController::class, 'import'])->name('mrc.import')->middleware('role:mrc,admin,registrar,verifier,drc');
+    Route::get('/mrc/registrar-names', [MrcController::class, 'registrarNames'])->name('mrc.registrar-names')->middleware('role:mrc,admin,registrar,verifier,drc');
 
     Route::middleware('role:drc,admin,mrc')->group(function () {
         Route::get('/drc/dashboard', [DivorceCaseController::class, 'dashboard'])->name('drc.dashboard');

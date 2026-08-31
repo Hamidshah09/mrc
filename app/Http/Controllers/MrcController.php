@@ -150,7 +150,27 @@ class MrcController extends Controller
     {
         $unionCouncils = UnionCouncil::orderBy('name')->get();
         $last = session('last_union_council_id');
-        return view('mrc.create', compact('unionCouncils', 'last'));
+        $lastRegistrar = session('last_registrar_name');
+        return view('mrc.create', compact('unionCouncils', 'last', 'lastRegistrar'));
+    }
+
+    /**
+     * Return distinct registrar names for a given union council (AJAX).
+     */
+    public function registrarNames(Request $request)
+    {
+        $request->validate([
+            'union_council_id' => 'required|integer|exists:union_councils,id',
+        ]);
+
+        $registrarNames = Mrc::where('union_council_id', $request->union_council_id)
+            ->whereNotNull('registrar_name')
+            ->where('registrar_name', '!=', '')
+            ->distinct()
+            ->orderBy('registrar_name')
+            ->pluck('registrar_name');
+
+        return response()->json($registrarNames);
     }
     public function store(Request $request)
     {
@@ -175,6 +195,14 @@ class MrcController extends Controller
             'union_council_id'   => 'required|exists:union_councils,id',
 
         ]);
+
+        // If "New" was selected, use the provided new registrar name instead
+        if ($request->input('registrar_name') === '__NEW__') {
+            $request->validate([
+                'new_registrar_name' => 'required|string|max:80',
+            ]);
+            $validated['registrar_name'] = $request->input('new_registrar_name');
+        }
         $exist = Mrc::where('groom_cnic', $request->groom_cnic)->Where('bride_cnic', $request->bride_cnic)->first();
         if ($exist){
             return back()
@@ -194,6 +222,11 @@ class MrcController extends Controller
         // save last used union council in session for convenience
         if (!empty($validated['union_council_id'])) {
             session(['last_union_council_id' => $validated['union_council_id']]);
+        }
+
+        // save last used registrar name in session for convenience
+        if (!empty($validated['registrar_name'])) {
+            session(['last_registrar_name' => $validated['registrar_name']]);
         }
 
         return redirect()->route('mrc.index')->with('success', 'MRC record created successfully.');
@@ -247,6 +280,11 @@ class MrcController extends Controller
         // update last used union council in session
         if (!empty($validated['union_council_id'])) {
             session(['last_union_council_id' => $validated['union_council_id']]);
+        }
+
+        // update last used registrar name in session
+        if (!empty($validated['registrar_name'])) {
+            session(['last_registrar_name' => $validated['registrar_name']]);
         }
 
         return redirect()->route('mrc.index')->with('success', 'MRC record updated successfully.');
@@ -338,12 +376,24 @@ class MrcController extends Controller
             'remarks' => ['nullable', 'string', 'max:100'],
         ]);
 
+        // If "New" was selected, use the provided new registrar name instead
+        if ($request->input('registrar_name') === '__NEW__') {
+            $validated['registrar_name'] = $request->validate([
+                'new_registrar_name' => 'required|string|max:80',
+            ])['new_registrar_name'];
+        }
+
         $mrc->fill($validated);
 
         $mrc->status = 'Completed';
         $mrc->updated_by = auth()->id();
 
         $mrc->save();
+
+        // update last used registrar name in session
+        if (!empty($mrc->registrar_name)) {
+            session(['last_registrar_name' => $mrc->registrar_name]);
+        }
 
         return redirect()
             ->route('mrc.index', ['status' => 'Pending'])

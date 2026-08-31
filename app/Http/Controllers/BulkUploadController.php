@@ -73,11 +73,23 @@ class BulkUploadController extends Controller
             });
         }
 
+        $successMessage = "{$created} document(s) uploaded successfully.";
+
+        /*
+         * AJAX batch uploads (sent by JavaScript in chunks
+         * of 10 files) expect a JSON response instead of
+         * a redirect.
+         */
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'uploaded' => $created,
+                'message' => $successMessage,
+            ]);
+        }
+
         return redirect()
             ->route('mrc.bulk-upload.create')
-            ->with(
-                'success',
-                "{$created} document(s) uploaded successfully."
-            );
+            ->with('success', $successMessage);
     }
 }

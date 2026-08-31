@@ -58,6 +58,7 @@
                 <select name="search_type" id="search_type" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
                     <option value="" {{ empty(request('search_type')) ? 'selected' : '' }}>Choose an option</option>
                     <option value="groom_cnic" {{ request('search_type') === 'groom_cnic' ? 'selected' : '' }}>Groom CNIC</option>
+                    <option value="id" {{ request('search_type') === 'id' ? 'selected' : '' }}>Id</option>
                     <option value="groom_name" {{ request('search_type') === 'groom_name' ? 'selected' : '' }}>Groom Name</option>
                     <option value="bride_cnic" {{ request('search_type') === 'bride_cnic' ? 'selected' : '' }}>Bride CNIC</option>
                     <option value="bride_name" {{ request('search_type') === 'bride_name' ? 'selected' : '' }}>Bride Name</option>
@@ -134,6 +135,7 @@
             <table class="min-w-full divide-y divide-gray-200 whitespace-nowrap">
                 <thead class="bg-gray-100">
                     <tr>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Id</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Groom CNIC</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Groom Name</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Bride CNIC</th>
@@ -149,6 +151,7 @@
                 <tbody class="bg-white divide-y divide-gray-100">
                     @foreach ($mrcRecords as $mrc)
                         <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->id }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->groom_cnic }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->groom_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-800">{{ $mrc->bride_cnic }}</td>

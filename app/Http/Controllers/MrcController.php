@@ -144,10 +144,33 @@ class MrcController extends Controller
         $tableRows = array_values($userTotals);
         $totalCount = array_sum(array_column($tableRows, 'count'));
 
+        // Registrar-wise record counts (grouped by distinct registrar_name)
+        $registrarQuery = Mrc::whereDate('updated_at', '>=', $from)
+            ->whereDate('updated_at', '<=', $to)
+            ->whereNotNull('groom_name')
+            ->where('groom_name', '!=', '');
+
+        if ($selectedUnionCouncil !== 'all' && is_numeric($selectedUnionCouncil)) {
+            $registrarQuery->where('union_council_id', $selectedUnionCouncil);
+        }
+
+        $registrarRecords = $registrarQuery
+            ->selectRaw("COALESCE(NULLIF(registrar_name, ''), 'Unknown') as registrar_name, COUNT(*) as cnt")
+            ->groupBy('registrar_name')
+            ->orderBy('registrar_name')
+            ->get();
+
+        $registrarRows = $registrarRecords->map(fn ($r) => [
+            'registrar' => $r->registrar_name,
+            'count'     => (int) $r->cnt,
+        ])->all();
+
+        $registrarTotalCount = array_sum(array_column($registrarRows, 'count'));
+
         $unionCouncils = UnionCouncil::orderBy('name')->get();
         $totalValues = array_values($totals);
 
-        return view('mrc.dashboard', compact('period', 'totalValues', 'tableRows', 'from', 'to', 'unionCouncils', 'selectedUnionCouncil', 'totalCount'));
+        return view('mrc.dashboard', compact('period', 'totalValues', 'tableRows', 'from', 'to', 'unionCouncils', 'selectedUnionCouncil', 'totalCount', 'registrarRows', 'registrarTotalCount'));
     }
     public function create()
     {

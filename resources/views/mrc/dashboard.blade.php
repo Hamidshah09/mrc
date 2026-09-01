@@ -66,6 +66,38 @@
                 </table>
             </div>
         </div>
+
+        <div class="mt-6 bg-white rounded shadow p-4">
+            <h3 class="font-semibold mb-2">Records per registrar (table)</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Registrar</th>
+                            <th class="px-4 py-2 text-left">Records Count</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-100">
+                        @forelse($registrarRows as $row)
+                            <tr>
+                                <td class="px-4 py-2">{{ $row['registrar'] }}</td>
+                                <td class="px-4 py-2">{{ $row['count'] }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td class="px-4 py-2 text-gray-500" colspan="2">No records found for the selected filters.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                    <tfoot class="bg-gray-100 font-semibold">
+                        <tr>
+                            <td class="px-4 py-3">Total</td>
+                            <td class="px-4 py-3">{{ $registrarTotalCount ?? 0 }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     </div>
 
     <script src="{{ asset('js/chart.js') }}"></script>

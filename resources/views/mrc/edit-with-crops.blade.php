@@ -608,19 +608,8 @@
         const NEW_REGISTRAR = '__NEW__';
 
         function toggleNewRegistrarInput() {
-
-            const select = document.getElementById('registrar_name_select');
-            const wrapper = document.getElementById('new_registrar_wrapper');
-
-            if (select.value === NEW_REGISTRAR) {
-
-                wrapper.classList.remove('hidden');
-
-            } else {
-
-                wrapper.classList.add('hidden');
-
-            }
+            
+            
 
         }
 
@@ -686,9 +675,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-
             const ucSelect = document.querySelector('select[name="union_council_id"]');
-            const registrarSelect = document.getElementById('registrar_name_select');
 
             // Initialize Select2
             $('#registrar_name_select').select2({
@@ -703,8 +690,20 @@
             });
 
             // Show/hide the "New" input when selection changes
-            registrarSelect.addEventListener('change', toggleNewRegistrarInput);
+            $("#registrar_name_select").on('change', () => {
+                const select = document.getElementById('registrar_name_select');
+                const wrapper = document.getElementById('new_registrar_wrapper');
 
+                if (select.value == NEW_REGISTRAR) {
+
+                    wrapper.classList.remove('hidden');
+
+                } else {
+
+                    wrapper.classList.add('hidden');
+
+                }
+            });
             // Preload on page load (validation errors / old input)
             const preselected = '{{ old('registrar_name', $mrc->registrar_name) }}';
             const preselectedUc = '{{ old('union_council_id', $mrc->union_council_id) }}';

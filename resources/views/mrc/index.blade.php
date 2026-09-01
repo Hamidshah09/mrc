@@ -4,7 +4,23 @@
             {{ __('Marriage Records') }}
         </h2>
     </x-slot>
+    
     <div class="w-[95%] mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+        <!-- Errors -->
+        @if ($errors->any())
+            <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-md border border-red-300">
+                <ul class="list-disc pl-5 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        @if (session('success'))
+            <div class="text-green-700 bg-green-100 p-3 rounded-md mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="w-full flex justify-end flex-wrap">
 
             {{-- Dashboard --}}

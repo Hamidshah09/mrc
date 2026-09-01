@@ -143,7 +143,7 @@
                                     name="remarks"
                                     rows="3"
                                     class="block w-full border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                    placeholder="Additional remarks or notes">{{ old('remarks') }}</textarea>
+                                    placeholder="Additional remarks or notes">{{ old('remarks', $applicant->remarks) }}</textarea>
 
                                 <x-input-error :messages="$errors->get('remarks')" class="mt-2" />
                             </div>

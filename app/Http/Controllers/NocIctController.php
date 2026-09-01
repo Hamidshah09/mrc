@@ -44,6 +44,7 @@ class NocIctController extends Controller
         $letter = NocICT::create([
             'letter_date' => $letterInput['Letter_Date'] ?? null,
             'letter_sent_to' => $letterInput['Letter_Sent_to'] ?? null,
+            'remarks' => $letterInput['Remarks'] ?? null,
         ]);
         $letterId = $letter->Letter_ID;
         

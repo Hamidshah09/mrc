@@ -95,16 +95,16 @@ class MrcController extends Controller
         $to = $request->input('to', $today);
         $selectedUnionCouncil = $request->input('union_council_id', 'all');
 
-        $query = Mrc::whereDate('created_at', '>=', $from)
-            ->whereDate('created_at', '<=', $to);
+        $query = Mrc::whereDate('updated_at', '>=', $from)
+            ->whereDate('updated_at', '<=', $to);
 
         if ($selectedUnionCouncil !== 'all' && is_numeric($selectedUnionCouncil)) {
             $query->where('union_council_id', $selectedUnionCouncil);
         }
 
         $records = $query
-            ->selectRaw('DATE(created_at) as date, user_id, union_council_id, count(*) as cnt')
-            ->groupBy('date', 'user_id', 'union_council_id')
+            ->selectRaw('DATE(updated_at) as date, updated_by, union_council_id, count(*) as cnt')
+            ->groupBy('date', 'updated_by', 'union_council_id')
             ->orderBy('date')
             ->get();
 
@@ -115,7 +115,7 @@ class MrcController extends Controller
             $period[] = $d->toDateString();
         }
 
-        $registrarIds = $records->pluck('user_id')->unique()->filter()->values()->all();
+        $registrarIds = $records->pluck('updated_by')->unique()->filter()->values()->all();
         $unionCouncilIds = $records->pluck('union_council_id')->unique()->filter()->values()->all();
         $users = User::whereIn('id', $registrarIds)->get()->keyBy('id');
         $unionCouncils = UnionCouncil::whereIn('id', $unionCouncilIds)->get()->keyBy('id');
@@ -124,7 +124,7 @@ class MrcController extends Controller
         $userTotals = [];
         foreach ($records as $r) {
             $date = $r->date;
-            $uid = $r->user_id ?: 0;
+            $uid = $r->updated_by ?: 0;
             $unionCouncilId = $r->union_council_id ?: 0;
             $userName = $users->has($uid) ? $users[$uid]->name : 'System';
             $unionCouncilName = $unionCouncils->has($unionCouncilId) ? $unionCouncils[$unionCouncilId]->name : 'N/A';
@@ -209,7 +209,9 @@ class MrcController extends Controller
         ->withErrors(['duplicate' => 'This Nikkah record already exists'])
         ->withInput();
         }
-        $validated['user_id'] = Auth::id(); // Assuming the registrar is the currently authenticated user
+        $auth_id = Auth::id();
+        $validated['user_id'] = $auth_id; // Assuming the registrar is the currently authenticated user
+        $validated['updated_by'] = $auth_id;
         // New record starts as 'Pending' until data entry is completed
         $validated['status'] = 'Completed';
         
@@ -346,7 +348,13 @@ class MrcController extends Controller
 
     public function editWithCrops($id)
     {
+
         $mrc = Mrc::findOrFail($id);
+        if ($mrc->locked_by)
+            return redirect()->route('mrc.index')->with('error', 'This record is currently locked by another user.');   
+        
+        $mrc->locked_by = auth()->id();
+        $mrc->save();
 
         $unionCouncils = UnionCouncil::all();
 

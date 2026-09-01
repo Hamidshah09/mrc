@@ -354,7 +354,7 @@ class MrcController extends Controller
     {
 
         $mrc = Mrc::findOrFail($id);
-        if ($mrc->locked_by)
+        if ($mrc->locked_by and $mrc->locked_by !== auth()->id())
             return redirect()->route('mrc.index')->with('error', 'This record is currently locked by another user.');   
         
         $mrc->locked_by = auth()->id();

@@ -238,11 +238,19 @@
 
                                 @if($mrc->status === 'Pending')
 
-                                    <span class="inline-flex items-center px-2.5 py-1
-                                                rounded-full text-xs font-semibold
-                                                bg-yellow-100 text-yellow-800">
-                                        Pending
-                                    </span>
+                                    @if($mrc->locked_by)
+                                        <span class="inline-flex items-center px-2.5 py-1
+                                                    rounded-full text-xs font-semibold
+                                                    bg-yellow-100 text-yellow-800">
+                                            Locked
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-2.5 py-1
+                                                    rounded-full text-xs font-semibold
+                                                    bg-yellow-100 text-yellow-800">
+                                            Pending
+                                        </span>
+                                    @endif
 
                                 @elseif($mrc->status === 'Completed')
 

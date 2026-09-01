@@ -96,7 +96,10 @@ class MrcController extends Controller
         $selectedUnionCouncil = $request->input('union_council_id', 'all');
 
         $query = Mrc::whereDate('updated_at', '>=', $from)
-            ->whereDate('updated_at', '<=', $to);
+            ->whereDate('updated_at', '<=', $to)
+            // Only count records with a groom name as valid entries
+            ->whereNotNull('groom_name')
+            ->where('groom_name', '!=', '');
 
         if ($selectedUnionCouncil !== 'all' && is_numeric($selectedUnionCouncil)) {
             $query->where('union_council_id', $selectedUnionCouncil);
@@ -212,6 +215,7 @@ class MrcController extends Controller
         $auth_id = Auth::id();
         $validated['user_id'] = $auth_id; // Assuming the registrar is the currently authenticated user
         $validated['updated_by'] = $auth_id;
+        $validated['updated_at'] = now();
         // New record starts as 'Pending' until data entry is completed
         $validated['status'] = 'Completed';
         
@@ -395,6 +399,7 @@ class MrcController extends Controller
 
         $mrc->status = 'Completed';
         $mrc->updated_by = auth()->id();
+        $mrc->updated_at = now();
 
         $mrc->save();
 

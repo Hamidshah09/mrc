@@ -55,7 +55,11 @@ class MrcController extends Controller
 
             // Sanitize and apply search type filter
             if (in_array($searchType, ['groom_cnic', 'groom_name', 'bride_cnic', 'bride_name','registrar_name', 'register_no', 'id'])) {
-                $query->where($searchType, '=', $searchValue);
+                if (in_array($searchType, ['groom_name', 'bride_name', 'registrar_name'])) {
+                    $query->where($searchType, 'LIKE', '%' . $searchValue . '%');
+                } else {
+                    $query->where($searchType, '=', $searchValue);
+                }
             }
         }
 

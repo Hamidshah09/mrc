@@ -80,7 +80,7 @@
             <form
                 action="{{ route('mrc.index') }}"
                 method="GET"
-                class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-8
+                class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-9
                     bg-gray-50 border border-gray-200 rounded-xl
                     p-4 md:p-5 shadow-sm"
             >
@@ -113,6 +113,16 @@
                     </select>
                 </div>
                 
+                <div>
+                    <label for="user_id" class="block mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">User</label>
+                    <select name="user_id" id="user_id" class="{{ $filterControl }}">
+                        <option value="">All Users</option>
+                        @foreach($mrcUsers as $mrcUser)
+                            <option value="{{ $mrcUser->id }}" {{ (string)request('user_id') === (string)$mrcUser->id ? 'selected' : '' }}>{{ $mrcUser->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div>
                     <label for="from" class="block mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">From</label>
                     <input type="date" name="from" id="from" class="{{ $filterControl }}" value="{{ request('from') }}">

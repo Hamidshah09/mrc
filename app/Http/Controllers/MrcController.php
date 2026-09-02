@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Imports\MrcImport;
 use App\Models\MrcStatus;
 use App\Models\UnionCouncil;
+use App\Models\Role;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
@@ -82,12 +83,21 @@ class MrcController extends Controller
             $query->where('union_council_id', $request->input('union_council_id'));
         }
 
+        // User (mrc role) filter
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->input('user_id'));
+        }
+
         // Get filtered results
         $mrcRecords = $query->paginate(10)->withQueryString(); // keep filters in pagination links
 
         $unionCouncils = UnionCouncil::orderBy('name')->get();
 
-        return view('mrc.index', compact('mrcRecords', 'user', 'unionCouncils'));
+        $mrcUsers = User::where('role_id', Role::where('role', 'mrc')->value('id'))
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        return view('mrc.index', compact('mrcRecords', 'user', 'unionCouncils', 'mrcUsers'));
     }
     /**
      * Display MRC dashboard with charts and daily-per-user table.
@@ -262,7 +272,7 @@ class MrcController extends Controller
             session(['last_registrar_name' => $validated['registrar_name']]);
         }
 
-        return redirect()->route('mrc.index')->with('success', 'MRC record created successfully.');
+        return redirect()->route('mrc.create')->with('success', 'MRC record created successfully.');
     }
     public function show($id){
         $record = Mrc::findorfail($id);

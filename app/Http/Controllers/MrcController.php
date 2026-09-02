@@ -445,6 +445,16 @@ class MrcController extends Controller
             session(['last_registrar_name' => $mrc->registrar_name]);
         }
 
+        // save last used union council in session for convenience
+        if (!empty($validated['union_council_id'])) {
+            session(['last_union_council_id' => $validated['union_council_id']]);
+        }
+
+        // save last used registrar name in session for convenience
+        if (!empty($validated['registrar_name'])) {
+            session(['last_registrar_name' => $validated['registrar_name']]);
+        }
+
         return redirect()
             ->route('mrc.index', ['status' => 'Pending'])
             ->with(

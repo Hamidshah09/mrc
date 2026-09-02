@@ -17,7 +17,16 @@
                 </ul>
             </div>
         @endif
-
+        @if(session('success'))
+            <div class="mb-4 p-4 bg-green-100 text-green-600 rounded-md border border-green-300">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="mb-4 p-4 bg-red-100 text-red-600 rounded-md border border-red-300">
+                {{ session('error') }}
+            </div>
+        @endif
         <form action="{{ route('mrc.correction') }}" method="POST" class="space-y-4">
             @csrf
 

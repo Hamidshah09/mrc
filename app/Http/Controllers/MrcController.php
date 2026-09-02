@@ -475,6 +475,7 @@ class MrcController extends Controller
             'wrong_name' => ['required', 'string', 'max:80'],
             'correct_name' => ['required', 'string', 'max:80'],
             'passkey' => ['required', 'string', 'max:80'],
+            'update_type' => ['required', 'string', 'in:name_match,id_match'],
         ]);
 
         if ($validated['passkey'] !== '0334') {
@@ -484,9 +485,20 @@ class MrcController extends Controller
         }
         // Here you would typically update the relevant record in the database
         // For example:
-        DB::table('mrc')
-            ->where('registrar_name', $validated['wrong_name'])
-            ->update(['registrar_name' => $validated['correct_name']]);
+        if ($validated['update_type'] === 'name_match') {
+            DB::table('mrc')
+                ->where('registrar_name', $validated['wrong_name'])
+                ->update(['registrar_name' => $validated['correct_name']]);
+        }else{
+            $records = DB::table('mrc')
+                ->select('id')
+                ->where('registrar_name', $validated['wrong_name']);
+            foreach ($records->get() as $record) {
+                DB::table('mrc')
+                    ->where('id', $record->id)
+                    ->update(['registrar_name' => $validated['correct_name']]);
+            }
+        }
         return redirect()
             ->route('mrc.correction.form')
             ->with('success', 'Registrar name correction submitted successfully.');

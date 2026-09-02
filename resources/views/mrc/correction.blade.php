@@ -53,7 +53,15 @@
                            class="w-full border-gray-300 rounded shadow-sm"
                            value="{{ old('passkey') }}">
                 </div>
+                <div>
+                    <label class="block text-sm font-medium">update type</label>
+                    <select name="update_type" class="w-full border-gray-300 rounded shadow-sm">
+                        <option selected value="name_match">Name Match</option>
+                        <option value="id_match">ID Match</option>
+                    </select>
+                </div>
             </div>
+            
             <div class="flex justify-end">
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded shadow-sm hover:bg-blue-700">
                     Submit Correction

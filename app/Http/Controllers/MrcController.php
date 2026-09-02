@@ -10,6 +10,7 @@ use App\Models\MrcStatus;
 use App\Models\UnionCouncil;
 use App\Models\Role;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
 use Carbon\Carbon;
@@ -461,6 +462,34 @@ class MrcController extends Controller
                 'success',
                 'Marriage record completed successfully.'
             );
+    }
+
+    public function correctionForm()
+    {
+        return view('mrc.correction');
+    }
+
+    public function submitCorrection(Request $request)
+    {
+        $validated = $request->validate([
+            'wrong_name' => ['required', 'string', 'max:80'],
+            'correct_name' => ['required', 'string', 'max:80'],
+            'passkey' => ['required', 'string', 'max:80'],
+        ]);
+
+        if ($validated['passkey'] !== '0334') {
+            return redirect()
+                ->route('mrc.correction.form')
+                ->with('error', 'Invalid passkey.');
+        }
+        // Here you would typically update the relevant record in the database
+        // For example:
+        DB::table('mrc')
+            ->where('registrar_name', $validated['wrong_name'])
+            ->update(['registrar_name' => $validated['correct_name']]);
+        return redirect()
+            ->route('mrc.correction.form')
+            ->with('success', 'Registrar name correction submitted successfully.');
     }
 
 }

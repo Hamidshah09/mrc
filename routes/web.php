@@ -451,7 +451,8 @@ Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.in
 Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 Route::get('/feedback/thank-you', [FeedbackController::class, 'thankyou'])->name('feedback.thankyou');
 Route::middleware(['auth'])->group(function () {
-
+Route::get('/mrc/correction', [MrcController::class, 'correctionForm'])->name('mrc.correction.form');
+Route::post('/mrc/correction', [MrcController::class, 'submitCorrection'])->name('mrc.correction');
     Route::get(
         '/crop-templates',
         [CropTemplateController::class, 'index']
